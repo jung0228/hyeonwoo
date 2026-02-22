@@ -37,8 +37,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 2.5rem;
-      height: 56px;
+      padding: 0 3rem;
+      height: 50px;
     }
     .nav-logo {
       font-weight: 700;
@@ -58,13 +58,14 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--accent); }
+    .nav-links .active { color: var(--accent); font-weight: 600; }
 
     /* ── HERO ── */
     #hero {
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 80px 2.5rem 4rem;
+      padding: 70px 2.5rem 4rem;
       max-width: 1060px;
       margin: 0 auto;
       gap: 5rem;
@@ -383,12 +384,18 @@
     }
 
     /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-photo { width: 200px; height: 200px; }
+    }
     @media (max-width: 680px) {
-      #hero { flex-direction: column; align-items: center; text-align: center; gap: 2rem; padding-top: 90px; }
-      .hero-photo { width: 160px; height: 160px; }
-      .hero-links { justify-content: center; }
+      nav { padding: 0 1.4rem; }
+      #hero { flex-direction: column; align-items: center; text-align: center; gap: 2rem; padding: 70px 1.4rem 4rem; }
+      .hero-photo { width: 150px; height: 150px; }
+      .hero-links { justify-content: center; flex-wrap: wrap; }
+      section { padding: 3.5rem 1.4rem; }
       .timeline-item { grid-template-columns: 1fr; gap: 0.2rem; }
-      .awards-list li { flex-direction: column; gap: 0.15rem; }
+      .awards-list li { flex-direction: column; gap: 0.5rem; }
+      .award-thumb { width: 70px; height: 95px; }
       .nav-links { display: none; }
     }
 
@@ -403,11 +410,8 @@
 <nav>
   <a class="nav-logo" href="#hero">Hyeonwoo Jung</a>
   <ul class="nav-links">
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#awards">Awards</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#hero" class="active">Home</a></li>
+    <li><a href="blog/index.html">Blog</a></li>
   </ul>
 </nav>
 
