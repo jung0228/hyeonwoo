@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyeonwoo Jung – AI Researcher</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg2: #f6f8fa;
+      --accent: #0969da;
+      --accent2: #1a7f37;
+      --text: #1f2328;
+      --text2: #636c76;
+      --border: #d0d7de;
+      --card-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2.5rem;
+      height: 56px;
+    }
+    .nav-logo {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 2.5rem 4rem;
+      max-width: 1060px;
+      margin: 0 auto;
+      gap: 5rem;
+    }
+    .hero-photo {
+      width: 260px;
+      height: 260px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 32px rgba(9,105,218,0.12);
+    }
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .hero-text { flex: 1; }
+    .hero-text .greeting {
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+    .hero-text h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #1f2328 40%, #0969da 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .about-text {
+      color: var(--text2);
+      font-size: 0.95rem;
+      line-height: 1.85;
+      margin-bottom: 2rem;
+    }
+    .about-text strong { color: var(--text); }
+    .hero-links {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: nowrap;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .hero-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s;
+    }
+    .hero-links a:hover { color: var(--accent); }
+    .hero-links .divider { color: var(--border); }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 2.5rem; }
+    .container { max-width: 800px; margin: 0 auto; }
+    section:nth-of-type(even) { background: var(--bg2); }
+    #awards { background: var(--bg2); }
+    #awards .award-card { background: var(--bg); }
+
+    .section-label {
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+    .section-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 0;
+      width: 36px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ── EXPERIENCE ── */
+    .exp-item {
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .exp-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.2rem;
+    }
+    .exp-header h3 { font-size: 1rem; font-weight: 700; }
+    .exp-date { font-size: 0.8rem; color: var(--text2); }
+    .exp-org { color: var(--accent); font-size: 0.875rem; margin-bottom: 0.7rem; }
+    .exp-bullets { list-style: none; }
+    .exp-bullets li {
+      color: var(--text2);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .exp-bullets li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--text2);
+    }
+
+    /* ── PUBLICATIONS ── */
+    .pub-group-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text2);
+      font-weight: 600;
+      margin-top: 1.8rem;
+      margin-bottom: 0.9rem;
+    }
+    .pub-group-title:first-child { margin-top: 0; }
+    .pub-list { list-style: none; }
+    .pub-list li {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pub-list li:last-child { border-bottom: none; }
+    .pub-list li strong { color: var(--text); }
+    .pub-title {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .pub-title:hover { color: var(--accent); text-decoration: underline; }
+    .pub-venue {
+      display: inline-block;
+      margin-top: 0.2rem;
+      font-size: 0.78rem;
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    /* ── AWARDS (list with thumbnail) ── */
+    .awards-list { list-style: none; }
+    .awards-list li {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .awards-list li:last-child { border-bottom: none; }
+    .award-info { flex: 1; }
+    .award-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+      line-height: 1.4;
+    }
+    .award-org-line { font-size: 0.82rem; color: var(--text2); }
+    .award-yr {
+      font-size: 0.78rem;
+      color: var(--text2);
+      margin-top: 0.15rem;
+    }
+    .award-thumb {
+      width: 90px;
+      height: 120px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg2);
+      position: relative;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .award-thumb:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(9,105,218,0.15);
+    }
+    .award-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .award-thumb-overlay { position: absolute; inset: 0; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-inner {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      width: min(820px, 92vw);
+      height: min(90vh, 1060px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    }
+    .lightbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .lightbox-title { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+    .lightbox-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text2);
+      padding: 0.25rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+    .lightbox-close:hover { color: var(--text); }
+    .lightbox-body {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: var(--bg2);
+    }
+    .lightbox-body img { max-width: 100%; max-height: 100%; border-radius: 4px; }
+
+    /* ── EDUCATION ── */
+    .timeline { display: flex; flex-direction: column; }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 175px 1fr;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-date { color: var(--text2); font-size: 0.8rem; padding-top: 0.15rem; }
+    .timeline-body h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem; }
+    .timeline-body .inst { color: var(--text2); font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .timeline-body .meta { font-size: 0.8rem; color: var(--accent2); }
+
+    /* ── CONTACT ── */
+    #contact { text-align: center; }
+    .contact-desc {
+      color: var(--text2);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .contact-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .contact-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .contact-links a:hover { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.78rem;
+      color: var(--text2);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      #hero { flex-direction: column; align-items: center; text-align: center; gap: 2rem; padding-top: 90px; }
+      .hero-photo { width: 160px; height: 160px; }
+      .hero-links { justify-content: center; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.2rem; }
+      .awards-list li { flex-direction: column; gap: 0.15rem; }
+      .nav-links { display: none; }
+    }
+
+    /* ── SCROLL ANIMATION ── */
+    .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-photo">
+    <img src="[반명함사진] 정현우.jpg" alt="Hyeonwoo Jung" />
+  </div>
+  <div class="hero-text">
+    <p class="greeting">Hello, I am</p>
+    <h1>Hyeonwoo Jung</h1>
+    <p class="about-text">
+      I graduated from <strong>Soongsil University</strong> (GPA: 4.32/4.5, Rank: 2/75, Feb. 2026)
+      and am currently a research intern at <strong>KAIST</strong>, advised by <strong>Prof. Jaegul Choo</strong>.
+      My research focuses on building AI systems that perceive and reason across multiple modalities—
+      particularly <strong>video, audio, and language</strong>.
+      I also completed <strong>BoostCamp AI Tech 7th</strong> (Naver Connect Foundation, Computer Vision track).
+    </p>
+    <div class="hero-links">
+      <a href="mailto:junghw3333@gmail.com">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        junghw3333@gmail.com
+      </a>
+      <span class="divider">|</span>
+      <a href="https://github.com/jung0228" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/jung0228
+      </a>
+      <span class="divider">|</span>
+      <a href="정현우_CV.pdf" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+        CV / Resume
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container fade-in">
+    <p class="section-label">Experience</p>
+    <h2 class="section-title">Research Experience</h2>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <h3>Undergraduate Research Intern</h3>
+        <span class="exp-date">Apr. 2025 – Present</span>
+      </div>
+      <div class="exp-org">KAIST &nbsp;·&nbsp; Advised by Prof. Jaegul Choo</div>
+      <ul class="exp-bullets">
+        <li>Developing query-adaptive multimodal video understanding methods that efficiently combine visual and audio information.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <h3>Undergraduate Research Intern</h3>
+        <span class="exp-date">Mar. 2023 – Apr. 2024</span>
+      </div>
+      <div class="exp-org">Soongsil University &nbsp;·&nbsp; Advised by Prof. Kunwoo Park</div>
+      <ul class="exp-bullets">
+        <li>Developed and evaluated a prime number reasoning dataset with varying difficulty levels to assess the mathematical reasoning capabilities of large language models.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="container fade-in">
+    <p class="section-label">Publications</p>
+    <h2 class="section-title">Publications</h2>
+
+    <div class="pub-group-title">Domestic Journal</div>
+    <ul class="pub-list">
+      <li>
+        <strong>Hyeonwoo Jung</strong>, Kunwoo Park,
+        <a class="pub-title" href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003107209" target="_blank">"In-Depth Evaluations of the Primality Testing Capabilities of Large Language Models: with a Focus on ChatGPT and PaLM 2"</a>
+        <br/><span class="pub-venue">Journal of KIISE, 2024</span>
+      </li>
+    </ul>
+
+    <div class="pub-group-title">Domestic Conference</div>
+    <ul class="pub-list">
+      <li>
+        <strong>Hyeonwoo Jung</strong>, Kunwoo Park,
+        <a class="pub-title" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11705105" target="_blank">"In-Depth Evaluations of the Primality Testing Capabilities of Large Language Models"</a>
+        <br/><span class="pub-venue">Korea Software Conference, 2023</span>
+      </li>
+      <li>
+        Yejun Yoon, <strong>Hyeonwoo Jung</strong>, Seunghyun Yoon, Kunwoo Park,
+        <a class="pub-title" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11488140" target="_blank">"A Multilingual CLIP-based Contrastive Learning Framework for Understanding News Image Representativeness: A cross-lingual experiment using English and Korean data"</a>
+        <br/><span class="pub-venue">Korea Computer Conference, 2023</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section id="awards">
+  <div class="container fade-in">
+    <p class="section-label">Awards</p>
+    <h2 class="section-title">Honors &amp; Recognition</h2>
+    <ul class="awards-list">
+
+      <li>
+        <div class="award-info">
+          <div class="award-name">Grand Award</div>
+          <div class="award-org-line">Autonomous Driving Data Utilization Competition<br/>Advanced Institute of Convergence Technology</div>
+          <div class="award-yr">2024</div>
+        </div>
+        <div class="award-thumb" onclick="openLightbox('honor/[수상] 대상 경기도자율주행대회.pdf', 'Grand Award')">
+          <img src="honor/[수상] 대상 경기도자율주행대회.pdf.png" alt="Grand Award" />
+          <div class="award-thumb-overlay"></div>
+        </div>
+      </li>
+
+      <li>
+        <div class="award-info">
+          <div class="award-name">Excellence Award (Kakao Mobility CEO Award)</div>
+          <div class="award-org-line">Autonomous Driving AI Challenge<br/>Ministry of Science and ICT</div>
+          <div class="award-yr">2024</div>
+        </div>
+        <div class="award-thumb" onclick="openLightbox('honor/[수상] 우수상 자율주행AI챌린지.pdf', 'Excellence Award (Kakao Mobility CEO Award)')">
+          <img src="honor/[수상] 우수상 자율주행AI챌린지.pdf.png" alt="Excellence Award" />
+          <div class="award-thumb-overlay"></div>
+        </div>
+      </li>
+
+      <li>
+        <div class="award-info">
+          <div class="award-name">Outstanding Paper Award in Language Engineering</div>
+          <div class="award-org-line">Korean Institute of Information Scientists and Engineers</div>
+          <div class="award-yr">2023</div>
+        </div>
+        <div class="award-thumb" onclick="openLightbox('honor/[수상] 우수논문상 KSC 2023.pdf', 'Outstanding Paper Award in Language Engineering')">
+          <img src="honor/[수상] 우수논문상 KSC 2023.pdf.png" alt="Outstanding Paper Award" />
+          <div class="award-thumb-overlay"></div>
+        </div>
+      </li>
+
+      <li>
+        <div class="award-info">
+          <div class="award-name">Excellence Award</div>
+          <div class="award-org-line">Soongsil University AI Convergence Code Challenge<br/>Soongsil University</div>
+          <div class="award-yr">2022</div>
+        </div>
+        <div class="award-thumb" onclick="openLightbox('honor/[수상] 우수상 교내 알고리즘 대회.pdf', 'Excellence Award')">
+          <img src="honor/[수상] 우수상 교내 알고리즘 대회.pdf.png" alt="Excellence Award" />
+          <div class="award-thumb-overlay"></div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
+  <div class="lightbox-inner">
+    <div class="lightbox-header">
+      <span class="lightbox-title" id="lightbox-title"></span>
+      <button class="lightbox-close" onclick="closeLightbox()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <div class="lightbox-body">
+      <img id="lightbox-img" src="" alt="" />
+    </div>
+  </div>
+</div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="container fade-in">
+    <p class="section-label">Education</p>
+    <h2 class="section-title">Academic Background</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">Mar. 2021 – Feb. 2026</div>
+        <div class="timeline-body">
+          <h3>BS in AI Convergence</h3>
+          <div class="inst">Soongsil University, Seoul, Republic of Korea</div>
+          <div class="meta">GPA: 4.32 / 4.5 &nbsp;·&nbsp; Rank: 2 / 75</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Aug. 2024 – Feb. 2025</div>
+        <div class="timeline-body">
+          <h3>BoostCamp AI Tech 7th</h3>
+          <div class="inst">Naver Connect Foundation</div>
+          <div class="meta">Track: Computer Vision</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container fade-in">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title" style="display:block; margin-bottom:1.2rem;">Let's Connect</h2>
+    <p class="contact-desc">Open to research discussions and collaboration opportunities.</p>
+    <div class="contact-links">
+      <a href="mailto:junghw3333@gmail.com">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        junghw3333@gmail.com
+      </a>
+      <a href="https://github.com/jung0228" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/jung0228
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Hyeonwoo Jung</p>
+</footer>
+
+<script>
+  // Scroll fade-in
+  const observer = new IntersectionObserver(
+    (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Lightbox
+  function openLightbox(pdfSrc, title) {
+    const imgSrc = pdfSrc + '.png';
+    document.getElementById('lightbox-img').src = imgSrc;
+    document.getElementById('lightbox-title').textContent = title;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lightbox-img').src = '';
+    document.body.style.overflow = '';
+  }
+  function closeLightboxBg(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>

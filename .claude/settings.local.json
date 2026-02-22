@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open:*)",
+      "WebFetch(domain:www.dbpia.co.kr)",
+      "WebSearch",
+      "WebFetch(domain:bywords.github.io)",
+      "Bash(git remote:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(git update-ref:*)",
+      "Bash(git init:*)"
+    ]
+  }
+}
