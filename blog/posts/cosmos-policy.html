@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmos Policy 리뷰 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── RESULT TABLE ─── */
+    .result-table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem;
+    }
+    .result-table th {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      padding: .55rem .8rem;
+      text-align: center; font-weight: 700;
+      color: var(--text); letter-spacing: .04em;
+    }
+    .result-table td {
+      border: 1px solid var(--rule-lt);
+      padding: .5rem .8rem;
+      text-align: center; color: var(--muted);
+    }
+    .result-table tr.highlight td {
+      background: #fffbe6;
+      color: var(--text); font-weight: 700;
+    }
+    .result-table td:first-child { text-align: left; }
+
+    /* ─── FIGURE ─── */
+    .post-figure {
+      margin: 2.4rem -3rem;
+    }
+    .post-figure img {
+      width: 100%;
+      display: block;
+      border-top: 1px solid var(--rule-lt);
+      border-bottom: 1px solid var(--rule-lt);
+    }
+    .post-figure figcaption {
+      margin-top: .7rem;
+      padding: 0 3rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .75rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .post-figure figcaption strong { color: var(--text); }
+
+    /* ─── FIGURE BREAKDOWN ─── */
+    .fig-breakdown {
+      padding: 1rem 3rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+    }
+    .fig-breakdown-item {
+      display: flex;
+      gap: .9rem;
+      align-items: flex-start;
+      padding: .75rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s;
+      border: 1px solid transparent;
+    }
+    .fig-breakdown-item:hover { background: var(--bg2); }
+    .fig-breakdown-item.open {
+      background: var(--bg2);
+      border-color: var(--rule-lt);
+    }
+    .fig-bd-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--rule-lt);
+      color: var(--muted);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+      margin-top: .1rem;
+    }
+    .fig-breakdown-item.open .fig-bd-num {
+      background: var(--accent);
+      color: #fff;
+    }
+    .fig-bd-body { flex: 1; }
+    .fig-bd-title {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem; font-weight: 700;
+      color: var(--text);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .fig-bd-arrow {
+      font-size: .65rem; color: var(--muted);
+      transition: transform .2s;
+    }
+    .fig-breakdown-item.open .fig-bd-arrow { transform: rotate(180deg); }
+    .fig-bd-desc {
+      display: none;
+      margin-top: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem; color: var(--muted);
+      line-height: 1.65;
+    }
+    .fig-breakdown-item.open .fig-bd-desc { display: block; }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+      .post-figure { margin-left: -2rem; margin-right: -2rem; }
+      .post-figure figcaption { padding: 0 2rem; }
+      .result-table { font-size: .75rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .post-figure { margin-left: -1.4rem; margin-right: -1.4rem; }
+      .post-figure figcaption { padding: 0 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">Cosmos Policy: 비디오 생성 모델을 로봇 정책으로 파인튜닝하기</h1>
+
+  <p class="post-dek">
+    아키텍처 변경 없이 대규모 비디오 파운데이션 모델을 로봇 제어 정책으로 변환하는
+    단일 단계 파인튜닝 접근법과, World Model을 활용한 플래닝까지.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">Video</span>
+    <span class="dot">·</span>
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span>Feb 23, 2026</span>
+    <span class="dot">·</span>
+    <span>15 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">배경: 왜 비디오 모델인가?</h2>
+    <p>
+      최근 로봇 조작 정책의 주류는 <strong>Vision-Language-Action(VLA) 모델</strong>이다.
+      RT-2, OpenVLA, π₀.₅ 등은 대규모 이미지-텍스트 쌍으로 사전학습된 VLM을 백본으로 삼아
+      로봇 시연 데이터에 파인튜닝한다. 이들은 다양한 의미적 개념에 대한 강한 일반화 능력을 보이지만,
+      정적인 이미지-텍스트 쌍에서 학습하기 때문에 <strong>시간적 인과관계(temporal causality)</strong>나
+      <strong>암묵적 물리(implicit physics)</strong>를 배우는 데는 한계가 있다.
+    </p>
+    <p>
+      반면 비디오 생성 모델은 수백만 개의 동영상으로부터 물체의 움직임, 물리적 상호작용,
+      시간적 흐름을 자연스럽게 학습한다. 이 논문은 이렇게 묻는다: <em>비디오 모델의 시공간 사전(spatiotemporal priors)을
+      로봇 제어에 어떻게 활용할 수 있을까?</em> 그 답이 바로 Cosmos Policy다.
+    </p>
+
+    <figure class="post-figure">
+      <img src="img/cosmos-policy/figure1.jpeg" alt="Cosmos Policy Overview" />
+      <figcaption>
+        <strong>Figure 1.</strong> Cosmos Policy 개요. Cosmos-Predict2-2B 비디오 파운데이션 모델을 파인튜닝하여
+        멀티모달 입력과 다시점 카메라 이미지를 처리하고, 액션 청크·미래 상태·가치를 동시에 예측한다.
+      </figcaption>
+    </figure>
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">1</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">입력: 여러 카메라 + 언어 명령 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">로봇에 달린 여러 대의 카메라 영상(손목, 정면 등)과 "접시 위에 물건 올려"처럼 무엇을 해야 하는지 알려주는 텍스트가 함께 입력된다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">2</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">출력 ①: 액션 청크 — 지금 당장 뭘 할지 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">로봇 팔이 앞으로 몇 초 동안 어떻게 움직여야 하는지(각 관절 각도 시퀀스)를 한 번에 예측한다. 매 프레임마다 계산하지 않고 "덩어리(chunk)"로 예측하므로 움직임이 부드럽다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">3</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">출력 ②: 미래 상태 — 그 액션 후 어떤 모습일지 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">액션을 실행하고 나면 카메라에 무엇이 찍힐지(미래 이미지)를 예측한다. 일종의 "상상"으로, 이걸 잘 예측할수록 더 좋은 계획을 세울 수 있다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">4</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">출력 ③: 가치 — 이 액션이 성공으로 이어질 확률 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">예측한 미래 상태가 얼마나 "좋은" 상태인지를 0~1 사이 숫자로 나타낸다. 여러 액션 후보 중 이 값이 가장 높은 것을 선택하면 성공률이 올라간다.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>핵심 아이디어: Latent Frame Injection</h2>
+    <p>
+      기존 비디오 기반 로봇 정책 연구들의 문제는 복잡성이었다.
+      "비디오 모델 파인튜닝 → 별도 액션 모듈 학습"처럼 여러 단계의 훈련을 요구하거나,
+      역동역학 모델(inverse dynamics model), 별도의 액션 디퓨저 등 새로운 아키텍처 컴포넌트를
+      추가하는 방식이 대부분이었다.
+    </p>
+    <p>
+      Cosmos Policy의 핵심 아이디어는 단순하면서 강력하다.
+      <strong>아키텍처를 전혀 수정하지 않고</strong>, 로봇의 액션, 고유감각(proprioception),
+      상태 가치(value)를 모두 <strong>잠재 프레임(latent frame)</strong>으로 인코딩하여
+      비디오 모델의 잠재 확산 시퀀스(latent diffusion sequence)에 직접 삽입한다.
+    </p>
+
+    <div class="pullquote">
+      <strong>핵심:</strong> 액션은 "보이지 않는 비디오 프레임"이다.
+      로봇이 취할 행동을 잠재 공간의 프레임으로 표현하고, 비디오 디퓨전 모델이
+      그것을 생성하도록 학습시킨다.
+    </div>
+
+    <p>
+      구체적으로 Cosmos-Predict2-2B는 Wan2.1 VAE를 사용해 비디오를
+      <code>(1+T') × H' × W' × 16</code> 크기의 잠재 시퀀스로 압축한다.
+      Latent frame injection은 다음과 같이 이루어진다:
+    </p>
+    <ol>
+      <li>빈(all-zero) 이미지를 입력 시퀀스에 삽입하여 새 모달리티의 자리를 만든다.</li>
+      <li>VAE가 이를 잠재 프레임으로 인코딩한다.</li>
+      <li>해당 잠재 프레임을 <strong>정규화된 로봇 액션/고유감각/가치값으로 덮어쓴다.</strong></li>
+      <li>모델은 이 시퀀스 전체를 디노이징하도록 학습된다.</li>
+    </ol>
+
+    <figure class="post-figure">
+      <img src="img/cosmos-policy/latent_injection.jpeg" alt="Latent Frame Injection" />
+      <figcaption>
+        <strong>Figure 2. Latent Frame Injection.</strong> 세 개의 행이 각각 입력 준비 → 모달리티 주입 → 학습 목표를 나타낸다.
+      </figcaption>
+    </figure>
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">행 1</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">카메라 영상을 숫자 배열로 압축 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">카메라로 찍은 이미지들을 VAE(압축 네트워크)로 줄여서 작은 숫자 격자(잠재 프레임)로 만든다. 또한 액션·고유감각·가치를 넣을 빈 자리(회색 박스)도 함께 준비한다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">행 2</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">빈 자리에 새 정보를 직접 덮어쓰기 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">준비해 둔 빈 자리에 로봇 팔 관절 각도(고유감각), 취할 액션, 미래 상태 가치를 정규화해서 채워 넣는다. 이게 바로 Latent Frame Injection. 별도 모듈 없이 그냥 덮어쓰는 것이 핵심이다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">행 3</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">노이즈 추가 → 원본 복원 학습 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">예측해야 할 프레임들(액션, 미래 이미지, 가치)에 랜덤 노이즈를 섞고, 현재 관측(클린 프레임)을 조건으로 노이즈를 제거하는 훈련을 한다. 이것이 디퓨전 모델의 학습 방식 그대로다.</div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      예를 들어 3대의 카메라(top-down 2대 + 손목 1대)를 가진 ALOHA 로봇의 경우,
+      잠재 시퀀스는 총 11개의 프레임으로 구성된다:
+      플레이스홀더, 현재 고유감각, 손목 카메라, 1·2번 카메라, 액션 청크,
+      미래 고유감각, 미래 손목 카메라, 미래 1·2번 카메라, 미래 상태 가치.
+      이 순서는 정확히 <code>(s, a, s', V(s'))</code>를 나타낸다.
+    </p>
+
+    <h2>Joint Training: 정책 + World Model + Value Function</h2>
+    <p>
+      Cosmos Policy는 하나의 모델로 세 가지 기능을 동시에 학습한다.
+    </p>
+    <ul>
+      <li><strong>Policy</strong> π(a, s', V(s') | s): 현재 상태에서 액션, 미래 상태, 가치를 예측</li>
+      <li><strong>World Model</strong> p(s', V(s') | s, a): 현재 상태와 액션으로 미래를 예측</li>
+      <li><strong>Value Function</strong> p(V(s') | s, a, s'): 미래 상태의 예상 누적 보상을 예측</li>
+    </ul>
+    <p>
+      각 훈련 배치에서 50%는 시연 데이터(policy 학습), 나머지 50%는 롤아웃 데이터(world model/value function 학습)에 사용된다.
+      어떤 잠재 프레임이 conditioning되고 어떤 프레임이 denoising 타겟이 되느냐에 따라
+      세 함수 중 어느 것을 훈련하는지가 결정된다.
+    </p>
+
+    <figure class="post-figure">
+      <img src="img/cosmos-policy/balanced_batches.jpeg" alt="Balanced Batches Training Scheme" />
+      <figcaption>
+        <strong>Figure 3. Joint Objectives 학습 방식.</strong> 같은 모델을 어떤 프레임을 가리느냐에 따라 세 가지 용도로 훈련한다.
+      </figcaption>
+    </figure>
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">50%</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Policy 훈련 — "지금 상태만 보고 뭘 할지 예측" <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">현재 카메라 영상(s)만 주어진 상태에서, 액션·미래 영상·가치를 동시에 예측하도록 훈련한다. 시연 데이터셋의 성공 사례들로 학습한다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">25%</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">World Model 훈련 — "이렇게 행동하면 어떻게 될지 예측" <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">현재 상태(s)와 액션(a)이 주어졌을 때, 미래 영상과 가치가 어떻게 될지를 예측한다. 롤아웃 데이터(성공+실패 모두)로 학습해서 실제 결과를 배운다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">25%</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Value Function 훈련 — "이 결과가 얼마나 좋은지 판단" <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">현재 상태(s), 액션(a), 미래 상태(s')가 모두 주어진 상태에서 그 결과가 성공일지 실패일지(0~1)를 예측한다. 이 값을 기준으로 플래닝 시 어떤 액션이 더 좋은지 선택한다.</div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      흥미로운 점은 <strong>보조 학습 목표(auxiliary objectives)</strong>가 중요하다는 것이다.
+      정책을 단순히 <code>p(a|s)</code>가 아닌 <code>p(a, s', V(s')|s)</code>로 학습시키면
+      성능이 유의미하게 향상된다. LIBERO에서 auxiliary loss를 제거하면 평균 성공률이 1.5% 하락,
+      사전학습 없이 처음부터 학습하면 3.9% 하락한다.
+    </p>
+
+    <h2>Model-Based Planning</h2>
+    <p>
+      시연 데이터만으로 학습한 world model은 성공 사례에만 노출되어 분포 밖(OOD) 상황에서
+      부정확한 예측을 낼 수 있다. Cosmos Policy는 이를 해결하기 위해 <strong>롤아웃 경험(rollout data)</strong>을
+      수집하고, 이를 기반으로 world model과 value function을 추가 파인튜닝한다.
+    </p>
+    <p>
+      플래닝은 <strong>Best-of-N 샘플링</strong>으로 구현된다:
+    </p>
+    <ol>
+      <li>정책에서 N개의 액션 후보를 샘플링</li>
+      <li>각 후보에 대해 world model로 미래 상태 예측 (앙상블 3회)</li>
+      <li>각 미래 상태에 대해 value function으로 가치 예측 (앙상블 5회)</li>
+      <li>가치가 가장 높은 액션을 실행</li>
+    </ol>
+    <p>
+      여기서 <strong>dual deployment</strong>를 사용한다. 원래의 Cosmos Policy 체크포인트는
+      "정책 모델"로, 롤아웃 데이터로 파인튜닝된 체크포인트는 "플래닝 모델"로 분리하여 사용한다.
+      이를 통해 world model이 정책의 실제 분포에서 수집된 데이터로 학습될 수 있다.
+    </p>
+
+    <h2>실험 결과</h2>
+
+    <h3>LIBERO 시뮬레이션 벤치마크</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Spatial</th>
+          <th>Object</th>
+          <th>Goal</th>
+          <th>Long</th>
+          <th>Average</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Diffusion Policy</td><td>78.3</td><td>92.5</td><td>68.3</td><td>50.5</td><td>72.4</td></tr>
+        <tr><td>π₀</td><td>96.8</td><td>98.8</td><td>95.8</td><td>85.2</td><td>94.2</td></tr>
+        <tr><td>π₀.₅</td><td>98.8</td><td>98.2</td><td>98.0</td><td>92.4</td><td>96.9</td></tr>
+        <tr><td>OpenVLA-OFT</td><td>97.6</td><td>98.4</td><td>97.9</td><td>94.5</td><td>97.1</td></tr>
+        <tr><td>CogVLA</td><td>98.6</td><td>98.8</td><td>96.6</td><td>95.4</td><td>97.4</td></tr>
+        <tr class="highlight"><td>Cosmos Policy (ours)</td><td>98.1</td><td>100.0</td><td>98.2</td><td>97.6</td><td>98.5</td></tr>
+      </tbody>
+    </table>
+
+    <h3>RoboCasa 벤치마크 (24개 주방 조작 태스크)</h3>
+    <p>
+      특히 RoboCasa에서의 결과가 인상적이다.
+      Cosmos Policy는 <strong>태스크당 50개의 시연 데이터</strong>만으로 67.1%의 평균 성공률을 달성,
+      300개 이상의 데이터를 사용한 경쟁 모델들을 모두 앞섰다.
+      데이터 효율성 측면에서 뚜렷한 강점을 보인다.
+    </p>
+
+    <h3>실제 ALOHA 로봇 평가</h3>
+    <p>
+      4개의 bimanual 조작 태스크(plate에 물체 올리기, 셔츠 접기, 사탕 모으기, 지퍼백에 사탕 넣기)에서
+      Cosmos Policy는 평균 93.6%의 점수로 모든 비교 방법을 능가했다.
+      특히 높은 action multimodality가 요구되는 "put candies in bowl"과
+      밀리미터 단위의 정밀도가 필요한 "put candy in ziploc bag"에서 두각을 나타냈다.
+    </p>
+    <p>
+      VLA 모델인 π₀.₅는 ziploc 슬라이더를 잡는 데 실패하는 경우가 많았고,
+      OpenVLA-OFT+는 L1 regression 기반 액션 예측으로 인해 multimodal한 grasp sequence에서
+      두 사탕 사이를 어정쩡하게 향하는 실패 패턴을 보였다.
+    </p>
+
+    <figure class="post-figure">
+      <img src="img/cosmos-policy/aloha_results.jpeg" alt="ALOHA Robot Evaluation Results" />
+      <figcaption>
+        <strong>Figure 4. 실제 ALOHA 로봇 평가 결과.</strong> 4개의 bimanual 조작 태스크에서
+        Cosmos Policy가 전체 평균 점수 기준으로 모든 비교 방법을 능가한다.
+      </figcaption>
+    </figure>
+
+    <p>
+      Model-based planning을 적용하면 두 어려운 태스크에서 <strong>평균 12.5점 향상</strong>을 확인했다.
+      아래 그림에서 볼 수 있듯이, 롤아웃 데이터로 파인튜닝된 world model은
+      실패 상황을 미리 예측하여 더 나은 액션을 선택할 수 있게 된다.
+    </p>
+
+    <figure class="post-figure">
+      <img src="img/cosmos-policy/planning_rollouts.jpeg" alt="World Model Planning Rollouts" />
+      <figcaption>
+        <strong>Figure 5. World Model 예측 비교.</strong> 같은 상황에서 "파인튜닝 전"과 "파인튜닝 후"의 World Model 예측 차이.
+      </figcaption>
+    </figure>
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">위</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">파인튜닝 전: 실패를 예측 못 함 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">시연 데이터(성공 사례만)로만 학습한 World Model은 "이렇게 하면 잘 될 것"이라고 장밋빛 예측만 한다. 슬라이더를 놓치는 실패를 상상조차 못하기 때문에, 나쁜 액션을 걸러내지 못한다.</div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">아래</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">파인튜닝 후: 실패를 미리 상상함 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">실패 롤아웃 데이터를 추가로 학습하면 "이렇게 하면 슬라이더를 놓칠 것 같다"는 예측이 가능해진다. 덕분에 Best-of-N 플래닝에서 그 액션을 걸러내고 더 안전한 액션을 선택할 수 있다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>내 생각</h2>
+    <p>
+      이 논문에서 가장 인상적인 부분은 <strong>단순함(simplicity)</strong>이다.
+      "액션을 잠재 프레임으로 표현한다"는 아이디어 하나로 아키텍처 수정 없이
+      정책·world model·value function을 통합한 것은 elegance의 전형이다.
+    </p>
+    <p>
+      내가 연구하고 있는 <strong>query-adaptive 멀티모달 비디오 이해</strong>와도 연결점이 있다.
+      Cosmos Policy는 비디오 모델이 시각 정보 외에 액션이라는 새로운 "채널"을 처리하도록
+      파인튜닝하는데, 이는 결국 어떤 쿼리(태스크 명세)에 따라 관련 정보를 선택적으로 처리하는
+      문제와 맞닿아 있다. 로봇 정책의 "어떤 행동을 취해야 하는가"는 곧 "어떤 시각 정보가 지금
+      중요한가"와 분리될 수 없다.
+    </p>
+    <p>
+      한계로 언급된 <strong>플래닝 속도</strong>(액션 청크 하나에 약 5초)는 실용적인 배포에서
+      분명한 병목이다. 특히 동적인 환경에서는 치명적일 수 있다.
+      Consistency model이나 flow matching을 활용한 denoising step 감소,
+      또는 더 효율적인 search tree 구성이 후속 연구의 핵심 방향이 될 것 같다.
+      실제로 논문에서 1-step denoising만으로도 RoboCasa에서 66.4%를 달성한 결과는 희망적이다.
+    </p>
+
+    <p style="margin-top: 3rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .75rem; color: #b0b0b0;">
+      Cosmos Policy · Moo Jin Kim et al. (NVIDIA, Stanford) · ICLR 2025 · <a href="https://research.nvidia.com/labs/dir/cosmos-policy/" target="_blank" style="color: #b0b0b0;">Project Page</a>
+    </p>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+<script>
+  function toggleBd(el) {
+    const isOpen = el.classList.contains('open');
+    // close siblings
+    el.parentElement.querySelectorAll('.fig-breakdown-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+</script>
+</body>
+</html>

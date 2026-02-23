@@ -70,6 +70,12 @@
 
     /* ─── FILTER ─── */
     .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
       max-width: 1080px; margin: 0 auto;
       padding: 0 3rem;
     }
@@ -245,12 +251,14 @@
 </div>
 
 <div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
   <div class="filter-inner">
     <button class="tag-btn" onclick="location.href='../index.html'">All</button>
-    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
     <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
     <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
-    <button class="tag-btn active" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+  </div>
   </div>
 </div>
 

@@ -81,6 +81,12 @@
 
     /* ─── FILTER ─── */
     .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
       max-width: 1080px; margin: 0 auto;
       padding: 0 3rem;
     }
@@ -249,12 +255,14 @@
 </div>
 
 <div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
   <div class="filter-inner">
     <button class="tag-btn active" onclick="filterPosts('all',this)">All</button>
     <button class="tag-btn" onclick="filterPosts('Multimodal',this)">Multimodal</button>
     <button class="tag-btn" onclick="filterPosts('LLM',this)">LLM</button>
     <button class="tag-btn" onclick="filterPosts('Computer Vision',this)">Vision</button>
     <button class="tag-btn" onclick="filterPosts('Video',this)">Video</button>
+  </div>
   </div>
 </div>
 
@@ -285,15 +293,13 @@
   </div>
 
   <div class="post-grid" id="post-grid">
-    <!--
-    <a class="post-card" href="posts/xxx.html" data-tags="LLM">
-      <div class="card-cat">LLM</div>
-      <div class="card-title">제목</div>
-      <div class="card-desc">설명</div>
-      <div class="card-meta">Feb 2026 · 8 min read</div>
+    <a class="post-card" href="posts/cosmos-policy.html" data-tags="Video,Multimodal">
+      <div class="card-cat">Video · Multimodal</div>
+      <div class="card-title">Cosmos Policy: 비디오 생성 모델을 로봇 정책으로 파인튜닝하기</div>
+      <div class="card-desc">아키텍처 변경 없이 Latent Frame Injection만으로 액션·World Model·Value Function을 통합한 NVIDIA의 단일 단계 파인튜닝 접근법.</div>
+      <div class="card-meta">Feb 23, 2026 · 15 min read</div>
     </a>
-    -->
-    <p class="empty" id="empty-msg">More posts coming soon.</p>
+    <p class="empty" id="empty-msg" style="display:none;">More posts coming soon.</p>
   </div>
 
 </div>
