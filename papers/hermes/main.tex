@@ -1,0 +1,267 @@
+\documentclass[]{mosi}
+
+% ===== Template packages (kept) =====
+%\usepackage{helvet}
+\usepackage{amsmath} 
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{subcaption} 
+
+\usepackage[toc,page,header]{appendix}
+%\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+%\usepackage{lmodern}        % scalable Latin Modern fonts
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{wrapfig}
+
+\usepackage{amssymb}        % special symbols
+% \usepackage{fontawesome}    % icons
+\usepackage{titletoc}
+\usepackage{minitoc}
+
+\usepackage{array}
+\usepackage{etoolbox}
+\newcommand{\maxbold}[1]{\textbf{#1}}
+\definecolor{lightblue}{RGB}{200, 230, 255}  
+\definecolor{headerblue}{RGB}{150, 200, 255} 
+
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{comment}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage{pgf-pie}
+\usepackage[export]{adjustbox}
+
+\usepackage{ragged2e}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{pifont}
+\usepackage[hang,flushmargin]{footmisc}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\tcbuselibrary{skins}
+
+\usepackage{tabularx}
+\usepackage{listings}
+
+\usepackage{inconsolata}
+
+%Including images in your LaTeX document requires adding
+%additional package(s)
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{tcolorbox}
+\usepackage[table]{xcolor}
+\usepackage{nicematrix}
+\usepackage{booktabs} 
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{xspace}
+\usepackage{subcaption}
+\usepackage{calc} % 必须引入，用于计算宽度
+\usepackage{cleveref}
+
+
+% ===== Added to support original content (template-only changes) =====
+\usepackage{threeparttable}
+\usepackage{setspace}
+% \usepackage[a4paper, margin=1in]{geometry}
+\usepackage[scheme=plain]{ctex} % needed for Chinese text in appendix prompts
+
+\crefname{figure}{Fig.}{Figs.}
+\crefname{table}{Tab.}{Tabs.}
+\crefname{section}{Sec.}{Secs.}
+\crefname{equation}{Eq.}{Eqs.}
+\crefname{appendix}{App.}{Apps.}
+
+% ===== Colors used in original content =====
+\definecolor{MossCyan}{HTML}{82D9FF} 
+\definecolor{MossBlue}{HTML}{82B1FF}
+
+% ===== Template macros (kept) =====
+%\def\axisLabels{{CharXiv, MMBench, MMMU, MMMU-Pro, MathVerse, MathVision, MathVista}}
+\def\numAxes{7}
+\definecolor{ForestGreen}{RGB}{34, 139, 34}
+\definecolor{Red}{RGB}{255, 0, 0}
+\newcommand{\catA}{\makecell{3D Spatial \\ Perc. \& Under.}}
+\newcommand{\catB}{\makecell{Pattern Recog. \\ \& Matching}}
+\newcommand{\catC}{\makecell{Multi-step \\ Reasoning}}
+\newcommand{\catD}{\makecell{Strategic \\ Planning}}
+\definecolor{tickG}{rgb}{0.1, 0.588, 0.1}
+\definecolor{crossR}{rgb}{0.588, 0.1, 0.1}
+\newcommand{\cmark}{\textcolor{tickG}{\ding{52}}}
+\newcommand{\xmark}{\textcolor{crossR}{\ding{56}}}
+\newcommand{\titleLogo}{%
+    $\raisebox{-1.5mm}
+    {\includegraphics[width=0.05\textwidth]{figures/HERMES_logo.pdf}}$ 
+}
+
+\definecolor{frenchblue}{rgb}{0.0, 0.45, 0.73}
+\definecolor{babyblue}{rgb}{0.54, 0.81, 0.94}
+\definecolor{classicrose}{rgb}{0.98, 0.8, 0.91}
+\definecolor{beige}{rgb}{0.96, 0.96, 0.86}
+\definecolor{forestgreen}{HTML}{2e7d43}
+
+\definecolor{blue1}{HTML}{91BBE6}
+\definecolor{blue2}{HTML}{3F90E0}
+\definecolor{blue3}{HTML}{316FAD}
+
+\definecolor{color1}{HTML}{FF9999}
+\definecolor{color2}{HTML}{FF6666}
+\definecolor{color3}{HTML}{FF3333}
+\definecolor{color4}{HTML}{E60000}
+\definecolor{color5}{HTML}{B30000}
+\definecolor{color6}{HTML}{8CD98C}
+\definecolor{color7}{HTML}{53c653}
+\definecolor{color8}{HTML}{00B050}
+\definecolor{color9}{HTML}{2d862d}
+\definecolor{color10}{HTML}{206020}
+\definecolor{color11}{HTML}{cca300}
+\definecolor{HermesBlue}{RGB}{0,102,204}
+
+\newcommand{\hermes}{\textcolor{HermesBlue}{\textit{\textbf{HERMES}}}\xspace}
+
+% ===== Prompt box from template (kept) =====
+\newtcolorbox{promptbox}[2][]{
+    colback=white,
+    coltext=black,
+    arc=3mm,
+    boxrule=0.5pt,
+    colframe=black!60!white,
+    title={#2},
+    colbacktitle=black,
+    coltitle=white,
+    fonttitle=\bfseries,
+    top=8pt,
+    bottom=8pt,
+    left=10pt,
+    right=10pt,
+    breakable,
+    before upper={%
+        \linespread{1}\selectfont
+        \setlength{\parskip}{1ex plus 0.2ex minus 0.2ex}%
+        \setlength{\parindent}{0pt}%
+    },
+    #1
+}
+
+% ===== Title & Author (moved into mosi template) =====
+% \title{MOSS Transcribe Diarize: Accurate Transcription with Speaker Diarization}
+\title{\titleLogo \hermes: KV Cache as Hierarchical Memory for Efficient Streaming Video Understanding}
+
+
+\author{
+Haowei Zhang$^{1,*}$\hspace{.1em}
+Shudong Yang$^{1,2,*}$\hspace{.1em}
+Jinlan Fu$^{1,3,\dagger}$ \hspace{.1em}
+See-Kiong Ng$^{3}$ \hspace{.1em}
+Xipeng Qiu$^{1,2}$ \hspace{.1em}
+}
+\affiliation{
+  $^1$Fudan University, $^2$Shanghai Innovation Institute,
+  $^3$National University of Singapore
+}
+% \affiliation[1]{Fudan University}
+% \affiliation[2]{Shanghai Innovation Institute}
+% \affiliation[3]{National University of Singapore,}
+% \affiliation[4]{OpenMoss Team}
+
+
+% ===== Abstract (content unchanged) =====
+\abstract{
+\input{main/0_abstract}
+}
+
+% ===== Checkdata (mapped from original links) =====
+\checkdata[Correspondence]{\email{hwzhang25@m.fudan.edu.cn}, \email{jinlanjonna@gmail.com}}
+\checkdata[Homepage]{\url{https://hermes-streaming.github.io/}}
+\checkdata[Repository]{\url{https://github.com/haowei-freesky/HERMES}}
+
+% \checkdata[Huggingface Space]{\url{https://huggingface.co/spaces/OpenMOSS-Team/MOSS-transcribe-diarize}}
+
+\newcommand{\todo}[1]{\textcolor{purple}{\bf\small [TODO: #1]}}
+
+\newcommand{\llava}{LLaVA-OV-7B\xspace}
+\newcommand{\llavasmall}{LLaVA-OV-0.5B\xspace}
+\newcommand{\qwen}{Qwen2.5-VL-7B\xspace}
+\newcommand{\qwenbig}{Qwen2.5-VL-32B\xspace}
+
+\definecolor{grey}{RGB}{128,138,135}
+
+\begin{document}
+\maketitle
+\begingroup
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\setcounter{footnote}{1}
+\footnotetext{Equal contribution.}
+\setcounter{footnote}{2}
+\footnotetext{Corresponding author.}
+\endgroup
+
+% ===== Original meta lines (content unchanged) =====
+% \begin{spacing}{1.0}
+% {\small \noindent \textbf{Date:} December 31, 2025 \par}
+% {\small \noindent \textbf{Demo:} \url{https://openmoss.github.io/MOSS-Transcribe-Diarize-demo/} \par}
+% {\small \noindent \textbf{Huggingface Space:} \url{https://huggingface.co/spaces/OpenMOSS-Team/MOSS-transcribe-diarize} \par}
+% \end{spacing}
+
+% ===== Original content starts here (sections/tables/figures unchanged) =====
+
+\input{main/1_introduction}
+\input{main/2_investigation}
+\input{main/3_method}
+\input{main/4_experiments}
+\input{main/5_related_work}
+\input{main/6_conclusion}
+
+
+
+
+
+% ===== Bibliography =====
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{main,datasets}
+
+% ===== Appendix (content unchanged) =====
+\clearpage
+\beginappendix
+
+\startcontents[app]
+\begingroup
+  \renewcommand{\contentsname}{Appendix Contents}
+  \section*{\contentsname}
+  \printcontents[app]{}{1}{}
+\endgroup
+\newpage
+
+\crefalias{section}{appendix}
+\crefalias{subsection}{appendix}
+
+\input{appendix/A_attention}
+\input{appendix/B_prompt}
+\input{appendix/K_smooth_configuration}
+\input{appendix/C_benchmark}
+%\input{appendix/D_flashattn}
+%\input{appendix/F_ablation}
+\input{appendix/H_pos}
+\input{appendix/I_aggre}
+%\input{appendix/F_ablation}
+%\input{appendix/A_attention}
+\input{appendix/E_full_performance}
+\input{appendix/G_case}
+
+\end{document}

@@ -1,0 +1,66 @@
+\begin{table}[t]
+    \centering
+    %\scriptsize
+    %\small
+    % 6 columns: Model, Frames, VideoMME (long), VideoMME (Avg), Egoschema, MVBench.
+    \begin{tabular}{l c | c c c c}
+    \toprule
+    \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{\#Frames}} & \textbf{MVBench} & \textbf{Egoschema} & \multicolumn{2}{c}{\textbf{VideoMME}} \\
+    % 
+    & & & & Long & \textbf{Avg.} \\
+    \midrule
+    \midrule
+
+    \multicolumn{6}{c}{\textbf{Proprietary MLLMs}} \\
+    \midrule
+    Gemini 1.5 pro~\cite{gemini25} & 1 fps & 75.69 & 69.32 & 62.54 & 66.41\\
+    GPT-4o~\cite{openai2024gpt4ocard} & 64 & 73.28 & 64.46 & 60.75 & 62.87\\
+    Claude 3.5 Sonnet~\cite{claude3_5} & 20 & 72.44 & - & - & -\\
+    \midrule
+    \multicolumn{6}{c}{\textbf{Open-source Offline MLLMs}} \\
+    \midrule
+    Video-LLaMA2-7B~\cite{videollama2} & 32 & 49.52 & - & - & -\\
+    VILA-1.5-8B~\cite{vila} & 14 & 52.32 & - & - & -\\
+    Video-CCAM-14B~\cite{videoccam} & 96 & 53.96 & - & - & -\\
+    LongVA-7B~\cite{longva} & 128 & 59.96 & - & - & -\\
+    LLaVA-Video-7B~\cite{zhang2025llavavideovideoinstructiontuning} & 32 & 58.60 & 57.3 & - & 63.30 \\
+    Qwen2-VL-7B~\cite{wang2024qwen2vlenhancingvisionlanguagemodels} & 64 & 67.00 & 66.70 & - & 63.30 \\
+    InternVL-V2-8B~\cite{internvl2} & 16 & 65.80 & - & - & 56.30 \\
+    Kangaroo-7B~\cite{kangaroo} & 64 & 64.60 & - & - & -\\
+    LLaVA-NeXT-Video-32B~\cite{llava-next} & 64 & 66.96 & - & - & -\\
+    MiniCPM-V-2.6-8B~\cite{minicpm} & 32 & 67.44 & - & - & -\\
+    
+    
+    \addlinespace[1pt]
+    
+    \midrule
+    \multicolumn{6}{c}{\textbf{Open-source  Online MLLMs}} \\
+    \midrule
+    Dispider-7B~\cite{dispider} & 1 fps & - & 55.60 & - & 57.20\\
+    TimeChat-Online-7B~\cite{timechatonline} & 1 fps & 75.36 & 61.90 & 41.70 & 53.22\\
+    StreamForest-7B~\cite{zeng2025streamforestefficientonlinevideo} & 1 fps & 70.20 & - & - & 61.40\\
+    \midrule
+    \multicolumn{6}{c}{\textbf{Training-free Offline-to-Online Methods}} \\
+    \midrule
+    LLaVA-OV-7B~\cite{li2024llavaonevisioneasyvisualtask} & 64 & \textbf{57.02} & 59.93 & 48.00 & 57.67 \\
+
+    \hspace{3pt} + ReKV~\cite{di2025streamingvideoquestionansweringincontext} & 0.5 fps &  56.83 & \textbf{60.70} & 46.89 & 57.74 \\
+
+    \rowcolor{gray!20}  \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & 56.95 & 60.23 & 49.11 & 58.44 \\
+
+     \rowcolor{gray!40}  \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & 56.92 & 60.29 & \textbf{49.22} & \textbf{58.85} \\
+    
+    \midrule    
+    Qwen2.5-VL-7B~\cite{bai2025qwen25vltechnicalreport} & 1 fps & 65.00 & 58.47 & 53.89 & \textbf{64.52}\\
+    \rowcolor{gray!20}\hspace{3pt} + HERMES (6K tokens) & 1 fps & 65.40 & 59.47 & \textbf{54.44} & 62.00 \\
+    \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 1 fps & \textbf{65.53} & \textbf{59.97} & 53.44 & 60.63 \\
+    
+    
+    \bottomrule
+    \end{tabular}
+    \vspace{-6pt}
+    \caption{Performance comparison (\%) on offline benchmarks.}
+    \label{tab:offline_main}
+\end{table}
+
+

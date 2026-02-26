@@ -1,0 +1,35 @@
+\begin{wraptable}{r}{0.48\textwidth}
+% \setlength{\tabcolsep}{1.5mm}
+% \renewcommand{\arraystretch}{1.15}
+\centering
+\vspace{-17pt}
+\caption{
+\textbf{Ablation study on \textsc{QaEgo4D}$_\texttt{test-mc}$}.
+\colorbox[RGB]{235,235,235}{``Oracle Retrieval''} refers to a scenario where the annotated, question-relevant video segments are used as input, with a uniform sampling of up to 16 frames.
+This setup, by definition, has 100\% recall and defines the upper-bound VideoQA performance.
+}
+\label{tab:ablation_qaego4d}
+\vspace{-4pt}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l cc}
+    \toprule
+    Retrieval Method    & VideoQA Acc. & Recall \\
+    \midrule
+    \footnotesize{\texttt{\textcolor{gray}{LLaVA-OV-0.5B}}} \\
+    Uniform Sampling    & 42.6    & 6.1 \\
+    External Retrieval  & 48.0    & 58.1 \\
+    Internal Retrieval  & 50.0    & 63.4 \\
+    \rowcolor[RGB]{235,235,235}
+    Oracle Retrieval    & 52.0    & 100 \\
+    \midrule
+    \footnotesize{\texttt{\textcolor{gray}{LLaVA-OV-7B}}} \\
+    Uniform Sampling    & 53.0    & 6.1 \\
+    External Retrieval  & 54.2    & 58.1 \\
+    Internal Retrieval  & 56.0    & 70.5\\
+    \rowcolor[RGB]{235,235,235}
+    Oracle Retrieval    & 64.4    & 100 \\
+    \bottomrule
+\end{tabular}
+}
+\vspace{-15pt}
+\end{wraptable}

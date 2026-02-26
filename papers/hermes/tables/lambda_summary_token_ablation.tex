@@ -1,0 +1,47 @@
+\begin{table}[t]
+    \centering
+    \begin{minipage}[t]{0.47\textwidth}
+    \centering
+    \small
+    \resizebox{\linewidth}{!}{
+    \begin{tabular}{ccc | cccc}
+        \toprule
+         \multicolumn{3}{c|}{\textbf{Hyperparameter}} & \multicolumn{4}{c}{\textbf{VideoMME}} \\
+        %\cmidrule(lr){1-3} \cmidrule(lr){4-7}
+        %\midrule
+        $\lambda_{deep}$ & $\lambda_{mid}$ & $\lambda_{shallow}$ & Short & Medium & Long & \textbf{Avg.}\\
+        \midrule
+        0 & 0 & 0   & 69.67 & 51.11 & 43.44 & 54.74 \\
+        0.5 & 0 & 0   & 69.67 & 51.44 & 43.56 & 54.89 \\
+        0 & 0.5 & 0   & 70.89 & 54.78 & 46.44 & 57.37 \\
+        0 & 0 & 0.5   & 70.89 & 54.44 & 47.00 & 57.44 \\
+        0.5 & 0.5 & 0.5   & \textbf{71.78} & 54.78 & 47.33 & 57.96 \\
+        \rowcolor{gray!40}0.4 & 0.3 & 0.1   & 71.33 & \textbf{54.89} & \textbf{49.11} & \textbf{58.44} \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Ablation on different cross-layer memory smoothing hyperparameter $\lambda$.}
+    \label{tab:lambda_ablation}
+    \end{minipage}
+    \quad
+    \begin{minipage}[t]{0.47\textwidth}
+        \centering
+        \small
+        \resizebox{\linewidth}{!}{
+        \begin{tabular}{lc|cccc}
+        \toprule
+         \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Aggregation}} & \multicolumn{4}{c}{\textbf{VideoMME}} \\
+        %\cmidrule(lr){3-6}
+        & & Short & Medium & Long & \textbf{Avg.}\\
+        \midrule
+        \llava & - & 69.89 & 55.11 & 48.00 & 57.67 \\
+        \hspace{3pt}+ HERMES & w/o & 71.33 & 54.78 & 47.78 & 57.96 \\
+        \rowcolor{gray!40} \hspace{3pt}+ HERMES & w/ & \textbf{71.33} & 54.89 & \textbf{49.11} & \textbf{58.44} \\
+        \bottomrule
+    \end{tabular}
+    }
+    
+    \caption{Ablation on summary tokens in deep layers. The gray row is our default setting in all experiments.}
+    \label{tab:summary_token_ablation}
+    \end{minipage}
+\end{table}

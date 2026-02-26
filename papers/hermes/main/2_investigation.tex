@@ -1,0 +1,31 @@
+\input{figures_tex/layer_vis}
+%\section{Mechanistic Investigation: Layer-wise Preference for Hierarchical Video Information}
+\section{Layer-wise Preference for Hierarchical Streaming Video Information}
+\label{sec: investigation}
+
+% In this section, we perform a mechanistic investigation of attention preferences in MLLM decoder layers, uncovering how different layers specialize in storing multiple-granularity video memory.
+
+Sliding Window is a standard paradigm for streaming video processing by incrementally encoding the continuous video stream chunk by chunk. When KV cache reaches the pre-defined memory budget, token eviction is triggered, and deciding which tokens to keep is crucial for stable understanding. Existing methods~\cite{di2025streamingvideoquestionansweringincontext, yang2025streammemqueryagnostickvcache, xu2025streamingvlmrealtimeunderstandinginfinite} rely on coarse-grained eviction strategies such as FIFO uniformly across all layers, overlooking layer-wise attention preferences.
+
+To fill this gap, we conduct a mechanistic investigation of attention preferences in MLLM decoder layers, revealing how layers specialize in storing multiple-granularity video memory. To derive generalized insights, we randomly sample 100 video-question pairs from each of the short (62s\footnote{To ensure the sliding window contains 6,000 tokens, a video at 0.5 fps for LLaVA-OV must have a duration of at least $6,000 / 196 / 0.5\approx 62s$.} - 141s), medium (251s - 1,092s) and long (1,795s - 3,579s) duration subsets of the VideoMME benchmark~\cite{fu2025videommefirstevercomprehensiveevaluation} to cover diverse video durations and user queries. The video samples are uniformly sampled at 0.5 fps and subsequently fed into \llava in a streaming chunk-wise manner, with each chunk containing 8 frames. \llava consists of 28 decoder layers, and each video frame is uniformly encoded into 196 visual tokens. During the prefilling stage for video tokens, we maintain a constant budget $|M|$ of 6K video tokens per KV cache layer. After each eviction step, the positional indices of tokens per KV cache layer are re-indexing to contiguous [0, $|M|$).
+
+Layer-wise attention visualizations over video tokens maintained in a FIFO KV cache in~\cref{fig:layer_vis} reveal three general stages of attention preference, along with more visualization results presented in~\cref{app:attn_vis}:
+
+\begin{itemize} [leftmargin=*]
+\itemsep0em
+\item
+\textbf{Shallow Layers as Sensory Memory}:
+As shown in~\cref{fig:shallow_vis}, the shallow layers (e.g., layer 0) exhibit an intense recency bias, with attention sharply concentrated on the most recent visual tokens and rapidly decaying over earlier ones. This behavior aligns with the concept of \emph{Sensory Memory}~\cite{ATKINSON196889, shan2025cognitivememorylargelanguage}: shallow layers function as a short-lived buffer for the most recent visual inputs, enabling the model to quickly perceive incoming frames.
+
+\item 
+\textbf{Deep Layers as Long-term Memory}: % or semantic Memory
+In deep layers (e.g., layer 26 in~\cref{fig:deep_vis}), recency bias largely disappears. Instead, the attention pattern becomes highly sparse and rhythmic, with local extrema appearing at regular intervals. These extrema are exactly N = 196 tokens apart, matching to the number of tokens encoding a single frame in \llava. These local maxima can be regarded as frame-level "anchor tokens", summarizing the visual information of each frame. This pattern reflects \emph{Long-term Memory}~\cite{ATKINSON196889, shan2025cognitivememorylargelanguage}: deep layers store critical frame-level semantic representations for long-horizon understanding.
+
+\item 
+\textbf{Middle Layers as Working Memory}:
+Middle layers (e.g., layer 8 in~\cref{fig:mid_vis}) exhibit a gradual reduction in recency bias, with attention more evenly distributed across recent and earlier tokens. Simultaneously, the attention begins to transition toward the rhythmic patterns in the deep layers. This behavior corresponds to \emph{Working Memory}~\cite{BADDELEY197447, hu2025memoryageaiagents}: middle layers integrate recent and earlier visual information, bridging short-term sensory traces with frame-level semantic summaries.
+% Therefore, the middle layers serve as a transitional memory stage, bridging the short-term, recency-focused attention of shallow layers with the long-range, frame-level semantic attention of deep layers.
+%This layer-wise investigation of attention preferences over video tokens provides a solid interpretability foundation for the concrete hierarchical KV cache management strategies.
+
+\end{itemize}
+

@@ -1,0 +1,88 @@
+\begin{table*}[ht]
+\renewcommand{\arraystretch}{0.9}
+% \renewcommand\tabcolsep{4.3pt}
+    \centering
+    \footnotesize
+    % 6 columns: Model, Frames, StreamingBench, OVO-Bench-rt, OVO-Bench-backward, OVO-Bench-Avg.
+    % \resizebox{0.98\linewidth}{!}{
+    \begin{tabular}{l c | c c c c}
+    \toprule
+    \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{\#Frames}} & \textbf{StreamingBench} & \multicolumn{3}{c}{\textbf{OVO-Bench}} \\
+    & & Real-Time & Real-Time & Backward & \textbf{Avg.} \\
+    \midrule
+    \midrule
+    Human & - & 91.46 & 93.20 & 92.33 & 92.83 \\
+    \midrule
+    \multicolumn{6}{c}{\textbf{Proprietary MLLMs}} \\
+    \midrule
+    Gemini 1.5 pro~\cite{gemini25} & 1 fps & 75.69 & 69.32 & 62.54 & 66.41\\
+    GPT-4o~\cite{openai2024gpt4ocard} & 64 & 73.28 & 64.46 & 60.75 & 62.87\\
+    Claude 3.5 Sonnet~\cite{claude3_5} & 20 & 72.44 & - & - & -\\
+    \midrule
+    \multicolumn{6}{c}{\textbf{Open-source Offline MLLMs}} \\
+    \midrule
+    Video-LLaMA2-7B~\cite{videollama2} & 32 & 49.52 & - & - & -\\
+    VILA-1.5-8B~\cite{vila} & 14 & 52.32 & - & - & -\\
+    Video-CCAM-14B~\cite{videoccam} & 96 & 53.96 & - & - & -\\
+    LongVA-7B~\cite{longva} & 128 & 59.96 & - & - & -\\
+    Qwen2-VL-7B~\cite{wang2024qwen2vlenhancingvisionlanguagemodels} & 64 & 69.04 & 60.65 & 48.58 & 54.62 \\
+    InternVL-V2-8B~\cite{internvl2} & 16 & 63.72 & 60.73 & 44.00 & 52.37 \\
+    % Kangaroo-7B~\cite{kangaroo} & 64 & 64.60 & - & - & -\\
+    LLaVA-NeXT-Video-32B~\cite{llava-next} & 64 & 66.96 & - & - & -\\
+    MiniCPM-V-2.6-8B~\cite{minicpm} & 32 & 67.44 & - & - & -\\
+    \addlinespace[1pt]
+    
+    \midrule
+    \multicolumn{6}{c}{\textbf{Open-source  Online MLLMs}} \\
+    \midrule
+    Flash-VStream-7B~\cite{flashvstream} & - & 23.23 & 29.86 & 25.35 & 27.61\\
+    VideoLLM-online-8B~\cite{videollmonline} & 2 fps & 35.99 & 20.79 & 17.73 & 19.26\\
+    Dispider-7B~\cite{dispider} & 1 fps & 67.63 & 54.55 & 36.06 & 45.31\\
+    TimeChat-Online-7B~\cite{timechatonline} & 1 fps & 75.36 & 61.90 & 41.70 & 51.80\\
+    StreamForest-7B~\cite{zeng2025streamforestefficientonlinevideo} & 1 fps & 77.26 & 61.20 & 52.02 & 56.61 \\
+
+    \midrule
+    \multicolumn{6}{c}{\textbf{Training-free Offline-to-Online Methods}} \\
+    \midrule
+    LLaVA-OV-7B~\cite{li2024llavaonevisioneasyvisualtask} & 64 & 71.34 & 63.06 & 43.64 & 53.35 \\
+
+    \hspace{3pt} + ReKV~\cite{di2025streamingvideoquestionansweringincontext} & 0.5 fps &  69.22 & 57.33 & 44.16 & 50.75 \\
+
+    \hspace{3pt} + LiveVLM~\cite{ning2025livevlmefficientonlinevideo} & 0.5 fps & 72.92 & - & - & -\\
+
+    \hspace{3pt} + StreamKV~\cite{chen2025streamkvstreamingvideoquestionanswering} & 0.5 fps & 68.80 & - & - & -\\
+
+    \rowcolor{gray!20}  \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & 72.63 & 65.07 & 48.80 & 56.94 \\
+
+    \rowcolor{gray!40}  \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & \textbf{73.23} & \textbf{66.34} & \textbf{50.20} & \textbf{58.27} \\
+    
+    \midrule
+
+    LLaVA-OV-0.5B~\cite{li2024llavaonevisioneasyvisualtask} & 64 & 59.64 & 49.70 & 34.59 & 42.15 \\
+
+    \hspace{3pt} + ReKV~\cite{di2025streamingvideoquestionansweringincontext} & 0.5 fps &  57.39 & 43.77 & 33.06 & 38.42 \\
+
+    \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & 61.04 & 50.34 & 34.75 & 42.55 \\
+
+     \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & \textbf{62.04} & \textbf{50.72} & \textbf{34.80} & \textbf{42.76} \\
+    
+    \midrule    
+    Qwen2.5-VL-7B~\cite{bai2025qwen25vltechnicalreport} & 1 fps & 73.31 & 59.90 & 44.65 & 52.28 \\
+    \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 1 fps & 78.72 & 68.42 & 48.10 & 58.26 \\
+    \rowcolor{gray!40}\hspace{3pt} + HERMES (4K tokens) & 1 fps & \textbf{79.44} & \textbf{68.98} & \textbf{49.43} & \textbf{59.21} \\
+    
+    \midrule
+    
+    Qwen2.5-VL-32B~\cite{bai2025qwen25vltechnicalreport} & 1 fps & 74.27 & 64.40 & 50.33 & 57.37 \\
+    \rowcolor{gray!20}\hspace{3pt} + HERMES (6K tokens) & 1 fps & \textbf{80.20} & 71.93 & \textbf{57.71} & \textbf{64.82} \\
+    \rowcolor{gray!40}\hspace{3pt} + HERMES (4K tokens) & 1 fps & 80.08 & \textbf{72.37} & 55.42 & 63.90 \\
+
+    
+    \bottomrule
+    
+    \end{tabular}
+    \caption{Performance comparison (\%) on StreamingBench and OVO-Bench. The "Avg." column reports the results of the average accuracy of real-time visual perception and backward tracing tasks.}
+    \label{tab:streaming_main}
+\end{table*}
+
+

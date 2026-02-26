@@ -1,0 +1,32 @@
+\section{Details of evaluated benchmarks}
+\label{app:details_of_benchmarks}
+
+\input{tables/benchmark_details}
+\subsection{Streaming Benchmarks}
+
+\begin{itemize} [leftmargin=*]
+\itemsep0em 
+\item \textbf{StreamingBench}~\cite{lin2024streamingbenchassessinggapmllms} assesses the streaming video understanding capabilities of MLLMs. It evaluates three core aspects: real-time visual understanding, omni-source understanding, and contextual understanding. The Real-Time Visual Understanding subset is the most extensive component, featuring 2,500 questions across 500 videos. It covers 10 tasks, such as object perception and causal reasoning. In this paper, we focus on the Real-Time Visual Understanding subset for evaluation.
+
+\item
+\textbf{OVO-Bench}~\cite{li2025ovobenchfarvideollmsrealworld} evaluates the online reasoning and temporal awareness of MLLMs, featuring 644 videos with approximately 2,800 fine-grained multiple-choice QA pairs. It organizes 12 tasks into three distinct categories, which are real-time visual perception, backward tracing, and forward active responding. Given that we do not focus on the proactive responding ability of MLLMs in this paper, we exclusively utilize the real-time perception and the backward tracing subsets.
+
+%The Backward Tracing subset evaluates episodic memory by requiring models to retrieve past information for tasks such as Action Sequence Identification. Meanwhile, the Real-Time Visual Perception subset assesses the precise understanding of current visual inputs through tasks including Spatial Understanding and Future Prediction, utilizing a multiple-choice format for evaluation. In this paper, we exclusively utilize the Backward Tracing and Real-Time Visual Perception subsets for evaluation.
+
+% \item
+% \textbf{OVBench}\cite{huang2025onlinevideounderstandingovbench} is a benchmark designed to evaluate spatiotemporal understanding in online video streaming scenarios. It comprises 16 subtasks organized into three temporal contexts (past, current, and future) to assess capabilities ranging from perception to prediction.
+
+\item
+\textbf{RVS-Ego} and \textbf{RVS-Movie}~\cite{zhang2024flashvstreammemorybasedrealtimeunderstanding} are designed to evaluate the real-time understanding capabilities of models in online streaming scenarios. The datasets consist of 10 long ego-centric videos from the Ego4D dataset~\cite{grauman2022ego4dworld3000hours} and 22 long movie clips from the MovieNet dataset~\cite{huang2020movienetholisticdatasetmovie} dataset, totaling over 21 hours of video content.
+\end{itemize}
+
+\subsection{Offline Benchmarks}
+\begin{itemize}[leftmargin=*]
+\itemsep0em
+\item
+\textbf{MVBench}~\cite{li2024mvbenchcomprehensivemultimodalvideo} systematically evaluates the temporal understanding capabilities of MLLMs. It utilizes a novel static-to-dynamic method to define 20 distinct temporal tasks, such as action sequence and moving direction, which cannot be effectively solved with a single frame. The videos are collected from a wide range of datasets, including NTU RGB+D~\cite{shahroudy2016nturgbdlargescale}, Perception~\cite{pătrăucean2023perceptiontestdiagnosticbenchmark}, etc.
+
+\item \textbf{Egoschema}~\cite{mangalam2023egoschemadiagnosticbenchmarklongform} is a diagnostic benchmark designed to assess long-form video understanding abilities. Derived from Ego4D~\cite{grauman2022ego4dworld3000hours}, it consists of over 5,000 human-curated multiple-choice QA pairs associated with egocentric video clips.
+
+\item \textbf{VideoMME}~\cite{fu2025videommefirstevercomprehensiveevaluation} is a full-spectrum, multimodal benchmark designed for the comprehensive evaluation of MLLMs in video analysis. It comprises 900 manually curated videos spanning six primary domains and diverse durations to assess temporal adaptability. The dataset features 2,700 high-quality QA pairs that necessitate processing multimodal inputs, including video frames, subtitles, and audio.
+\end{itemize}

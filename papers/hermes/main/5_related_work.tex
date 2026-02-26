@@ -1,0 +1,13 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Streaming Video Understanding}
+%写有两个范式，explicit memory and implicit memory - 提一下nested learning那篇文章
+% The rapid growth of streaming video applications requires MLLMs to manage extended temporal context, low latency and memory-efficient deployment. Nevertheless, 
+Existing MLLMs~\cite{gemini25, li2024llavaonevisioneasyvisualtask,bai2025qwen25vltechnicalreport, bai2025qwen3vltechnicalreport} are primarily designed for pre-defined offline videos and struggle with continuous streaming videos. While some prior works have adapted existing offline MLLMs to online settings~\cite{ timechatonline,zeng2025streamforestefficientonlinevideo,xu2025streamingvlmrealtimeunderstandinginfinite}, they rely on costly model-specific training. Training-free streaming methods, such as ReKV~\cite{di2025streamingvideoquestionansweringincontext} and LiveVLM~\cite{ning2025livevlmefficientonlinevideo}, prefill offload KV cache to external devices. At user query time, they retrieve the full KV cache and reconstruct it on the GPU, incurring high latency and overall memory usage. In contrast, StreamMem~\cite{yang2025streammemqueryagnostickvcache} heuristically reuses KV cache, but lacks fine-grained KV cache management and interpretability. Unlike prior training-free methods, \hermes is grounded in a systematic attention analysis with improved interpretability and reliability.
+
+\paragraph{KV Cache Compression for Video Input}
+Numerous KV cache compression techniques have been proposed for offline video understanding~\cite{ yang2024visionziplongerbetternecessary, wang2024dynamicvlmsimpledynamicvisual,wang2025videotreeadaptivetreebasedvideo, tao2025dycokedynamiccompressiontokens}, but most of these methods are poorly suited for streaming scenarios due to the unpredictable future frames and user queries~\cite{chen2025streamingtomstreamingtokencompression}.
+%KV cache compression methods specifically designed for streaming video remain relatively underexplored.
+Existing online KV cache compression paradigms~\cite{di2025streamingvideoquestionansweringincontext, ning2025livevlmefficientonlinevideo, yang2025streammemqueryagnostickvcache, chen2025streamingtomstreamingtokencompression} largely overlook the inherently hierarchical storage structure of the KV cache. \hermes addresses this gap by introducing a hierarchical KV cache management strategy, which enables fine-grained memory utilization and low-latency responses.
+

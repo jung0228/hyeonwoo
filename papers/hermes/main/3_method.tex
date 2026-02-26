@@ -1,0 +1,115 @@
+\input{figures_tex/HERMES}
+
+\section{HERMES}
+\label{sec:method}
+We propose \hermes, a training-free framework that can be seamlessly integrated with MLLMs. As shown in~\cref{fig:hermes}, \hermes has three components: hierarchical KV cache management, cross-layer memory smoothing, and position re-indexing.
+% This section proposes \textbf{HERMES}, a novel framework that can be seamlessly adopted with existing MLLMs without training. As shown in~\cref{fig:hermes}, HERMES consists of three components, hierarchical KV cache management, cross-layer memory smoothing and position re-indexing strategies. 
+%, which collectively enable MLLMs to achieve stable and accurate comprehension, real-time responsiveness and low GPU memory consumption in streaming video scenarios.
+
+\subsection{Hierarchical KV Cache Management}
+\label{sec:hierarchical}
+% Based on the layer-wise attention preferences identified in~\cref{sec: investigation}, we design a hierarchical KV cache management strategy. 
+Motivated by the layer-wise attention patterns identified in~\cref{sec: investigation}, we design a hierarchical KV cache strategy.
+For each video token with KV cache index $i$ at layer $l$, where $i$ denotes its physical position in KV cache, we compute an importance score $S_i^l$ to decide its retention:
+
+\begin{itemize} [leftmargin=*]
+\itemsep0em
+\item
+\textbf{Shallow Layers}:
+% As shallow layers act as sensory memory for streaming video tokens with strong recency bias. Inspired by Ebbinghaus' theory of memory decay~\cite{ebbinghaus2013memory}, we adopt the Ebbinghaus forgetting curve to quantify the importance score of each visual token as a function of its temporal distance from the current timestep:
+They act as sensory memory with strong recency bias. Inspired by Ebbinghaus’ memory decay theory~\cite{ebbinghaus2013memory}, we model token importance using an exponential forgetting curve based on temporal distance:
+\begin{equation}
+\label{eq:shallow}
+S_i^l = \alpha_i^l \cdot e^{-k\Delta t_i}, \Delta t_i = T - 1 - i,
+\end{equation}
+where $T$ is the total number of video tokens in the cache, $k > 0$ is the forgetting rate, $\alpha_i^l$ denotes the normalization factor.
+
+
+\item
+\textbf{Deep Layers}:
+Deep layers function as frame-level long-term memory with stable anchor tokens. Their attention distributions are sparse, and these anchor tokens consistently receive high attention across frames, making attention magnitude a reliable indicator of long-term importance. We therefore compute token importance directly from attention weights with respect to the user query. To handle unpredictable queries in streaming scenarios, we use a generic guidance prompt (see~\cref{app:prompt}) as a pseudo query. 
+% Consequently, the importance scores are computed simply as the normalized attention weights:
+Token importance is computed as:
+\begin{equation}
+\label{eq:deep}
+S_i^l = \alpha_i^l \cdot W_i^l,
+\end{equation}
+where $W_i^l$ denotes the attention weight of the $i$-th token at the layer $l$.
+
+\item
+\textbf{Middle Layers}:
+Middle layers serve as working memory, transitioning from recency-dominated shallow layers to attention-driven deep layers. 
+% As the layer depth increases, the attention patterns gradually evolve toward the pattern observed in the deep layers. Therefore, we compute importance via a layer-dependent interpolation of recency and attention:
+We compute importance by interpolating recency and attention with a layer-dependent weight:
+\begin{equation}
+\omega^l = \omega_0 - \gamma \cdot \frac{l - l_{\text{short}}}{l_{\text{long}} - l_{\text{short}}},
+\end{equation}
+where $l_{\text{short}}$ and $l_{\text{long}}$ denote the layer indices, with $\omega_0 = 0.75$ and $\gamma = 0.6$.
+% $\omega_0 = 0.75$ as initial weight and $\gamma = 0.6$ as decay rate of the recency bias across layers.
+% For a middle layer $l$, we first define its normalized layer progress between the shallow and deep layers as
+% \begin{equation}
+% p^l = \frac{l - l_{\text{short}}}{l_{\text{long}} - l_{\text{short}}}.
+% \end{equation}
+% Based on this progress, we define a layer-dependent recency weight as
+% \begin{equation}
+% \omega^l = \omega_{0} - \gamma \, p^l,
+% \end{equation}
+% where $\omega_0 = 0.75$ as initial weight and $\gamma = 0.6$ as decay rate of the recency bias across layers.
+The importance score of token $i$ at layer $l$ is then computed as
+\begin{equation}
+S_i^l = (1 - \omega^l)\,A_i^l + \omega^l\, R_i^l,
+\end{equation}
+where $A_i^l$ and $R_i^l$ denote the normalized attention weight and recency score, respectively, computed as in~\cref{eq:deep,eq:shallow}.
+
+\end{itemize}
+
+% In practical implementation, we divide the first 10\% of layers as shallow layers, the middle 60\% as middle layers, and the remaining 30\% as deep layers. Assume the model consists of $L$ transformer layers indexed by $l \in \{0, \dots, L-1\}$: \todo{should put here?}
+% \begin{align}
+% \mathcal{L}_{\text{shallow}} &= \{\, l \mid 0 \le l \le \lfloor 0.1L \rfloor \,\}, \\
+% \mathcal{L}_{\text{middle}}  &= \{\, l \mid \lfloor 0.1L \rfloor < l \le \lfloor 0.7L \rfloor \,\}, \\
+% \mathcal{L}_{\text{deep}}    &= \{\, l \mid \lfloor 0.7L \rfloor < l \le L-1 \,\},
+% \end{align}
+% where $\mathcal{L}_{\text{shallow}}$, $\mathcal{L}_{\text{middle}}$, $\mathcal{L}_{\text{long}}$ denote the layer index sets of shallow, middle and deep layers, respectively.
+
+
+\subsection{Cross-Layer Memory Smoothing}
+\label{sec: smoothing}
+%To efficiently manage the KV cache for long-form video streaming, we implement a hierarchical eviction strategy that applies varying retention policies across different transformer layers.
+% While hierarchical KV cache management introduced in~\cref{sec:hierarchical} preserves diverse information, it raises a potential concern regarding cross-layer semantic inconsistency, as video tokens at the same KV cache physical index can be evicted independently across decoder layers, leading to asynchronous visual memory along network depth. More generally, effective LLM memory relies on interaction and mutual influence across layers rather than isolation, which is essential for robust performance~\cite{packer2024memgptllmsoperatingsystems, behrouz2024titanslearningmemorizetest, sun2025hierarchicalmemoryhighefficiencylongterm, hu2025memoryageaiagents}.
+Hierarchical KV cache management may introduce cross-layer inconsistency, as tokens at the same cache index can be evicted independently across layers, leading to misaligned visual memory. Since effective LLM memory relies on cross-layer interaction~\cite{packer2024memgptllmsoperatingsystems, behrouz2024titanslearningmemorizetest, sun2025hierarchicalmemoryhighefficiencylongterm, hu2025memoryageaiagents}, we address this issue with \emph{Cross-Layer Memory Smoothing}.
+
+% To mitigate this inconsistency, we propose \emph{Cross-Layer Memory Smoothing}, which enforces consistency in token importance estimation across the hierarchical memory.
+Instead of treating video tokens at the same KV cache index as independent across layers, we propagate and smooth importance signals from deeper to shallower layers. 
+% After computing the raw importance scores $S_l(i)$ for each token, the smoothed score at layer $l$ is obtained by incorporating guidance from the next deeper layer:
+Given raw importance scores $S_i^l$, the smoothed score is computed as:
+\begin{equation}
+\tilde{S_i^l} = (1 - {\lambda}_l) \cdot S_i^l + \lambda_l \cdot S_i^{l+1},
+\end{equation}
+% where $\tilde{S_l}(i)$ denotes the smoothed importance score of the video token stored at index $i$ in the KV cache of the $l$-th decoder layer. 
+$\lambda \in [0,1]$ is the smoothing hyperparameter that controls the strength of cross-layer smoothing.
+
+
+% Finally, we use Top-K selection based on the smoothed scores to enforce a fixed memory budget of $|M|$ tokens per layer:
+We then apply Top-K selection based on $\tilde{S}_i^l$ to maintain a fixed memory budget $|M|$ per layer:
+\begin{equation}
+\begin{aligned}
+\mathcal{I}_l &= \mathrm{TopK}(\tilde{S}_l, |M|), \\
+K_l &= K_l[\mathcal{I}_l], \quad
+V_l = V_l[\mathcal{I}_l].
+\end{aligned}
+\end{equation}
+
+% Moreover, to better preserve critical long-term frame-level information, we aggregate evicted tokens into one \emph{\textbf{summary token}} for each layer instead of simply discarding them. This summary token provides a compact representation of long-term memory and is retained in the KV cache (see~\cref{alg:summary} for the detailed algorithm).
+To preserve long-term information, evicted tokens are aggregated into a \textbf{summary token} per layer, which compactly encodes long-term memory and is retained in the KV cache (see~\cref{alg:summary}).
+
+% This smoothing mechanism maintains a continuous and coherent memory trace throughout the hierarchy of model layers. A detailed ablation study in~\cref{app:ablation_lambda} demonstrates the effectiveness of this mechanism and the hyperparameter settings.
+
+\subsection{Position Re-Indexing}
+\label{sec:pos}
+Continuous accumulation of streaming inputs causes positional indices to exceed the model's maximum supported range, severely degrading text generation quality. To stabilize inference, we apply position re-indexing, which remaps positional indices to a contiguous range $[0, |M|)$ within the memory budget $|M|$. We design two strategies:
+
+\paragraph{Lazy Re-Indexing} Re-indexing is triggered only when positional indices approach the model limit, resulting in lower computational overhead. By preserving the original positional indices of recent tokens, it prevents positional drift compared to eager re-indexing, making it well suited for streaming video understanding.
+
+\paragraph{Eager Re-Indexing} Re-indexing is performed at each compression step, maintaining strictly contiguous RoPE indices in KV cache. While this strategy stabilizes long-range visual semantics~\cite{kim2024infinipotinfinitecontextprocessing,kim2025infinipotvmemoryconstrainedkvcache, xu2025streamingvlmrealtimeunderstandinginfinite}, it leads to higher computational cost due to frequent re-indexing, making it more suitable for offline videos.
+
+The details of re-indexing implementation for 1D RoPE (LLaVA-OV) and 3D M-RoPE (Qwen2.5-VL) are illustrated in~\cref{app:1d_pos} and ~\cref{app:3d_pos}, respectively.

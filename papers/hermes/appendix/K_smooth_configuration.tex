@@ -1,0 +1,12 @@
+\section{Configuration of Cross-Layer Memory Smoothing}
+\label{app:smooth_config}
+Given that long-term memory tends to remain relatively stable, while short-term memory focuses on diverse perception, we set different $\lambda$ for different layer stages:
+\begin{equation}
+\lambda_l =
+\begin{cases}
+0.1,   & \text{if } l \in \mathcal{L}_{shallow} \\
+0.3,   & \text{if } l \in \mathcal{L}_{middle} \\
+0.4, & \text{if } l \in \mathcal{L}_{deep}
+\end{cases}
+\end{equation}
+The ablation study~\cref{tab:lambda_ablation} shows the effectiveness of this hyperparameter choice.

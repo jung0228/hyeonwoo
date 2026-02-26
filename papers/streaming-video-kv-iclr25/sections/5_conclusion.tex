@@ -1,0 +1,12 @@
+\section{Conclusion}
+\label{sec:conclusions}
+
+In conclusion, this paper introduces a training-free approach, \ourmethod, designed to enhance the efficiency of Video Large Language Models (Video-LLMs) for streaming video question-answering (StreamingVQA). 
+Unlike conventional video question-answering (VideoQA) systems that must process entire videos before answering, \ourmethod~enables rapid, real-time responses. 
+By employing a sliding-window attention mechanism, it ensures that the model only considers a subset of previous frames while encoding the video stream, significantly cutting down on computational demands. To retain key video context, we developed an in-context KV-Cache retrieval method that efficiently stores and reloads key-value vectors that relevant for each query. This targeted retrieval strategy, combined with the ability to perform video modeling and question-answering on separate processes and GPUs, results in a highly efficient streaming VideoQA system. Extensive experiments show that \ourmethod~not only surpasses existing VideoQA models in performance but also enhances their practicality for real-world streaming applications.
+
+\vspace{5pt}
+
+\textbf{Acknowledgements.}
+This work is supported by National Key R\&D Program of China (No. 2022ZD0161400).
+We thank Yikun Liu for discussions and conducting experiments on CGBench.

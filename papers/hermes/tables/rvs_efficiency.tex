@@ -1,0 +1,61 @@
+\begin{table}[t]
+    \centering
+    \begin{minipage}[t]{0.49\textwidth}
+      \centering
+      \small
+      \resizebox{\linewidth}{!}{
+      \begin{tabular}{lcccc}
+        \toprule
+        \multirow{2}{*}{\textbf{Model}} & \multicolumn{2}{c}{\textbf{RVS-Ego}} & \multicolumn{2}{c}{\textbf{RVS-Movie}} \\
+        \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+         & \textbf{Acc} & \textbf{Score} & \textbf{Acc} & \textbf{Score} \\
+        \midrule
+        \llava~\cite{li2024llavaonevisioneasyvisualtask} & 56.2 & 3.7 & 43.0 & 3.3 \\
+        \hspace{3pt}+ ReKV$^{\dag}$ \citep{di2025streamingvideoquestionansweringincontext} & 63.7 & 4.0 & 54.4 & 3.6  \\
+        \hspace{3pt}+ ReKV w/o off.~\cite{di2025streamingvideoquestionansweringincontext} & 55.8 & 3.3 & 50.8 & 3.4 \\
+        \hspace{3pt}+ Flash-VStream \citep{flashvstream} & 57.0 & 4.0 & 53.1 & 3.3 \\
+        \hspace{3pt}+ InfiniPot-V \citep{kim2025infinipotvmemoryconstrainedkvcache} & 57.9 & 3.5 & 51.4 & 3.5 \\
+        \hspace{3pt}+ StreamMem \citep{yang2025streammemqueryagnostickvcache} & 57.6 & 3.8 & 52.7 & 3.4 \\
+        \hspace{3pt}+ StreamingTOM~\cite{chen2025streamingtomstreamingtokencompression} & 58.3 & 3.9 & 53.2 & 3.5 \\
+        \rowcolor{gray!20}\hspace{3pt}+ HERMES (6K tokens) & \textbf{60.3} & \textbf{4.0} & \textbf{54.4} & \textbf{3.6} \\
+        \rowcolor{gray!40}\hspace{3pt}+ HERMES (4K tokens) & 58.3 & 3.9 & \textbf{54.4} & \textbf{3.6} \\
+        \midrule
+        
+        \llavasmall~\cite{li2024llavaonevisioneasyvisualtask} & 51.8 & 3.7 & 37.2 & 3.2 \\
+        \hspace{3pt}+ ReKV$^{\dag}$ \citep{di2025streamingvideoquestionansweringincontext} & 54.7 & 3.9 & 44.6 & 3.4  \\
+        \rowcolor{gray!20}\hspace{3pt}+ HERMES (6K tokens) & \textbf{53.0} & \textbf{3.8} & \textbf{42.5} & \textbf{3.4} \\
+        \rowcolor{gray!40}\hspace{3pt}+ HERMES (4K tokens) & 52.7 & 3.8 & 41.7 & \textbf{3.4} \\
+        \bottomrule
+        
+      \end{tabular}
+      }
+      \caption{Performance on RVS-Ego and RVS-Movie. \dag: ReKV caches the KV states of all previously seen frames and is therefore treated as an upper bound.}
+      \label{tab:rvs}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{0.49\textwidth}
+        \centering
+        \small
+        \resizebox{\linewidth}{!}{
+        \begin{tabular}{l cccc}
+        \toprule
+        \multirow{2}{*}{\textbf{Metric}} & \multicolumn{4}{c}{\textbf{Frames}} \\
+        %\cmidrule(lr){2-5}
+         & \textbf{16} & \textbf{64} & \textbf{256} & \textbf{512}\\
+        \midrule
+        \multicolumn{5}{c}{\textit{\textbf{Chunk Size: 8}}} \\
+        GPU Mem. / GB $\downarrow$          & 16.54 & 16.66 & 16.66 & 16.66  \\
+        TTFT / ms $\downarrow$               & 27.01 & 28.41 & 28.44 & 28.41  \\
+        TPOT / ms $\downarrow$  & 24.43 & 23.89 & 24.02 & 23.98 \\
+        \midrule
+        \multicolumn{5}{c}{\textit{\textbf{Chunk Size: 16}}} \\
+        GPU Mem. / GB $\downarrow$          & 17.46 & 17.66 & 17.66 & 17.66 \\
+        TTFT / ms $\downarrow$               & 27.02 & 28.97 & 28.50 & 28.38 \\
+        TPOT / ms $\downarrow$  & 24.50 & 23.59 & 23.56 & 23.63 \\
+        \bottomrule
+        \end{tabular}
+        }
+        \caption{Efficiency across input frame numbers under two chunk sizes. "TTFT" denotes \textit{Time to First Token} and "TPOT" denotes \textit{Time Per Output Token}.}
+        \label{tab:efficiency_chunk}
+    \end{minipage}
+\end{table}

@@ -1,0 +1,59 @@
+\section{Algorithm of Summary Tokens}
+% \begin{algorithm}
+% \caption{Deep Layer KV Aggregation}
+% \begin{algorithmic}[1]
+% \REQUIRE $K_{p}, V_{p}$: Pruned KV set; $P_{p}$: Original positions; $t$: Target position ID.
+% \ENSURE $k_{sum}, v_{sum}$: Single aggregated summary token.
+
+% \STATE \COMMENT{1. Aggregate Value: Simple spatial average}
+% \STATE $v_{sum} \leftarrow \text{Mean}(V_{p}, \text{dim=seq})$ 
+
+% \STATE \COMMENT{2. Aggregate Key: Align phases before averaging}
+% \STATE $\Delta\theta \leftarrow \text{RotaryDelta}(P_{p} \to t)$ \COMMENT{Calculate rotation shift to target}
+% \STATE $K_{aligned} \leftarrow \text{ApplyDelta}(K_{p}, \Delta\theta)$ \COMMENT{Rotate all keys to same phase}
+% \STATE $k_{sum} \leftarrow \text{Mean}(K_{aligned}, \text{dim=seq})$ \COMMENT{Average aligned features}
+
+% \STATE \COMMENT{3. Update Cache}
+% \RETURN $\text{Concat}([K_{kept}, k_{sum}]), \text{Concat}([V_{kept}, v_{sum}])$
+% \end{algorithmic}
+% \end{algorithm}
+
+\begin{algorithm}
+\label{alg:summary}
+\caption{Summary Token Aggregation}
+\small
+\begin{algorithmic}
+\REQUIRE 
+    $K_{p}, V_{p}$: Pruned KV tensors from visual tokens;
+    $P_{p}$: Original position indices of pruned tokens;
+    $t$: Target position index for the summary token. \\
+\ENSURE
+    $k_{sum}, v_{sum}$: Single aggregated summary token cache.\\
+
+\item[]
+
+\STATE \textbf{Step 1: Aggregate Value} \\
+\# Simple spatial mean \\
+\STATE $v_{sum} \leftarrow \text{Mean}(V_{p})$ 
+
+\item[]
+
+\STATE \textbf{Step 2: Aggregate Key} \\
+\# Phase alignment before pooling \\
+\STATE $\Delta\theta \leftarrow \text{RotaryDelta}(P_{p} \to t)$ \\
+\# Calculate rotation shift from $P_p$ to $t$ \\
+\STATE $K_{aligned} \leftarrow \text{ApplyDelta}(K_{p}, \Delta\theta)$ \\
+\# Align all keys to the same phase \\
+\STATE $k_{sum} \leftarrow \text{Mean}(K_{aligned})$
+
+\item[]
+
+\STATE \textbf{Step 3: Update KV Cache} \\
+\STATE $K_{new} \leftarrow \text{Concat}([K_{kept}, k_{sum}])$
+\STATE $V_{new} \leftarrow \text{Concat}([V_{kept}, v_{sum}])$
+
+\item[]
+
+\RETURN $K_{new}, V_{new}$
+\end{algorithmic}
+\end{algorithm}

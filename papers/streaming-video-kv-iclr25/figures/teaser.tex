@@ -1,0 +1,10 @@
+\begin{figure}[t]
+\centerline{\includegraphics[width=\linewidth]{figures/src/teaser.pdf}}
+\caption{
+\textbf{Overview of the StreamingVQA task and our proposed \ourmethod.}
+(a) StreamingVQA requires a model to continuously process video streams and answer questions about previously viewed content at any moment. 
+(b) We propose \ourmethod~to enhance efficiency and accuracy in StreamingVQA.
+Tested with \texttt{LLaVA-OV-7B} on an H800 (80GB) GPU, \ourmethod~maintains stable latency and GPU memory usage, preventing out-of-memory (OOM) errors as frames increase. It also improves the accuracy on seven long-form VideoQA benchmarks compared to the uniform sampling baseline. Further details are provided in Section~\ref{sec:experiments}.
+}
+\label{fig:teaser} 
+\end{figure}
