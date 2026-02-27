@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReKV – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, {
+        delimiters: [
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false}
+        ]
+      });"></script>
+  <style>
+    :root {
+      --bg:#f9f8f4; --text:#0f0f0f; --muted:#6b6b6b;
+      --accent:#1a56c4; --rule:#999; --rule-lt:#d8d8d2; --bg2:#efede6;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',Georgia,serif; line-height:1.7; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(249,248,244,.96); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule-lt); display:flex; justify-content:space-between; align-items:center; padding:0 3rem; height:50px; font-family:-apple-system,BlinkMacSystemFont,sans-serif; }
+    .nav-logo { font-weight:700; font-size:.88rem; color:var(--text); text-decoration:none; letter-spacing:.03em; }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a { font-size:.8rem; color:var(--muted); text-decoration:none; transition:color .15s; }
+    .nav-links a:hover, .nav-links .active { color:var(--accent); font-weight:600; }
+
+    .masthead { max-width:1080px; margin:0 auto; padding:72px 3rem 0; }
+    .masthead-bar { height:3px; background:var(--text); }
+    .masthead-inner { border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:1.1rem 0 1rem; margin-top:5px; text-align:center; }
+    .masthead-title { font-family:'Playfair Display',Georgia,serif; font-size:clamp(2.6rem,5vw,4rem); font-weight:800; letter-spacing:-.02em; line-height:1; color:var(--text); }
+    .masthead-sub { margin-top:.45rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+
+    .filter-bar { position:sticky; top:50px; z-index:99; background:var(--bg); }
+    .filter-bar-inner-wrap { max-width:1080px; margin:0 auto; padding:0 3rem; }
+    .filter-inner { display:flex; border-bottom:3px double var(--text); }
+    .tag-btn { background:none; border:none; flex:1; text-align:center; padding:.6rem .5rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); cursor:pointer; border-right:1px solid var(--rule-lt); transition:color .15s; }
+    .tag-btn:last-child { border-right:none; }
+    .tag-btn:hover, .tag-btn.active { color:var(--accent); }
+
+    .article-wrap { max-width:1080px; margin:0 auto; padding:2rem 3rem 7rem; }
+    h1.post-title { font-family:'Playfair Display',Georgia,serif; font-size:1.55rem; font-weight:700; line-height:1.3; color:var(--text); margin-bottom:.95rem; }
+    .post-dek { font-family:'Playfair Display',Georgia,serif; font-size:1.15rem; font-style:italic; color:var(--muted); line-height:1.7; margin-bottom:1.3rem; }
+    .post-meta { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.7rem; color:var(--muted); display:flex; gap:.55rem; align-items:center; margin-bottom:2rem; }
+    .post-meta .dot { color:var(--rule-lt); }
+    .post-meta .cat { color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+
+    .post-content h2 { font-family:'Playfair Display',Georgia,serif; font-size:1.45rem; font-weight:700; color:var(--text); margin:3rem 0 .9rem; padding-top:1.5rem; border-top:1px solid var(--rule-lt); }
+    .post-content h2.no-rule { border-top:none; padding-top:0; }
+    .post-content h3 { font-family:'Playfair Display',Georgia,serif; font-size:1.1rem; font-weight:700; font-style:italic; color:var(--text); margin:2rem 0 .55rem; }
+    .post-content p { font-size:1.02rem; line-height:1.88; color:var(--text); margin-bottom:1.35rem; }
+    .post-content ul, .post-content ol { padding-left:1.6rem; margin-bottom:1.35rem; }
+    .post-content li { font-size:1.02rem; line-height:1.8; color:var(--text); margin-bottom:.4rem; }
+    .post-content strong { color:var(--text); font-weight:600; }
+    .post-content a { color:var(--accent); text-decoration:underline; text-underline-offset:2px; }
+
+    .math-block { background:var(--bg2); border:1px solid var(--rule-lt); border-radius:6px; padding:1.2rem 1.8rem; margin:1.5rem 0; overflow-x:auto; text-align:center; }
+    .math-block .math-label { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--accent); margin-bottom:.6rem; text-align:left; }
+    .math-block p { font-size:.85rem; color:var(--muted); margin-top:.5rem; margin-bottom:0; text-align:center; }
+
+    .def-box { border:1px solid var(--rule-lt); border-left:3px solid var(--text); padding:1.1rem 1.4rem; margin:1.8rem 0; background:var(--bg); }
+    .def-box .def-title { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:.55rem; }
+    .def-box p { margin-bottom:.5rem; font-size:.98rem; }
+    .def-box p:last-child { margin-bottom:0; }
+
+    .pullquote { border-bottom:1px solid var(--rule-lt); margin:2.6rem 0; padding:1.4rem 0 1.3rem; font-family:'Playfair Display',Georgia,serif; font-size:1.2rem; font-style:italic; color:var(--text); line-height:1.65; }
+    .pullquote strong { font-style:normal; font-weight:700; }
+
+    .callout { background:var(--bg2); border-left:3px solid var(--accent); padding:1.1rem 1.4rem; margin:1.8rem 0; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.9rem; color:var(--muted); line-height:1.7; }
+    .callout strong { color:var(--text); }
+
+    code { background:var(--bg2); border:1px solid var(--rule-lt); border-radius:3px; padding:.1rem .4rem; font-size:.85em; font-family:'SF Mono','Fira Code',monospace; }
+
+    .ornament { text-align:center; color:var(--rule); font-size:1.1rem; letter-spacing:.6em; margin:2.8rem 0; }
+
+    .result-table { width:100%; border-collapse:collapse; margin:1.5rem 0 2rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.82rem; }
+    .result-table th { background:var(--bg2); border:1px solid var(--rule-lt); padding:.55rem .8rem; text-align:center; font-weight:700; color:var(--text); letter-spacing:.04em; }
+    .result-table td { border:1px solid var(--rule-lt); padding:.5rem .8rem; text-align:center; color:var(--muted); }
+    .result-table td:first-child { text-align:left; font-weight:600; color:var(--text); }
+    .result-table .highlight { color:var(--accent); font-weight:700; }
+
+    .fig-breakdown { padding:.5rem 0 0; display:flex; flex-direction:column; gap:.45rem; margin-bottom:1.8rem; }
+    .fig-breakdown-item { display:flex; gap:.9rem; align-items:flex-start; padding:.75rem 1rem; border-radius:6px; cursor:pointer; transition:background .15s; border:1px solid transparent; }
+    .fig-breakdown-item:hover { background:var(--bg2); }
+    .fig-breakdown-item.open { background:var(--bg2); border-color:var(--rule-lt); }
+    .fig-bd-num { width:22px; height:22px; border-radius:50%; background:var(--rule-lt); color:var(--muted); font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.68rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s,color .15s; margin-top:.1rem; }
+    .fig-breakdown-item.open .fig-bd-num { background:var(--accent); color:#fff; }
+    .fig-bd-body { flex:1; }
+    .fig-bd-title { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.82rem; font-weight:700; color:var(--text); display:flex; justify-content:space-between; align-items:center; }
+    .fig-bd-arrow { font-size:.65rem; color:var(--muted); transition:transform .2s; }
+    .fig-breakdown-item.open .fig-bd-arrow { transform:rotate(180deg); }
+    .fig-bd-desc { display:none; margin-top:.4rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.82rem; color:var(--muted); line-height:1.65; }
+    .fig-breakdown-item.open .fig-bd-desc { display:block; }
+
+    /* paper badge */
+    .paper-badge { display:inline-flex; align-items:center; gap:.5rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; background:var(--bg2); border:1px solid var(--rule-lt); border-radius:4px; padding:.3rem .7rem; color:var(--muted); margin-bottom:1.6rem; }
+    .paper-badge .venue { color:var(--accent); }
+
+    footer { border-top:3px double var(--text); text-align:center; padding:2rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.7rem; color:var(--muted); letter-spacing:.06em; }
+
+    @media (max-width:768px) { .masthead-title{font-size:2.4rem;} .tag-btn{font-size:.62rem;padding:.55rem .3rem;letter-spacing:.06em;} .article-wrap{padding-left:2rem;padding-right:2rem;} }
+    @media (max-width:600px) { nav{padding:0 1.4rem;} nav .nav-links{display:none;} .masthead{padding-left:1.4rem;padding-right:1.4rem;} .filter-bar-inner-wrap{padding-left:1.4rem;padding-right:1.4rem;} .article-wrap{padding-left:1.4rem;padding-right:1.4rem;} .masthead-title{font-size:1.9rem;} .tag-btn{font-size:.58rem;letter-spacing:.04em;padding:.5rem .2rem;} h1.post-title{font-size:1.35rem;} .post-dek{font-size:1rem;} .post-content h2{font-size:1.2rem;} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">ReKV: 비디오 KV Cache를 RAM에 쌓고, 질문이 오면 꺼내 쓴다</h1>
+
+  <p class="post-dek">
+    긴 비디오를 스트리밍하면서 실시간으로 질문에 답하려면 어떻게 해야 할까.
+    ReKV는 KV Cache를 GPU 밖으로 오프로드하고, 질문과 관련된 프레임만 꺼내 오는 방식으로
+    메모리와 정확도를 동시에 잡는다.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">Video</span>
+    <span class="dot">·</span>
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span>Feb 27, 2026</span>
+    <span class="dot">·</span>
+    <span>15 min read</span>
+  </div>
+
+  <div class="paper-badge">
+    <span class="venue">ICLR 2025</span>
+    <span>·</span>
+    <span>Retrieve In-context Video KV-Cache (ReKV)</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">해결하려는 문제: Streaming Video QA</h2>
+    <p>
+      영상이 계속 흘러가는 동안 사용자가 언제든 질문을 던질 수 있는 시나리오를 상상해보자.
+      자율주행 차량이 "방금 앞에 뭐가 지나갔어?", CCTV 모니터가 "10분 전에 이상한 움직임이 있었나?" 같은 질문에
+      실시간으로 답해야 하는 상황이다. 이것이 <strong>Streaming Video QA(StreamingVQA)</strong>다.
+    </p>
+    <p>
+      기존 Video-LLM은 이 태스크에 맞지 않는다. 오프라인 모드로 설계되어 있어서
+      영상 전체를 보고 나서야 질문을 처리한다. 실시간 스트리밍에 적용하면 두 가지 문제가 생긴다:
+    </p>
+    <ul>
+      <li><strong>재처리:</strong> 질문마다 영상을 처음부터 다시 인코딩해야 한다.</li>
+      <li><strong>메모리:</strong> 영상이 길어질수록 KV Cache가 GPU를 꽉 채운다.</li>
+    </ul>
+
+    <div class="callout">
+      <strong>규모 감각:</strong> 1시간짜리 영상을 0.5 FPS로 처리하면 1,800 프레임.
+      프레임당 수백 개의 시각 토큰을 생성하면 수십만 토큰에 달하는 KV Cache가 쌓인다.
+      LLaVA-OV-7B 기준 약 <strong>18.8 GB/h</strong>의 KV Cache가 발생한다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>ReKV의 핵심 아이디어</h2>
+
+    <div class="def-box">
+      <div class="def-title">핵심 통찰</div>
+      <p>
+        KV Cache를 GPU에 전부 올려둘 필요가 없다.
+        <strong>인코딩 후 RAM/디스크에 오프로드</strong>해두고,
+        질문이 들어오면 <strong>관련된 프레임의 KV만 GPU로 불러오면 된다.</strong>
+      </p>
+      <p>
+        Transformer의 Causal Attention 덕분에 비디오 인코딩과 QA를 분리할 수 있다.
+        시각 토큰은 질문을 보지 않고도 독립적으로 인코딩될 수 있기 때문이다.
+      </p>
+    </div>
+
+    <p>
+      ReKV는 세 개의 모듈로 구성된다:
+    </p>
+
+    <!-- ── 파이프라인 SVG ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 680 170" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <defs>
+          <marker id="p-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
+          </marker>
+        </defs>
+
+        <!-- Step 1: Video Stream Encoding -->
+        <rect x="4" y="30" width="170" height="90" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+        <text x="89" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">① 비디오 스트림 인코딩</text>
+        <text x="89" y="76" text-anchor="middle" font-size="10" fill="#4ade80">슬라이딩 윈도우 Attention</text>
+        <text x="89" y="92" text-anchor="middle" font-size="10" fill="#166534">청크 단위 처리</text>
+        <text x="89" y="108" text-anchor="middle" font-size="10" fill="#166534">KV Cache 생성</text>
+
+        <!-- Arrow 1→2 -->
+        <line x1="174" y1="75" x2="208" y2="75" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#p-arr)"/>
+
+        <!-- Step 2: KV Bank (RAM/Disk) -->
+        <rect x="210" y="30" width="170" height="90" rx="8" fill="#fefce8" stroke="#fde047" stroke-width="1.5"/>
+        <text x="295" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#854d0e">② KV Bank</text>
+        <text x="295" y="76" text-anchor="middle" font-size="10" fill="#ca8a04">GPU → RAM → Disk</text>
+        <text x="295" y="92" text-anchor="middle" font-size="10" fill="#854d0e">전체 KV Cache 보존</text>
+        <text x="295" y="108" text-anchor="middle" font-size="10" fill="#854d0e">정보 손실 없음</text>
+
+        <!-- Arrow 2→3 (with "질문" label) -->
+        <line x1="380" y1="75" x2="414" y2="75" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#p-arr)"/>
+        <text x="397" y="68" text-anchor="middle" font-size="9" fill="#6b7280">질문 입력</text>
+
+        <!-- Step 3: Retrieval + QA -->
+        <rect x="416" y="30" width="260" height="90" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="546" y="55" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">③ KV 검색 + 질문 응답</text>
+        <text x="546" y="73" text-anchor="middle" font-size="10" fill="#3b82f6">관련 KV만 GPU로 로드</text>
+        <text x="546" y="89" text-anchor="middle" font-size="10" fill="#1e40af">External / Internal 검색</text>
+        <text x="546" y="105" text-anchor="middle" font-size="10" fill="#1e40af">답변 생성</text>
+
+        <!-- Label: 분리 가능 -->
+        <text x="340" y="148" text-anchor="middle" font-size="10" fill="#9ca3af">비디오 인코딩과 QA를 별도 프로세스·GPU로 분리 가능</text>
+        <line x1="4" y1="138" x2="676" y2="138" stroke="#d8d8d2" stroke-width="1" stroke-dasharray="4,3"/>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:var(--muted);margin-top:.5rem;">
+        ReKV 파이프라인. 인코딩과 QA가 완전히 분리되어 있어 서로 다른 GPU에서 병렬 실행도 가능하다.
+      </p>
+    </div>
+
+    <h3>① 슬라이딩 윈도우로 비디오 스트림 인코딩</h3>
+    <p>
+      영상을 청크(chunk) 단위로 순차 처리한다. 각 청크를 인코딩할 때
+      직전 $l_L$개 토큰(로컬 윈도우)에만 Attention을 계산한다.
+      덕분에 인코딩 비용이 영상 길이에 선형적으로 유지되고,
+      생성된 KV Cache는 모두 KV Bank에 저장된다.
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">슬라이딩 윈도우 Attention</div>
+      $$\mathbf{O} = \text{Attn}\!\left(\mathbf{W_Q X},\ [\mathbf{L}_k,\ \mathbf{W_K X}],\ [\mathbf{L}_v,\ \mathbf{W_V X}]\right)$$
+      <p>$\mathbf{L}$: 직전 $l_L$개 KV, $\mathbf{X}$: 현재 청크 토큰. 모든 KV는 Bank에 저장.</p>
+    </div>
+
+    <h3>② KV Bank: GPU → RAM → Disk 오프로드</h3>
+    <p>
+      생성된 KV Cache를 GPU에 두지 않고 계층적으로 내린다.
+      GPU 메모리가 부족해지면 RAM으로, RAM도 부족하면 디스크로 내린다.
+      정보를 버리지 않는다는 점이 핵심이다 — 모든 프레임의 KV가 어딘가에는 남아 있다.
+    </p>
+
+    <h3>③ KV Cache 검색: External vs Internal</h3>
+    <p>
+      질문이 들어오면 KV Bank에서 관련 프레임의 KV만 골라 GPU로 로드한다.
+      두 가지 검색 방식을 제안한다:
+    </p>
+
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">A</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">External Retrieval — CLIP으로 의미 검색 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            SigLIP 같은 외부 CLIP 모델로 각 프레임 임베딩과 질문 임베딩을 계산한 뒤 코사인 유사도로 순위를 매긴다.
+            상위 $r$개 프레임의 KV Cache를 GPU로 로드한다. 프레임 단위 또는 $b$개 프레임을 한 블록으로 묶어 블록 단위로 검색도 가능하다.
+            추가 파라미터와 레이턴시가 발생하는 단점이 있다.
+          </div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">B</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Internal Retrieval — LLM 내부 Key 벡터로 검색 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            이미 계산된 Key 벡터를 재활용한다. 프레임 내 모든 Key의 평균을 대표 벡터로 쓰고,
+            질문의 Query 벡터와 유사도를 계산한다. 레이어마다 다른 프레임을 검색할 수 있어서
+            더 넓은 컨텍스트를 포착한다. 추가 파라미터 없이 0-overhead로 동작하며 실험 결과 External보다 성능이 높다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>위치 인코딩(RoPE) 처리</h3>
+    <p>
+      검색된 KV는 원래 영상에서 불연속적인 위치에 있던 프레임들이다.
+      이들을 연속된 토큰인 것처럼 RoPE를 재적용하면,
+      원래 절대 위치를 그대로 쓰는 것보다 성능이 더 높다.
+      비디오 이해에서 시간적 순서(temporal order)가 중요하기 때문에
+      상대 위치 정보라도 유지하는 편이 낫기 때문이다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>실험 결과</h2>
+
+    <h3>오프라인 VideoQA 벤치마크</h3>
+    <p>
+      LLaVA-OV-7B에 ReKV를 붙인 모델이 메모리 기반 스트리밍 모델인
+      VideoStreaming, Flash-VStream을 큰 차이로 앞선다.
+      추가 학습 없이 기존 Video-LLM에 붙이기만 해도 성능이 올라간다.
+    </p>
+
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>모델</th>
+          <th>MLVU (mc)</th>
+          <th>QaEgo4D (mc)</th>
+          <th>EgoSchema</th>
+          <th>ActivityNet-QA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Flash-VStream</td>
+          <td>—</td>
+          <td>—</td>
+          <td>54.7</td>
+          <td>45.0</td>
+        </tr>
+        <tr>
+          <td>LLaVA-OV-0.5B</td>
+          <td>54.7</td>
+          <td>51.3</td>
+          <td>52.0</td>
+          <td>46.5</td>
+        </tr>
+        <tr>
+          <td>LLaVA-OV-0.5B + ReKV</td>
+          <td class="highlight">57.0</td>
+          <td class="highlight">57.7</td>
+          <td class="highlight">54.9</td>
+          <td class="highlight">47.3</td>
+        </tr>
+        <tr>
+          <td>LLaVA-OV-7B + ReKV</td>
+          <td class="highlight">68.3</td>
+          <td class="highlight">67.5</td>
+          <td class="highlight">67.0</td>
+          <td class="highlight">56.6</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>스트리밍 속도와 메모리</h3>
+    <p>
+      1시간짜리 1080P 영상, 100개 질문 조건에서 측정한 결과:
+    </p>
+    <ul>
+      <li>LLaVA-OV-7B: <strong>11 FPS</strong> 인코딩, KV Bank 증가량 18.8 GB/h</li>
+      <li>LLaVA-OV-0.5B: <strong>17 FPS</strong> 인코딩, KV Bank 증가량 4.0 GB/h</li>
+      <li>GPU 메모리 사용량과 레이턴시가 영상이 길어져도 <strong>안정적으로 유지</strong>됨</li>
+      <li>Internal Retrieval이 External보다 레이턴시와 GPU 메모리 모두 낮음</li>
+    </ul>
+
+    <div class="callout">
+      <strong>핵심 결과:</strong> 검색 품질(Recall)이 높을수록 QA 정확도가 따라 올라간다.
+      Oracle Retrieval(완벽한 검색)이 가장 높고, Internal &gt; External &gt; Uniform Sampling 순이다.
+      Internal Retrieval은 레이어마다 독립적으로 다른 프레임을 검색하기 때문에 전체 컨텍스트를
+      더 풍부하게 포착한다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>의의와 한계</h2>
+
+    <div class="pullquote">
+      ReKV는 <strong>"KV Cache를 버리지 않고 오프로드하라"</strong>는 단순한 아이디어로
+      Streaming Video QA를 실용적인 수준까지 끌어올렸다.
+    </div>
+
+    <p>
+      <strong>기여:</strong> Training-free. 기존 Video-LLM에 붙이기만 해도 동작한다.
+      비디오 인코딩과 QA를 완전히 분리해 서로 다른 GPU에서 병렬 처리도 가능하다.
+      정보를 버리지 않으므로 어떤 질문에도 대응 가능하다.
+    </p>
+
+    <p>
+      <strong>한계:</strong> 모든 KV Cache를 보존하므로 스토리지 비용이 선형 증가한다.
+      세그먼트를 균일하게 나눠서 의미적 경계를 무시한다.
+      검색 전략이 고정되어 레이어별 정보 분포 차이를 활용하지 못한다.
+      이 한계들을 후속 연구인 StreamKV(AAAI 2026)가 직접 겨냥한다.
+    </p>
+
+    <p style="margin-top:3rem;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.75rem;color:#b0b0b0;">
+      Paper: Di et al., <em>ReKV: Retrieve In-context Video KV-Cache</em>, ICLR 2025
+    </p>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+<script>
+  function toggleBd(el) {
+    const isOpen = el.classList.contains('open');
+    el.parentElement.querySelectorAll('.fig-breakdown-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+</script>
+</body>
+</html>
