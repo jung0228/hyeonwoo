@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KV Cache – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, {
+        delimiters: [
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false}
+        ]
+      });"></script>
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule { border-top: none; padding-top: 0; }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── MATH BLOCK ─── */
+    .math-block {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      border-radius: 6px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .math-block .math-label {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--accent);
+      margin-bottom: .6rem;
+      text-align: left;
+    }
+    .math-block p {
+      font-size: .85rem; color: var(--muted);
+      margin-top: .5rem; margin-bottom: 0;
+      text-align: center;
+    }
+
+    /* ─── DEFINITION BOX ─── */
+    .def-box {
+      border: 1px solid var(--rule-lt);
+      border-left: 3px solid var(--text);
+      padding: 1.1rem 1.4rem;
+      margin: 1.8rem 0;
+      background: var(--bg);
+    }
+    .def-box .def-title {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: .55rem;
+    }
+    .def-box p { margin-bottom: .5rem; font-size: .98rem; }
+    .def-box p:last-child { margin-bottom: 0; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── COMPARISON TABLE ─── */
+    .result-table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem;
+    }
+    .result-table th {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      padding: .55rem .8rem;
+      text-align: center; font-weight: 700;
+      color: var(--text); letter-spacing: .04em;
+    }
+    .result-table td {
+      border: 1px solid var(--rule-lt);
+      padding: .5rem .8rem;
+      text-align: center; color: var(--muted);
+    }
+    .result-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+    .result-table .katex { font-size: .9em; }
+
+    /* ─── FIGURE BREAKDOWN ─── */
+    .fig-breakdown {
+      padding: .5rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+      margin-bottom: 1.8rem;
+    }
+    .fig-breakdown-item {
+      display: flex; gap: .9rem;
+      align-items: flex-start;
+      padding: .75rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s;
+      border: 1px solid transparent;
+    }
+    .fig-breakdown-item:hover { background: var(--bg2); }
+    .fig-breakdown-item.open { background: var(--bg2); border-color: var(--rule-lt); }
+    .fig-bd-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--rule-lt);
+      color: var(--muted);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+      margin-top: .1rem;
+    }
+    .fig-breakdown-item.open .fig-bd-num { background: var(--accent); color: #fff; }
+    .fig-bd-body { flex: 1; }
+    .fig-bd-title {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem; font-weight: 700;
+      color: var(--text);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .fig-bd-arrow { font-size: .65rem; color: var(--muted); transition: transform .2s; }
+    .fig-breakdown-item.open .fig-bd-arrow { transform: rotate(180deg); }
+    .fig-bd-desc {
+      display: none;
+      margin-top: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem; color: var(--muted);
+      line-height: 1.65;
+    }
+    .fig-breakdown-item.open .fig-bd-desc { display: block; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+      .result-table { font-size: .75rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar-inner-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">KV Cache: Transformer 추론의 병목과 그 해법</h1>
+
+  <p class="post-dek">
+    오토리그레시브 생성에서 매 스텝마다 전체 시퀀스를 재계산하는 낭비를 없애는 KV Cache.
+    왜 필요한지, 어떻게 동작하는지, 그리고 메모리 폭발이라는 새로운 문제를 어떻게 다루는지 정리한다.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span>Feb 27, 2026</span>
+    <span class="dot">·</span>
+    <span>18 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">문제: 토큰을 하나씩 만드는 모델은 얼마나 느린가?</h2>
+    <p>
+      GPT 계열의 언어 모델은 <strong>오토리그레시브(autoregressive)</strong> 방식으로 텍스트를 생성한다.
+      한 번에 토큰 하나를 뽑고, 그것을 다시 입력에 붙여 다음 토큰을 뽑는 과정을 반복한다.
+      100개의 토큰을 생성하려면 모델을 100번 호출해야 한다.
+    </p>
+    <p>
+      문제는 Transformer의 Self-Attention이다. $t$번째 토큰을 생성할 때,
+      그 토큰은 앞선 모든 토큰 $1, 2, \ldots, t-1$에 attention을 계산해야 한다.
+      그런데 이전 스텝에서도 토큰 $1, \ldots, t-2$에 대한 같은 계산을 이미 했다.
+      <strong>매 스텝마다 이전 결과를 버리고 처음부터 다시 계산하고 있는 것이다.</strong>
+    </p>
+
+    <div class="callout">
+      <strong>규모 감각:</strong> 시퀀스 길이 $T$, 레이어 수 $L$, 헤드당 차원 $d$인 모델이 토큰 하나를 생성할 때
+      KV 계산 비용은 $O(T \cdot L \cdot d)$다. KV Cache 없이 $T$개 토큰을 생성하면
+      총 비용은 $O(T^2 \cdot L \cdot d)$로 <strong>시퀀스 길이의 제곱</strong>에 비례한다.
+    </div>
+
+    <h2>Self-Attention 복습: K와 V가 하는 일</h2>
+
+    <p>
+      Transformer의 Self-Attention을 수식으로 쓰면:
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">Scaled Dot-Product Attention</div>
+      <p>$$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right) V$$</p>
+      <p>
+        $Q$ (Query): 현재 토큰이 "무엇을 찾고 있는가"<br>
+        $K$ (Key): 각 과거 토큰이 "나는 어떤 토큰인가"<br>
+        $V$ (Value): 각 과거 토큰이 "내 실제 정보는 무엇인가"
+      </p>
+    </div>
+
+    <p>
+      오토리그레시브 생성에서 새 토큰 $t$가 추가될 때, Query는 토큰 $t$ 하나에서만 나온다.
+      하지만 Key와 Value는 <em>모든</em> 이전 토큰 $1, \ldots, t$에서 나온다.
+      K와 V를 만드는 연산은 다음과 같다:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">토큰 $i$의 Key와 Value 계산</div>
+      $$K_i = W_K \cdot x_i, \quad V_i = W_V \cdot x_i$$
+      <p>$W_K, W_V$는 학습된 가중치, $x_i$는 토큰 $i$의 hidden state다.</p>
+    </div>
+
+    <p>
+      토큰 $i$의 $x_i$는 토큰 $i$가 입력에 들어온 순간 이미 결정된다.
+      이후 스텝에서 $x_i$가 바뀌지 않으므로, $K_i$와 $V_i$도 바뀌지 않는다.
+      즉, <strong>한 번 계산한 $K_i$, $V_i$는 이후 모든 스텝에서 재사용 가능하다.</strong>
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>KV Cache: "이미 계산한 건 저장해두자"</h2>
+
+    <div class="def-box">
+      <div class="def-title">KV Cache (Key-Value Cache)</div>
+      <p>
+        오토리그레시브 생성 중 각 레이어에서 과거 토큰들의 Key($K$)와 Value($V$) 텐서를 메모리에 저장해두고,
+        새 토큰이 추가될 때마다 재사용하는 기법.
+        매 스텝에서 K, V를 처음부터 재계산하는 $O(T)$ 연산을 없앤다.
+      </p>
+    </div>
+
+    <!-- ── SVG: KV Cache 동작 비교 ── -->
+    <div style="margin:2rem 0 1.6rem;">
+      <svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:660px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <defs>
+          <marker id="arr-g" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#9ca3af"/>
+          </marker>
+          <marker id="arr-b" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#3b82f6"/>
+          </marker>
+        </defs>
+
+        <!-- ── 왼쪽: KV Cache 없을 때 ── -->
+        <rect x="4" y="4" width="314" height="292" rx="8" fill="#fff5f5" stroke="#fca5a5" stroke-width="1.5"/>
+        <text x="161" y="27" text-anchor="middle" font-size="12.5" font-weight="700" fill="#dc2626">KV Cache 없을 때</text>
+        <text x="161" y="43" text-anchor="middle" font-size="10" fill="#9ca3af">매 스텝마다 전부 재계산</text>
+
+        <!-- 토큰 박스 -->
+        <rect x="16" y="54" width="54" height="26" rx="4" fill="white" stroke="#d1d5db"/>
+        <text x="43" y="71" text-anchor="middle" font-size="12" fill="#374151">나는</text>
+        <rect x="82" y="54" width="54" height="26" rx="4" fill="white" stroke="#d1d5db"/>
+        <text x="109" y="71" text-anchor="middle" font-size="12" fill="#374151">밥을</text>
+        <rect x="148" y="54" width="54" height="26" rx="4" fill="white" stroke="#d1d5db"/>
+        <text x="175" y="71" text-anchor="middle" font-size="12" fill="#374151">먹고</text>
+        <rect x="214" y="54" width="54" height="26" rx="4" fill="white" stroke="#d1d5db"/>
+        <text x="241" y="71" text-anchor="middle" font-size="12" fill="#374151">싶</text>
+
+        <!-- 화살표 아래 -->
+        <line x1="43" y1="80" x2="43" y2="101" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <line x1="109" y1="80" x2="109" y2="101" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <line x1="175" y1="80" x2="175" y2="101" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <line x1="241" y1="80" x2="241" y2="101" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- KV 박스 (전부 빨간색 = 재계산) -->
+        <rect x="16" y="101" width="54" height="36" rx="4" fill="#fee2e2" stroke="#f87171" stroke-width="1.5"/>
+        <text x="43" y="116" text-anchor="middle" font-size="10" font-weight="700" fill="#b91c1c">K₁V₁</text>
+        <text x="43" y="130" text-anchor="middle" font-size="9" fill="#dc2626">재계산</text>
+
+        <rect x="82" y="101" width="54" height="36" rx="4" fill="#fee2e2" stroke="#f87171" stroke-width="1.5"/>
+        <text x="109" y="116" text-anchor="middle" font-size="10" font-weight="700" fill="#b91c1c">K₂V₂</text>
+        <text x="109" y="130" text-anchor="middle" font-size="9" fill="#dc2626">재계산</text>
+
+        <rect x="148" y="101" width="54" height="36" rx="4" fill="#fee2e2" stroke="#f87171" stroke-width="1.5"/>
+        <text x="175" y="116" text-anchor="middle" font-size="10" font-weight="700" fill="#b91c1c">K₃V₃</text>
+        <text x="175" y="130" text-anchor="middle" font-size="9" fill="#dc2626">재계산</text>
+
+        <rect x="214" y="101" width="54" height="36" rx="4" fill="#fee2e2" stroke="#f87171" stroke-width="1.5"/>
+        <text x="241" y="116" text-anchor="middle" font-size="10" font-weight="700" fill="#b91c1c">K₄V₄</text>
+        <text x="241" y="130" text-anchor="middle" font-size="9" fill="#dc2626">재계산</text>
+
+        <!-- KV → Attention 수렴 -->
+        <line x1="43" y1="137" x2="43" y2="160" stroke="#d1d5db" stroke-width="1"/>
+        <line x1="109" y1="137" x2="109" y2="160" stroke="#d1d5db" stroke-width="1"/>
+        <line x1="175" y1="137" x2="175" y2="160" stroke="#d1d5db" stroke-width="1"/>
+        <line x1="241" y1="137" x2="241" y2="160" stroke="#d1d5db" stroke-width="1"/>
+        <line x1="43" y1="160" x2="241" y2="160" stroke="#d1d5db" stroke-width="1"/>
+        <line x1="142" y1="160" x2="142" y2="176" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Attention 박스 -->
+        <rect x="84" y="176" width="116" height="32" rx="5" fill="#fff7ed" stroke="#fb923c" stroke-width="1.5"/>
+        <text x="142" y="197" text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c">Attention</text>
+
+        <!-- 출력 토큰 -->
+        <line x1="142" y1="208" x2="142" y2="230" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <rect x="116" y="230" width="52" height="26" rx="4" fill="#d1fae5" stroke="#34d399" stroke-width="1.5"/>
+        <text x="142" y="247" text-anchor="middle" font-size="12" fill="#065f46">"다"</text>
+
+        <!-- 비용 레이블 -->
+        <rect x="16" y="266" width="282" height="22" rx="3" fill="#fecaca"/>
+        <text x="157" y="281" text-anchor="middle" font-size="10" fill="#b91c1c">4회 계산 — 토큰이 늘수록 비례해 증가</text>
+
+        <!-- ── 오른쪽: KV Cache 있을 때 ── -->
+        <rect x="342" y="4" width="314" height="292" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="499" y="27" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1d4ed8">KV Cache 있을 때</text>
+        <text x="499" y="43" text-anchor="middle" font-size="10" fill="#9ca3af">새 토큰만 계산, 나머지는 재사용</text>
+
+        <!-- 토큰 박스 (이전 토큰 희미하게) -->
+        <rect x="354" y="54" width="54" height="26" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+        <text x="381" y="71" text-anchor="middle" font-size="12" fill="#94a3b8">나는</text>
+        <rect x="420" y="54" width="54" height="26" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+        <text x="447" y="71" text-anchor="middle" font-size="12" fill="#94a3b8">밥을</text>
+        <rect x="486" y="54" width="54" height="26" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+        <text x="513" y="71" text-anchor="middle" font-size="12" fill="#94a3b8">먹고</text>
+        <!-- 새 토큰 강조 -->
+        <rect x="552" y="54" width="54" height="26" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="579" y="71" text-anchor="middle" font-size="12" fill="#1d4ed8" font-weight="700">싶</text>
+
+        <!-- 이전 토큰 → 캐시 (점선) -->
+        <line x1="381" y1="80" x2="381" y2="101" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="447" y1="80" x2="447" y2="101" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="513" y1="80" x2="513" y2="101" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- 캐시 박스 (K₁V₁ ~ K₃V₃ 저장됨) -->
+        <rect x="354" y="101" width="190" height="36" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="449" y="115" text-anchor="middle" font-size="9.5" font-weight="700" fill="#64748b">KV Cache (저장됨)</text>
+        <text x="393" y="130" text-anchor="middle" font-size="10" fill="#475569">K₁V₁</text>
+        <text x="449" y="130" text-anchor="middle" font-size="10" fill="#475569">K₂V₂</text>
+        <text x="505" y="130" text-anchor="middle" font-size="10" fill="#475569">K₃V₃</text>
+
+        <!-- 새 토큰 → 새 KV 계산 (실선) -->
+        <line x1="579" y1="80" x2="579" y2="101" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr-b)"/>
+        <!-- 새 KV 박스 -->
+        <rect x="552" y="101" width="54" height="36" rx="4" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="579" y="116" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">K₄V₄</text>
+        <text x="579" y="130" text-anchor="middle" font-size="9" fill="#1d4ed8">새 계산</text>
+
+        <!-- KV → Attention 수렴 -->
+        <line x1="449" y1="137" x2="449" y2="160" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="579" y1="137" x2="579" y2="160" stroke="#3b82f6" stroke-width="1"/>
+        <line x1="449" y1="160" x2="579" y2="160" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="514" y1="160" x2="514" y2="176" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Attention 박스 -->
+        <rect x="454" y="176" width="120" height="32" rx="5" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="514" y="197" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">Attention</text>
+
+        <!-- 출력 토큰 -->
+        <line x1="514" y1="208" x2="514" y2="230" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <rect x="488" y="230" width="52" height="26" rx="4" fill="#d1fae5" stroke="#34d399" stroke-width="1.5"/>
+        <text x="514" y="247" text-anchor="middle" font-size="12" fill="#065f46">"다"</text>
+
+        <!-- 비용 레이블 -->
+        <rect x="354" y="266" width="282" height="22" rx="3" fill="#bfdbfe"/>
+        <text x="495" y="281" text-anchor="middle" font-size="10" fill="#1d4ed8">1회 계산 + 캐시 조회 — 스텝 수에 무관</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:var(--muted);margin-top:.5rem;">
+        "나는 밥을 먹고 싶다"를 생성하는 중 "싶" 다음 토큰 "다"를 만들 때.
+        KV Cache가 없으면 이전 토큰의 K, V를 매번 처음부터 다시 계산한다.
+      </p>
+    </div>
+
+    <h3>동작 방식: Prefill과 Decode</h3>
+    <p>
+      LLM 추론은 두 단계로 나뉜다.
+    </p>
+
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">1</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Prefill (프리필): 프롬프트 전체를 한 번에 처리 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            입력 프롬프트의 모든 토큰을 병렬로 처리한다. 각 토큰의 K, V를 계산하고 KV Cache에 저장한다.
+            이 단계는 행렬-행렬 연산(GEMM)이라 GPU 활용률이 높다.
+            프롬프트 길이 $T_p$에 비례한 계산량 $O(T_p^2)$이 발생한다.
+          </div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">2</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Decode (디코드): 토큰 하나씩 생성 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            새 토큰 하나만 입력으로 받는다. 그 토큰의 Q를 계산하고, Cache에 저장된 모든 K, V를 불러와 Attention을 계산한다.
+            새 토큰의 K, V를 Cache에 추가(append)한 뒤, 다음 스텝으로 넘어간다.
+            이 단계는 행렬-벡터 연산(GEMV)이라 GPU 연산보다 <em>메모리 대역폭(memory bandwidth)</em>이 병목이다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      KV Cache 덕분에 각 Decode 스텝의 계산량은 $O(T)$에서 $O(1)$로 줄어든다
+      (Cache 조회 비용은 상수처럼 취급 가능).
+      전체 생성 비용은 $O(T^2)$에서 $O(T)$로 개선된다.
+    </p>
+
+    <h3>메모리 비용</h3>
+    <p>
+      공짜가 아니다. KV Cache를 저장하려면 메모리가 필요하다.
+      레이어 수 $L$, 헤드 수 $H$, 헤드 차원 $d$, 시퀀스 길이 $T$, 배치 크기 $B$일 때:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">KV Cache 메모리 사용량</div>
+      $$\text{Memory} = 2 \times B \times L \times H \times d \times T \times \text{sizeof(dtype)}$$
+      <p>K와 V 두 개($\times 2$), 모든 레이어($\times L$), 모든 헤드($\times H$), 모든 토큰($\times T$).</p>
+    </div>
+
+    <p>
+      예를 들어, LLaMA-2 70B (레이어 80, GQA 8 그룹, 헤드 차원 128)에서
+      배치 1, 시퀀스 4096 토큰을 FP16으로 캐시하면:
+    </p>
+
+    <div class="callout">
+      $2 \times 1 \times 80 \times 8 \times 128 \times 4096 \times 2\text{ bytes} \approx \textbf{1.3 GB}$
+      <br><br>
+      시퀀스가 32K로 늘면 약 <strong>10 GB</strong>. 배치가 늘거나 멀티턴 대화가 길어질수록 선형적으로 증가한다.
+      모델 가중치(140 GB)와 별도로 필요한 메모리다.
+    </div>
+
+    <div class="pullquote">
+      KV Cache는 연산을 메모리로 교환(trade computation for memory)하는 전형적인 기법이다.
+      문제는, <strong>시퀀스가 길수록 그 교환 비율이 점점 불리해진다는 것이다.</strong>
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>메모리 폭발 문제와 세 가지 해법</h2>
+
+    <p>
+      긴 비디오 스트리밍, 수만 토큰의 문서, 멀티턴 대화 — 현실 애플리케이션에서
+      시퀀스는 갈수록 길어진다. KV Cache를 무제한 쌓을 수 없으니, 뭔가를 포기해야 한다.
+      크게 세 가지 방향이 있다.
+    </p>
+
+    <h3>1. Sliding Window Attention: 최근 것만 보기</h3>
+    <p>
+      가장 단순한 해법. Attention 범위를 최근 $w$개 토큰으로 제한한다.
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">Sliding Window Attention</div>
+      $$\text{Attention}_t(Q, K, V) = \text{softmax}\!\left(\frac{Q \cdot K_{[t-w:t]}^T}{\sqrt{d_k}}\right) V_{[t-w:t]}$$
+      <p>토큰 $t$는 직전 $w$개 토큰($t-w$부터 $t-1$)에만 attend한다.</p>
+    </div>
+
+    <p>
+      메모리가 $O(w)$로 고정되는 장점이 있다. 하지만 창(window) 밖의 정보는 완전히 잃는다.
+      로컬 패턴이 강한 텍스트(예: 코드 한 함수)에는 효과적이지만,
+      먼 과거의 정보가 필요한 경우(예: "5분 전에 뭐가 나왔지?")에는 성능이 떨어진다.
+      Mistral, LLaMA의 일부 변형 등이 이 방식을 채택한다.
+    </p>
+
+    <h3>2. KV Cache Compression: 덜 중요한 것 버리기</h3>
+    <p>
+      모든 토큰이 똑같이 중요하지는 않다. Attention score가 낮은 토큰은 대답 생성에 거의 기여하지 않는다.
+      이런 토큰의 KV를 <strong>선제적으로 삭제(eviction)</strong>하거나
+      <strong>합쳐서 압축(compression)</strong>하는 방법이다.
+    </p>
+    <p>
+      핵심은 "어떤 기준으로 중요도를 측정하느냐"다:
+    </p>
+    <ul>
+      <li><strong>Attention Score 기반:</strong> 누적 attention이 낮은 토큰은 버린다 (H2O, SnapKV 등).</li>
+      <li><strong>Query 유사도 기반:</strong> 현재 질문과 의미적으로 가장 가까운 토큰만 남긴다.</li>
+      <li><strong>레이어별 적응형 할당:</strong> 레이어마다 정보 분포가 다르므로, 각 레이어에 다른 압축 예산을 배정한다 (StreamKV의 Layer-Adaptive Selection).</li>
+    </ul>
+
+    <div class="def-box">
+      <div class="def-title">KV Cache Compression의 핵심 트레이드오프</div>
+      <p>
+        어떤 토큰이 "나중 질문에 중요할지"는 질문을 받기 전까지 알 수 없다.
+        오프라인 설정에서는 질문이 주어진 뒤 중요 토큰을 고를 수 있지만,
+        <strong>스트리밍 설정에서는 질문을 모른 채 압축을 해야 한다.</strong>
+        StreamKV는 이 문제를 "안내 프롬프트(guidance prompt)"로 해결한다:
+        질문 대신 "어떤 개체가 등장하는가, 어떤 사건이 일어나는가"를 물어보는 고정 프롬프트로
+        비디오 세그먼트의 핵심 정보를 포착한다.
+      </p>
+    </div>
+
+    <h3>3. KV Cache Retrieval: 필요할 때만 불러오기</h3>
+    <p>
+      압축 대신 <strong>오프로드(offload)</strong>하는 방식이다.
+      KV Cache 전체를 RAM이나 디스크에 저장해두고, 질문이 들어왔을 때 관련된 것만 GPU로 불러온다.
+    </p>
+    <p>
+      이것이 ReKV(ICLR 2025)의 핵심 아이디어다. 비디오를 청크(chunk) 단위로 인코딩하면서
+      KV Cache를 계속 쌓아두고, 질문이 오면 두 가지 방법으로 관련 캐시를 검색한다:
+    </p>
+
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">A</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">External Retrieval: 외부 CLIP 모델로 검색 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            CLIP 같은 외부 모델로 각 프레임 임베딩과 질문 임베딩의 코사인 유사도를 계산한다.
+            유사도가 높은 상위 $r$개 프레임의 KV Cache를 GPU로 로드한다.
+            추가 모델 파라미터가 필요하지만, LLM 내부 상태와 독립적으로 작동한다.
+          </div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">B</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Internal Retrieval: LLM 내부 Key 벡터로 검색 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            이미 계산된 Key 벡터의 평균을 각 프레임의 대표 벡터로 사용한다.
+            질문의 Query 벡터와 유사도를 계산해 관련 KV Cache를 선택한다.
+            외부 모델 없이 추가 파라미터 0개로 동작하며, 레이어마다 다른 프레임을 검색할 수 있다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      Retrieval의 장점은 정보를 <em>버리지 않는다</em>는 점이다. 디스크에는 모든 KV Cache가 보존되어 있고,
+      어떤 질문이 와도 가장 관련 있는 것을 찾아올 수 있다. 대신 검색과 I/O 지연이 발생한다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>Positional Encoding과 KV Cache의 충돌</h2>
+
+    <p>
+      KV Cache를 쓸 때 종종 간과되는 문제가 있다: <strong>위치 인코딩(Positional Encoding)</strong>.
+      현대 LLM이 널리 쓰는 <strong>RoPE(Rotary Position Embedding)</strong>는 토큰의 절대 위치가 아닌
+      두 토큰 간의 상대 거리를 인코딩한다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">RoPE의 핵심 성질</div>
+      <p>
+        RoPE를 적용한 Query $\tilde{q}_m$과 Key $\tilde{k}_n$의 내적은 두 토큰의 상대 거리 $m - n$에만 의존한다:
+      </p>
+      <p>$$\tilde{q}_m^T \tilde{k}_n = f(q_m, k_n, m - n)$$</p>
+      <p>이 성질이 긴 시퀀스에서의 일반화를 가능하게 한다.</p>
+    </div>
+
+    <p>
+      문제는 Retrieval이다. 비디오 프레임 100번째와 500번째의 KV Cache를 검색해 GPU에 올리면,
+      이 두 프레임은 원래 위치에서 400 토큰 떨어져 있었지만, 이제 연속된 것처럼 붙어 있다.
+      RoPE는 이 "불연속적인" 거리를 어떻게 처리해야 할지 모른다.
+    </p>
+    <p>
+      실험적으로는 검색된 토큰들을 <em>연속적인 것처럼</em> 취급해서 RoPE를 다시 적용하는 방식이
+      절대 위치를 그대로 쓰는 것보다 성능이 좋다고 알려져 있다.
+      비디오 이해에서 시간적 순서(temporal order)가 중요하기 때문에,
+      상대 위치 정보라도 유지하는 것이 유리하기 때문이다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>세 방법의 비교</h2>
+
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>방법</th>
+          <th>메모리</th>
+          <th>정보 손실</th>
+          <th>지연 (latency)</th>
+          <th>특징</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>KV Cache (기본)</td>
+          <td>$O(T)$, 선형 증가</td>
+          <td>없음</td>
+          <td>낮음</td>
+          <td>짧은 시퀀스에 최적</td>
+        </tr>
+        <tr>
+          <td>Sliding Window</td>
+          <td>$O(w)$, 고정</td>
+          <td>창 밖 정보 전부</td>
+          <td>매우 낮음</td>
+          <td>지역 패턴 강한 태스크에 유리</td>
+        </tr>
+        <tr>
+          <td>KV Compression</td>
+          <td>$O(k)$, 예산 고정</td>
+          <td>낮음 (선택적)</td>
+          <td>낮음</td>
+          <td>질문 없이 압축 → 범용성 필요</td>
+        </tr>
+        <tr>
+          <td>KV Retrieval</td>
+          <td>GPU: $O(r)$, 디스크: $O(T)$</td>
+          <td>없음 (오프로드)</td>
+          <td>I/O 지연 추가</td>
+          <td>긴 컨텍스트 완전 보존에 유리</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      실전에서는 하이브리드가 많다. 예를 들어 Sliding Window로 단기 컨텍스트를 처리하면서,
+      장기 KV Cache는 오프로드하고 Retrieval로 불러오는 방식 (ReKV).
+      또는 Retrieval과 Compression을 하나의 모듈로 통합해서 Layer-Adaptive하게 예산을 나누는 방식 (StreamKV).
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>비디오 LLM에서의 KV Cache: 왜 더 중요한가?</h2>
+
+    <p>
+      텍스트와 비교할 때, 비디오는 KV Cache 문제를 극단적으로 키운다.
+    </p>
+    <ul>
+      <li>비디오 프레임 하나를 ViT로 인코딩하면 수백 개의 시각 토큰이 나온다.</li>
+      <li>1 FPS, 10분 영상이면 600 프레임 × 수백 토큰 = 수십만 토큰.</li>
+      <li>오프라인 QA는 영상 전체를 한 번에 처리하면 되지만, 스트리밍은 실시간으로 처리하면서 과거 컨텍스트도 유지해야 한다.</li>
+    </ul>
+
+    <p>
+      KV Cache가 없으면 매 질문마다 영상 전체를 다시 인코딩해야 한다 — 불가능한 수준의 지연.
+      하지만 KV Cache를 무제한 쌓으면 GPU 메모리가 금방 찬다.
+      그래서 비디오 LLM 연구에서 KV Cache 효율화는 단순한 최적화가 아니라
+      <strong>실용적 배포(deployment)를 가능하게 하는 핵심 기술</strong>이다.
+    </p>
+
+    <div class="callout">
+      <strong>핵심 설계 질문:</strong>
+      "어떤 과거 프레임을 기억해야 하는가?"를 미리 알 수 없다는 점이 가장 어려운 부분이다.
+      텍스트에서는 질문이 주어진 후 관련 토큰을 선택하면 되지만,
+      스트리밍 비디오에서는 질문이 오기 전에 이미 인코딩이 완료되어 있어야 한다.
+      ReKV는 retrieval로, StreamKV는 guidance prompt 기반 compression으로 이 문제에 각각 다르게 접근한다.
+    </div>
+
+    <h2>마치며</h2>
+    <p>
+      KV Cache는 Transformer 추론을 실용적으로 만든 가장 중요한 기법 중 하나다.
+      하지만 시퀀스가 길어질수록 메모리 폭발이라는 새로운 병목이 생긴다.
+      이를 해결하는 Sliding Window, Compression, Retrieval은 각각 다른 트레이드오프를 가진다.
+    </p>
+    <p>
+      최근의 흐름은 이 세 방향을 통합하는 것이다.
+      단기는 슬라이딩 윈도우, 중기는 압축된 KV, 장기는 디스크에 오프로드 후 검색 — 이 계층적 메모리 구조가
+      스트리밍 비디오 LLM 설계의 주류가 되고 있다.
+      모델이 크고 시퀀스가 길수록 KV Cache 관리 전략이 곧 모델의 실질적 컨텍스트 윈도우를 결정한다.
+    </p>
+
+    <p style="margin-top: 3rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .75rem; color: #b0b0b0;">
+      References: Vaswani et al., <em>Attention Is All You Need</em> (2017) ·
+      Su et al., <em>RoFormer: Enhanced Transformer with Rotary Position Embedding</em> (2023) ·
+      Di et al., <em>ReKV: Retrieve In-context Video KV-Cache</em>, ICLR 2025 ·
+      StreamKV, AAAI 2026
+    </p>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+<script>
+  function toggleBd(el) {
+    const isOpen = el.classList.contains('open');
+    el.parentElement.querySelectorAll('.fig-breakdown-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+</script>
+</body>
+</html>

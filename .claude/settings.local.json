@@ -9,7 +9,12 @@
       "Bash(git add:*)",
       "Bash(git reset:*)",
       "Bash(git update-ref:*)",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(cmd.exe /c start \"C:\\\\Users\\\\jungh\\\\OneDrive\\\\Desktop\\\\web\\\\hyeonwoo\\\\blog\\\\posts\\\\eigenvalue-properties.html\")",
+      "Bash(git fetch:*)",
+      "Bash(cmd.exe /c start:*)"
     ]
   }
 }
