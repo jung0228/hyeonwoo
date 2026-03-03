@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Navigation Agents 개념 정리 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">Web을 탐색하는 AI Agent: 개념부터 최신 연구까지</h1>
+
+  <p class="post-dek">
+    브라우저를 직접 조작하고, 링크를 클릭하고, 폼을 채우는 AI — Web Navigation Agent의
+    핵심 개념과 주요 연구 흐름을 정리합니다.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">Agent</span>
+    <span class="dot">·</span>
+    <span>Mar 3, 2026</span>
+    <span class="dot">·</span>
+    <span>12 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">왜 Web Navigation인가</h2>
+    <p>
+      LLM이 텍스트를 잘 생성한다는 건 이제 익숙한 사실이다. 그런데 실제로 유용한 작업의 상당수는
+      단순히 텍스트를 뽑아내는 것이 아니라 <strong>무언가를 하는 것</strong>이다. 항공권을 검색하고,
+      서류를 제출하고, 가격을 비교하고, 예약을 완료하는 것. 이 모든 행위는 웹 브라우저 위에서 이루어진다.
+    </p>
+    <p>
+      Web Navigation Agent는 사람이 브라우저를 쓰듯이 AI가 스스로 웹을 탐색하게 만드는 연구다.
+      단순히 URL을 fetch해서 텍스트를 읽어오는 것과는 다르다. 동적으로 렌더링되는 페이지,
+      로그인 세션, 클릭 이벤트, 드롭다운, 무한 스크롤 — 실제 브라우저 환경 전체가 action space다.
+    </p>
+
+    <div class="pullquote">
+      <strong>핵심 질문:</strong> LLM에게 "무엇을 할지"를 알려주는 것은 이미 잘 된다.
+      문제는 "어떻게 실행하느냐"다. 웹이라는 복잡한 환경에서.
+    </div>
+
+    <h2>문제를 어렵게 만드는 것들</h2>
+    <p>
+      Web Navigation이 어려운 이유는 단순히 HTML을 파싱하는 것보다 훨씬 복잡한 환경 때문이다.
+    </p>
+    <ul>
+      <li><strong>거대한 observation space</strong>: 실제 웹페이지의 DOM은 수천 개의 노드를 갖는다. 그 중 어디를 봐야 하는가?</li>
+      <li><strong>긴 action sequence</strong>: 한 태스크를 완료하려면 수십 번의 클릭·타이핑이 필요할 수 있다.</li>
+      <li><strong>부분 관찰 가능성</strong>: 현재 화면에 보이지 않는 정보가 태스크 완료에 필요할 수 있다.</li>
+      <li><strong>오류 복구</strong>: 중간에 잘못된 액션을 취했을 때 스스로 감지하고 되돌아와야 한다.</li>
+      <li><strong>일반화</strong>: 훈련 때 보지 못한 새로운 웹사이트에서도 동작해야 한다.</li>
+    </ul>
+
+    <h2>Agent의 기본 구조</h2>
+    <p>
+      Web Navigation Agent는 일반적으로 <strong>관찰 → 계획 → 행동</strong>의 루프로 동작한다.
+      세 가지 요소가 핵심이다.
+    </p>
+
+    <h3>1. Observation — 웹을 어떻게 입력으로 받는가</h3>
+    <p>
+      브라우저 상태를 모델에게 전달하는 방법은 크게 두 가지다.
+    </p>
+    <ul>
+      <li>
+        <strong>텍스트 기반 (DOM / Accessibility Tree)</strong>: HTML을 파싱해 텍스트 표현으로 변환한다.
+        토큰 수가 많아지는 게 문제지만 LLM이 직접 읽을 수 있다. Mind2Web이 이 방식을 정제했다.
+      </li>
+      <li>
+        <strong>스크린샷 기반 (Visual)</strong>: 실제 렌더링된 화면을 그대로 Vision 모델에게 넘긴다.
+        사람이 보는 것과 같은 정보를 사용하므로 더 자연스럽다. WebVoyager가 이 접근이다.
+      </li>
+    </ul>
+    <p>
+      최근 연구들은 두 방식을 결합하거나, Accessibility Tree + 스크린샷을 함께 주는 방향으로 간다.
+    </p>
+
+    <h3>2. Action Space — 무엇을 할 수 있는가</h3>
+    <p>
+      브라우저에서 취할 수 있는 행동은 보통 이렇게 정의된다.
+    </p>
+    <ul>
+      <li><code>click(element)</code>: 특정 요소 클릭</li>
+      <li><code>type(element, text)</code>: 텍스트 입력</li>
+      <li><code>scroll(direction)</code>: 스크롤</li>
+      <li><code>navigate(url)</code>: URL 직접 이동</li>
+      <li><code>select(element, option)</code>: 드롭다운 선택</li>
+      <li><code>submit()</code>: 폼 제출</li>
+      <li><code>done(answer)</code>: 태스크 완료 선언</li>
+    </ul>
+    <p>
+      어떤 요소를 지칭하느냐가 핵심 과제다. 인덱스 번호로 지칭할 수도 있고, XPath·CSS selector를
+      생성할 수도 있고, 좌표(x, y)로 찍을 수도 있다.
+    </p>
+
+    <h3>3. Planning — 어떻게 결정하는가</h3>
+    <p>
+      초기 연구들은 단순히 LLM에게 현재 상태를 주고 다음 액션을 하나 뽑는 방식이었다.
+      최근에는 <strong>ReAct</strong> (Reason + Act) 패턴이 표준처럼 자리 잡았다.
+      행동 전에 <em>why</em>를 먼저 생성하게 해서 추론 품질을 높이는 방식이다.
+    </p>
+
+    <div class="callout">
+      <strong>ReAct 패턴 예시:</strong><br>
+      Thought: 현재 페이지에서 "flights" 검색창을 찾아야 한다. 상단 네비게이션에 보인다.<br>
+      Action: click(#search-flights-input)<br>
+      Observation: 텍스트 입력창이 포커스됨.<br>
+      Thought: 출발지를 입력해야 한다…
+    </div>
+
+    <h2>주요 연구 흐름</h2>
+
+    <h3>Mind2Web (NeurIPS 2023 Spotlight)</h3>
+    <p>
+      <a href="https://arxiv.org/abs/2306.06070" target="_blank">Mind2Web</a>은 Web Navigation을
+      위한 첫 번째 대규모 벤치마크이자 Generalist Agent 연구다.
+      137개 웹사이트, 2,000개 이상의 태스크를 포함하는 데이터셋을 구축했다.
+    </p>
+    <p>
+      핵심 기여는 <strong>후보 요소 필터링 + 액션 예측의 분리</strong>다.
+      전체 DOM 대신 관련 요소 후보군을 먼저 추려낸 뒤, 그 중에서 액션을 선택하게 한다.
+      거대한 HTML을 그대로 LLM에 던지는 것보다 훨씬 효율적이다.
+    </p>
+    <ul>
+      <li>Task type: cross-website generalization (훈련 시 못 본 사이트에서 평가)</li>
+      <li>Observation: HTML → 정제된 텍스트 표현</li>
+      <li>모델: fine-tuned LLM (GPT 계열 + 소형 모델 조합)</li>
+    </ul>
+
+    <h3>WebVoyager (ACL 2024)</h3>
+    <p>
+      <a href="https://aclanthology.org/2024.acl-long.371/" target="_blank">WebVoyager</a>는
+      GPT-4V를 기반으로 스크린샷을 직접 관찰로 사용하는 end-to-end 웹 에이전트다.
+      사람이 브라우저를 보듯 화면을 그대로 입력으로 받고, 클릭할 위치를 좌표로 출력한다.
+    </p>
+    <p>
+      실제 웹사이트 15개에 대해 사람이 작성한 태스크를 수행하며 평가했고,
+      기존 텍스트 기반 방법보다 현저히 높은 성공률을 보였다.
+      <strong>시각적 맥락의 중요성</strong>을 보여준 연구다 — 어디에 무엇이 있는지를 봐야
+      올바른 액션을 취할 수 있다.
+    </p>
+    <ul>
+      <li>Observation: 전체 페이지 스크린샷</li>
+      <li>Action: 화면 위 좌표 클릭 + 타이핑</li>
+      <li>모델: GPT-4V (fine-tuning 없이 in-context로 동작)</li>
+    </ul>
+
+    <h3>Agent-E (arXiv 2024.07)</h3>
+    <p>
+      <a href="https://arxiv.org/abs/2407.13032" target="_blank">Agent-E</a>는 단순히 새 모델을
+      제안하는 것을 넘어, <strong>Agentic System 설계 원칙</strong>을 체계화한 연구다.
+      "어떻게 하면 더 강건한 웹 에이전트를 만들 수 있는가"에 대한 엔지니어링 관점의 답을 제시한다.
+    </p>
+    <p>
+      핵심 기여:
+    </p>
+    <ul>
+      <li><strong>Hierarchical architecture</strong>: 고수준 Planner + 저수준 Executor로 분리. Planner는 전략을, Executor는 실제 DOM 조작을 담당한다.</li>
+      <li><strong>DOM Distillation</strong>: 페이지 전체 대신 태스크와 관련 있는 DOM 요소만 추출하는 기법.</li>
+      <li><strong>Change Observation</strong>: 액션 전후 DOM 변화를 관찰해 의도된 액션이 실행됐는지 확인.</li>
+      <li><strong>Error recovery</strong>: 실패를 감지하고 다른 전략으로 재시도하는 루프.</li>
+    </ul>
+    <p>
+      WebArena 벤치마크에서 당시 SOTA였으며, 구조 설계 측면에서 후속 연구들에 많이 인용된다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>Browser Use — 오픈소스 프레임워크</h2>
+    <p>
+      <a href="https://github.com/browser-use/browser-use" target="_blank">Browser Use</a>는
+      GitHub Star 72K를 넘긴 오픈소스 웹 에이전트 프레임워크다.
+      위 연구들의 아이디어를 실용적으로 구현해놓은 라이브러리라고 보면 된다.
+    </p>
+    <p>
+      Playwright를 기반으로 실제 Chromium 브라우저를 제어하고, LLM(OpenAI, Anthropic 등)을
+      두뇌로 연결한다. 구조는 단순하다.
+    </p>
+    <ul>
+      <li>브라우저 상태를 Accessibility Tree + 스크린샷으로 캡처</li>
+      <li>LLM에게 현재 상태와 목표를 전달</li>
+      <li>LLM이 반환한 액션을 Playwright로 실행</li>
+      <li>반복</li>
+    </ul>
+    <p>
+      연구용 프로토타입을 빠르게 만들거나, 웹 자동화 파이프라인을 LLM 기반으로 전환할 때 유용하다.
+      특히 <code>pip install browser-use</code> 한 줄로 시작할 수 있어 접근성이 높다.
+    </p>
+
+    <div class="callout">
+      <strong>주의:</strong> Browser Use는 실제 브라우저를 제어하므로 로그인 세션, 쿠키, 결제 등
+      실제 액션이 실행된다. 테스트 환경 분리가 중요하다.
+    </div>
+
+    <h2>벤치마크: 어디서 평가하는가</h2>
+    <p>
+      Web Navigation 연구에서 자주 등장하는 벤치마크들이다.
+    </p>
+    <ul>
+      <li><strong>Mind2Web</strong>: 137개 사이트, 2K+ 태스크. Cross-website 일반화 평가.</li>
+      <li><strong>WebArena</strong>: 실제처럼 동작하는 4개 웹앱(쇼핑몰, 깃허브, 포럼 등)에서 812개 태스크. 결과가 실제로 DB에 반영되어 평가 가능.</li>
+      <li><strong>VisualWebArena</strong>: WebArena의 시각적 확장. 이미지·차트가 포함된 태스크.</li>
+      <li><strong>WorkArena</strong>: 기업용 SaaS(ServiceNow) 환경 특화.</li>
+    </ul>
+    <p>
+      WebArena의 평균 성공률은 GPT-4 기반 최신 에이전트도 50%대 수준이다.
+      사람의 성공률(~78%)과 아직 격차가 있다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>내가 생각하는 것들</h2>
+    <p>
+      지금까지의 연구를 보면, Web Navigation은 본질적으로 <strong>정보 탐색</strong>과
+      <strong>순차적 의사결정</strong>이 결합된 문제다. 두 가지가 모두 잘 되어야 한다.
+    </p>
+    <p>
+      흥미로운 점은, 성공적인 웹 에이전트들이 공통적으로 <strong>계층적 구조</strong>를 가진다는 것이다.
+      한 모델이 모든 걸 하는 게 아니라, 고수준 계획과 저수준 실행을 분리한다.
+      이건 사람도 마찬가지 — 우리는 "항공권 예약"이라는 목표를 갖고 있지만, 실제로는
+      "검색창 찾기 → 클릭 → 날짜 입력 → …"으로 decompose해서 실행한다.
+    </p>
+    <p>
+      또 하나: <strong>오류 감지와 복구</strong>가 생각보다 훨씬 중요하다.
+      완벽한 plan을 세워도 실제 실행에서 예상치 못한 일이 생긴다.
+      팝업이 떴다거나, 버튼 위치가 달라졌다거나. 이걸 인식하고 대처할 수 있는 에이전트가 강하다.
+    </p>
+
+    <div class="footnote">
+      참고:
+      <a href="https://arxiv.org/abs/2306.06070" target="_blank">Mind2Web (NeurIPS 2023)</a> ·
+      <a href="https://aclanthology.org/2024.acl-long.371/" target="_blank">WebVoyager (ACL 2024)</a> ·
+      <a href="https://arxiv.org/abs/2407.13032" target="_blank">Agent-E (arXiv 2024)</a> ·
+      <a href="https://github.com/browser-use/browser-use" target="_blank">Browser Use</a> ·
+      <a href="https://medium.com/data-science/building-visual-agents-that-can-navigate-the-web-autonomously-1184efbfe895" target="_blank">Building Visual Agents (Medium 2025)</a>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>
