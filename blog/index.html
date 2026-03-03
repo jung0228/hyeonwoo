@@ -259,8 +259,6 @@
   <div class="filter-inner">
     <button class="tag-btn active" onclick="filterPosts('all',this)">All</button>
     <button class="tag-btn" onclick="filterPosts('Multimodal',this)">Multimodal</button>
-    <button class="tag-btn" onclick="filterPosts('LLM',this)">LLM</button>
-    <button class="tag-btn" onclick="filterPosts('Computer Vision',this)">Vision</button>
     <button class="tag-btn" onclick="filterPosts('Video',this)">Video</button>
     <button class="tag-btn" onclick="filterPosts('Math',this)">Math</button>
     <button class="tag-btn" onclick="filterPosts('Agent',this)">Agent</button>
@@ -270,31 +268,18 @@
 
 <div class="blog-main">
 
-  <div class="featured" id="featured" data-tags="Multimodal,Video">
-    <div class="eyebrow">Top Story</div>
-    <a class="featured-headline" href="posts/example.html">
-      Video-Language Models 완전 정리
-    </a>
-    <p class="featured-dek">
-      비디오와 언어를 함께 이해하는 멀티모달 모델들의 흐름을 정리합니다. CLIP, VideoCLIP, InternVideo 등 주요 모델들의 구조와 차이점을 비교합니다.
-    </p>
-    <div class="post-meta-line">
-      <span class="cat">Multimodal</span>
-      <span class="dot">·</span>
-      <span class="cat">Video</span>
-      <span class="dot">·</span>
-      <span>Feb 22, 2026</span>
-      <span class="dot">·</span>
-      <span>10 min read</span>
-    </div>
-  </div>
-
   <div class="section-header">
-    <span class="section-name" id="section-label">More Posts</span>
+    <span class="section-name" id="section-label">Posts</span>
     <div class="section-rule"></div>
   </div>
 
   <div class="post-grid" id="post-grid">
+    <a class="post-card" href="posts/web-navigation-agents.html" data-tags="Agent">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Web을 탐색하는 AI Agent: 개념부터 최신 연구까지</div>
+      <div class="card-desc">브라우저를 직접 조작하는 AI — Web Navigation Agent의 핵심 개념과 Mind2Web, WebVoyager, Agent-E, Browser Use까지 흐름을 정리합니다.</div>
+      <div class="card-meta">Mar 3, 2026 · 12 min read</div>
+    </a>
     <a class="post-card" href="posts/streamkv.html" data-tags="Video,LLM">
       <div class="card-cat">Video · LLM</div>
       <div class="card-title">StreamKV: KV Cache를 의미 단위로 압축하고, 예산을 레이어별로 나눈다</div>
@@ -313,11 +298,11 @@
       <div class="card-desc">오토리그레시브 생성의 O(T²) 낭비를 없애는 KV Cache. 왜 필요한지, 어떻게 동작하는지, 그리고 메모리 폭발을 다루는 Sliding Window·Compression·Retrieval까지.</div>
       <div class="card-meta">Feb 27, 2026 · 18 min read</div>
     </a>
-    <a class="post-card" href="posts/cosmos-policy.html" data-tags="Video,Multimodal">
-      <div class="card-cat">Video · Multimodal</div>
-      <div class="card-title">Cosmos Policy: 비디오 생성 모델을 로봇 정책으로 파인튜닝하기</div>
-      <div class="card-desc">아키텍처 변경 없이 Latent Frame Injection만으로 액션·World Model·Value Function을 통합한 NVIDIA의 단일 단계 파인튜닝 접근법.</div>
-      <div class="card-meta">Feb 23, 2026 · 15 min read</div>
+    <a class="post-card" href="posts/eigenvalue-properties.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">고유값의 성질: 복소수, 부호, 그리고 특수 행렬들</div>
+      <div class="card-desc">실수 행렬인데 복소 고유값이 나오는 이유, 대칭 행렬에서 항상 실수인 증명, 양정치성과 부호, 직교·투영·반대칭·멱영 행렬의 고유값 특성, Gershgorin 정리까지.</div>
+      <div class="card-meta">Feb 27, 2026 · 22 min read</div>
     </a>
     <a class="post-card" href="posts/eigendecomposition-svd.html" data-tags="Math">
       <div class="card-cat">Math</div>
@@ -325,17 +310,17 @@
       <div class="card-desc">선형 변환의 핵심 구조를 드러내는 고유값 분해와, 임의의 직사각형 행렬로 확장한 SVD. 두 분해의 연결과 PCA, LoRA, 추천 시스템 등 ML 응용까지.</div>
       <div class="card-meta">Feb 26, 2026 · 20 min read</div>
     </a>
-    <a class="post-card" href="posts/eigenvalue-properties.html" data-tags="Math">
-      <div class="card-cat">Math</div>
-      <div class="card-title">고유값의 성질: 복소수, 부호, 그리고 특수 행렬들</div>
-      <div class="card-desc">실수 행렬인데 복소 고유값이 나오는 이유, 대칭 행렬에서 항상 실수인 증명, 양정치성과 부호, 직교·투영·반대칭·멱영 행렬의 고유값 특성, Gershgorin 정리까지.</div>
-      <div class="card-meta">Feb 27, 2026 · 22 min read</div>
+    <a class="post-card" href="posts/cosmos-policy.html" data-tags="Video,Multimodal">
+      <div class="card-cat">Video · Multimodal</div>
+      <div class="card-title">Cosmos Policy: 비디오 생성 모델을 로봇 정책으로 파인튜닝하기</div>
+      <div class="card-desc">아키텍처 변경 없이 Latent Frame Injection만으로 액션·World Model·Value Function을 통합한 NVIDIA의 단일 단계 파인튜닝 접근법.</div>
+      <div class="card-meta">Feb 23, 2026 · 15 min read</div>
     </a>
-    <a class="post-card" href="posts/web-navigation-agents.html" data-tags="Agent">
-      <div class="card-cat">Agent</div>
-      <div class="card-title">Web을 탐색하는 AI Agent: 개념부터 최신 연구까지</div>
-      <div class="card-desc">브라우저를 직접 조작하는 AI — Web Navigation Agent의 핵심 개념과 Mind2Web, WebVoyager, Agent-E, Browser Use까지 흐름을 정리합니다.</div>
-      <div class="card-meta">Mar 2026 · 12 min read</div>
+    <a class="post-card" href="posts/example.html" data-tags="Multimodal,Video">
+      <div class="card-cat">Multimodal · Video</div>
+      <div class="card-title">Video-Language Models 완전 정리</div>
+      <div class="card-desc">비디오와 언어를 함께 이해하는 멀티모달 모델들의 흐름을 정리합니다. CLIP, VideoCLIP, InternVideo 등 주요 모델들의 구조와 차이점을 비교합니다.</div>
+      <div class="card-meta">Feb 22, 2026 · 10 min read</div>
     </a>
     <p class="empty" id="empty-msg" style="display:none;">More posts coming soon.</p>
   </div>
@@ -345,29 +330,24 @@
 <footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
 
 <script>
-  // URL 파라미터로 들어온 경우 자동 필터
   const urlTag = new URLSearchParams(location.search).get('tag');
   if (urlTag) {
-    const btn = [...document.querySelectorAll('.tag-btn')].find(b => b.textContent.trim() === urlTag || (urlTag === 'Computer Vision' && b.textContent.trim() === 'Vision'));
+    const btn = [...document.querySelectorAll('.tag-btn')].find(b => b.textContent.trim() === urlTag);
     if (btn) filterPosts(urlTag, btn);
   }
 
   function filterPosts(tag, btn) {
     document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
-    const f = document.getElementById('featured');
-    f.style.display = (tag==='all' || (f.dataset.tags||'').includes(tag)) ? 'block' : 'none';
-
     const cards = document.querySelectorAll('.post-card');
     let vis = 0;
     cards.forEach(c => {
-      const show = tag==='all' || (c.dataset.tags||'').includes(tag);
+      const show = tag === 'all' || (c.dataset.tags || '').includes(tag);
       c.style.display = show ? 'block' : 'none';
       if (show) vis++;
     });
-    document.getElementById('section-label').textContent = tag==='all' ? 'More Posts' : tag;
-    document.getElementById('empty-msg').style.display = vis===0 ? 'block' : 'none';
+    document.getElementById('section-label').textContent = tag === 'all' ? 'Posts' : tag;
+    document.getElementById('empty-msg').style.display = vis === 0 ? 'block' : 'none';
   }
 </script>
 </body>
