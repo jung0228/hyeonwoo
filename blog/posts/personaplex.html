@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PersonaPlex: Full-Duplex 대화 AI에 목소리와 역할을 입히다 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-top: 1px solid var(--rule-lt);
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── STAT TABLE ─── */
+    .stat-table {
+      width: 100%; border-collapse: collapse;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem; margin: 1.8rem 0;
+    }
+    .stat-table th {
+      text-align: left; padding: .55rem .8rem;
+      font-weight: 700; font-size: .75rem;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted);
+      border-bottom: 2px solid var(--text);
+    }
+    .stat-table td {
+      padding: .55rem .8rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text);
+    }
+    .stat-table tr:last-child td { border-bottom: none; }
+    .stat-table .highlight td { background: #dbeafe; font-weight: 600; }
+    .stat-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">PersonaPlex: Full-Duplex 대화 AI에 목소리와 역할을 입히다</h1>
+
+  <p class="post-dek">
+    자연스러운 대화와 페르소나 제어 — 둘 중 하나를 포기해야 했던 트레이드오프를
+    NVIDIA Research의 PersonaPlex는 어떻게 동시에 해결했는가.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">Speech</span>
+    <span class="dot">·</span>
+    <span>Mar 3, 2026</span>
+    <span class="dot">·</span>
+    <span>14 min read</span>
+    <span class="dot">·</span>
+    <span>NVIDIA Research · Jan 2026</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">오래된 트레이드오프</h2>
+    <p>
+      대화 AI 시스템을 만들 때 두 가지 방향 중 하나를 택해야 했다.
+      첫 번째는 <strong>캐스케이드 파이프라인</strong>이다. ASR(음성 인식) → LLM(텍스트 처리) → TTS(음성 합성)로
+      이어지는 구조인데, 원하는 목소리와 역할을 자유롭게 지정할 수 있다. 하지만 각 모듈 사이에 지연이 생기고,
+      무엇보다 대화가 <em>어색하다</em>. 끊기고, 기다리고, 반응이 늦다.
+    </p>
+    <p>
+      두 번째는 <strong>Full-Duplex 모델</strong>이다. Moshi 같은 모델이 대표적인데,
+      사람처럼 말하면서 동시에 듣고, 끊어도 되고, "음", "아" 같은 backchannel도 자연스럽게 나온다.
+      대화 품질 자체는 월등히 낫다. 문제는 목소리와 역할이 모델에 고정되어 있다는 것이다.
+      고객 서비스 봇에 쓰거나 특정 캐릭터로 배포하려면 별도의 모델이 필요하다.
+    </p>
+
+    <div class="pullquote">
+      <strong>핵심 긴장:</strong> 자연스러운 대화를 원하면 페르소나를 잃고,
+      페르소나를 원하면 대화가 어색해진다. PersonaPlex는 이 둘을 함께 갖겠다는 시도다.
+    </div>
+
+    <h2 class="no-rule">두 종류의 프롬프트</h2>
+    <p>
+      PersonaPlex의 핵심 아이디어는 단순하다. <strong>두 가지 프롬프트를 동시에 주입</strong>한다.
+    </p>
+    <ul>
+      <li>
+        <strong>Voice Prompt (음성 프롬프트)</strong>: 몇 초짜리 음성 클립. 모델이 이 오디오에서
+        화자의 음색, 억양, 리듬을 추출해서 그 목소리로 말한다. 텍스트로 설명할 수 없는
+        "이 사람 목소리처럼"을 audio embedding으로 직접 전달한다.
+      </li>
+      <li>
+        <strong>Text Prompt (텍스트 프롬프트)</strong>: 역할과 맥락을 서술하는 자연어. "너는 친절한
+        항공사 고객 서비스 직원이야. 예약 변경 요청을 처리해줘." 같은 내용이다.
+        대화의 성격과 태도를 지정한다.
+      </li>
+    </ul>
+    <p>
+      이 두 채널이 함께 작동하면, 특정 목소리로 특정 역할을 수행하는 Full-Duplex 에이전트가 된다.
+      캐스케이드 파이프라인에서 TTS에 목소리를 지정하고 LLM에 시스템 프롬프트를 주는 것과
+      기능적으로는 유사하지만, 하나의 end-to-end 모델 안에서 일어난다.
+    </p>
+
+    <!-- ── SVG: PersonaPlex Architecture ── -->
+    <div style="margin:2.2rem 0 1.6rem;">
+      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:700px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <defs>
+          <marker id="pp-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <polygon points="0 0,7 3,0 6" fill="#1a56c4"/>
+          </marker>
+          <marker id="pp-b" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <polygon points="0 0,7 3,0 6" fill="#0f0f0f"/>
+          </marker>
+        </defs>
+
+        <!-- Voice Prompt box -->
+        <rect x="20" y="30" width="160" height="56" rx="6" fill="#efede6" stroke="#d8d8d2" stroke-width="1.5"/>
+        <text x="100" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f0f">Voice Prompt</text>
+        <text x="100" y="72" text-anchor="middle" font-size="9.5" fill="#6b6b6b">Audio Clip (몇 초)</text>
+        <text x="100" y="85" text-anchor="middle" font-size="9" fill="#6b6b6b">→ 음색·억양 추출</text>
+
+        <!-- Text Prompt box -->
+        <rect x="20" y="120" width="160" height="56" rx="6" fill="#efede6" stroke="#d8d8d2" stroke-width="1.5"/>
+        <text x="100" y="144" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f0f">Text Prompt</text>
+        <text x="100" y="162" text-anchor="middle" font-size="9.5" fill="#6b6b6b">Role Description</text>
+        <text x="100" y="175" text-anchor="middle" font-size="9" fill="#6b6b6b">→ 역할·태도 지정</text>
+
+        <!-- Arrows to PersonaPlex -->
+        <line x1="181" y1="58" x2="268" y2="95" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#pp-a)"/>
+        <line x1="181" y1="148" x2="268" y2="115" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#pp-a)"/>
+
+        <!-- PersonaPlex (Moshi 7B) -->
+        <rect x="270" y="62" width="180" height="86" rx="6" fill="#dbeafe" stroke="#1a56c4" stroke-width="2"/>
+        <text x="360" y="94" text-anchor="middle" font-size="13" font-weight="700" fill="#1a56c4">PersonaPlex</text>
+        <text x="360" y="113" text-anchor="middle" font-size="10" fill="#1a56c4">Moshi 7B 기반</text>
+        <text x="360" y="130" text-anchor="middle" font-size="9.5" fill="#6b6b6b">Full-Duplex · End-to-End</text>
+
+        <!-- User input box -->
+        <rect x="270" y="174" width="180" height="36" rx="5" fill="#efede6" stroke="#d8d8d2" stroke-width="1.5"/>
+        <text x="360" y="197" text-anchor="middle" font-size="10" fill="#6b6b6b">User Speech (real-time)</text>
+
+        <!-- User to model arrow -->
+        <line x1="360" y1="174" x2="360" y2="149" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#pp-a)"/>
+
+        <!-- Arrow to output -->
+        <line x1="451" y1="105" x2="518" y2="105" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#pp-b)"/>
+
+        <!-- Output box -->
+        <rect x="520" y="62" width="160" height="86" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+        <text x="600" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a">Output</text>
+        <text x="600" y="109" text-anchor="middle" font-size="9.5" fill="#0f0f0f">지정된 목소리로</text>
+        <text x="600" y="124" text-anchor="middle" font-size="9.5" fill="#0f0f0f">역할에 맞게 대화</text>
+        <text x="600" y="140" text-anchor="middle" font-size="9" fill="#6b6b6b">끊김·backchannel 자연스럽게</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        PersonaPlex의 dual prompting 구조. Voice Prompt와 Text Prompt가 동시에 모델에 주입되어
+        목소리와 역할이 결합된 Full-Duplex 대화를 생성한다.
+      </p>
+    </div>
+
+    <h2>모델 구조: Moshi 위에서</h2>
+    <p>
+      PersonaPlex는 Moshi를 기반으로 한다. Moshi는 7B 파라미터 규모의 Full-Duplex 대화 모델로,
+      Mimi라는 audio codec(ConvNet + Transformer)을 통해 24kHz 오디오를 처리한다.
+      두 스트림 — 사용자 발화와 시스템 발화 — 을 동시에 다루는 temporal/depth transformer 구조다.
+      밑에서는 Helium 언어 모델이 semantic 이해를 담당한다.
+    </p>
+    <p>
+      여기에 PersonaPlex는 두 가지를 추가했다. Voice Prompt의 audio embedding을 조건으로 주입하는
+      경로, 그리고 Text Prompt를 token sequence로 처리하는 경로. 아키텍처 자체는 크게 바꾸지 않고,
+      조건 입력 채널만 확장한 셈이다.
+    </p>
+
+    <div class="callout">
+      <strong>왜 Moshi를 베이스로 쓰나?</strong><br>
+      Full-Duplex 동작 — 동시에 듣고 말하기, 자연스러운 turn-taking, backchannel — 은
+      처음부터 학습하기 매우 어렵다. Moshi가 이미 이 능력을 갖추고 있기 때문에,
+      PersonaPlex는 5,000시간 미만의 directed fine-tuning 데이터만으로도 persona 제어를
+      추가할 수 있었다. 사전학습된 대화 능력 위에 제어 레이어를 얹는 방식이다.
+    </div>
+
+    <h2>데이터 전략: 실제 + 합성</h2>
+    <p>
+      학습 데이터를 어떻게 구성했는지가 이 논문에서 특히 흥미로운 부분이다.
+      두 종류의 데이터를 섞었다.
+    </p>
+
+    <h3>실제 대화 데이터: Fisher Corpus</h3>
+    <p>
+      <strong>7,303개</strong>의 실제 전화 통화(1,217시간). 전화 특유의 노이즈, 자연스러운
+      말 겹침, 다양한 억양과 발화 패턴이 담겨 있다. 여기에 GPT-OSS-120B를 이용해
+      대화에 맞는 personality prompt를 역으로 생성(back-annotation)해서 붙였다.
+      "이 대화를 하는 사람이라면 어떤 성격일까"를 LLM이 추론해서 텍스트 프롬프트를 만드는 방식이다.
+    </p>
+    <p>
+      Fisher 데이터의 장점은 <em>행동의 풍부함</em>이다. 실제 사람들의 말하기 방식 — 망설임,
+      수정, 감정의 변화 — 이 고스란히 담겨 있다. 단점은 도메인이 좁다는 것.
+      일상 대화 위주라서 특정 역할(고객 서비스, 기술 지원 등)에 맞는 데이터가 부족하다.
+    </p>
+
+    <h3>합성 데이터: Qwen + Chatterbox TTS</h3>
+    <p>
+      <strong>144,732개</strong>의 합성 대화(2,250시간). Qwen3-32B로 대본을 생성하고,
+      Chatterbox TTS로 음성을 합성했다. assistant 시나리오와 customer service 시나리오를
+      다양하게 커버한다. 우주 비상 상황, 기술 위기 관리처럼 Fisher에는 없는 도메인도 포함된다.
+    </p>
+    <p>
+      합성 데이터의 장점은 <em>다양성</em>이다. 원하는 페르소나와 상황을 마음대로 만들 수 있다.
+      단점은 TTS가 생성한 음성이 실제 사람의 행동 패턴 — 말 겹침, 자연스러운 끊김 —
+      을 완벽하게 재현하지 못한다는 것이다.
+    </p>
+    <p>
+      두 데이터는 상호보완적이다. Fisher는 <em>어떻게 말하는가</em>를 가르치고,
+      합성 데이터는 <em>무슨 역할로 말하는가</em>를 가르친다.
+      Single-stage training에서 둘을 blend해서 학습했다.
+    </p>
+
+    <h2>결과: 숫자로 보면</h2>
+    <p>
+      평가는 두 가지 벤치마크에서 진행됐다.
+      <strong>FullDuplexBench</strong>는 대화 역학(turn-taking, 끊기, backchannel)을 측정하고,
+      자체 개발한 <strong>ServiceDuplexBench</strong>는 고객 서비스 시나리오에서의
+      역할 수행 능력을 측정한다.
+    </p>
+
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <th>지표</th>
+          <th class="num">PersonaPlex</th>
+          <th class="num">Moshi (베이스)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>Smooth Turn-Taking</td>
+          <td class="num">94.1%</td>
+          <td class="num">71.8%</td>
+        </tr>
+        <tr>
+          <td>User Interruption Handling</td>
+          <td class="num">89.1%</td>
+          <td class="num">75.5%</td>
+        </tr>
+        <tr class="highlight">
+          <td>Pause Handling</td>
+          <td class="num">100%</td>
+          <td class="num">71.8%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      원래 Full-Duplex 능력이 떨어질 것을 우려할 수 있다 — persona 제어를 추가하면서
+      대화 자연스러움이 손상될 수 있으니까. 하지만 결과는 반대다.
+      Smooth Turn-Taking이 71.8% → 94.1%로 올랐다. Pause Handling은 100%에 도달했다.
+      Moshi의 대화 능력을 유지하면서 제어 능력까지 더한 게 아니라, 대화 능력 자체도 개선됐다.
+    </p>
+
+    <div class="callout">
+      <strong>흥미로운 발견:</strong> 모델이 훈련 데이터에 없던 시나리오에서 emergent generalization을
+      보였다. 예를 들어 "우주 비상 상황"처럼 훈련 예제가 없는 도메인에서도 기술적 위기 관리 어휘를
+      적절하게 사용했다. 합성 데이터가 충분히 다양한 persona space를 커버했기 때문으로 해석된다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>내가 생각하는 것들</h2>
+    <p>
+      이 논문에서 가장 인상적인 것은 <strong>문제 설정</strong>이다.
+      "Full-Duplex vs. Persona Control" 트레이드오프를 명확하게 정의하고,
+      그 해결 방향을 dual prompting으로 잡은 것 — 단순하지만 효과적이다.
+    </p>
+    <p>
+      아키텍처 측면에서는 새로운 걸 만든 게 아니라 <em>기존 모델(Moshi) 위에 조건 채널을 추가</em>했다는 점이
+      흥미롭다. 강력한 사전학습 모델 위에 최소한의 수정으로 새로운 능력을 올리는 방식 —
+      이게 요즘 연구의 주류 방향이기도 하다. 5,000시간 미만의 데이터로 persona 제어를 추가한 것도
+      efficient transfer learning 관점에서 주목할 만하다.
+    </p>
+    <p>
+      데이터 전략도 배울 게 있다. 실제 데이터(Fisher)와 합성 데이터를 단순히 섞은 게 아니라,
+      각각의 역할을 명확히 분리했다. Fisher는 <em>행동 패턴</em>을, 합성은 <em>도메인 다양성</em>을 담당한다.
+      서로의 약점을 보완하는 구조다. 데이터를 설계할 때 "무엇이 부족한가"를 먼저 분석하고
+      그걸 채울 소스를 찾는 접근이 참고할 만하다.
+    </p>
+    <p>
+      한 가지 남는 질문은 <strong>voice cloning의 윤리적 경계</strong>다. 몇 초의 음성 클립만으로
+      타인의 목소리를 재현하는 능력은 강력하지만, 동시에 오남용 가능성도 크다.
+      논문에서는 이 부분에 대한 언급이 많지 않은데, 상용화 전에 반드시 정면으로 다뤄야 할 부분이다.
+    </p>
+
+    <div class="footnote">
+      참고:
+      <a href="https://research.nvidia.com/labs/adlr/personaplex/" target="_blank">PersonaPlex (NVIDIA Research, Jan 2026)</a> ·
+      <a href="https://github.com/kyutai-labs/moshi" target="_blank">Moshi (kyutai-labs)</a>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Hyeonwoo Jung
+</footer>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blog – Hyeonwoo Jung</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -263,6 +263,7 @@
     <button class="tag-btn" onclick="filterPosts('Video',this)">Video</button>
     <button class="tag-btn" onclick="filterPosts('Math',this)">Math</button>
     <button class="tag-btn" onclick="filterPosts('Agent',this)">Agent</button>
+    <button class="tag-btn" onclick="filterPosts('Speech',this)">Speech</button>
   </div>
   </div>
 </div>
@@ -275,6 +276,12 @@
   </div>
 
   <div class="post-grid" id="post-grid">
+    <a class="post-card" href="posts/personaplex.html" data-tags="Speech">
+      <div class="card-cat">Speech</div>
+      <div class="card-title">PersonaPlex: Full-Duplex 대화 AI에 목소리와 역할을 입히다</div>
+      <div class="card-desc">자연스러운 대화 vs. 페르소나 제어 — 오랫동안 양립하기 어려웠던 트레이드오프를 NVIDIA Research가 dual prompting으로 어떻게 깼는지 정리합니다.</div>
+      <div class="card-meta">Mar 3, 2026 · 14 min read</div>
+    </a>
     <a class="post-card" href="posts/web-navigation-agents.html" data-tags="Agent">
       <div class="card-cat">Agent</div>
       <div class="card-title">Web을 탐색하는 AI Agent: 개념부터 최신 연구까지</div>
