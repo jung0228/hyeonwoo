@@ -308,6 +308,45 @@
       세 가지 요소가 핵심이다.
     </p>
 
+    <!-- ── SVG: Agent 기본 루프 ── -->
+    <div style="margin:2.2rem 0 1.6rem;">
+      <svg viewBox="0 0 640 165" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:640px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <defs>
+          <marker id="lp-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <polygon points="0 0,7 3,0 6" fill="#1a56c4"/>
+          </marker>
+          <marker id="lp-b" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <polygon points="0 0,7 3,0 6" fill="#999"/>
+          </marker>
+        </defs>
+        <!-- Browser -->
+        <rect x="20" y="42" width="150" height="62" rx="6" fill="#efede6" stroke="#d8d8d2" stroke-width="1.5"/>
+        <text x="95" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f">Browser</text>
+        <text x="95" y="88" text-anchor="middle" font-size="10" fill="#6b6b6b">Observation</text>
+        <!-- LLM -->
+        <rect x="245" y="42" width="150" height="62" rx="6" fill="#dbeafe" stroke="#1a56c4" stroke-width="1.5"/>
+        <text x="320" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#1a56c4">LLM</text>
+        <text x="320" y="88" text-anchor="middle" font-size="10" fill="#1a56c4">Reason · Plan</text>
+        <!-- Executor -->
+        <rect x="470" y="42" width="150" height="62" rx="6" fill="#efede6" stroke="#d8d8d2" stroke-width="1.5"/>
+        <text x="545" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f">Executor</text>
+        <text x="545" y="88" text-anchor="middle" font-size="10" fill="#6b6b6b">Action</text>
+        <!-- Browser → LLM -->
+        <line x1="171" y1="73" x2="242" y2="73" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#lp-a)"/>
+        <text x="206" y="67" text-anchor="middle" font-size="9" fill="#6b6b6b">state</text>
+        <!-- LLM → Executor -->
+        <line x1="396" y1="73" x2="467" y2="73" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#lp-a)"/>
+        <text x="431" y="67" text-anchor="middle" font-size="9" fill="#6b6b6b">action</text>
+        <!-- Return arc (bottom) -->
+        <path d="M 545 104 L 545 135 L 95 135 L 95 105" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#lp-b)"/>
+        <text x="320" y="152" text-anchor="middle" font-size="9" fill="#6b6b6b">browser state updates</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        Web Navigation Agent의 기본 루프. Browser 상태를 관찰하고, LLM이 계획하고, Executor가 실행한다.
+      </p>
+    </div>
+
     <h3>1. Observation — 웹을 어떻게 입력으로 받는가</h3>
     <p>
       브라우저 상태를 모델에게 전달하는 방법은 크게 두 가지다.
@@ -325,6 +364,73 @@
     <p>
       최근 연구들은 두 방식을 결합하거나, Accessibility Tree + 스크린샷을 함께 주는 방향으로 간다.
     </p>
+
+    <!-- ── SVG: Observation 방식 비교 ── -->
+    <div style="margin:2rem 0 1.6rem;">
+      <svg viewBox="0 0 660 275" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:660px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <defs>
+          <marker id="ob-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <polygon points="0 0,7 3,0 6" fill="#1a56c4"/>
+          </marker>
+        </defs>
+
+        <!-- ── LEFT: Text-based (DOM) ── -->
+        <text x="160" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f0f">텍스트 기반 (DOM)</text>
+        <rect x="15" y="26" width="290" height="172" rx="6" fill="#efede6" stroke="#d8d8d2" stroke-width="1.5"/>
+        <rect x="24" y="35" width="272" height="154" rx="4" fill="#f9f8f4"/>
+        <text x="36" y="57"  font-size="9.5" fill="#6b6b6b" font-family="'SF Mono',Menlo,monospace">nav</text>
+        <text x="36" y="74"  font-size="9.5" fill="#6b6b6b" font-family="'SF Mono',Menlo,monospace">  ├─ a: "Home"</text>
+        <text x="36" y="91"  font-size="9.5" fill="#6b6b6b" font-family="'SF Mono',Menlo,monospace">  └─ a: "Search Flights"</text>
+        <text x="36" y="108" font-size="9.5" fill="#1a56c4" font-family="'SF Mono',Menlo,monospace">input[id=from] "Seoul"</text>
+        <text x="36" y="125" font-size="9.5" fill="#1a56c4" font-family="'SF Mono',Menlo,monospace">input[id=to]   "Tokyo"</text>
+        <text x="36" y="142" font-size="9.5" fill="#0a7a0a" font-family="'SF Mono',Menlo,monospace">button: "Search"</text>
+        <text x="36" y="159" font-size="9.5" fill="#999"    font-family="'SF Mono',Menlo,monospace">div.results (empty)</text>
+        <text x="36" y="176" font-size="9"   fill="#bbb"    font-family="'SF Mono',Menlo,monospace">... 2,847 more nodes</text>
+
+        <!-- ── RIGHT: Visual (Screenshot) ── -->
+        <text x="500" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f0f">스크린샷 기반 (Visual)</text>
+        <!-- browser outer frame -->
+        <rect x="355" y="26" width="290" height="172" rx="6" fill="#efede6" stroke="#d8d8d2" stroke-width="1.5"/>
+        <!-- title bar -->
+        <rect x="355" y="26" width="290" height="22" rx="6" fill="#c8c8c4"/>
+        <rect x="355" y="37"  width="290" height="11" fill="#c8c8c4"/>
+        <!-- traffic lights -->
+        <circle cx="371" cy="37" r="5" fill="#ff5f57"/>
+        <circle cx="385" cy="37" r="5" fill="#febc2e"/>
+        <circle cx="399" cy="37" r="5" fill="#28c840"/>
+        <!-- URL bar -->
+        <rect x="414" y="30" width="215" height="14" rx="7" fill="#f9f8f4"/>
+        <text x="521" y="41" text-anchor="middle" font-size="8" fill="#6b6b6b">booking.com/flights</text>
+        <!-- nav bar -->
+        <rect x="363" y="53" width="274" height="24" fill="#1a56c4"/>
+        <rect x="370" y="59" width="32"  height="12" rx="2" fill="#3d6fd4"/>
+        <rect x="410" y="59" width="50"  height="12" rx="2" fill="#3d6fd4"/>
+        <!-- search inputs -->
+        <rect x="363" y="85" width="125" height="18" rx="3" fill="#fff" stroke="#d8d8d2" stroke-width="1"/>
+        <text x="371" y="97" font-size="8" fill="#6b6b6b">From: Seoul</text>
+        <rect x="496" y="85" width="125" height="18" rx="3" fill="#fff" stroke="#d8d8d2" stroke-width="1"/>
+        <text x="504" y="97" font-size="8" fill="#6b6b6b">To: Tokyo</text>
+        <!-- search button -->
+        <rect x="434" y="111" width="78" height="22" rx="4" fill="#1a56c4"/>
+        <text x="473" y="126" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">Search</text>
+        <!-- results placeholder -->
+        <rect x="363" y="143" width="274" height="10" rx="2" fill="#d8d8d2"/>
+        <rect x="363" y="160" width="220" height="10" rx="2" fill="#d8d8d2"/>
+        <rect x="363" y="177" width="250" height="10" rx="2" fill="#d8d8d2"/>
+
+        <!-- LLM box -->
+        <rect x="255" y="224" width="150" height="44" rx="6" fill="#dbeafe" stroke="#1a56c4" stroke-width="1.5"/>
+        <text x="330" y="247" text-anchor="middle" font-size="12" font-weight="700" fill="#1a56c4">LLM</text>
+        <text x="330" y="263" text-anchor="middle" font-size="9.5" fill="#1a56c4">Action Prediction</text>
+        <!-- Arrows to LLM -->
+        <line x1="160" y1="199" x2="282" y2="228" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ob-a)"/>
+        <line x1="500" y1="199" x2="378" y2="228" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ob-a)"/>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        같은 페이지를 두 가지 방식으로 표현. 텍스트 기반은 DOM 트리를, 시각 기반은 렌더링된 화면을 LLM에 전달한다.
+      </p>
+    </div>
 
     <h3>2. Action Space — 무엇을 할 수 있는가</h3>
     <p>
