@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정보이론 기초: 엔트로피, 교차 엔트로피, KL Divergence – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, {
+        delimiters: [
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false}
+        ]
+      });"></script>
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule { border-top: none; padding-top: 0; }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── MATH BLOCK ─── */
+    .math-block {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      border-radius: 6px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .math-block .math-label {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--accent);
+      margin-bottom: .6rem;
+      text-align: left;
+    }
+    .math-block p {
+      font-size: .85rem; color: var(--muted);
+      margin-top: .5rem; margin-bottom: 0;
+      text-align: center;
+    }
+
+    /* ─── DEFINITION BOX ─── */
+    .def-box {
+      border: 1px solid var(--rule-lt);
+      border-left: 3px solid var(--text);
+      padding: 1.1rem 1.4rem;
+      margin: 1.8rem 0;
+      background: var(--bg);
+    }
+    .def-box .def-title {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: .55rem;
+    }
+    .def-box p { margin-bottom: .5rem; font-size: .98rem; }
+    .def-box p:last-child { margin-bottom: 0; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── COMPARISON TABLE ─── */
+    .result-table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem;
+    }
+    .result-table th {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      padding: .55rem .8rem;
+      text-align: center; font-weight: 700;
+      color: var(--text); letter-spacing: .04em;
+    }
+    .result-table td {
+      border: 1px solid var(--rule-lt);
+      padding: .5rem .8rem;
+      text-align: center; color: var(--muted);
+    }
+    .result-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+    .result-table .katex { font-size: .9em; }
+
+    /* ─── FIGURE BREAKDOWN ─── */
+    .fig-breakdown {
+      padding: .5rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+      margin-bottom: 1.8rem;
+    }
+    .fig-breakdown-item {
+      display: flex; gap: .9rem;
+      align-items: flex-start;
+      padding: .75rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s;
+      border: 1px solid transparent;
+    }
+    .fig-breakdown-item:hover { background: var(--bg2); }
+    .fig-breakdown-item.open { background: var(--bg2); border-color: var(--rule-lt); }
+    .fig-bd-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--rule-lt);
+      color: var(--muted);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+      margin-top: .1rem;
+    }
+    .fig-breakdown-item.open .fig-bd-num { background: var(--accent); color: #fff; }
+    .fig-bd-body { flex: 1; }
+    .fig-bd-title {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem; font-weight: 700;
+      color: var(--text);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .fig-bd-arrow { font-size: .65rem; color: var(--muted); transition: transform .2s; }
+    .fig-breakdown-item.open .fig-bd-arrow { transform: rotate(180deg); }
+    .fig-bd-desc {
+      display: none;
+      margin-top: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem; color: var(--muted);
+      line-height: 1.65;
+    }
+    .fig-breakdown-item.open .fig-bd-desc { display: block; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+      .result-table { font-size: .75rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar-inner-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">정보이론 기초: 엔트로피, 교차 엔트로피, KL Divergence</h1>
+
+  <p class="post-dek">
+    불확실성을 수로 표현하는 방법 — 섀넌 엔트로피부터 KL divergence까지,
+    확률 분포 간의 차이를 측정하는 도구들이 어떻게 딥러닝의 핵심 손실 함수와
+    생성 모델의 목적 함수로 이어지는지 정리한다.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">Math</span>
+    <span class="dot">·</span>
+    <span>Mar 4, 2026</span>
+    <span class="dot">·</span>
+    <span>20 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">정보를 측정한다는 것</h2>
+    <p>
+      "정보"를 직관적으로 생각해보자. 오늘 서울에 비가 내렸다는 사실은 그리 놀랍지 않다.
+      하지만 6월 한낮에 눈이 내렸다는 소식은 대단히 놀랍다. 이 놀라움의 차이가 바로
+      <strong>정보량</strong>의 차이다.
+    </p>
+    <p>
+      정보이론의 핵심 직관은 이렇다: <strong>희귀한 사건일수록 더 많은 정보를 담는다.</strong>
+      확실히 일어날 사건(확률 1)은 아무 정보도 주지 않는다. 이미 아는 것이기 때문이다.
+      반면 거의 불가능한 사건이 일어났을 때, 우리는 큰 정보를 얻는다.
+    </p>
+    <p>
+      1948년 클로드 섀넌(Claude Shannon)은 이 직관을 수식으로 엄밀하게 만들었다.
+      그 결과물이 오늘날 ML과 딥러닝 전반을 관통하는 정보이론의 기초다.
+    </p>
+
+    <h2>자기 정보량 (Self-Information)</h2>
+    <p>
+      사건 $x$의 정보량은 그 확률 $P(x)$의 역수에 로그를 취한 값으로 정의한다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">자기 정보량 (Self-Information)</div>
+      <p>$$I(x) = -\log P(x) = \log \frac{1}{P(x)}$$</p>
+      <p>로그의 밑이 2이면 단위는 <strong>비트(bit)</strong>, 자연 로그($e$)이면 <strong>나트(nat)</strong>다. ML에서는 주로 나트를 쓴다.</p>
+    </div>
+
+    <p>성질을 확인해보자:</p>
+    <ul>
+      <li>$P(x) = 1$이면 $I(x) = 0$. 확실한 사건은 정보가 없다.</li>
+      <li>$P(x) \to 0$이면 $I(x) \to \infty$. 불가능에 가까운 사건이 일어났을 때 정보가 무한히 크다.</li>
+      <li>두 독립 사건 $x, y$의 결합 정보량: $I(x, y) = -\log P(x)P(y) = I(x) + I(y)$. 정보는 더해진다.</li>
+    </ul>
+
+    <div class="callout">
+      <strong>비트 해석 예시:</strong> 공정한 동전 1번 → $I(H) = -\log_2(0.5) = 1$ bit.
+      공정한 주사위의 특정 면 → $I = \log_2 6 \approx 2.58$ bits.
+      100면체 주사위의 특정 면 → $I = \log_2 100 \approx 6.64$ bits.
+      이진 부호화에서 이 정보를 저장하는 데 필요한 최소 비트 수다.
+    </div>
+
+    <h2>섀넌 엔트로피 (Shannon Entropy)</h2>
+    <p>
+      자기 정보량은 특정 사건 하나의 정보량이다.
+      그런데 확률 변수 $X$ 전체의 "평균적인 불확실성"은 어떻게 측정할까?
+      자기 정보량의 기댓값이 바로 <strong>섀넌 엔트로피</strong>다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">섀넌 엔트로피 (Shannon Entropy)</div>
+      <p>$$H(X) = \mathbb{E}[I(X)] = -\sum_{x} P(x) \log P(x)$$</p>
+      <p>연속 확률 변수의 경우(미분 엔트로피):</p>
+      <p>$$h(X) = -\int p(x) \log p(x)\, dx$$</p>
+    </div>
+
+    <h3>엔트로피의 성질</h3>
+    <ul>
+      <li>
+        <strong>비음성:</strong> $H(X) \geq 0$.
+        $0 \log 0 = 0$으로 정의하면(극한 처리) 항상 성립.
+      </li>
+      <li>
+        <strong>결정론적 분포에서 최소:</strong> $P(x^*) = 1$이면 $H = 0$.
+        결과가 완전히 확정되면 불확실성이 없다.
+      </li>
+      <li>
+        <strong>균등 분포에서 최대:</strong> $n$개의 이산 값에서
+        균등 분포일 때 $H = \log n$이 최대다 (Jensen 부등식으로 증명 가능).
+        모든 결과가 동등하게 불확실할 때 불확실성이 가장 크다.
+      </li>
+      <li>
+        <strong>가산성:</strong> $X$, $Y$가 독립이면 $H(X, Y) = H(X) + H(Y)$.
+      </li>
+    </ul>
+
+    <div class="callout">
+      <strong>이진 엔트로피 예시:</strong> 베르누이 확률 변수 $X \sim \text{Bernoulli}(p)$의 엔트로피:
+      $H = -p\log p - (1-p)\log(1-p)$.
+      $p = 0.5$일 때 $H = 1$ bit로 최대. $p = 0$ 또는 $p = 1$일 때 $H = 0$.
+      동전이 공정할수록 불확실성이 크다.
+    </div>
+
+    <div class="pullquote">
+      엔트로피는 <strong>분포의 불확실성</strong>을 수치화한다.
+      동시에 그 분포에서 오는 메시지를 최적으로 부호화했을 때 필요한 <strong>평균 비트 수</strong>이기도 하다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>교차 엔트로피 (Cross-Entropy)</h2>
+    <p>
+      현실에서는 실제 분포 $p$를 모르고, 우리의 모델이 근사 분포 $q$를 제시한다.
+      $p$에서 나온 메시지를 $q$에 최적화된 부호로 인코딩하면 얼마나 많은 비트가 필요할까?
+      이것이 <strong>교차 엔트로피</strong>다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">교차 엔트로피 (Cross-Entropy)</div>
+      <p>$$H(p, q) = -\sum_x p(x) \log q(x) = \mathbb{E}_{x \sim p}[-\log q(x)]$$</p>
+      <p>
+        $p$: 실제 분포(데이터 생성 분포) &nbsp;·&nbsp;
+        $q$: 모델이 추정한 근사 분포
+      </p>
+    </div>
+
+    <p>
+      $H(p, q) \geq H(p)$ 임이 항상 성립한다. 잘못된 코드($q$)를 쓰면 항상 최적($p$ 기준) 보다
+      더 많은 비트를 써야 한다. 등호는 $p = q$일 때만 성립한다.
+    </p>
+
+    <h3>분류 손실 함수로서의 교차 엔트로피</h3>
+    <p>
+      분류 문제에서 실제 레이블 $y$가 클래스 $c$에 해당한다면, 실제 분포는 one-hot이다:
+      $p(c) = 1[y = c]$. 모델의 출력은 softmax 확률 $q(c) = \hat{p}_c$라 하면:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">분류에서의 교차 엔트로피 손실</div>
+      $$H(p, q) = -\sum_{c=1}^C \mathbf{1}[y = c] \log \hat{p}_c = -\log \hat{p}_y$$
+      <p>정답 클래스의 예측 확률에 로그를 취하고 부호를 바꾼 값. MLE의 NLL과 동일하다.</p>
+    </div>
+
+    <p>
+      교차 엔트로피를 최소화하는 것은 KL divergence를 최소화하는 것과 같다.
+      왜냐하면 $H(p, q) = H(p) + D_{KL}(p \| q)$이고, $H(p)$는 모델 파라미터에 무관한 상수이기 때문이다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>KL Divergence</h2>
+    <p>
+      두 분포 $p$와 $q$가 얼마나 다른지 측정하는 함수가 필요하다.
+      KL divergence(Kullback–Leibler divergence, 상대 엔트로피)는 그 측도 중 가장 중요한 것이다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">KL Divergence (Relative Entropy)</div>
+      <p>$$D_{KL}(p \| q) = \sum_x p(x) \log \frac{p(x)}{q(x)} = \mathbb{E}_{x \sim p}\left[\log \frac{p(x)}{q(x)}\right]$$</p>
+      <p>교차 엔트로피와의 관계:</p>
+      <p>$$D_{KL}(p \| q) = H(p, q) - H(p)$$</p>
+      <p>"$p$를 기준으로 $q$가 얼마나 다른가"를 측정한다. $q$를 $p$에 맞추는 데 드는 추가 비용이다.</p>
+    </div>
+
+    <h3>비음성 증명: Jensen 부등식</h3>
+    <p>
+      $D_{KL}(p \| q) \geq 0$은 Jensen 부등식으로 우아하게 증명된다.
+      $\log$는 오목 함수(concave)이므로:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">Gibbs' Inequality — KL ≥ 0</div>
+      $$-D_{KL}(p \| q) = \mathbb{E}_{p}\left[\log\frac{q(x)}{p(x)}\right] \leq \log \mathbb{E}_{p}\left[\frac{q(x)}{p(x)}\right] = \log \sum_x p(x) \cdot \frac{q(x)}{p(x)} = \log \sum_x q(x) = \log 1 = 0$$
+      $$\therefore\quad D_{KL}(p \| q) \geq 0, \quad \text{등호 } \Leftrightarrow p = q$$
+    </div>
+
+    <h3>비대칭성</h3>
+    <p>
+      KL divergence는 <strong>비대칭</strong>이다: 일반적으로 $D_{KL}(p \| q) \neq D_{KL}(q \| p)$.
+      이 때문에 KL divergence는 거리(metric)가 아니다. 삼각 부등식도 성립하지 않는다.
+    </p>
+    <p>
+      그런데 이 비대칭성은 단점이 아니라 의미 있는 구분이다. 어느 방향의 KL을 최소화하느냐에 따라
+      최적화의 행동이 완전히 달라진다.
+    </p>
+
+    <h2>Forward KL vs Reverse KL</h2>
+    <p>
+      $p$를 실제 분포, $q_\phi$를 우리가 학습할 근사 분포라 하자.
+    </p>
+
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">1</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Forward KL: $D_{KL}(p \| q_\phi)$ — Mode-Covering <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            $p(x) > 0$인 곳에서 $q_\phi(x) = 0$이 되면 $\log(p/q) \to \infty$가 되어 무한 패널티가 발생한다.
+            따라서 $q_\phi$는 $p$의 <em>모든</em> 지지(support)를 반드시 커버해야 한다.
+            다봉 분포(multi-modal) $p$가 있으면 $q_\phi$는 모든 모드(mode)를 포함하는 넓은 분포가 된다.
+            MLE는 $\min_\phi D_{KL}(p_{data} \| q_\phi)$와 동치이므로, 표준 학습이 여기에 해당한다.
+          </div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">2</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">Reverse KL: $D_{KL}(q_\phi \| p)$ — Mode-Seeking <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            $q_\phi(x) > 0$인 곳에서 $p(x) = 0$이 되면 무한 패널티가 발생한다.
+            따라서 $q_\phi$는 $p$가 낮은 곳에 확률을 두지 않는다.
+            대신 $p$의 단 하나의 강한 모드에만 집중하는(zero-forcing, 확률을 0으로 몰아가는) 행동을 한다.
+            Variational Inference(VI)는 $\min_\phi D_{KL}(q_\phi \| p)$를 목적으로 하며,
+            다봉 사후 분포를 단봉으로 근사하는 경향이 있다.
+          </div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">3</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">JS Divergence — 대칭 버전 <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            Jensen–Shannon divergence: $D_{JS}(p \| q) = \frac{1}{2}D_{KL}(p \| m) + \frac{1}{2}D_{KL}(q \| m)$,
+            여기서 $m = \frac{p+q}{2}$.
+            대칭적($D_{JS}(p\|q) = D_{JS}(q\|p)$)이고 유계($0 \leq D_{JS} \leq \log 2$)이다.
+            원래 GAN의 학습 목적 함수가 generator-discriminator 균형점에서 JS divergence 최소화와 동치임이 알려져 있다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>상호 정보량 (Mutual Information)</h2>
+    <p>
+      두 확률 변수 $X$와 $Y$가 얼마나 서로 연관되어 있는가를 측정하는 양이다.
+      결합 분포 $P(X, Y)$와 독립 가정 하의 주변 분포의 곱 $P(X)P(Y)$ 사이의 KL divergence로 정의한다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">상호 정보량 (Mutual Information)</div>
+      <p>$$I(X;\, Y) = D_{KL}(P(X,Y) \| P(X)P(Y)) = \sum_{x,y} P(x,y)\log\frac{P(x,y)}{P(x)P(y)}$$</p>
+      <p>엔트로피로 표현하면:</p>
+      <p>$$I(X;\, Y) = H(X) - H(X \mid Y) = H(Y) - H(Y \mid X) = H(X) + H(Y) - H(X, Y)$$</p>
+      <p>$X$에 대한 불확실성이 $Y$를 알고 나서 얼마나 줄어드는가. 항상 $\geq 0$.</p>
+    </div>
+
+    <p>
+      $I(X;Y) = 0$은 $X$와 $Y$가 독립임을 의미한다.
+      특성 선택(feature selection), 정보 병목 이론(Information Bottleneck),
+      그리고 표현 학습에서 "어떤 정보를 보존할 것인가"를 정량화할 때 핵심 역할을 한다.
+    </p>
+
+    <h2>VAE와 ELBO: KL divergence의 실제 응용</h2>
+    <p>
+      VAE(Variational Autoencoder)는 정보이론 개념이 생성 모델에 어떻게 녹아드는지를
+      보여주는 가장 명쾌한 예다. 잠재 변수 $z$를 통해 데이터 $x$를 생성하는 모델을 생각하자.
+    </p>
+    <p>
+      우리가 원하는 것은 $\log p_\theta(x)$를 최대화하는 것이다.
+      하지만 사후 분포 $p_\theta(z \mid x)$는 계산이 불가능(intractable)하다.
+      대신 근사 사후 분포 $q_\phi(z \mid x)$를 도입하면:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">ELBO 유도</div>
+      $$\log p_\theta(x) = \mathbb{E}_{q_\phi(z \mid x)}\left[\log p_\theta(x)\right]$$
+      $$= \mathbb{E}_{q_\phi}\left[\log \frac{p_\theta(x, z)}{p_\theta(z \mid x)}\right]$$
+      $$= \mathbb{E}_{q_\phi}\left[\log \frac{p_\theta(x, z)}{q_\phi(z \mid x)}\right] + D_{KL}(q_\phi(z \mid x) \| p_\theta(z \mid x))$$
+      $$\geq \underbrace{\mathbb{E}_{q_\phi}\left[\log p_\theta(x \mid z)\right] - D_{KL}(q_\phi(z \mid x) \| p(z))}_{\mathcal{L}_{\text{ELBO}}}$$
+    </div>
+
+    <p>
+      $D_{KL} \geq 0$이므로 $\log p_\theta(x) \geq \mathcal{L}_{\text{ELBO}}$, 즉 ELBO는 하한이다.
+      ELBO를 최대화하면 두 가지 효과가 동시에 발생한다:
+    </p>
+
+    <div class="fig-breakdown">
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">1</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">재구성 항: $\mathbb{E}_{q_\phi}[\log p_\theta(x \mid z)]$ <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            잠재 변수 $z$를 샘플링했을 때 원래 데이터 $x$를 잘 복원하는가를 측정한다.
+            $p_\theta(x \mid z)$가 가우시안이면 이 항은 MSE에 해당한다.
+            Bernoulli이면 binary cross-entropy다. 디코더(decoder)의 재구성 품질을 높인다.
+          </div>
+        </div>
+      </div>
+      <div class="fig-breakdown-item" onclick="toggleBd(this)">
+        <div class="fig-bd-num">2</div>
+        <div class="fig-bd-body">
+          <div class="fig-bd-title">KL 정규화 항: $-D_{KL}(q_\phi(z \mid x) \| p(z))$ <span class="fig-bd-arrow">▼</span></div>
+          <div class="fig-bd-desc">
+            인코더가 만드는 사후 분포 $q_\phi(z \mid x)$를 사전 분포 $p(z) = \mathcal{N}(0, I)$에 가깝게 유지한다.
+            잠재 공간이 정규 분포를 따르도록 강제해 새로운 샘플 생성이 가능하게 한다.
+            $q_\phi$가 가우시안 $\mathcal{N}(\mu, \sigma^2 I)$이면 이 항은 닫힌 형태로 계산 가능하다:
+            $D_{KL} = \frac{1}{2}\sum_j (\mu_j^2 + \sigma_j^2 - \log \sigma_j^2 - 1)$.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>ELBO의 의미:</strong> VAE는 "데이터를 잘 설명하는 잠재 표현(재구성 항)"과
+      "잠재 공간이 사전 분포에서 크게 벗어나지 않아야 한다는 정규화(KL 항)" 사이의 균형을 학습한다.
+      이 균형이 생성 모델의 핵심이다.
+    </div>
+
+    <h2>모든 개념의 연결 구조</h2>
+
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>개념</th>
+          <th>수식</th>
+          <th>ML에서의 역할</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>자기 정보량</td>
+          <td>$-\log P(x)$</td>
+          <td>단일 샘플의 NLL (손실 기여도)</td>
+        </tr>
+        <tr>
+          <td>엔트로피 $H(p)$</td>
+          <td>$-\mathbb{E}_p[\log p]$</td>
+          <td>불확실성 측도, 최적 부호화 비트 수</td>
+        </tr>
+        <tr>
+          <td>교차 엔트로피 $H(p,q)$</td>
+          <td>$-\mathbb{E}_p[\log q]$</td>
+          <td>분류 손실 함수, MLE와 동치</td>
+        </tr>
+        <tr>
+          <td>KL divergence $D_{KL}(p\|q)$</td>
+          <td>$H(p,q) - H(p)$</td>
+          <td>VAE 정규화 항, VI 목적 함수</td>
+        </tr>
+        <tr>
+          <td>상호 정보량 $I(X;Y)$</td>
+          <td>$H(X) - H(X|Y)$</td>
+          <td>특성 선택, 정보 병목, 표현 학습</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>마치며</h2>
+    <p>
+      섀넌이 1948년에 세운 정보이론은 원래 통신 채널의 용량을 분석하기 위한 것이었다.
+      그런데 70여 년이 지난 지금, 이 이론은 딥러닝의 거의 모든 곳에 살아있다.
+    </p>
+    <p>
+      교차 엔트로피 손실을 쓸 때마다, KL divergence로 사후 분포를 정규화할 때마다,
+      특성 간 상호 정보량을 최대화하는 SSL(self-supervised learning) 목적 함수를 볼 때마다 —
+      섀넌의 아이디어가 코드 안에서 작동하고 있는 것이다.
+    </p>
+    <p>
+      앞 포스트에서 다룬 MLE와 MAP도 이 맥락에서 다시 읽힌다.
+      MLE는 $D_{KL}(p_{data} \| q_\theta)$를 최소화하는 것이고,
+      교차 엔트로피 손실은 그 practical한 구현이다.
+      수식이 아니라 개념의 흐름이 보이기 시작하면, 논문의 목적 함수가 낯설지 않아진다.
+    </p>
+
+    <p style="margin-top: 3rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .75rem; color: #b0b0b0;">
+      References: Claude Shannon, <em>A Mathematical Theory of Communication</em> (1948) ·
+      Ian Goodfellow et al., <em>Deep Learning</em>, Ch. 3 ·
+      David MacKay, <em>Information Theory, Inference, and Learning Algorithms</em>
+    </p>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+<script>
+  function toggleBd(el) {
+    const isOpen = el.classList.contains('open');
+    el.parentElement.querySelectorAll('.fig-breakdown-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+</script>
+</body>
+</html>

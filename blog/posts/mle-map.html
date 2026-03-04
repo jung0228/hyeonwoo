@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>최대 우도 추정과 최대 사후 추정 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, {
+        delimiters: [
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false}
+        ]
+      });"></script>
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule { border-top: none; padding-top: 0; }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── MATH BLOCK ─── */
+    .math-block {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      border-radius: 6px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .math-block .math-label {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--accent);
+      margin-bottom: .6rem;
+      text-align: left;
+    }
+    .math-block p {
+      font-size: .85rem; color: var(--muted);
+      margin-top: .5rem; margin-bottom: 0;
+      text-align: center;
+    }
+
+    /* ─── DEFINITION BOX ─── */
+    .def-box {
+      border: 1px solid var(--rule-lt);
+      border-left: 3px solid var(--text);
+      padding: 1.1rem 1.4rem;
+      margin: 1.8rem 0;
+      background: var(--bg);
+    }
+    .def-box .def-title {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: .55rem;
+    }
+    .def-box p { margin-bottom: .5rem; font-size: .98rem; }
+    .def-box p:last-child { margin-bottom: 0; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── COMPARISON TABLE ─── */
+    .result-table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem;
+    }
+    .result-table th {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      padding: .55rem .8rem;
+      text-align: center; font-weight: 700;
+      color: var(--text); letter-spacing: .04em;
+    }
+    .result-table td {
+      border: 1px solid var(--rule-lt);
+      padding: .5rem .8rem;
+      text-align: center; color: var(--muted);
+    }
+    .result-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+    .result-table .katex { font-size: .9em; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+      .result-table { font-size: .75rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar-inner-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">최대 우도 추정(MLE)과 최대 사후 추정(MAP): 파라미터를 추정하는 두 관점</h1>
+
+  <p class="post-dek">
+    관측 데이터로부터 모델 파라미터를 찾는 두 가지 방법론 — 빈도주의 관점의 MLE와 베이즈주의 관점의 MAP가
+    어떻게 연결되는지, 그리고 딥러닝의 손실 함수와 정규화가 이 두 개념에서 어떻게 자연스럽게 도출되는지 정리한다.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">Math</span>
+    <span class="dot">·</span>
+    <span>Mar 4, 2026</span>
+    <span class="dot">·</span>
+    <span>18 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">파라미터 추정이란?</h2>
+    <p>
+      확률 모델을 사용한다는 것은, 데이터가 어떤 파라미터 $\theta$를 가진 분포 $P(X \mid \theta)$에서
+      생성됐다고 가정하는 것이다. 동전이라면 앞면 확률 $p$, 가우시안 분포라면 평균 $\mu$와 분산 $\sigma^2$,
+      신경망이라면 수백만 개의 가중치가 $\theta$에 해당한다.
+    </p>
+    <p>
+      문제는 $\theta$를 모른다는 것이다. 우리가 가진 것은 데이터 $\mathcal{D} = \{x_1, \ldots, x_n\}$뿐이다.
+      이 데이터로부터 $\theta$를 어떻게 추정할 것인가 — 이것이 <strong>파라미터 추정(parameter estimation)</strong> 문제다.
+    </p>
+    <p>
+      크게 두 관점이 있다. <strong>빈도주의(frequentist)</strong>는 $\theta$를 고정된 미지의 상수로 보고
+      데이터만으로 추정한다. <strong>베이즈주의(Bayesian)</strong>는 $\theta$도 확률 변수로 보고,
+      데이터를 관측하기 전의 사전 믿음(prior)을 데이터로 업데이트한다.
+      MLE는 전자, MAP는 후자의 대표적 방법이다.
+    </p>
+
+    <h2>우도 함수 (Likelihood)</h2>
+    <p>
+      MLE를 이해하려면 먼저 <strong>우도(likelihood)</strong>의 개념이 중요하다.
+      $P(X \mid \theta)$는 두 가지 관점으로 읽을 수 있다.
+    </p>
+    <ul>
+      <li><strong>확률(probability)</strong>: $\theta$가 고정됐을 때, $X = x$가 얼마나 자주 나오는가</li>
+      <li><strong>우도(likelihood)</strong>: $X = x$가 관측됐을 때, $\theta$라는 파라미터가 얼마나 그럴듯한가</li>
+    </ul>
+    <p>
+      두 관점 모두 같은 함수 $P(X \mid \theta)$를 쓰지만, 무엇을 변수로 보는지가 다르다.
+      우도로 볼 때는 $x$가 고정이고 $\theta$가 변수다. 이를 명시하기 위해 우도 함수를 다음과 같이 쓴다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">우도 함수 (Likelihood Function)</div>
+      <p>$$\mathcal{L}(\theta \,;\, \mathcal{D}) = P(\mathcal{D} \mid \theta) = \prod_{i=1}^{n} P(x_i \mid \theta)$$</p>
+      <p>데이터 포인트가 독립적으로 생성됐다(i.i.d.)고 가정할 때, 전체 우도는 각 포인트의 우도의 곱이다.</p>
+    </div>
+
+    <p>
+      여기서 $\prod$로 곱하는 이유가 i.i.d. 가정이다. 각 $x_i$가 독립이면 결합 확률은 주변 확률의 곱이다.
+      이 곱은 $n$이 커질수록 극도로 작아져 수치적으로 불안정해진다.
+      그래서 대신 <strong>로그 우도(log-likelihood)</strong>를 사용한다.
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">로그 우도 (Log-Likelihood)</div>
+      $$\ell(\theta) = \log \mathcal{L}(\theta\,;\,\mathcal{D}) = \sum_{i=1}^{n} \log P(x_i \mid \theta)$$
+    </div>
+
+    <p>
+      $\log$는 단조 증가 함수이므로 $\mathcal{L}$을 최대화하는 $\theta$와 $\ell$을 최대화하는 $\theta$는
+      동일하다. 곱이 합으로 바뀌어 수치 안정성도 높아진다.
+    </p>
+
+    <h2>최대 우도 추정 (MLE)</h2>
+
+    <div class="def-box">
+      <div class="def-title">최대 우도 추정 (Maximum Likelihood Estimation)</div>
+      <p>$$\hat{\theta}_{MLE} = \arg\max_{\theta} \, \ell(\theta) = \arg\max_{\theta} \sum_{i=1}^{n} \log P(x_i \mid \theta)$$</p>
+      <p>관측 데이터를 가장 그럴듯하게 만드는 파라미터를 선택한다.</p>
+    </div>
+
+    <h3>예시 1: 동전 던지기 (Bernoulli)</h3>
+    <p>
+      동전을 $n$번 던져 $k$번 앞면이 나왔다. 앞면 확률 $p$의 MLE를 구해보자.
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">Bernoulli MLE 풀이</div>
+      $$\ell(p) = k \log p + (n - k) \log(1 - p)$$
+      $$\frac{d\ell}{dp} = \frac{k}{p} - \frac{n-k}{1-p} = 0 \quad \Rightarrow \quad \hat{p}_{MLE} = \frac{k}{n}$$
+    </div>
+
+    <p>
+      결과는 직관적으로 당연하다. 앞면이 나온 비율이 MLE다.
+      수학이 "관측한 것을 그대로 믿어라"는 상식을 도출한 것이다.
+    </p>
+
+    <h3>예시 2: 가우시안 분포</h3>
+    <p>
+      $x_1, \ldots, x_n \overset{\text{iid}}{\sim} \mathcal{N}(\mu, \sigma^2)$일 때 $\mu$와 $\sigma^2$의 MLE를 구하면:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">Gaussian MLE 결과</div>
+      $$\hat{\mu}_{MLE} = \frac{1}{n}\sum_{i=1}^n x_i \qquad (\text{표본 평균})$$
+      $$\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum_{i=1}^n (x_i - \hat{\mu})^2 \qquad (\text{편향 추정량})$$
+    </div>
+
+    <p>
+      평균의 MLE는 표본 평균이다. 분산의 MLE는 $\frac{1}{n}$으로 나누는 편향(biased) 추정량임에 주의하자.
+      불편 추정량은 $\frac{1}{n-1}$로 나누는데, MLE가 반드시 불편 추정량을 주진 않는다.
+    </p>
+
+    <div class="callout">
+      <strong>MLE의 한계:</strong> 데이터가 적을 때 과적합(overfitting)하기 쉽다.
+      동전을 3번 던져 3번 모두 앞면이 나왔다면 MLE는 $\hat{p} = 1$이다.
+      하지만 우리는 이 동전이 공정할 가능성도 있다는 것을 안다.
+      이 사전 지식을 모델에 반영하는 방법이 MAP다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>베이즈 정리와 사후 확률</h2>
+    <p>
+      베이즈 정리는 $\theta$에 대한 믿음을 데이터로 업데이트하는 공식이다.
+    </p>
+
+    <div class="def-box">
+      <div class="def-title">베이즈 정리 (Bayes' Theorem)</div>
+      <p>$$P(\theta \mid \mathcal{D}) = \frac{P(\mathcal{D} \mid \theta)\, P(\theta)}{P(\mathcal{D})}$$</p>
+      <p>
+        $P(\theta)$: <strong>사전 분포(prior)</strong> — 데이터를 보기 전 $\theta$에 대한 믿음<br>
+        $P(\mathcal{D} \mid \theta)$: <strong>우도(likelihood)</strong> — 파라미터 $\theta$ 하에서 데이터가 나올 확률<br>
+        $P(\theta \mid \mathcal{D})$: <strong>사후 분포(posterior)</strong> — 데이터를 본 후 $\theta$에 대한 믿음<br>
+        $P(\mathcal{D})$: <strong>증거(evidence)</strong> — 정규화 상수, $\theta$에 무관
+      </p>
+    </div>
+
+    <p>
+      $P(\mathcal{D})$는 $\theta$에 무관한 상수이므로, 최적화 목적으로는 무시할 수 있다:
+    </p>
+
+    <div class="math-block">
+      $$P(\theta \mid \mathcal{D}) \propto P(\mathcal{D} \mid \theta)\, P(\theta)$$
+      <p>사후 확률 ∝ 우도 × 사전 확률</p>
+    </div>
+
+    <p>
+      직관적으로, 베이즈 추론은 "과거 경험(prior)과 새 증거(likelihood)를 결합해 믿음을 업데이트한다."
+      데이터가 많아질수록 우도가 prior를 압도하고 MLE와 수렴한다.
+    </p>
+
+    <h2>최대 사후 추정 (MAP)</h2>
+
+    <div class="def-box">
+      <div class="def-title">최대 사후 추정 (Maximum A Posteriori Estimation)</div>
+      <p>$$\hat{\theta}_{MAP} = \arg\max_{\theta}\, P(\theta \mid \mathcal{D}) = \arg\max_{\theta}\left[\sum_{i=1}^n \log P(x_i \mid \theta) + \log P(\theta)\right]$$</p>
+      <p>사후 확률을 최대화하는 파라미터를 선택한다. MLE에 $\log P(\theta)$ 항이 추가된 형태다.</p>
+    </div>
+
+    <p>
+      MLE와 MAP의 차이는 $\log P(\theta)$ 항 하나다.
+      사전 분포 $P(\theta)$가 균등 분포(uniform)라면 $\log P(\theta)$는 상수이고,
+      MAP와 MLE는 동일한 해를 준다.
+      즉 <strong>MLE = uniform prior인 MAP</strong>다.
+    </p>
+
+    <div class="pullquote">
+      MAP는 데이터가 말하는 것(우도)과 우리가 이미 아는 것(사전 분포)을
+      <strong>균형 있게</strong> 반영한 추정이다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>정규화의 기원: 사전 분포의 선택</h2>
+    <p>
+      딥러닝에서 흔히 쓰이는 L2 정규화(weight decay)와 L1 정규화(Lasso)는
+      사실 MAP 추정의 특수한 경우다. 사전 분포를 어떻게 선택하느냐에 따라 정규화 형태가 결정된다.
+    </p>
+
+    <h3>가우시안 사전 분포 → L2 정규화</h3>
+    <p>
+      각 파라미터가 독립적으로 $\theta_j \sim \mathcal{N}(0, \tau^2)$라고 가정하면:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">Gaussian Prior → L2 Regularization</div>
+      $$\log P(\theta) = -\frac{1}{2\tau^2}\sum_j \theta_j^2 + \text{const} = -\frac{1}{2\tau^2}\|\theta\|_2^2 + \text{const}$$
+      $$\hat{\theta}_{MAP} = \arg\max_{\theta}\left[\sum_i \log P(x_i \mid \theta) - \frac{1}{2\tau^2}\|\theta\|_2^2\right]$$
+      $$= \arg\min_{\theta}\left[\underbrace{-\sum_i \log P(x_i \mid \theta)}_{\text{NLL}} + \underbrace{\lambda\|\theta\|_2^2}_{L2 \text{ 정규화}}\right], \quad \lambda = \frac{1}{2\tau^2}$$
+    </div>
+
+    <p>
+      딥러닝에서의 <strong>weight decay</strong>가 정확히 이것이다.
+      사전 분포의 분산 $\tau^2$이 클수록(파라미터에 대한 사전 확신이 약할수록) $\lambda$가 작아지고
+      정규화 강도가 약해진다.
+    </p>
+
+    <h3>라플라스 사전 분포 → L1 정규화</h3>
+    <p>
+      각 파라미터가 $\theta_j \sim \text{Laplace}(0, b)$를 따른다고 가정하면:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">Laplace Prior → L1 Regularization</div>
+      $$\log P(\theta) = -\frac{1}{b}\sum_j |\theta_j| + \text{const} = -\frac{1}{b}\|\theta\|_1 + \text{const}$$
+      $$\hat{\theta}_{MAP} = \arg\min_{\theta}\left[-\sum_i \log P(x_i \mid \theta) + \lambda\|\theta\|_1\right], \quad \lambda = \frac{1}{b}$$
+    </div>
+
+    <p>
+      라플라스 분포는 0 근방에서 뾰족한 피크를 가지고 꼬리가 두꺼운 분포다.
+      이는 "파라미터 대부분이 0에 가깝고, 일부는 클 수도 있다"는 사전 믿음이다.
+      L1 정규화가 희소(sparse) 해를 유도하는 이유가 바로 이 라플라스 사전 분포의 성질에서 비롯된다.
+    </p>
+
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>사전 분포</th>
+          <th>$\log P(\theta)$</th>
+          <th>정규화 항</th>
+          <th>효과</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>균등 (Uniform)</td>
+          <td>상수</td>
+          <td>없음</td>
+          <td>MLE와 동일</td>
+        </tr>
+        <tr>
+          <td>가우시안 $\mathcal{N}(0, \tau^2)$</td>
+          <td>$-\frac{1}{2\tau^2}\|\theta\|_2^2$</td>
+          <td>L2 (Weight Decay)</td>
+          <td>파라미터를 0으로 당김 (수축)</td>
+        </tr>
+        <tr>
+          <td>라플라스 $\text{Laplace}(0, b)$</td>
+          <td>$-\frac{1}{b}\|\theta\|_1$</td>
+          <td>L1 (Lasso)</td>
+          <td>파라미터를 0으로 만들어 희소성 유도</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>딥러닝 손실 함수의 MLE 해석</h2>
+    <p>
+      딥러닝에서 쓰이는 대부분의 손실 함수는 MLE로부터 자연스럽게 도출된다.
+      "어떤 분포를 가정하는가"가 손실 함수를 결정한다.
+    </p>
+
+    <h3>교차 엔트로피 손실 = Categorical NLL</h3>
+    <p>
+      분류 문제에서 레이블 $y_i \in \{1, \ldots, C\}$가
+      $P(y_i = c \mid x_i;\, \theta) = \text{softmax}(f_\theta(x_i))_c$를 따른다고 가정하면:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">Cross-Entropy = Categorical Negative Log-Likelihood</div>
+      $$-\log P(y_i \mid x_i; \theta) = -\sum_{c=1}^C \mathbf{1}[y_i = c]\, \log \hat{p}_c(x_i;\theta)$$
+      $$\text{NLL} = -\sum_{i=1}^n \log P(y_i \mid x_i;\theta) = \sum_{i=1}^n H(y_i^{\text{one-hot}},\, \hat{p}(x_i;\theta))$$
+    </div>
+
+    <p>
+      분류에서 cross-entropy loss를 최소화하는 것은 categorical likelihood를 최대화하는 것과 완전히 동일하다.
+      손실 함수 선택에 이미 확률 모델에 대한 가정이 내재되어 있는 것이다.
+    </p>
+
+    <h3>평균 제곱 오차 (MSE) = Gaussian NLL</h3>
+    <p>
+      회귀 문제에서 $y_i \sim \mathcal{N}(f_\theta(x_i), \sigma^2)$라고 가정하면:
+    </p>
+
+    <div class="math-block">
+      <div class="math-label">MSE = Gaussian Negative Log-Likelihood</div>
+      $$-\log P(y_i \mid x_i;\theta) = \frac{(y_i - f_\theta(x_i))^2}{2\sigma^2} + \frac{1}{2}\log(2\pi\sigma^2)$$
+      $$\text{NLL} \propto \sum_{i=1}^n (y_i - f_\theta(x_i))^2 = \text{MSE}$$
+    </div>
+
+    <p>
+      $\sigma^2$이 상수라면 NLL 최소화는 MSE 최소화와 동치다.
+      MSE 손실을 쓰는 것은 암묵적으로 잔차가 가우시안 분포를 따른다고 가정하는 것이다.
+      이상치(outlier)에 MSE가 취약한 이유도 여기 있다 — 가우시안 분포는 꼬리가 얇아 큰 오차에 과도한 패널티를 준다.
+      Huber 손실이나 MAE(L1 손실)는 라플라스 분포 가정에 해당하며, 이상치에 더 강건하다.
+    </p>
+
+    <div class="callout">
+      <strong>요약:</strong> 손실 함수를 선택할 때 "어떤 노이즈 모델을 가정하는가?"를 생각하면
+      선택의 근거가 명확해진다. 가우시안 노이즈 → MSE,
+      Bernoulli/Categorical → Cross-entropy, 라플라스 노이즈 → MAE.
+    </div>
+
+    <h2>마치며</h2>
+    <p>
+      MLE와 MAP는 단순히 "파라미터 추정 방법" 이상의 의미를 가진다.
+      이 두 개념은 딥러닝 전반에 걸쳐 있는 아이디어들의 출발점이다.
+    </p>
+    <p>
+      손실 함수는 우도 모델의 선택이고, 정규화는 사전 분포의 선택이다.
+      배치 정규화, 드롭아웃, 앙상블 등 다양한 기법들도 베이즈 관점에서 해석될 수 있다.
+      이 틀을 이해하면 새로운 방법론을 접했을 때 "어떤 분포를 가정하는가?", "어떤 사전 지식을 인코딩하는가?"라는
+      질문을 자연스럽게 던질 수 있다.
+    </p>
+    <p>
+      다음 포스트에서는 MLE와 MAP의 목적 함수에 등장하는 로그 확률의 합산이
+      <strong>정보이론</strong>과 어떻게 연결되는지 — 엔트로피, 교차 엔트로피, KL divergence — 를 다룬다.
+    </p>
+
+    <p style="margin-top: 3rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .75rem; color: #b0b0b0;">
+      References: Christopher Bishop, <em>Pattern Recognition and Machine Learning</em>, Ch. 1–2 ·
+      Kevin Murphy, <em>Probabilistic Machine Learning</em>, Ch. 4 ·
+      Ian Goodfellow et al., <em>Deep Learning</em>, Ch. 5
+    </p>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>
