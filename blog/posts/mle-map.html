@@ -420,6 +420,58 @@
       수학이 "관측한 것을 그대로 믿어라"는 상식을 도출한 것이다.
     </p>
 
+    <!-- ── SVG: 베르누이 우도 함수 ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 560 215" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="560" height="215" fill="#efede6" rx="6"/>
+        <!-- horizontal grid -->
+        <line x1="70" y1="30" x2="510" y2="30" stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <line x1="70" y1="100" x2="510" y2="100" stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <!-- axes -->
+        <line x1="70" y1="170" x2="512" y2="170" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr1)"/>
+        <line x1="70" y1="172" x2="70" y2="18" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr1)"/>
+        <defs>
+          <marker id="arr1" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#0f0f0f"/>
+          </marker>
+        </defs>
+        <!-- x-axis ticks & labels -->
+        <line x1="202" y1="170" x2="202" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="290" y1="170" x2="290" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="378" y1="170" x2="378" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="510" y1="170" x2="510" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="70"  y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0</text>
+        <text x="202" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.3</text>
+        <text x="290" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.5</text>
+        <text x="378" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.7</text>
+        <text x="510" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">1.0</text>
+        <text x="300" y="202" text-anchor="middle" font-size="11" fill="#6b6b6b" font-style="italic">p (앞면 확률)</text>
+        <!-- y-axis label -->
+        <text transform="rotate(-90)" x="-95" y="20" text-anchor="middle" font-size="11" fill="#6b6b6b" font-style="italic">L(p)</text>
+        <!-- Peak dashed verticals -->
+        <line x1="378" y1="30" x2="378" y2="170" stroke="#1a56c4" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+        <line x1="202" y1="30" x2="202" y2="170" stroke="#e07b00" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+        <!-- Curve 1: n=10, k=7 (blue solid), peak at p=0.7 -->
+        <polyline fill="none" stroke="#1a56c4" stroke-width="2.3" stroke-linejoin="round"
+          points="70,170 92,170 114,170 136,170 158,169.6 180,168.3 202,165.2 224,158.9 246,147.8 268,130.8 290,108.4 312,82.9 334,57.0 356,37.6 378,30 400,38.1 422,64.1 444,102 466,139.9 488,164.5 510,170"/>
+        <!-- Curve 2: n=10, k=3 (orange dashed), peak at p=0.3 -->
+        <polyline fill="none" stroke="#e07b00" stroke-width="2.3" stroke-linejoin="round" stroke-dasharray="7,3"
+          points="70,170 92,164.5 114,139.9 136,101.8 158,64.3 180,38.5 202,30 224,37.7 246,57 290,108.4 334,147.7 378,165.2 422,169.6 466,170 510,170"/>
+        <!-- Peak labels -->
+        <text x="378" y="22" text-anchor="middle" font-size="10" fill="#1a56c4" font-weight="700">p̂ = 0.7</text>
+        <text x="202" y="22" text-anchor="middle" font-size="10" fill="#e07b00" font-weight="700">p̂ = 0.3</text>
+        <!-- Legend -->
+        <line x1="88" y1="14" x2="112" y2="14" stroke="#1a56c4" stroke-width="2.3"/>
+        <text x="116" y="18" font-size="10" fill="#1a56c4">n=10, k=7</text>
+        <line x1="188" y1="14" x2="212" y2="14" stroke="#e07b00" stroke-width="2.3" stroke-dasharray="5,3"/>
+        <text x="216" y="18" font-size="10" fill="#e07b00">n=10, k=3</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        베르누이 우도 함수 $L(p) = p^k(1-p)^{n-k}$. 두 관측 모두 $n=10$으로 동일하지만 $k$가 다르면 피크 위치가 달라진다.
+      </p>
+    </div>
+
     <h3>예시 2: 가우시안 분포</h3>
     <p>
       $x_1, \ldots, x_n \overset{\text{iid}}{\sim} \mathcal{N}(\mu, \sigma^2)$일 때 $\mu$와 $\sigma^2$의 MLE를 구하면:
@@ -475,6 +527,59 @@
       데이터가 많아질수록 우도가 prior를 압도하고 MLE와 수렴한다.
     </p>
 
+    <!-- ── SVG: 베이즈 업데이트 ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 560 215" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="560" height="215" fill="#efede6" rx="6"/>
+        <defs>
+          <marker id="arr2" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#0f0f0f"/>
+          </marker>
+        </defs>
+        <!-- grid -->
+        <line x1="70" y1="100" x2="510" y2="100" stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <!-- axes -->
+        <line x1="70" y1="170" x2="512" y2="170" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <line x1="70" y1="172" x2="70" y2="18" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <!-- ticks & labels -->
+        <line x1="290" y1="170" x2="290" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="422" y1="170" x2="422" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="510" y1="170" x2="510" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="70"  y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0</text>
+        <text x="290" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.5</text>
+        <text x="422" y="185" text-anchor="middle" font-size="10" fill="#1a56c4" font-weight="700">0.8</text>
+        <text x="510" y="185" text-anchor="middle" font-size="10" fill="#999">1.0</text>
+        <text x="300" y="202" text-anchor="middle" font-size="11" fill="#6b6b6b" font-style="italic">p</text>
+        <!-- Peak marker: MAP at 0.8 -->
+        <line x1="422" y1="30" x2="422" y2="170" stroke="#1a56c4" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+        <!-- MLE marker at p=1.0 -->
+        <line x1="510" y1="30" x2="510" y2="170" stroke="#999" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+        <text x="510" y="24" text-anchor="middle" font-size="9" fill="#999">MLE=1.0</text>
+        <!-- Curve 1: Prior Beta(2,2), blue — peaks at 0.5 -->
+        <polyline fill="none" stroke="#6b9fde" stroke-width="2" stroke-linejoin="round"
+          points="70,170 114,119.6 158,80.4 202,52.4 246,35.6 290,30 334,35.6 378,52.4 422,80.4 466,119.6 510,170"/>
+        <!-- Curve 2: Likelihood p^3, monotone, green dashed -->
+        <polyline fill="none" stroke="#3a9455" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6,3"
+          points="70,170 114,170 158,168.9 202,166.2 246,161 290,152.5 334,139.8 378,122 422,98.3 466,67.9 488,50 510,30"/>
+        <!-- Curve 3: Posterior Beta(5,2), red bold — peaks at 0.8 -->
+        <polyline fill="none" stroke="#1a56c4" stroke-width="2.5" stroke-linejoin="round"
+          points="70,170 114,169.9 158,167.8 202,160.3 246,143.8 290,116.7 334,81.4 378,46.9 422,30 444,36.2 466,57.9 488,100.4 510,170"/>
+        <!-- MAP peak label -->
+        <text x="422" y="22" text-anchor="middle" font-size="10" fill="#1a56c4" font-weight="700">MAP = 0.8</text>
+        <!-- Legend -->
+        <line x1="80" y1="13" x2="104" y2="13" stroke="#6b9fde" stroke-width="2"/>
+        <text x="108" y="17" font-size="9.5" fill="#6b9fde">사전 분포 Beta(2,2)</text>
+        <line x1="236" y1="13" x2="260" y2="13" stroke="#3a9455" stroke-width="2" stroke-dasharray="5,3"/>
+        <text x="264" y="17" font-size="9.5" fill="#3a9455">우도 (n=3, k=3)</text>
+        <line x1="390" y1="13" x2="414" y2="13" stroke="#1a56c4" stroke-width="2.5"/>
+        <text x="418" y="17" font-size="9.5" fill="#1a56c4">사후 분포</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        3번 모두 앞면이 나왔을 때(우도 ↗): MLE는 $\hat{p}=1$이지만, 사전 분포가 극단적인 추정을 당겨 MAP는 $\hat{p}=0.8$.
+      </p>
+    </div>
+
     <h2>최대 사후 추정 (MAP)</h2>
 
     <div class="def-box">
@@ -489,6 +594,59 @@
       MAP와 MLE는 동일한 해를 준다.
       즉 <strong>MLE = uniform prior인 MAP</strong>다.
     </p>
+
+    <!-- ── SVG: MLE vs MAP ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 560 215" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="560" height="215" fill="#efede6" rx="6"/>
+        <defs>
+          <marker id="arr3" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#0f0f0f"/>
+          </marker>
+        </defs>
+        <!-- grid -->
+        <line x1="70" y1="100" x2="500" y2="100" stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <!-- axes -->
+        <line x1="70" y1="170" x2="502" y2="170" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <line x1="70" y1="172" x2="70" y2="18" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <!-- x ticks -->
+        <line x1="70"  y1="170" x2="70"  y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="253" y1="170" x2="253" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="344" y1="170" x2="344" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="70"  y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0</text>
+        <text x="253" y="185" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="700">0.47</text>
+        <text x="344" y="185" text-anchor="middle" font-size="10" fill="#1a56c4" font-weight="700">0.7</text>
+        <text x="500" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b" font-style="italic">θ</text>
+        <!-- Peak dashed verticals -->
+        <line x1="70"  y1="30"  x2="70"  y2="170" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+        <line x1="253" y1="30"  x2="253" y2="170" stroke="#c0392b" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+        <line x1="344" y1="30"  x2="344" y2="170" stroke="#1a56c4" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+        <!-- Gray: log prior P(θ), exp(-4θ²), peaks at θ=0 -->
+        <polyline fill="none" stroke="#999" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5,3"
+          points="70,30 109,35.5 148,49.7 187,72.3 226,96.2 266,118.5 305,136.8 344,150.3 383,159.2 422,164.5 461,167.5 500,168.9"/>
+        <!-- Blue: log-likelihood ℓ(θ), peaks at θ=0.7 -->
+        <polyline fill="none" stroke="#1a56c4" stroke-width="2.2" stroke-linejoin="round"
+          points="70,167.2 109,162.2 148,151.1 187,131.1 226,101.8 266,68.4 305,40.8 344,30 383,40.8 422,68.4 461,101.8 500,131.1"/>
+        <!-- Red: log posterior, peaks at θ≈0.47 -->
+        <polyline fill="none" stroke="#c0392b" stroke-width="2.5" stroke-linejoin="round"
+          points="70,159.8 109,142.1 148,110.6 187,69.8 226,37.3 253,30 266,32.1 305,56.9 344,97.2 383,133.3 422,155.6 461,165.4 500,170"/>
+        <!-- Peak labels -->
+        <text x="344" y="22" text-anchor="middle" font-size="10" fill="#1a56c4" font-weight="700">θ̂_MLE</text>
+        <text x="253" y="22" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="700">θ̂_MAP</text>
+        <text x="70"  y="22" text-anchor="middle" font-size="10" fill="#888">prior 피크</text>
+        <!-- Legend -->
+        <line x1="80" y1="13" x2="104" y2="13" stroke="#1a56c4" stroke-width="2.2"/>
+        <text x="108" y="17" font-size="9.5" fill="#1a56c4">ℓ(θ) 로그 우도</text>
+        <line x1="240" y1="13" x2="264" y2="13" stroke="#999" stroke-width="1.8" stroke-dasharray="4,3"/>
+        <text x="268" y="17" font-size="9.5" fill="#888">log P(θ) 사전 분포</text>
+        <line x1="400" y1="13" x2="424" y2="13" stroke="#c0392b" stroke-width="2.5"/>
+        <text x="428" y="17" font-size="9.5" fill="#c0392b">log P(θ|D) 사후</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        사후 분포(빨강) = 우도(파랑) + 사전 분포(회색)의 합산. MAP는 MLE와 사전 피크(θ=0) 사이에서 균형을 잡는다.
+      </p>
+    </div>
 
     <div class="pullquote">
       MAP는 데이터가 말하는 것(우도)과 우리가 이미 아는 것(사전 분포)을
@@ -537,6 +695,60 @@
       이는 "파라미터 대부분이 0에 가깝고, 일부는 클 수도 있다"는 사전 믿음이다.
       L1 정규화가 희소(sparse) 해를 유도하는 이유가 바로 이 라플라스 사전 분포의 성질에서 비롯된다.
     </p>
+
+    <!-- ── SVG: Gaussian vs Laplace Prior ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 560 215" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="560" height="215" fill="#efede6" rx="6"/>
+        <defs>
+          <marker id="arr4" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#0f0f0f"/>
+          </marker>
+        </defs>
+        <!-- grid -->
+        <line x1="70" y1="100" x2="510" y2="100" stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <!-- axes -->
+        <line x1="70" y1="170" x2="512" y2="170" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr4)"/>
+        <line x1="70" y1="172" x2="70" y2="18" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#arr4)"/>
+        <!-- ticks -->
+        <line x1="143" y1="170" x2="143" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="217" y1="170" x2="217" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="290" y1="170" x2="290" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="363" y1="170" x2="363" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="437" y1="170" x2="437" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="143" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">−2</text>
+        <text x="217" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">−1</text>
+        <text x="290" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0</text>
+        <text x="363" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">1</text>
+        <text x="437" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">2</text>
+        <text x="510" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b" font-style="italic">θ</text>
+        <!-- Zero vertical -->
+        <line x1="290" y1="30" x2="290" y2="170" stroke="#d8d8d2" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Gaussian N(0,1), blue: smooth bell -->
+        <polyline fill="none" stroke="#1a56c4" stroke-width="2.3" stroke-linejoin="round"
+          points="70,168.5 107,163.8 143,151.1 180,124.5 217,85 253,46.5 290,30 327,46.5 363,85 400,124.5 437,151.1 473,163.8 510,168.5"/>
+        <!-- Laplace(0,1), orange: sharp tent with heavier tails -->
+        <polyline fill="none" stroke="#e07b00" stroke-width="2.3" stroke-linejoin="round"
+          points="70,163 107,158.5 143,151.1 180,138.8 217,118.5 253,85 290,30 327,85 363,118.5 400,138.8 437,151.1 473,158.5 510,163"/>
+        <!-- Annotations: Gaussian narrow bell → L2 -->
+        <text x="180" y="55" font-size="9.5" fill="#1a56c4">부드러운 곡선</text>
+        <text x="180" y="67" font-size="9.5" fill="#1a56c4">→ L2 정규화</text>
+        <!-- Annotations: Laplace sharp peak → L1 -->
+        <text x="310" y="42" font-size="9.5" fill="#e07b00">뾰족한 피크</text>
+        <text x="310" y="54" font-size="9.5" fill="#e07b00">→ L1 정규화</text>
+        <!-- Heavy tail annotation for Laplace -->
+        <text x="452" y="158" font-size="8.5" fill="#e07b00" text-anchor="middle">두꺼운 꼬리</text>
+        <!-- Legend -->
+        <line x1="80" y1="13" x2="104" y2="13" stroke="#1a56c4" stroke-width="2.3"/>
+        <text x="108" y="17" font-size="9.5" fill="#1a56c4">가우시안 N(0,1) → L2</text>
+        <line x1="296" y1="13" x2="320" y2="13" stroke="#e07b00" stroke-width="2.3"/>
+        <text x="324" y="17" font-size="9.5" fill="#e07b00">라플라스 Laplace(0,1) → L1</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        두 사전 분포의 형태 비교. 라플라스는 0 근방이 급격해 파라미터를 정확히 0으로 만들지만(희소성), 가우시안은 부드럽게 0 방향으로 수축시킨다.
+      </p>
+    </div>
 
     <table class="result-table">
       <thead>
