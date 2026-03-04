@@ -435,6 +435,62 @@
       이진 부호화에서 이 정보를 저장하는 데 필요한 최소 비트 수다.
     </div>
 
+    <!-- ── SVG: 자기 정보량 I(P) = -log₂P ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 560 215" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="560" height="215" fill="#efede6" rx="6"/>
+        <defs>
+          <marker id="ia1" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#0f0f0f"/>
+          </marker>
+        </defs>
+        <!-- grid lines -->
+        <line x1="70" y1="50"  x2="510" y2="50"  stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <line x1="70" y1="90"  x2="510" y2="90"  stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <line x1="70" y1="130" x2="510" y2="130" stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <!-- axes -->
+        <line x1="70" y1="170" x2="512" y2="170" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#ia1)"/>
+        <line x1="70" y1="172" x2="70"  y2="18"  stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#ia1)"/>
+        <!-- x ticks & labels -->
+        <line x1="180" y1="170" x2="180" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="290" y1="170" x2="290" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="400" y1="170" x2="400" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="510" y1="170" x2="510" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="70"  y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0</text>
+        <text x="180" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.25</text>
+        <text x="290" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.5</text>
+        <text x="400" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.75</text>
+        <text x="510" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">1.0</text>
+        <text x="295" y="202" text-anchor="middle" font-size="11" fill="#6b6b6b" font-style="italic">P(x)</text>
+        <!-- y ticks & labels -->
+        <text x="62" y="173" text-anchor="end" font-size="10" fill="#6b6b6b">0</text>
+        <text x="62" y="133" text-anchor="end" font-size="10" fill="#6b6b6b">2</text>
+        <text x="62" y="93"  text-anchor="end" font-size="10" fill="#6b6b6b">4</text>
+        <text x="62" y="53"  text-anchor="end" font-size="10" fill="#6b6b6b">6</text>
+        <text x="28" y="100" text-anchor="middle" font-size="11" fill="#6b6b6b" transform="rotate(-90,28,100)" font-style="italic">I(x) [bits]</text>
+        <!-- asymptote arrow at left -->
+        <text x="78" y="28" font-size="9" fill="#1a56c4">↑ ∞</text>
+        <!-- curve I(P) = -log₂(P), from P=0.01 to P=1 -->
+        <polyline fill="none" stroke="#1a56c4" stroke-width="2.3" stroke-linejoin="round"
+          points="74,37 79,57 92,84 114,104 136,115 158,124 180,130 202,135 246,144 290,150 334,155 378,160 422,164 466,167 510,170"/>
+        <!-- Annotation: coin flip P=0.5 → 1 bit -->
+        <circle cx="290" cy="150" r="4" fill="#1a56c4"/>
+        <line x1="290" y1="150" x2="290" y2="170" stroke="#1a56c4" stroke-width="1" stroke-dasharray="3,2" opacity="0.6"/>
+        <text x="292" y="148" font-size="9.5" fill="#1a56c4">동전: P=0.5 → 1 bit</text>
+        <!-- Annotation: fair die P=1/6 → 2.58 bits -->
+        <circle cx="143" cy="118" r="4" fill="#e07b00"/>
+        <line x1="143" y1="118" x2="143" y2="170" stroke="#e07b00" stroke-width="1" stroke-dasharray="3,2" opacity="0.6"/>
+        <text x="145" y="113" font-size="9.5" fill="#e07b00">주사위: P=¹⁄₆ → 2.58 bits</text>
+        <!-- Direction annotation -->
+        <text x="430" y="100" text-anchor="middle" font-size="9.5" fill="#6b6b6b">← P 작을수록</text>
+        <text x="430" y="112" text-anchor="middle" font-size="9.5" fill="#6b6b6b">정보량 ↑</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        $I(x) = -\log_2 P(x)$. $P(x) \to 0$일수록 정보량은 무한대로 증가하고, $P(x) = 1$이면 정보량은 0이다.
+      </p>
+    </div>
+
     <h2>섀넌 엔트로피 (Shannon Entropy)</h2>
     <p>
       자기 정보량은 특정 사건 하나의 정보량이다.
@@ -474,6 +530,58 @@
       $H = -p\log p - (1-p)\log(1-p)$.
       $p = 0.5$일 때 $H = 1$ bit로 최대. $p = 0$ 또는 $p = 1$일 때 $H = 0$.
       동전이 공정할수록 불확실성이 크다.
+    </div>
+
+    <!-- ── SVG: 이진 엔트로피 H(p) ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 560 215" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="560" height="215" fill="#efede6" rx="6"/>
+        <defs>
+          <marker id="ia2" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#0f0f0f"/>
+          </marker>
+        </defs>
+        <!-- grid -->
+        <line x1="70" y1="100" x2="510" y2="100" stroke="#d8d8d2" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <!-- curve fill (area under dome) -->
+        <polygon fill="#1a56c4" fill-opacity="0.12"
+          points="70,170 74,159 92,130 114,104 136,85 158,69 180,57 202,46 224,39 246,34 268,31 290,30 312,31 334,34 356,39 378,46 400,57 422,69 444,85 466,104 488,130 506,159 510,170"/>
+        <!-- axes -->
+        <line x1="70"  y1="170" x2="512" y2="170" stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#ia2)"/>
+        <line x1="70"  y1="172" x2="70"  y2="18"  stroke="#0f0f0f" stroke-width="1.5" marker-end="url(#ia2)"/>
+        <!-- x ticks -->
+        <line x1="290" y1="170" x2="290" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="510" y1="170" x2="510" y2="176" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="70"  y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0</text>
+        <text x="180" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.25</text>
+        <text x="290" y="185" text-anchor="middle" font-size="10" fill="#1a56c4" font-weight="700">0.5</text>
+        <text x="400" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">0.75</text>
+        <text x="510" y="185" text-anchor="middle" font-size="10" fill="#6b6b6b">1.0</text>
+        <text x="295" y="202" text-anchor="middle" font-size="11" fill="#6b6b6b" font-style="italic">p</text>
+        <!-- y ticks -->
+        <line x1="70" y1="30"  x2="65" y2="30"  stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="70" y1="100" x2="65" y2="100" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="62" y="173" text-anchor="end" font-size="10" fill="#6b6b6b">0</text>
+        <text x="62" y="103" text-anchor="end" font-size="10" fill="#6b6b6b">0.5</text>
+        <text x="62" y="33"  text-anchor="end" font-size="10" fill="#1a56c4" font-weight="700">1</text>
+        <text x="28" y="100" text-anchor="middle" font-size="11" fill="#6b6b6b" transform="rotate(-90,28,100)" font-style="italic">H(p) [bits]</text>
+        <!-- dome curve -->
+        <polyline fill="none" stroke="#1a56c4" stroke-width="2.4" stroke-linejoin="round"
+          points="70,170 74,159 92,130 114,104 136,85 158,69 180,57 202,46 224,39 246,34 268,31 290,30 312,31 334,34 356,39 378,46 400,57 422,69 444,85 466,104 488,130 506,159 510,170"/>
+        <!-- Max point annotation -->
+        <circle cx="290" cy="30" r="4" fill="#1a56c4"/>
+        <line x1="290" y1="30" x2="290" y2="170" stroke="#1a56c4" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+        <text x="292" y="25" font-size="10" fill="#1a56c4" font-weight="700">H = 1 bit (최대)</text>
+        <!-- H=0 at endpoints -->
+        <text x="75"  y="163" font-size="9.5" fill="#6b6b6b">H=0</text>
+        <text x="493" y="163" font-size="9.5" fill="#6b6b6b">H=0</text>
+        <!-- Interpretation -->
+        <text x="290" y="117" text-anchor="middle" font-size="9.5" fill="#6b6b6b">균등 분포 → 최대 불확실성</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        이진 엔트로피 $H(p) = -p\log_2 p - (1-p)\log_2(1-p)$. $p=0.5$에서 최대(1 bit), $p=0$ 또는 $1$에서 0.
+      </p>
     </div>
 
     <div class="pullquote">
@@ -521,6 +629,71 @@
       왜냐하면 $H(p, q) = H(p) + D_{KL}(p \| q)$이고, $H(p)$는 모델 파라미터에 무관한 상수이기 때문이다.
     </p>
 
+    <!-- ── SVG: H(p), H(p,q), KL 관계 ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 440 215" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:440px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="440" height="215" fill="#efede6" rx="6"/>
+        <!-- y-axis guide line at H(p)=1 bit level (y=120) -->
+        <line x1="70" y1="120" x2="390" y2="120" stroke="#6b6b6b" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- y-axis -->
+        <line x1="80" y1="175" x2="80" y2="22" stroke="#0f0f0f" stroke-width="1.5"/>
+        <line x1="80" y1="175" x2="390" y2="175" stroke="#0f0f0f" stroke-width="1.5"/>
+        <!-- y-axis ticks & labels -->
+        <line x1="80" y1="175" x2="74" y2="175" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="80" y1="120" x2="74" y2="120" stroke="#6b6b6b" stroke-width="1"/>
+        <line x1="80" y1="65"  x2="74" y2="65"  stroke="#6b6b6b" stroke-width="1"/>
+        <text x="70" y="178" text-anchor="end" font-size="10" fill="#6b6b6b">0</text>
+        <text x="70" y="123" text-anchor="end" font-size="10" fill="#6b6b6b">1</text>
+        <text x="70" y="68"  text-anchor="end" font-size="10" fill="#6b6b6b">2</text>
+        <text x="30" y="100" text-anchor="middle" font-size="10" fill="#6b6b6b" transform="rotate(-90,30,100)">bits</text>
+        <!-- H(p) label on guideline -->
+        <text x="393" y="118" font-size="9.5" fill="#6b6b6b" font-style="italic">H(p) = 1 bit</text>
+        <!-- BAR A: 좋은 모델 (D_KL = 0.3 bit = 16.5px) -->
+        <!-- H(p) gray: y=120 to y=175, height=55 -->
+        <rect x="110" y="120" width="90" height="55" fill="#b0b0b0" opacity="0.8"/>
+        <!-- D_KL_A red: y=103.5 to y=120, height=16.5 -->
+        <rect x="110" y="103" width="90" height="17" fill="#c0392b" opacity="0.85"/>
+        <!-- H(p,q)_A bracket -->
+        <line x1="205" y1="103" x2="212" y2="103" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="205" y1="175" x2="212" y2="175" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="212" y1="103" x2="212" y2="175" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="216" y="145" font-size="9" fill="#c0392b">H(p,q)</text>
+        <text x="216" y="156" font-size="9" fill="#c0392b">= 1.3 bit</text>
+        <!-- Labels inside bar A -->
+        <text x="155" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">H(p)</text>
+        <text x="155" y="114" text-anchor="middle" font-size="9.5" fill="#fff">KL=0.3</text>
+        <!-- Bar A bottom label -->
+        <text x="155" y="192" text-anchor="middle" font-size="10" fill="#1a56c4" font-weight="700">좋은 모델</text>
+        <text x="155" y="203" text-anchor="middle" font-size="9" fill="#6b6b6b">(q ≈ p)</text>
+        <!-- BAR B: 나쁜 모델 (D_KL = 1.8 bit = 99px) -->
+        <!-- H(p) gray: y=120 to y=175, height=55 -->
+        <rect x="270" y="120" width="90" height="55" fill="#b0b0b0" opacity="0.8"/>
+        <!-- D_KL_B red: y=21 to y=120, height=99 -->
+        <rect x="270" y="21"  width="90" height="99" fill="#c0392b" opacity="0.85"/>
+        <!-- H(p,q)_B bracket -->
+        <line x1="365" y1="21"  x2="372" y2="21"  stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="365" y1="175" x2="372" y2="175" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="372" y1="21"  x2="372" y2="175" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="376" y="95"  font-size="9" fill="#c0392b">H(p,q)</text>
+        <text x="376" y="106" font-size="9" fill="#c0392b">= 2.8 bit</text>
+        <!-- Labels inside bar B -->
+        <text x="315" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">H(p)</text>
+        <text x="315" y="65"  text-anchor="middle" font-size="10" fill="#fff" font-weight="700">D_KL = 1.8</text>
+        <!-- Bar B bottom label -->
+        <text x="315" y="192" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="700">나쁜 모델</text>
+        <text x="315" y="203" text-anchor="middle" font-size="9" fill="#6b6b6b">(q ≠ p)</text>
+        <!-- Legend -->
+        <rect x="88" y="9" width="12" height="10" fill="#b0b0b0" opacity="0.8"/>
+        <text x="103" y="18" font-size="9.5" fill="#6b6b6b">H(p): 실제 분포의 엔트로피 (고정)</text>
+        <rect x="250" y="9" width="12" height="10" fill="#c0392b" opacity="0.85"/>
+        <text x="265" y="18" font-size="9.5" fill="#c0392b">D_KL: 모델이 틀린 만큼 추가 비용</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        $H(p,q) = H(p) + D_{KL}(p \| q)$. 교차 엔트로피 최소화 = KL 최소화. $H(p)$는 상수이므로.
+      </p>
+    </div>
+
     <div class="ornament">· · ·</div>
 
     <h2>KL Divergence</h2>
@@ -563,6 +736,73 @@
     <p>
       $p$를 실제 분포, $q_\phi$를 우리가 학습할 근사 분포라 하자.
     </p>
+
+    <!-- ── SVG: Forward KL vs Reverse KL ── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 560 235" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <rect width="560" height="235" fill="#efede6" rx="6"/>
+        <!-- Panel titles -->
+        <text x="147" y="18" text-anchor="middle" font-size="11" fill="#1a56c4" font-weight="700">Forward KL: D_KL(p ‖ q)</text>
+        <text x="412" y="18" text-anchor="middle" font-size="11" fill="#c0392b" font-weight="700">Reverse KL: D_KL(q ‖ p)</text>
+        <!-- Panel divider -->
+        <line x1="280" y1="22" x2="280" y2="210" stroke="#d8d8d2" stroke-width="1.5"/>
+        <!-- LEFT panel axes -->
+        <line x1="30" y1="158" x2="265" y2="158" stroke="#0f0f0f" stroke-width="1.2"/>
+        <!-- RIGHT panel axes -->
+        <line x1="295" y1="158" x2="530" y2="158" stroke="#0f0f0f" stroke-width="1.2"/>
+        <!-- ── p bimodal: gray fill (both panels) ── -->
+        <!-- Left p polygon -->
+        <polygon fill="#999" fill-opacity="0.25"
+          points="30,158 41,135 53,102 64,60 75,40 86,60 98,102 109,135 120,152 143,158 165,152 176,135 188,102 199,60 210,40 221,60 233,102 244,135 255,152 265,158"/>
+        <!-- Left p outline -->
+        <polyline fill="none" stroke="#888" stroke-width="1.5" stroke-linejoin="round"
+          points="30,158 41,135 53,102 64,60 75,40 86,60 98,102 109,135 120,152 143,158 165,152 176,135 188,102 199,60 210,40 221,60 233,102 244,135 255,152 265,158"/>
+        <!-- Right p polygon -->
+        <polygon fill="#999" fill-opacity="0.25"
+          points="295,158 306,135 318,102 329,60 340,40 351,60 363,102 374,135 385,152 408,158 430,152 441,135 453,102 464,60 475,40 486,60 498,102 509,135 520,152 530,158"/>
+        <!-- Right p outline -->
+        <polyline fill="none" stroke="#888" stroke-width="1.5" stroke-linejoin="round"
+          points="295,158 306,135 318,102 329,60 340,40 351,60 363,102 374,135 385,152 408,158 430,152 441,135 453,102 464,60 475,40 486,60 498,102 509,135 520,152 530,158"/>
+        <!-- RIGHT: missed mode highlight (where p>0, q≈0) -->
+        <polygon fill="#c0392b" fill-opacity="0.18"
+          points="408,158 430,152 441,135 453,102 464,60 475,40 486,60 498,102 509,135 520,152 530,158"/>
+        <!-- ── q_forward (blue, broad Gaussian at center): LEFT panel ── -->
+        <polyline fill="none" stroke="#1a56c4" stroke-width="2.4" stroke-linejoin="round"
+          points="30,140 53,123 75,99 98,72 120,49 143,40 165,49 188,72 210,99 233,123 255,140"/>
+        <!-- ── q_reverse (red, narrow Gaussian at left peak): RIGHT panel ── -->
+        <polyline fill="none" stroke="#c0392b" stroke-width="2.4" stroke-linejoin="round"
+          points="295,158 306,135 318,102 329,60 340,40 351,60 363,102 374,135 385,152 408,158 430,158 453,158 475,158 498,158 530,158"/>
+        <!-- LEFT labels -->
+        <text x="147" y="175" text-anchor="middle" font-size="9.5" fill="#888">p: 두 봉우리</text>
+        <text x="147" y="187" text-anchor="middle" font-size="9.5" fill="#1a56c4">q: 두 모드 모두 커버</text>
+        <text x="147" y="200" text-anchor="middle" font-size="9" fill="#1a56c4">(mode-covering)</text>
+        <!-- LEFT: q covers both -->
+        <text x="75"  y="37" text-anchor="middle" font-size="9" fill="#888">p</text>
+        <text x="210" y="37" text-anchor="middle" font-size="9" fill="#888">p</text>
+        <text x="143" y="37" text-anchor="middle" font-size="9.5" fill="#1a56c4">q</text>
+        <!-- RIGHT labels -->
+        <text x="412" y="175" text-anchor="middle" font-size="9.5" fill="#888">p: 두 봉우리</text>
+        <text x="412" y="187" text-anchor="middle" font-size="9.5" fill="#c0392b">q: 하나의 모드만 선택</text>
+        <text x="412" y="200" text-anchor="middle" font-size="9" fill="#c0392b">(mode-seeking)</text>
+        <!-- RIGHT: missed mode annotation -->
+        <text x="475" y="90" text-anchor="middle" font-size="9" fill="#c0392b">q=0</text>
+        <text x="475" y="102" text-anchor="middle" font-size="9" fill="#c0392b">(무시됨)</text>
+        <!-- RIGHT: q peak annotation -->
+        <text x="340" y="37" text-anchor="middle" font-size="9.5" fill="#c0392b">q</text>
+        <text x="475" y="37" text-anchor="middle" font-size="9" fill="#888">p</text>
+        <!-- LEFT: p(x)>0 but no penalty in forward KL -->
+        <text x="143" y="215" text-anchor="middle" font-size="9" fill="#6b6b6b">p &gt; 0 인 곳 반드시 커버</text>
+        <!-- RIGHT: q=0 where p>0 is OK in reverse KL -->
+        <text x="412" y="215" text-anchor="middle" font-size="9" fill="#6b6b6b">q = 0 으로 강제 (zero-forcing)</text>
+        <!-- p labels inside plots -->
+        <text x="340" y="155" text-anchor="middle" font-size="9.5" fill="#888">p</text>
+        <text x="475" y="155" text-anchor="middle" font-size="9.5" fill="#888">p</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        같은 이봉 분포 $p$를 단봉 $q$로 근사할 때: Forward KL은 두 모드를 모두 커버하는 넓은 $q$를, Reverse KL은 하나의 모드에만 집중하는 좁은 $q$를 만든다.
+      </p>
+    </div>
 
     <div class="fig-breakdown">
       <div class="fig-breakdown-item" onclick="toggleBd(this)">
