@@ -607,6 +607,34 @@
       </p>
     </div>
 
+    <div class="callout">
+      <strong>구체적인 예시로 이해하기</strong><br><br>
+      알파벳이 A, B, C, D 네 글자뿐인 언어를 생각하자. <strong>실제 분포 $p$</strong>는 다음과 같다.
+      <table style="border-collapse:collapse;margin:0.8rem auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.88rem;">
+        <tr style="border-bottom:1px solid #ccc;">
+          <th style="padding:4px 14px;">글자</th>
+          <th style="padding:4px 14px;">확률 $p$</th>
+          <th style="padding:4px 14px;">최적 코드 (for $p$)</th>
+          <th style="padding:4px 14px;">비트 수</th>
+        </tr>
+        <tr><td style="padding:4px 14px;text-align:center;">A</td><td style="padding:4px 14px;text-align:center;">1/2</td><td style="padding:4px 14px;text-align:center;font-family:monospace;">0</td><td style="padding:4px 14px;text-align:center;">1</td></tr>
+        <tr><td style="padding:4px 14px;text-align:center;">B</td><td style="padding:4px 14px;text-align:center;">1/4</td><td style="padding:4px 14px;text-align:center;font-family:monospace;">10</td><td style="padding:4px 14px;text-align:center;">2</td></tr>
+        <tr><td style="padding:4px 14px;text-align:center;">C</td><td style="padding:4px 14px;text-align:center;">1/8</td><td style="padding:4px 14px;text-align:center;font-family:monospace;">110</td><td style="padding:4px 14px;text-align:center;">3</td></tr>
+        <tr><td style="padding:4px 14px;text-align:center;">D</td><td style="padding:4px 14px;text-align:center;">1/8</td><td style="padding:4px 14px;text-align:center;font-family:monospace;">111</td><td style="padding:4px 14px;text-align:center;">3</td></tr>
+      </table>
+      자주 나오는 A는 짧게, 드물게 나오는 C·D는 길게 — 허프만 코딩이 이렇게 동작한다.
+      평균 비트 수 = $\frac{1}{2}{\cdot}1 + \frac{1}{4}{\cdot}2 + \frac{1}{8}{\cdot}3 + \frac{1}{8}{\cdot}3 = 1.75$ bits = $H(p)$.
+      <br><br>
+      이번에는 내가 <strong>잘못된 모델 $q$</strong> (균등 분포 $q = 1/4$ each) 를 쓴다고 하자.
+      $q$ 기준으로 모든 글자가 동등하게 나온다고 믿으므로, 코드북은 A=<code>00</code>, B=<code>01</code>, C=<code>10</code>, D=<code>11</code> (모두 2비트).
+      <br><br>
+      이 코드를 <em>실제 분포 $p$</em>에 적용하면 평균 비트 수는?
+      $$\frac{1}{2}{\cdot}2 + \frac{1}{4}{\cdot}2 + \frac{1}{8}{\cdot}2 + \frac{1}{8}{\cdot}2 = 2.0 \text{ bits} = H(p, q)$$
+      최적(1.75 bits)보다 0.25 비트를 더 쓴다. 이 낭비가 바로 $D_{KL}(p \| q) = 0.25$ bits.
+      <br><br>
+      <strong>정리:</strong> $H(p,q) = H(p) + D_{KL}(p \| q)$ → 교차 엔트로피 = 최적 비트 수 + 잘못된 모델 때문에 생기는 낭비.
+    </div>
+
     <p>
       $H(p, q) \geq H(p)$ 임이 항상 성립한다. 잘못된 코드($q$)를 쓰면 항상 최적($p$ 기준) 보다
       더 많은 비트를 써야 한다. 등호는 $p = q$일 때만 성립한다.
