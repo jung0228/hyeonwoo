@@ -270,12 +270,35 @@
 
 <div class="blog-main">
 
+  <div class="featured" id="featured-section">
+    <div class="eyebrow">Latest</div>
+    <a class="featured-headline" href="posts/web-agent-benchmarks.html">
+      웹 에이전트 벤치마크 해부: LLM 출력이 점수가 되는 방법
+    </a>
+    <p class="featured-dek">
+      Mind2Web의 네 가지 지표 수식, WebArena의 기능적 검증 로직, WebVoyager의 GPT-4V 심판 문제, 그리고 2025년 "Illusion of Progress" 논문이 폭로한 것들 — 벤치마크 숫자 뒤에서 실제로 무슨 일이 일어나는지 전부 분해한다.
+    </p>
+    <div class="post-meta-line">
+      <span style="color:var(--accent);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;">Agent</span>
+      <span style="color:var(--rule-lt);">·</span>
+      <span>Mar 7, 2026</span>
+      <span style="color:var(--rule-lt);">·</span>
+      <span>32 min read</span>
+    </div>
+  </div>
+
   <div class="section-header">
     <span class="section-name" id="section-label">Posts</span>
     <div class="section-rule"></div>
   </div>
 
   <div class="post-grid" id="post-grid">
+    <a class="post-card" href="posts/web-agent-benchmarks.html" data-tags="Agent">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">웹 에이전트 벤치마크 해부: LLM 출력이 점수가 되는 방법</div>
+      <div class="card-desc">Mind2Web 수식, WebArena 기능적 검증, WebVoyager GPT-4V 심판, VisualWebArena, WorkArena, WebLINX, WebCanvas — 그리고 "Illusion of Progress"가 폭로한 벤치마크의 허상까지.</div>
+      <div class="card-meta">Mar 7, 2026 · 32 min read</div>
+    </a>
     <a class="post-card" href="posts/web-agent-internals.html" data-tags="Agent">
       <div class="card-cat">Agent</div>
       <div class="card-title">웹 에이전트 해부: 브라우저와 소통하는 법, 입출력의 진실, 그리고 평가까지</div>
@@ -380,6 +403,8 @@
     });
     document.getElementById('section-label').textContent = tag === 'all' ? 'Posts' : tag;
     document.getElementById('empty-msg').style.display = vis === 0 ? 'block' : 'none';
+    const featured = document.getElementById('featured-section');
+    if (featured) featured.style.display = tag === 'all' ? 'block' : 'none';
   }
 </script>
 </body>

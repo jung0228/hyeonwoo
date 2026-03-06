@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>웹 에이전트 벤치마크 해부: LLM 출력이 점수가 되는 방법 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-top: 1px solid var(--rule-lt);
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+    .callout.warn { border-left-color: #c47a1a; }
+    .callout.green { border-left-color: #1a7a4a; }
+    .callout.red { border-left-color: #c0392b; }
+
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.8rem 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .6rem .9rem;
+      border-bottom: 2px solid var(--text);
+      font-size: .78rem; text-transform: uppercase; letter-spacing: .06em;
+    }
+    .post-content td {
+      padding: .55rem .9rem; border-bottom: 1px solid var(--rule-lt);
+      vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+    .post-content td.num { font-weight: 700; color: var(--accent); text-align: center; }
+    .post-content td.hi { font-weight: 700; }
+    .post-content td.muted { color: var(--muted); font-size: .82rem; }
+    .post-content td.warn { color: #c47a1a; font-weight: 600; }
+    .post-content td.good { color: #1a7a4a; font-weight: 600; }
+
+    /* ─── CODE BLOCK ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+    pre {
+      background: #1a1a1a;
+      border-radius: 6px; padding: 1.3rem 1.5rem;
+      margin: 1.6rem 0; overflow-x: auto;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .82rem; line-height: 1.65;
+      color: #e8e8e8;
+    }
+    pre code {
+      background: none; border: none; padding: 0;
+      font-size: inherit; color: inherit;
+    }
+    pre .cm { color: #6a9955; }
+    pre .kw { color: #569cd6; }
+    pre .st { color: #ce9178; }
+    pre .fn { color: #dcdcaa; }
+    pre .nb { color: #b5cea8; }
+    pre .cl { color: #4ec9b0; }
+    pre .op { color: #d4d4d4; }
+    pre .hi { color: #4ec9b0; }
+    pre .yw { color: #dcdcaa; }
+
+    /* ─── IO BLOCK ─── */
+    .io-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 1.8rem 0;
+    }
+    .io-panel {
+      border: 1px solid var(--rule-lt);
+      border-radius: 6px; overflow: hidden;
+    }
+    .io-header {
+      background: var(--bg2);
+      padding: .5rem .9rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--muted);
+      border-bottom: 1px solid var(--rule-lt);
+    }
+    .io-header.in { color: var(--accent); }
+    .io-header.out { color: #1a7a4a; }
+    .io-header.eval { color: #c47a1a; }
+    .io-body {
+      background: #1a1a1a;
+      padding: 1rem 1.1rem;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .78rem; line-height: 1.65; color: #e8e8e8;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .io-body .cm { color: #6a9955; }
+    .io-body .kw { color: #569cd6; }
+    .io-body .st { color: #ce9178; }
+    .io-body .hi { color: #4ec9b0; }
+    .io-body .yw { color: #dcdcaa; }
+    .io-body .gn { color: #4fc1ff; }
+    .io-body .rd { color: #f44747; }
+
+    /* ─── MATH FORMULA ─── */
+    .math-block {
+      background: var(--bg2);
+      border: 1px solid var(--rule-lt);
+      border-radius: 6px;
+      padding: 1.2rem 1.6rem;
+      margin: 1.6rem 0;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .9rem; line-height: 2;
+      color: var(--text);
+    }
+    .math-block .label {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--muted);
+      margin-bottom: .5rem;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+      .io-wrap { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+      .post-content table { font-size: .78rem; }
+      .post-content th, .post-content td { padding: .45rem .5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">웹 에이전트 벤치마크 해부: LLM 출력이 점수가 되는 방법</h1>
+
+  <p class="post-dek">
+    Mind2Web의 네 가지 지표 수식, WebArena의 기능적 검증 로직, WebVoyager의 GPT-4V 심판 문제, 그리고 2025년 "Illusion of Progress" 논문이 폭로한 것들 — 벤치마크 숫자 뒤에서 실제로 무슨 일이 일어나는지 전부 분해한다.
+  </p>
+
+  <div class="post-meta">
+    <span class="cat">Agent</span>
+    <span class="dot">·</span>
+    <span>Mar 7, 2026</span>
+    <span class="dot">·</span>
+    <span>32 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">같은 "60%"가 다른 이유</h2>
+
+    <p>
+      논문을 읽다 보면 "Task Success Rate 60%"라는 숫자가 나온다. 그런데 어느 벤치마크의 60%인지에 따라 그 의미는 완전히 달라진다. Mind2Web에서 60%와 WebArena에서 60%는 측정하는 것 자체가 다르다. 그리고 WebVoyager에서 60%는 위 두 개와 또 다르다.
+    </p>
+    <p>
+      이 포스트는 그 차이의 실체를 파고든다. 평가 스크립트가 실제로 무엇을 확인하는지, LLM의 출력 하나가 어떤 계산 과정을 거쳐 점수가 되는지를 각 벤치마크마다 분해한다. 기본 개념(<a href="web-agent-internals.html">입출력 포맷, Playwright 통신, Mind2Web vs WebArena 파이프라인 개요</a>)은 이전 포스트에서 다뤘으니, 여기선 평가 메커니즘 자체에 집중한다.
+    </p>
+
+    <!-- ─── 벤치마크 진화 SVG ─── -->
+    <div style="margin:2.4rem 0 1.6rem;">
+      <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:720px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <polygon points="0 0,7 3,0 6" fill="#1a56c4"/>
+          </marker>
+        </defs>
+
+        <!-- 배경 레인 -->
+        <rect x="10" y="30" width="700" height="50" fill="#fef3cd" rx="4" opacity="0.5"/>
+        <rect x="10" y="90" width="700" height="50" fill="#d1fae5" rx="4" opacity="0.5"/>
+        <rect x="10" y="150" width="700" height="50" fill="#dbeafe" rx="4" opacity="0.5"/>
+
+        <!-- 레인 레이블 -->
+        <text x="20" y="60" font-size="9" font-weight="700" fill="#c47a1a" letter-spacing=".06em">OFFLINE</text>
+        <text x="20" y="120" font-size="9" font-weight="700" fill="#065f46" letter-spacing=".06em">ONLINE / SELF-HOSTED</text>
+        <text x="20" y="180" font-size="9" font-weight="700" fill="#1a56c4" letter-spacing=".06em">ONLINE / LIVE</text>
+
+        <!-- Mind2Web -->
+        <rect x="90" y="38" width="110" height="34" rx="4" fill="#e67e22" opacity="0.85"/>
+        <text x="145" y="52" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Mind2Web</text>
+        <text x="145" y="65" text-anchor="middle" font-size="8" fill="white">NeurIPS 2023</text>
+
+        <!-- WebLINX -->
+        <rect x="230" y="38" width="100" height="34" rx="4" fill="#e67e22" opacity="0.75"/>
+        <text x="280" y="52" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">WebLINX</text>
+        <text x="280" y="65" text-anchor="middle" font-size="8" fill="white">ICML 2024</text>
+
+        <!-- WebArena -->
+        <rect x="90" y="98" width="110" height="34" rx="4" fill="#065f46" opacity="0.85"/>
+        <text x="145" y="112" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">WebArena</text>
+        <text x="145" y="125" text-anchor="middle" font-size="8" fill="white">ICLR 2024</text>
+
+        <!-- VisualWebArena -->
+        <rect x="230" y="98" width="130" height="34" rx="4" fill="#065f46" opacity="0.75"/>
+        <text x="295" y="112" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">VisualWebArena</text>
+        <text x="295" y="125" text-anchor="middle" font-size="8" fill="white">ACL 2024</text>
+
+        <!-- WorkArena -->
+        <rect x="390" y="98" width="100" height="34" rx="4" fill="#065f46" opacity="0.65"/>
+        <text x="440" y="112" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">WorkArena</text>
+        <text x="440" y="125" text-anchor="middle" font-size="8" fill="white">ICML 2024</text>
+
+        <!-- WebVoyager -->
+        <rect x="90" y="158" width="110" height="34" rx="4" fill="#1a56c4" opacity="0.85"/>
+        <text x="145" y="172" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">WebVoyager</text>
+        <text x="145" y="185" text-anchor="middle" font-size="8" fill="white">ACL 2024</text>
+
+        <!-- WebCanvas -->
+        <rect x="230" y="158" width="110" height="34" rx="4" fill="#1a56c4" opacity="0.75"/>
+        <text x="285" y="172" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">WebCanvas</text>
+        <text x="285" y="185" text-anchor="middle" font-size="8" fill="white">2024</text>
+
+        <!-- Online-Mind2Web -->
+        <rect x="370" y="158" width="140" height="34" rx="4" fill="#1a56c4" opacity="0.65"/>
+        <text x="440" y="172" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Online-Mind2Web</text>
+        <text x="440" y="185" text-anchor="middle" font-size="8" fill="white">COLM 2025</text>
+
+        <!-- 진화 방향 설명 -->
+        <line x1="550" y1="55" x2="700" y2="55" stroke="#c47a1a" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="560" y="49" font-size="8" fill="#c47a1a">캐시된 HTML · 오프라인 판정</text>
+        <line x1="550" y1="115" x2="700" y2="115" stroke="#065f46" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="560" y="109" font-size="8" fill="#065f46">Docker 환경 · DB 상태 검증</text>
+        <line x1="550" y1="175" x2="700" y2="175" stroke="#1a56c4" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="560" y="169" font-size="8" fill="#1a56c4">라이브 웹 · 인간/LLM 심판</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        2023–2025년 주요 웹 에이전트 벤치마크를 평가 방식 기준으로 분류. Offline → Self-hosted → Live 순으로 "실제"에 가까워진다.
+      </p>
+    </div>
+
+    <h2>1. Mind2Web: 오프라인 평가의 수식 해부</h2>
+
+    <p>
+      Mind2Web(NeurIPS 2023)은 "웹 에이전트에게 실제 사람이 수행한 탐색 기록을 주고, 그 기록을 얼마나 잘 재현하는가"를 측정한다. 137개 사이트, 2,350개 태스크, 태스크당 평균 7.3개 스텝이 저장된 HTML 스냅샷으로 존재한다. 실제 브라우저는 없다.
+    </p>
+
+    <h3>세 개의 테스트 분할 — 일반화 난이도 계층</h3>
+
+    <p>
+      Mind2Web의 설계에서 종종 간과되는 부분이 테스트 분할이다. 단순히 train/test를 나누는 게 아니라 <strong>세 가지 일반화 시나리오</strong>로 테스트한다.
+    </p>
+
+    <table>
+      <tr>
+        <th>분할</th>
+        <th>조건</th>
+        <th>의미</th>
+        <th>태스크 수</th>
+      </tr>
+      <tr>
+        <td class="hi">Cross-Task</td>
+        <td>같은 사이트, 다른 태스크 유형</td>
+        <td>Amazon에서 훈련했는데 Amazon에서 본 적 없는 태스크</td>
+        <td class="num">252</td>
+      </tr>
+      <tr>
+        <td class="hi">Cross-Website</td>
+        <td>같은 도메인, 다른 사이트</td>
+        <td>쇼핑몰 훈련 → 다른 쇼핑몰 테스트</td>
+        <td class="num">177</td>
+      </tr>
+      <tr>
+        <td class="hi">Cross-Domain</td>
+        <td>전혀 다른 도메인</td>
+        <td>여행 사이트 훈련 → 금융 사이트 테스트</td>
+        <td class="num">912</td>
+      </tr>
+    </table>
+
+    <p>
+      성능은 Cross-Task &gt; Cross-Website &gt; Cross-Domain 순으로 떨어진다. 논문에서 "우리 모델이 X%"라고 보고할 때 어느 분할인지를 반드시 확인해야 한다. Cross-Task 성능이 Cross-Domain보다 10–15%p 높은 경우가 흔하다.
+    </p>
+
+    <h3>네 가지 지표의 수식</h3>
+
+    <p>Mind2Web은 스텝 하나를 (요소 선택, 액션 타입, 액션 값) 세 부분으로 분해하고, 각 레벨에서 정확도를 측정한다.</p>
+
+    <div class="math-block">
+      <div class="label">Element Accuracy (Ele. Acc)</div>
+      Ele. Acc = 1  if  predicted_element ∈ pos_candidates
+               0  otherwise
+
+      <br>
+      <span style="color:#6b6b6b;font-size:.8em;"># pos_candidates: 같은 액션을 수행하는 의미론적으로 동등한 DOM 요소들의 집합
+# 예: &lt;label for="departure"&gt;와 &lt;input id="departure"&gt;는 둘 다 정답</span>
+    </div>
+
+    <div class="math-block">
+      <div class="label">Operation F1 (Op. F1)</div>
+      <span style="color:#6b6b6b;font-size:.8em;"># CLICK: 단순 exact match (값이 없음)</span>
+      Op. F1(CLICK) = 1  if  predicted_op == "CLICK"  else  0
+
+      <span style="color:#6b6b6b;font-size:.8em;"># TYPE / SELECT: SQuAD 스타일 토큰 레벨 F1</span>
+      pred_tokens = tokenize(predicted_value)
+      gt_tokens   = tokenize(ground_truth_value)
+      common      = |pred_tokens ∩ gt_tokens|
+
+      Precision = common / |pred_tokens|
+      Recall    = common / |gt_tokens|
+      Op. F1    = 2 × Precision × Recall / (Precision + Recall)
+    </div>
+
+    <div class="math-block">
+      <div class="label">Step Success Rate (Step SR)</div>
+      Step SR = 1  if  (Ele. Acc == 1)  AND  (Op. F1 == 1)
+               0  otherwise
+
+      <span style="color:#6b6b6b;font-size:.8em;"># 부분 점수 없음: 요소를 맞혀도 값이 틀리면 0</span>
+    </div>
+
+    <div class="math-block">
+      <div class="label">Task Success Rate (Task SR)</div>
+      Task SR = 1  if  Step SR == 1  for ALL steps in task
+               0  otherwise
+
+      <span style="color:#6b6b6b;font-size:.8em;"># 한 스텝이라도 틀리면 태스크 전체가 0</span>
+    </div>
+
+    <h3>Task SR 폭락의 수학 — 왜 항상 낮은가</h3>
+
+    <p>
+      Step SR 50%라는 숫자만 보면 나쁘지 않아 보인다. 하지만 태스크당 평균 7.3개 스텝을 가정하면:
+    </p>
+
+    <!-- ─── 복합 오류 전파 SVG ─── -->
+    <div style="margin:2rem 0 1.4rem;">
+      <svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:720px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+
+        <!-- 격자 -->
+        <line x1="60" y1="20" x2="60" y2="170" stroke="#d8d8d2" stroke-width="1"/>
+        <line x1="60" y1="170" x2="700" y2="170" stroke="#d8d8d2" stroke-width="1"/>
+        <!-- x축 레이블 -->
+        <text x="60"  y="185" text-anchor="middle" font-size="9" fill="#6b6b6b">1</text>
+        <text x="155" y="185" text-anchor="middle" font-size="9" fill="#6b6b6b">2</text>
+        <text x="250" y="185" text-anchor="middle" font-size="9" fill="#6b6b6b">3</text>
+        <text x="345" y="185" text-anchor="middle" font-size="9" fill="#6b6b6b">4</text>
+        <text x="440" y="185" text-anchor="middle" font-size="9" fill="#6b6b6b">5</text>
+        <text x="535" y="185" text-anchor="middle" font-size="9" fill="#6b6b6b">6</text>
+        <text x="630" y="185" text-anchor="middle" font-size="9" fill="#6b6b6b">7</text>
+        <text x="380" y="198" text-anchor="middle" font-size="9" fill="#6b6b6b">스텝 수 (태스크당 평균 7.3)</text>
+
+        <!-- y축 레이블 -->
+        <text x="50" y="170" text-anchor="end" font-size="9" fill="#6b6b6b">0%</text>
+        <text x="50" y="120" text-anchor="end" font-size="9" fill="#6b6b6b">33%</text>
+        <text x="50" y="70"  text-anchor="end" font-size="9" fill="#6b6b6b">67%</text>
+        <text x="50" y="23"  text-anchor="end" font-size="9" fill="#6b6b6b">100%</text>
+        <line x1="58" y1="120" x2="62" y2="120" stroke="#d8d8d2" stroke-width="1"/>
+        <line x1="58" y1="70"  x2="62" y2="70"  stroke="#d8d8d2" stroke-width="1"/>
+
+        <!-- p=0.9 라인 (파란색) -->
+        <polyline points="60,20 155,28 250,42 345,59 440,78 535,99 630,122"
+                  fill="none" stroke="#1a56c4" stroke-width="2"/>
+        <circle cx="60" cy="20" r="3" fill="#1a56c4"/>
+        <circle cx="155" cy="28" r="3" fill="#1a56c4"/>
+        <circle cx="250" cy="42" r="3" fill="#1a56c4"/>
+        <circle cx="345" cy="59" r="3" fill="#1a56c4"/>
+        <circle cx="440" cy="78" r="3" fill="#1a56c4"/>
+        <circle cx="535" cy="99" r="3" fill="#1a56c4"/>
+        <circle cx="630" cy="122" r="3" fill="#1a56c4"/>
+        <text x="645" y="118" font-size="9" fill="#1a56c4" font-weight="700">p=0.9</text>
+        <text x="645" y="129" font-size="8" fill="#1a56c4">→ 48%</text>
+
+        <!-- p=0.7 라인 (주황) -->
+        <polyline points="60,20 155,54 250,89 345,119 440,143 535,162 630,173"
+                  fill="none" stroke="#e67e22" stroke-width="2"/>
+        <circle cx="60" cy="20" r="3" fill="#e67e22"/>
+        <circle cx="155" cy="54" r="3" fill="#e67e22"/>
+        <circle cx="250" cy="89" r="3" fill="#e67e22"/>
+        <circle cx="345" cy="119" r="3" fill="#e67e22"/>
+        <circle cx="440" cy="143" r="3" fill="#e67e22"/>
+        <circle cx="535" cy="162" r="3" fill="#e67e22"/>
+        <circle cx="630" cy="173" r="3" fill="#e67e22"/>
+        <text x="645" y="169" font-size="9" fill="#e67e22" font-weight="700">p=0.7</text>
+        <text x="645" y="180" font-size="8" fill="#e67e22">→ 8%</text>
+
+        <!-- p=0.5 라인 (빨간) -->
+        <polyline points="60,20 155,95 250,132 345,153 440,163 535,168 630,170"
+                  fill="none" stroke="#c0392b" stroke-width="2"/>
+        <circle cx="60" cy="20" r="3" fill="#c0392b"/>
+        <text x="645" y="185" font-size="9" fill="#c0392b" font-weight="700">p=0.5 → 1%</text>
+
+        <!-- 수직 기준선 (7스텝) -->
+        <line x1="630" y1="20" x2="630" y2="170" stroke="#999" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- y축 이름 -->
+        <text x="14" y="110" font-size="9" fill="#6b6b6b" transform="rotate(-90,14,110)">Task SR = p^N</text>
+      </svg>
+      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:#6b6b6b;margin-top:.6rem;">
+        Task SR = (Step SR)^N. 스텝당 90% 정확도도 7스텝 태스크에서 Task SR은 48%로 떨어진다. 70%면 8%.
+      </p>
+    </div>
+
+    <p>
+      이 수학적 현실 때문에 Mind2Web 논문들은 대부분 Task SR보다 Step SR을 앞세운다. Task SR 5–10%는 "형편없다"는 뜻이 아니라 "스텝당 정확도 50–60%의 정상적인 귀결"이다. 두 숫자를 같이 봐야 한다.
+    </p>
+
+    <h3>MindAct 2단계 파이프라인이 왜 필요한가</h3>
+
+    <p>
+      페이지당 평균 1,135개의 DOM 요소를 LLM에 그대로 넣으면 컨텍스트 한계를 초과한다. MindAct(Mind2Web 논문의 베이스라인 시스템)는 이 문제를 2단계로 해결한다.
+    </p>
+
+    <div class="io-wrap">
+      <div class="io-panel">
+        <div class="io-header in">Stage 1 — Candidate Ranker (DeBERTa)</div>
+        <div class="io-body"><span class="cm"># 입력: 태스크 + 액션 이력 + DOM 요소 하나</span>
+<span class="cm"># 출력: 관련성 스코어 (0~1)</span>
+
+<span class="yw">cross_encoder_input</span> = f"""
+Task: {task_desc}
+Previous: {action_history}
+Element: {element_html_snippet}
+"""
+
+score = deberta_cross_encoder(cross_encoder_input)
+
+<span class="cm"># 모든 요소에 대해 반복 → top-k 선택</span>
+<span class="cm"># GPT-4: k=10, 소형 LM: k=50</span>
+candidates = sorted(elements, key=score)[:k]</div>
+      </div>
+      <div class="io-panel">
+        <div class="io-header in">Stage 2 — Action Predictor (GPT-4)</div>
+        <div class="io-body"><span class="cm"># 입력: top-k 후보를 객관식으로 구성</span>
+<span class="cm"># 출력: (선택지 문자, 액션 타입, 값)</span>
+
+<span class="yw">prompt</span> = f"""
+Task: Search one-way flights NYC to LAX
+Previous: [none]
+Choose the element:
+A. None of the above
+B. &lt;div role="radio"&gt;One way&lt;/div&gt;
+C. &lt;input placeholder="Where from?"&gt;
+D. &lt;button&gt;Search&lt;/button&gt;
+E. &lt;select name="stops"&gt;...&lt;/select&gt;
+
+Action type: CLICK / TYPE / SELECT
+Value (if TYPE/SELECT): ___
+"""
+
+output = gpt4(prompt)
+<span class="cm"># → "B, CLICK, " (값 없음)</span>
+
+<span class="cm"># 평가: B == pos_candidates에 있나?</span>
+<span class="cm"># 있으면 Ele. Acc = 1</span></div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <strong>핵심 한계: 오프라인 평가는 실제 동작을 측정하지 않는다.</strong> 에이전트가 step 3에서 틀린 요소를 클릭했다면 실제 브라우저에서는 step 4의 페이지 상태가 완전히 달라진다. Mind2Web은 이걸 무시한다 — 각 스텝을 독립적으로 평가한다. 즉, "오류 복구 능력"이나 "이전 액션이 현재 페이지에 미치는 영향"은 전혀 측정되지 않는다.
+    </div>
+
+    <h3>실제 성능 표 (Cross-Website 기준)</h3>
+
+    <table>
+      <tr>
+        <th>모델</th>
+        <th>Ele. Acc</th>
+        <th>Op. F1</th>
+        <th>Step SR</th>
+        <th>Task SR</th>
+      </tr>
+      <tr>
+        <td>Flan-T5-XL (MindAct)</td>
+        <td class="num">42.0%</td>
+        <td class="num">—</td>
+        <td class="num">38.9%</td>
+        <td class="num">5.1%</td>
+      </tr>
+      <tr>
+        <td>GPT-3.5-Turbo (MindAct)</td>
+        <td class="num">47.3%</td>
+        <td class="num">—</td>
+        <td class="num">42.8%</td>
+        <td class="num">7.3%</td>
+      </tr>
+      <tr>
+        <td>GPT-4 (MindAct)</td>
+        <td class="num">54.6%</td>
+        <td class="num">—</td>
+        <td class="num">48.8%</td>
+        <td class="num">9.7%</td>
+      </tr>
+      <tr>
+        <td>GPT-4 + SoM (MindAct)</td>
+        <td class="num">58.1%</td>
+        <td class="num">—</td>
+        <td class="num">52.3%</td>
+        <td class="num">11.2%</td>
+      </tr>
+    </table>
+    <p class="muted" style="font-family:-apple-system,sans-serif;font-size:.8rem;color:#6b6b6b;margin-top:-.8rem;margin-bottom:1.4rem;">
+      Task SR가 Step SR에 비해 얼마나 낮은지 주목. Task SR 11%는 단순히 "나쁜" 게 아니라 (~52%)^7.3의 정상적인 결과다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>2. WebArena: 기능적 검증의 전체 구조</h2>
+
+    <p>
+      WebArena(ICLR 2024)의 근본적 혁신은 "<strong>에이전트가 무엇을 클릭했는가</strong>"가 아니라 "<strong>환경이 올바른 상태에 도달했는가</strong>"를 묻는다는 점이다. 이미 <a href="web-agent-internals.html">이전 포스트</a>에서 파이프라인을 개괄했으니, 여기선 평가 메커니즘 내부를 더 깊이 들어간다.
+    </p>
+
+    <h3>전체 액션 스페이스</h3>
+
+    <table>
+      <tr>
+        <th>카테고리</th>
+        <th>액션</th>
+        <th>인자</th>
+        <th>비고</th>
+      </tr>
+      <tr>
+        <td class="hi">페이지 조작</td>
+        <td><code>click [elem]</code></td>
+        <td>요소 ID 또는 좌표</td>
+        <td class="muted">AX tree node ID 기준</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>type [elem] [text]</code></td>
+        <td>요소 ID + 입력 텍스트</td>
+        <td class="muted">기존 내용 지우고 입력</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>hover [elem]</code></td>
+        <td>요소 ID</td>
+        <td class="muted">드롭다운 열기 등</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>press [key]</code></td>
+        <td>키 조합</td>
+        <td class="muted">"Enter", "Ctrl+A" 등</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>scroll [dir]</code></td>
+        <td>"up" / "down"</td>
+        <td class="muted">500px씩</td>
+      </tr>
+      <tr>
+        <td class="hi">탭 관리</td>
+        <td><code>new_tab</code></td>
+        <td>없음</td>
+        <td class="muted">새 탭 열기</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>tab_focus [n]</code></td>
+        <td>탭 인덱스</td>
+        <td class="muted">탭 전환</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>tab_close</code></td>
+        <td>없음</td>
+        <td class="muted">현재 탭 닫기</td>
+      </tr>
+      <tr>
+        <td class="hi">내비게이션</td>
+        <td><code>goto [url]</code></td>
+        <td>URL 문자열</td>
+        <td class="muted">직접 URL 이동</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>go_back</code></td>
+        <td>없음</td>
+        <td class="muted">브라우저 뒤로</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>go_forward</code></td>
+        <td>없음</td>
+        <td class="muted">브라우저 앞으로</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><code>noop</code></td>
+        <td>없음</td>
+        <td class="muted">대기/관찰만</td>
+      </tr>
+      <tr>
+        <td class="hi">종료</td>
+        <td><code>stop [answer]</code></td>
+        <td>텍스트 답변 (선택)</td>
+        <td class="muted">태스크 완료 선언</td>
+      </tr>
+    </table>
+
+    <h3>두 가지 평가 함수 — r_info와 r_prog</h3>
+
+    <p>
+      WebArena 태스크의 56%는 정보 검색이 아닌 상태 변경(이슈 생성, 댓글 작성, 장바구니 조작 등)을 요구한다. 이 경우 텍스트 비교는 의미가 없고, 실제 환경 상태를 검사해야 한다. 논문은 두 함수를 정의한다.
+    </p>
+
+    <div class="io-wrap">
+      <div class="io-panel">
+        <div class="io-header eval">r_info — 정보 검색 태스크 (44%)</div>
+        <div class="io-body"><span class="cm"># stop [answer]의 텍스트를 검증</span>
+<span class="cm"># 세 가지 비교 방법 중 하나를 사용</span>
+
+<span class="cm">## 1. exact_match</span>
+<span class="yw">task</span>: "What is the title of the most
+       recent GitLab issue in proj A?"
+<span class="yw">gt</span>: "Fix login timeout bug"
+<span class="yw">pred</span>: "Fix login timeout bug"
+→ r_info = 1.0
+
+<span class="cm">## 2. must_include</span>
+<span class="yw">task</span>: "List all open issues in proj A"
+<span class="yw">gt</span>: ["Fix login", "Add tests"]
+<span class="yw">pred</span>: "The open issues are: Fix login,
+       Add tests, Update docs"
+→ r_info = 1.0  <span class="cm"># 포함하면 OK</span>
+
+<span class="cm">## 3. fuzzy_match (GPT-4 심판)</span>
+<span class="yw">task</span>: "Where is the nearest hospital?"
+<span class="yw">gt</span>: "UPMC Mercy"
+<span class="yw">pred</span>: "Mercy Hospital (UPMC)"
+→ GPT-4 판정: 동일 → r_info = 1.0
+<span class="cm"># 표면형이 달라도 의미가 같으면 정답</span>
+<span class="cm"># 논문: 인간 대비 99.7% 일치</span></div>
+      </div>
+      <div class="io-panel">
+        <div class="io-header eval">r_prog — 상태 변경 태스크 (56%)</div>
+        <div class="io-body"><span class="cm"># 에이전트 실행 후 환경 상태를 직접 검증</span>
+<span class="cm"># 네 가지 검증 방법</span>
+
+<span class="cm">## 1. GitLab API 호출</span>
+<span class="yw">task</span>: "Create issue 'Fix login bug'
+       in project 'awesome-os'"
+<span class="hi">validator</span>: gitlab_api.get_issues(
+    project="awesome-os"
+).filter(title="Fix login bug")
+→ 존재하면 1.0, 없으면 0.0
+
+<span class="cm">## 2. DOM/JavaScript 검사</span>
+<span class="yw">task</span>: "Add Waffle Beanie to cart"
+<span class="hi">validator</span>: page.evaluate(
+    "document.querySelector(
+     '.cart-count').textContent"
+) == "1"
+
+<span class="cm">## 3. URL 상태 확인</span>
+<span class="yw">task</span>: "Navigate to product #1234"
+<span class="hi">validator</span>: page.url.contains("/1234")
+
+<span class="cm">## 4. 데이터베이스 직접 쿼리</span>
+<span class="yw">task</span>: "Post comment on r/LocalLLaMA"
+<span class="hi">validator</span>: db.query(
+    "SELECT * FROM comments
+     WHERE user=? ORDER BY id DESC",
+    [agent_user]
+).first().text == expected_text</div>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <strong>r_prog의 의의.</strong> 에이전트가 GitLab 이슈를 API로 직접 만들었든, 웹 폼을 채워 제출했든, 단축키를 썼든 — 결과물이 DB에 존재하면 정답이다. Mind2Web에서 "정답 경로"만 인정하던 것과 근본적으로 다르다. WebArena는 경로가 아닌 결과를 본다.
+    </div>
+
+    <h3>stop 액션과 불가능한 태스크 처리</h3>
+
+    <p>
+      WebArena에는 실제로 수행 불가능한 태스크가 포함된다. 예를 들어 존재하지 않는 사용자의 프로필을 찾으라는 요청. 이때 에이전트는 <code>stop [N/A]</code>을 출력해야 한다.
+    </p>
+    <p>
+      에이전트가 강제 종료되는 조건도 정의되어 있다: 동일 관찰에서 같은 액션을 3번 반복하거나, 파싱 불가능한 액션을 3번 연속 생성하면 태스크 실패 처리된다. 이 규칙은 무한 루프와 헛소리 생성을 방지한다.
+    </p>
+
+    <div class="callout warn">
+      <strong>불가능 태스크 힌트 제공 여부가 결과를 바꾼다.</strong> WebArena 논문의 ablation에서, 에이전트에게 "일부 태스크는 수행 불가능할 수 있다"는 힌트를 주면 성공률이 올라가지만, 이로 인해 실제로 가능한 태스크에서 에이전트가 너무 일찍 N/A를 선언하는 false negative가 증가한다. 각 논문에서 이 힌트를 줬는지 확인해야 한다.
+    </div>
+
+    <h3>SOTA 수치 변화 — 2년간의 궤적</h3>
+
+    <table>
+      <tr>
+        <th>에이전트</th>
+        <th>발표</th>
+        <th>Task SR</th>
+        <th>비고</th>
+      </tr>
+      <tr>
+        <td>GPT-4 (최초 베이스라인)</td>
+        <td class="muted">2023.07</td>
+        <td class="num">14.41%</td>
+        <td class="muted">WebArena 논문 공개 시점</td>
+      </tr>
+      <tr>
+        <td>SeeAct (GPT-4V + SoM)</td>
+        <td class="muted">2024.01</td>
+        <td class="num">~23%</td>
+        <td class="muted">멀티모달 접근 최초</td>
+      </tr>
+      <tr>
+        <td>GPT-4o (experience replay)</td>
+        <td class="muted">2024.07</td>
+        <td class="num">~36.7%</td>
+        <td class="muted">경험 재생 추가</td>
+      </tr>
+      <tr>
+        <td>Claude Computer Use 3.5</td>
+        <td class="muted">2024.10</td>
+        <td class="num">~49.0%</td>
+        <td class="muted">Anthropic 공식 발표</td>
+      </tr>
+      <tr>
+        <td>Claude Computer Use 3.7</td>
+        <td class="muted">2025.02</td>
+        <td class="num">~56.3%</td>
+        <td class="muted">Online-Mind2Web 기준</td>
+      </tr>
+      <tr>
+        <td class="hi">OpenAI Operator</td>
+        <td class="muted">2025.01</td>
+        <td class="num">~61.3%</td>
+        <td class="muted warn">현재 SOTA (인간 78.2%)</td>
+      </tr>
+      <tr>
+        <td>인간 (CS 대학원생 5명)</td>
+        <td class="muted">—</td>
+        <td class="num good">78.24%</td>
+        <td class="muted">상한선</td>
+      </tr>
+    </table>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>3. WebVoyager: GPT-4V 심판의 문제</h2>
+
+    <p>
+      WebVoyager(ACL 2024)는 Mind2Web도, WebArena도 커버하지 못하는 지점을 겨냥했다: <strong>실제 라이브 웹사이트에서 멀티모달 에이전트를 평가</strong>하는 것. Google, Amazon, GitHub, Booking.com 등 15개 실제 사이트, 643개 태스크. 에이전트는 스크린샷을 직접 보고 행동한다.
+    </p>
+
+    <h3>라이브 웹의 평가 문제 — 왜 GPT-4V가 심판이 됐나</h3>
+
+    <p>
+      WebArena는 Docker로 격리된 환경에서 DB 상태를 직접 검증한다. 하지만 실제 Amazon이나 GitHub에서는 그게 불가능하다. 페이지가 바뀌고, 로그인이 필요하고, 정답이 고정되지 않는다. WebVoyager는 이 문제를 GPT-4V를 심판으로 써서 해결했다.
+    </p>
+
+    <p>GPT-4V 심판 프로세스:</p>
+
+    <div class="io-wrap">
+      <div class="io-panel">
+        <div class="io-header in">GPT-4V 심판 입력</div>
+        <div class="io-body"><span class="cm"># 심판에게 주어지는 정보</span>
+
+<span class="yw">[Task]</span>
+Search for a round-trip flight from NYC
+to Paris, departing Dec 15, returning
+Dec 22. What is the cheapest option?
+
+<span class="yw">[Agent's Final Answer]</span>
+"The cheapest round-trip is $487 on
+Air France, departing at 10:30 AM."
+
+<span class="yw">[Screenshots]</span>
+[Image 1: Google Flights results page]
+[Image 2: Price filter applied]
+[Image 3: Final search result page]
+... (마지막 k=전체 스크린샷)
+
+<span class="yw">[Evaluation prompt]</span>
+"Based on the task, the agent's answer,
+and the screenshots, did the agent
+successfully complete the task?
+Answer: Yes / No, with brief reason."</div>
+      </div>
+      <div class="io-panel">
+        <div class="io-header out">GPT-4V 심판 출력</div>
+        <div class="io-body"><span class="cm"># 성공 케이스</span>
+<span class="gn">Yes</span>. The agent successfully completed
+the task. Screenshot 3 shows Google
+Flights search results for NYC→Paris
+Dec 15–22. The agent's answer of $487
+on Air France is visible in the results
+list and appears to be the lowest price.
+
+<span class="cm"># 실패 케이스 예시</span>
+<span class="rd">No</span>. The agent navigated to the correct
+page but reported "$487" while the
+screenshot shows $512 as the actual
+cheapest option. The agent may have
+misread the price filter.
+
+<span class="cm"># 인간 평가자와의 일치율: 85.3%</span>
+<span class="cm"># Cohen's kappa (전체 궤적): 0.70</span>
+<span class="cm"># Cohen's kappa (마지막 1장만): 0.51</span></div>
+      </div>
+    </div>
+
+    <h3>스크린샷 수 k가 평가 신뢰도를 결정한다</h3>
+
+    <p>
+      WebVoyager 논문에서 가장 중요한 발견 중 하나: GPT-4V에 몇 장의 스크린샷을 줄 것인가가 평가 신뢰도를 크게 좌우한다.
+    </p>
+
+    <table>
+      <tr>
+        <th>제공 스크린샷</th>
+        <th>인간과의 일치율</th>
+        <th>Cohen's kappa</th>
+        <th>실용성</th>
+      </tr>
+      <tr>
+        <td>마지막 1장만</td>
+        <td class="num">~73%</td>
+        <td class="num warn">0.51</td>
+        <td class="muted">비용 저렴, 신뢰도 낮음</td>
+      </tr>
+      <tr>
+        <td>마지막 3장</td>
+        <td class="num">~80%</td>
+        <td class="num">0.63</td>
+        <td class="muted">균형점</td>
+      </tr>
+      <tr>
+        <td>전체 궤적</td>
+        <td class="num">85.3%</td>
+        <td class="num good">0.70</td>
+        <td class="muted warn">비용 높음, 가장 신뢰</td>
+      </tr>
+    </table>
+
+    <p>
+      kappa 0.51은 "moderate agreement"로, 동전 뒤집기보다 약간 낫다는 뜻이다. 마지막 스크린샷 하나만으로 판단하는 것은 신뢰하기 어렵다. 많은 후속 연구들이 비용 절감을 위해 마지막 1–3장만 쓰는데, 이 경우 평가 신뢰도는 크게 낮아진다.
+    </p>
+
+    <h3>사이트별 성능 분포 — 멀티모달의 진짜 이점</h3>
+
+    <table>
+      <tr>
+        <th>사이트</th>
+        <th>WebVoyager (GPT-4V)</th>
+        <th>텍스트 전용 (GPT-4)</th>
+        <th>차이</th>
+      </tr>
+      <tr>
+        <td>Google Search</td>
+        <td class="num">76.7%</td>
+        <td class="num">68.3%</td>
+        <td class="num">+8.4%p</td>
+      </tr>
+      <tr>
+        <td>Google Flights</td>
+        <td class="num">70.7%</td>
+        <td class="num">41.5%</td>
+        <td class="num good">+29.2%p</td>
+      </tr>
+      <tr>
+        <td>Cambridge Dict.</td>
+        <td class="num">65.1%</td>
+        <td class="num">55.0%</td>
+        <td class="num">+10.1%p</td>
+      </tr>
+      <tr>
+        <td>BBC News</td>
+        <td class="num">61.9%</td>
+        <td class="num">52.4%</td>
+        <td class="num">+9.5%p</td>
+      </tr>
+      <tr>
+        <td>Amazon</td>
+        <td class="num">58.5%</td>
+        <td class="num">36.6%</td>
+        <td class="num good">+21.9%p</td>
+      </tr>
+      <tr>
+        <td>Booking.com</td>
+        <td class="num">43.2%</td>
+        <td class="num warn">2.3%</td>
+        <td class="num good">+40.9%p</td>
+      </tr>
+      <tr>
+        <td>ArXiv</td>
+        <td class="num">51.2%</td>
+        <td class="num">48.8%</td>
+        <td class="num">+2.4%p</td>
+      </tr>
+      <tr>
+        <td><strong>전체 평균</strong></td>
+        <td class="num hi">59.1%</td>
+        <td class="num">40.1%</td>
+        <td class="num good">+19.0%p</td>
+      </tr>
+    </table>
+
+    <p>
+      Booking.com에서 텍스트 전용 에이전트가 2.3%라는 점이 눈에 띈다. Booking.com의 달력 UI와 가격 비교 레이아웃은 DOM만으로는 파악하기 매우 어렵다. 이런 시각적 의존도 높은 사이트에서 멀티모달의 이점이 극대화된다.
+    </p>
+
+    <div class="pullquote">
+      WebVoyager 결과에서 한 가지를 배운다면: <strong>멀티모달의 이점은 균일하지 않다.</strong> 텍스트 밀도가 높은 사이트(ArXiv, GitHub)에서는 차이가 미미하고, 시각적 레이아웃에 의존하는 사이트(Booking.com, Google Flights)에서 극적인 차이가 난다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>4. VisualWebArena: 시각 이해가 필수일 때</h2>
+
+    <p>
+      WebArena 태스크들은 이론적으로 DOM/AX Tree만으로 전부 해결 가능하다. 이미지를 봐야 알 수 있는 정보가 없다. VisualWebArena(ACL 2024, Koh et al.)는 이 한계를 직접 공략한다: <strong>시각 이해 없이는 원천적으로 풀 수 없는 태스크를 만든다.</strong>
+    </p>
+
+    <h3>이미지가 태스크 자체에 포함된다</h3>
+
+    <p>
+      VisualWebArena 태스크의 25.2%는 이미지를 태스크 설명에 직접 포함한다. 예를 들어:
+    </p>
+
+    <div class="callout">
+      <strong>태스크 예시:</strong> [이미지: 파란 스트라이프 셔츠 사진] "이 셔츠와 동일한 스타일인데 빨간색인 제품을 찾아서 장바구니에 담아라."<br><br>
+      이 태스크는 AX Tree나 HTML에서 "파란 스트라이프 셔츠"라는 정보를 찾을 수 없다. 에이전트는 이미지를 보고, 그 시각적 특성(색상, 패턴)을 이해해야 한다.
+    </div>
+
+    <h3>새로운 평가 검증자</h3>
+
+    <p>
+      시각적 정답 검증을 위해 WebArena의 프로그래밍 검증자를 확장했다.
+    </p>
+
+    <table>
+      <tr>
+        <th>검증자</th>
+        <th>설명</th>
+        <th>사용 예</th>
+      </tr>
+      <tr>
+        <td class="hi"><code>eval_vqa</code></td>
+        <td>VQA 모델로 스크린샷에 질문</td>
+        <td>"이 상품의 색상은 빨간색인가?"</td>
+      </tr>
+      <tr>
+        <td class="hi"><code>eval_fuzzy_image_match</code></td>
+        <td>SSIM으로 스크린샷과 참조 이미지 비교</td>
+        <td>목표 제품 이미지와 현재 페이지 비교</td>
+      </tr>
+      <tr>
+        <td class="hi"><code>must_exclude</code></td>
+        <td>특정 내용이 없어야 함</td>
+        <td>삭제된 포스트가 더 이상 안 보여야 함</td>
+      </tr>
+    </table>
+
+    <h3>결과 — 여전히 낮은 천장</h3>
+
+    <table>
+      <tr>
+        <th>에이전트</th>
+        <th>Task SR</th>
+        <th>비고</th>
+      </tr>
+      <tr>
+        <td>인간</td>
+        <td class="num good">88.70%</td>
+        <td class="muted">상한선</td>
+      </tr>
+      <tr>
+        <td>GPT-4o + SoM (최고)</td>
+        <td class="num">19.78%</td>
+        <td class="muted">현재 SOTA</td>
+      </tr>
+      <tr>
+        <td>GPT-4V + SoM</td>
+        <td class="num">16.37%</td>
+        <td class="muted"></td>
+      </tr>
+      <tr>
+        <td>Llama-3-70B + SoM</td>
+        <td class="num warn">9.78%</td>
+        <td class="muted">오픈소스 최고</td>
+      </tr>
+      <tr>
+        <td>Caption-augmented GPT-4</td>
+        <td class="num warn">12.75%</td>
+        <td class="muted">이미지→텍스트 변환 후 텍스트 에이전트</td>
+      </tr>
+    </table>
+
+    <p>
+      인간 88.70% 대비 최고 모델 19.78%는 WebArena(78% vs 14%)보다 격차가 더 크다. Caption 방식(이미지를 텍스트로 변환한 뒤 텍스트 에이전트에 주기)이 12.75%에 그치는 것은, 이미지를 텍스트 설명으로 요약하면 시각적 세부 정보가 손실된다는 것을 보여준다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>5. WorkArena, WebLINX, WebCanvas — 각자 다른 문제</h2>
+
+    <h3>WorkArena (ICML 2024): 기업용 소프트웨어</h3>
+
+    <p>
+      WorkArena는 Fortune 500의 85%가 사용하는 <strong>ServiceNow 플랫폼</strong>에서 에이전트를 평가한다. 소비자 웹이 아닌 기업용 SaaS가 타겟이다. 33개 태스크 유형, 19,912개 태스크 인스턴스.
+    </p>
+    <p>
+      가장 충격적인 결과는 <strong>List-Filter 태스크에서 GPT-4o가 0%</strong>를 기록한다는 점이다. 드롭다운 5개 조건을 조합해 결과를 필터링하는 태스크인데, 에이전트들이 GUI 조작의 순서와 조합을 체계적으로 실행하지 못한다. 의미론적 이해는 있어도 "3번 이상의 필터를 정확한 순서로 적용한다"는 절차적 작업은 여전히 취약하다.
+    </p>
+    <p>
+      WorkArena는 <strong>BrowserGym</strong>이라는 범용 벤치마크 인프라도 함께 제공한다. 요소 ID 기반 액션, 좌표 기반 액션, Python/Playwright API를 통합 지원하며, 여러 벤치마크를 같은 코드베이스에서 실행할 수 있게 해준다.
+    </p>
+
+    <h3>WebLINX (ICML 2024 Spotlight): 대화형 웹 탐색</h3>
+
+    <p>
+      WebLINX는 혼자 태스크를 수행하는 에이전트가 아닌, <strong>인간 사용자와 대화하면서 탐색하는 에이전트</strong>를 다룬다. 2,337개 전문가 데모, 155개 실제 사이트, 대화당 평균 43턴, 10만+ 인터랙션.
+    </p>
+    <p>
+      핵심 차별점: 에이전트가 <code>say(text)</code> 액션으로 사용자에게 말을 걸 수 있다. "지금 항공편 날짜를 확인하고 있어요. 편도로 드릴까요, 왕복으로 드릴까요?" 같은 질문이 가능하다.
+    </p>
+    <p>
+      평가는 턴 단위 미시 F1으로 측정한다: 액션 유형(Intent Match), 클릭 위치(Element IoU), 텍스트 값(Token F1)을 분해해서 합산한다. 미세 조정된 Llama-3-8B가 GPT-4V 제로샷(10.5%)을 크게 앞서는 28.8%를 달성한다는 점에서, 특정 도메인에서의 파인튜닝이 여전히 강력하다는 것을 보여준다.
+    </p>
+
+    <h3>WebCanvas / Mind2Web-Live (2024): 부분 점수 도입</h3>
+
+    <p>
+      WebArena의 이진 평가(성공/실패)는 중간에 7개 스텝 중 6개를 맞혀도 0점이다. WebCanvas는 이를 해결하기 위해 <strong>Key Node</strong> 개념을 도입한다: 태스크 완료에 필수적인 중간 상태들을 정의하고, 각 상태를 별도로 검증한다.
+    </p>
+
+    <table>
+      <tr>
+        <th>검증 방식</th>
+        <th>설명</th>
+      </tr>
+      <tr>
+        <td class="hi">ExactMatch</td>
+        <td>URL, 선택된 요소 경로, 값이 정확히 일치</td>
+      </tr>
+      <tr>
+        <td class="hi">IncludeMatch</td>
+        <td>페이지 내용에 필요한 텍스트가 포함됨</td>
+      </tr>
+      <tr>
+        <td class="hi">SemanticMatch</td>
+        <td>임베딩 유사도로 의미론적 일치 확인</td>
+      </tr>
+    </table>
+
+    <p>
+      Mind2Web-Live는 Mind2Web 데이터셋을 라이브 웹사이트에서 재주석한 버전이다. 542개 태스크, 2,439개 Key Node. 그런데 재주석 과정에서 <strong>원본 태스크의 47% 이상이 사이트 변경이나 링크 깨짐으로 무효화</strong>됐다. 이건 정적 벤치마크의 수명이 얼마나 짧은지를 단적으로 보여준다.
+    </p>
+    <p>
+      Mind2Web-Live 최고 성능: Task SR 23.1%, Task Completion Rate(Key Node 기반 부분 점수) 48.8%. Task SR이 낮아도 Completion Rate는 훨씬 높다 — 에이전트가 태스크를 "절반 이상" 완료하고 있다는 의미다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>6. "Illusion of Progress" — 2025년의 메타 비판</h2>
+
+    <p>
+      2025년 4월, OSU NLP 그룹은 "<a href="https://arxiv.org/abs/2504.01382">An Illusion of Progress? Assessing the Current State of Web Agents</a>"(COLM 2025)를 발표한다. 논문의 주장은 단순하지만 충격적이다: <strong>현재 보고된 웹 에이전트 성능 수치의 상당 부분이 허상이다.</strong>
+    </p>
+
+    <h3>WebVoyager의 구조적 문제</h3>
+
+    <p>
+      논문은 WebVoyager를 체계적으로 해부한다. 15개 사이트, GPT-4V 심판 — 이 구조에서 무엇이 잘못됐는가?
+    </p>
+
+    <div class="callout red">
+      <strong>핵심 발견: Google Search만 쓰는 에이전트가 WebVoyager에서 51% 달성.</strong> "Google에서 검색하고 첫 결과 페이지의 정보를 답변으로 제출하는" 단순한 에이전트가 WebVoyager 태스크의 절반 이상을 통과한다. 즉 WebVoyager 태스크의 상당 부분은 실제 멀티스텝 웹 탐색이 필요 없다. 검색 한 번으로 해결된다.
+    </div>
+
+    <p>
+      이 발견은 "우리 에이전트가 WebVoyager에서 X%를 달성했다"는 수많은 논문 클레임을 다시 봐야 한다는 의미다. 그 중 얼마가 Google Search 능력이고, 얼마가 진짜 웹 탐색 능력인지 알 수 없다.
+    </p>
+
+    <h3>Online-Mind2Web — 더 엄격한 기준</h3>
+
+    <p>
+      논문은 WebVoyager의 대안으로 <strong>Online-Mind2Web</strong> 벤치마크를 제안한다. 설계 원칙:
+    </p>
+    <ul>
+      <li>300개 태스크, <strong>136개 사이트</strong> (다양성 확보)</li>
+      <li>Mind2Web 원본에서 필터링(47% 무효화 후 유효한 것만 사용)</li>
+      <li>모든 태스크를 <strong>라이브 웹사이트에서 인간이 직접 검증</strong></li>
+      <li>난이도 분류: 쉬움(≤5스텝) 83개, 중간(6–10스텝) 143개, 어려움(≥11스텝) 74개</li>
+    </ul>
+
+    <h3>WebJudge — 더 신뢰할 수 있는 자동 평가</h3>
+
+    <p>
+      기존 자동 평가자들(GPT-4V judge 등)은 인간 판단과의 일치율이 66–79%였다. WebJudge는 이를 개선한 새 방법론이다.
+    </p>
+
+    <div class="io-wrap">
+      <div class="io-panel">
+        <div class="io-header in">WebJudge 프로세스</div>
+        <div class="io-body"><span class="cm"># 1단계: 요구사항 추출</span>
+task = "Find a Python tutorial for
+        beginners on YouTube, sort by
+        view count, find the top video"
+
+requirements = o4_mini.extract(task)
+→ ["navigate to youtube.com",
+   "search 'python tutorial beginners'",
+   "apply sort by view count filter",
+   "identify top result title & views"]
+
+<span class="cm"># 2단계: 관련 스크린샷 필터링</span>
+for screenshot in trajectory:
+    relevance = score(screenshot, req)
+    if relevance > δ:  <span class="cm"># δ=3</span>
+        keep(screenshot)
+
+<span class="cm"># 3단계: o4-mini 이진 판정</span>
+verdict = o4_mini.judge(
+    task=task,
+    requirements=requirements,
+    key_screenshots=filtered_screenshots,
+    agent_answer=final_answer
+)
+→ {"success": True/False,
+   "reason": "..."}</div>
+      </div>
+      <div class="io-panel">
+        <div class="io-header out">평가자 비교</div>
+        <div class="io-body"><span class="cm"># 인간 판단과의 일치율</span>
+
+기존 GPT-4V judge:    66~79%
+WebJudge (o4-mini):   <span class="gn">86%</span>
+WebJudge-7B (RM):     <span class="gn">83%</span>
+
+<span class="cm"># 평균 성공률 오차 (인간 대비)</span>
+기존 방법:  ±5~12%p
+WebJudge:   ±3.8%p
+
+<span class="cm"># 왜 나아지는가?</span>
+- 관련 스크린샷만 선택 (노이즈 제거)
+- 요구사항을 명시적으로 추출해
+  판단 기준을 구체화
+- o4-mini의 더 나은 멀티모달 추론
+
+<span class="cm"># WebJudge-7B는 RL 훈련용으로도 사용 가능</span>
+<span class="cm"># (오픈소스 reward model)</span></div>
+      </div>
+    </div>
+
+    <h3>진짜 숫자들 — 제대로 측정하면 얼마나 나오나</h3>
+
+    <table>
+      <tr>
+        <th>에이전트</th>
+        <th>발표된 수치</th>
+        <th>Online-Mind2Web<br>(인간 평가)</th>
+        <th>차이</th>
+      </tr>
+      <tr>
+        <td class="hi">OpenAI Operator</td>
+        <td class="num">WebArena ~65%</td>
+        <td class="num">61.3%</td>
+        <td class="muted">가장 높음</td>
+      </tr>
+      <tr>
+        <td class="hi">Claude CU 3.7</td>
+        <td class="num">WebArena ~58%</td>
+        <td class="num">56.3%</td>
+        <td class="muted">비교적 일관</td>
+      </tr>
+      <tr>
+        <td>Browser Use</td>
+        <td class="num">자체 벤치 ~80%</td>
+        <td class="num warn">~30%</td>
+        <td class="muted warn">큰 격차</td>
+      </tr>
+      <tr>
+        <td>Agent-E</td>
+        <td class="num">WebArena ~73%</td>
+        <td class="num warn">~28%</td>
+        <td class="muted warn">큰 격차</td>
+      </tr>
+      <tr>
+        <td>SeeAct (2024 베이스라인)</td>
+        <td class="num">WebVoyager 59%</td>
+        <td class="num">~26%</td>
+        <td class="muted">최신 에이전트들과 비슷</td>
+      </tr>
+    </table>
+
+    <div class="callout red">
+      <strong>"Illusion of Progress"의 핵심 주장.</strong> 2024년에 나온 수많은 웹 에이전트들이 엄격한 평가에서 2024년 초 베이스라인인 SeeAct와 비슷한 성능을 보인다. 발표된 높은 수치들의 상당 부분은 쉬운 벤치마크(WebVoyager 등)나 느슨한 자동 평가의 인플레이션이다. 실제 라이브 웹에서 인간이 검증하면 수치가 크게 내려온다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>7. 평가의 근본적 긴장들</h2>
+
+    <h3>오프라인 vs 온라인 — 수치로 본 격차</h3>
+
+    <p>
+      Mind2Web-Live 논문에서 측정한 결과: 동일한 모델이 오프라인(캐시된 HTML) 평가와 라이브 웹사이트 평가에서 얼마나 다른 점수를 보이는지를 직접 비교했다.
+    </p>
+
+    <table>
+      <tr>
+        <th>모델</th>
+        <th>오프라인 Step SR</th>
+        <th>라이브 Step SR</th>
+        <th>하락폭</th>
+      </tr>
+      <tr>
+        <td>GPT-4 (MindAct)</td>
+        <td class="num">48.8%</td>
+        <td class="num warn">25.5%</td>
+        <td class="num warn">-23.3%p</td>
+      </tr>
+      <tr>
+        <td>GPT-3.5 (MindAct)</td>
+        <td class="num">42.8%</td>
+        <td class="num warn">19.1%</td>
+        <td class="num warn">-23.7%p</td>
+      </tr>
+    </table>
+
+    <p>
+      오프라인 성능의 절반 수준으로 떨어진다. 원인은 복합적이다: 사이트 UI 변경, 동적으로 생성되는 요소 ID, 팝업과 쿠키 배너, 로그인 요구, 그리고 오프라인 평가에서는 없던 "이전 액션의 영향으로 변한 페이지 상태". 오프라인 벤치마크 숫자는 실제 라이브 성능의 상한선이 아니라 과대 추정치라고 봐야 한다.
+    </p>
+
+    <h3>참조 기반 vs 기능적 평가</h3>
+
+    <p>
+      두 평가 방식은 근본적으로 다른 것을 측정한다.
+    </p>
+
+    <table>
+      <tr>
+        <th>측면</th>
+        <th>참조 기반 (Mind2Web)</th>
+        <th>기능적 (WebArena)</th>
+      </tr>
+      <tr>
+        <td class="hi">측정 대상</td>
+        <td>인간 주석자가 택한 경로와의 유사도</td>
+        <td>환경이 목표 상태에 도달했는가</td>
+      </tr>
+      <tr>
+        <td class="hi">대체 경로</td>
+        <td>인정 안 함 (정답 경로 하나만)</td>
+        <td>완전히 수용 (어떤 경로든 OK)</td>
+      </tr>
+      <tr>
+        <td class="hi">패널티 오류</td>
+        <td>다른 경로로 성공해도 실패</td>
+        <td>경로 무관, 결과만 본다</td>
+      </tr>
+      <tr>
+        <td class="hi">부분 점수</td>
+        <td>스텝 단위 (Element Acc, Step SR)</td>
+        <td>없음 (이진 성공/실패)</td>
+      </tr>
+      <tr>
+        <td class="hi">재현성</td>
+        <td>높음 (고정된 HTML 스냅샷)</td>
+        <td>낮음 (환경 상태 오염 가능)</td>
+      </tr>
+      <tr>
+        <td class="hi">인프라</td>
+        <td>HuggingFace 데이터셋 다운로드만</td>
+        <td>Docker, 포트 설정, 환경 초기화 필요</td>
+      </tr>
+    </table>
+
+    <h3>평가 오염과 포화의 문제</h3>
+
+    <p>
+      2024–2025년 사이 여러 벤치마크가 포화에 가까워지거나 이미 포화됐다. WebVoyager의 경우 90%+ 성능을 클레임하는 에이전트들이 등장했다 — 그런데 Google Search 전용 에이전트가 51%라면, 남은 40%p도 그다지 신뢰하기 어렵다.
+    </p>
+
+    <p>
+      오염(contamination) 문제도 실재한다. Mind2Web의 훈련 분할은 공개되어 있고, 사이트 이름과 태스크가 그대로 들어 있다. 대형 모델이 이 데이터를 사전훈련 중에 봤을 가능성을 완전히 배제할 수 없다. Mind2Web이 테스트 분할을 비밀번호로 보호하는 것도 이 때문이다 — 하지만 훈련 분할 자체의 오염은 막을 수 없다.
+    </p>
+
+    <p>
+      현재 연구 커뮤니티가 취하는 mitigation 전략들:
+    </p>
+    <ul>
+      <li><strong>동적 태스크 재생성:</strong> Online-Mind2Web은 오래된 태스크를 정기적으로 교체한다</li>
+      <li><strong>테스트 분할 비공개:</strong> 비밀번호 보호 또는 API를 통한 제출만 허용</li>
+      <li><strong>훈련 컷오프 이후 데이터:</strong> 모델 훈련 완료 후에 생성된 태스크 사용 (SWE-Bench-Live 방식)</li>
+      <li><strong>자체 호스팅 환경:</strong> 특정 시점의 데이터로 초기화된 Docker 환경</li>
+    </ul>
+
+    <h3>부분 점수의 딜레마</h3>
+
+    <p>
+      이진 Task SR(WebArena)은 7스텝 중 6스텝 완료도 0점이다. 너무 엄격하다. 하지만 부분 점수(WebCanvas의 Key Node)는 "어디까지가 필수 중간 상태인가"를 정의하는 문제를 만든다. Key Node를 어떻게 정의하느냐에 따라 같은 에이전트의 점수가 달라진다.
+    </p>
+    <p>
+      LLM 심판 방식(GPT-4V가 부분 완료 정도를 점수화)은 더 나쁜 문제를 가져온다: LLM 심판은 애매한 케이스에서 일관성 없이 중간 점수를 주는 경향이 있다. "절반 정도 완료했다"는 판단 자체가 주관적이고, 재현되지 않는다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>어떤 숫자를 믿어야 하는가</h2>
+
+    <p>
+      웹 에이전트 논문의 성능 수치를 읽을 때 체크해야 할 것들을 정리하면:
+    </p>
+
+    <table>
+      <tr>
+        <th>체크 항목</th>
+        <th>의미</th>
+        <th>위험 신호</th>
+      </tr>
+      <tr>
+        <td class="hi">어느 벤치마크?</td>
+        <td>오프라인/온라인, 라이브/격리 여부</td>
+        <td class="muted">WebVoyager 단독 클레임</td>
+      </tr>
+      <tr>
+        <td class="hi">어느 분할?</td>
+        <td>Mind2Web: Cross-Task vs Cross-Domain</td>
+        <td class="muted">가장 쉬운 분할만 보고</td>
+      </tr>
+      <tr>
+        <td class="hi">어느 지표?</td>
+        <td>Task SR vs Step SR (10배 차이 가능)</td>
+        <td class="muted">Step SR만 보고</td>
+      </tr>
+      <tr>
+        <td class="hi">평가자는?</td>
+        <td>인간 vs GPT-4V vs 프로그래밍 검증</td>
+        <td class="muted">자체 LLM 심판, 단일 평가자</td>
+      </tr>
+      <tr>
+        <td class="hi">불가능 태스크?</td>
+        <td>힌트 제공 여부가 결과를 바꿈</td>
+        <td class="muted">명시 안 함</td>
+      </tr>
+      <tr>
+        <td class="hi">인간 상한선?</td>
+        <td>같은 조건에서의 인간 성능</td>
+        <td class="muted">인간 수치 없음</td>
+      </tr>
+    </table>
+
+    <p>
+      가장 신뢰할 수 있는 숫자는 Online-Mind2Web처럼 (a) 라이브 웹사이트, (b) 다양한 사이트, (c) 인간이 직접 검증한 것이다. 현재 그 기준에서 최고는 Operator의 61.3%이고, 이게 웹 에이전트의 진짜 현주소에 가장 가깝다. 인간의 78%와 아직 상당한 격차가 있다.
+    </p>
+
+    <div class="pullquote">
+      벤치마크는 항상 현실의 단순화다. 그 단순화가 얼마나 합리적인지, 그리고 측정값이 우리가 실제로 신경 쓰는 것과 얼마나 상관관계가 있는지를 — <strong>숫자를 보기 전에</strong> 물어야 한다.
+    </div>
+
+    <div class="footnote">
+      <strong>참고 논문</strong><br>
+      Deng et al., "Mind2Web: Towards a Generalist Agent for the Web," NeurIPS 2023 ·
+      Zhou et al., "WebArena: A Realistic Web Environment for Building Autonomous Agents," ICLR 2024 ·
+      He et al., "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models," ACL 2024 ·
+      Koh et al., "VisualWebArena: Evaluating Multimodal Agents on Realistic Visually Grounded Web Tasks," ACL 2024 ·
+      Drouin et al., "WorkArena: How Capable are Web Agents at Solving Common Knowledge Work Tasks?", ICML 2024 ·
+      Lù et al., "WebLINX: Real-World Website Navigation with Multi-Turn Dialogue," ICML 2024 ·
+      Pan et al., "WebCanvas: Benchmarking Web Agents in Online Environments," 2024 ·
+      OSU NLP Group, "An Illusion of Progress? Assessing the Current State of Web Agents," COLM 2025
+    </div>
+
+  </div><!-- .post-content -->
+</div><!-- .article-wrap -->
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>
