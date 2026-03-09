@@ -16,11 +16,24 @@
       "Bash(git fetch:*)",
       "Bash(cmd.exe /c start:*)",
       "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git stash pop:*)",
       "Bash(npm install:*)",
       "Bash(node:*)",
-      "WebFetch(domain:arxiv.org)",
+      "Bash(find:*)",
       "Bash(grep:*)",
-      "Bash(awk NR>=195 && NR<=265:*)"
+      "Bash(awk NR>=195 && NR<=265:*)",
+      "Bash(git -C /mnt/c/Users/jungh/OneDrive/Desktop/web/hyeonwoo pull:*)",
+      "Bash(git -C /mnt/c/Users/jungh/OneDrive/Desktop/web/hyeonwoo diff .claude/settings.local.json)",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:proceedings.neurips.cc)",
+      "WebFetch(domain:aclanthology.org)",
+      "WebFetch(domain:proceedings.iclr.cc)",
+      "WebFetch(domain:www.emergentmind.com)",
+      "WebFetch(domain:webarena.dev)",
+      "WebFetch(domain:ukgovernmentbeis.github.io)",
+      "WebFetch(domain:github.com)",
+      "Bash(git -C /mnt/c/Users/jungh/OneDrive/Desktop/web/hyeonwoo add:*)"
     ]
   }
 }
