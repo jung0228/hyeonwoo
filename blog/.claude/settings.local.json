@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(npm run:*)",
+      "Bash(open:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git:*)",
+      "Bash(xargs basename:*)",
+      "Bash(sshpass:*)",
+      "Bash(gh auth:*)",
+      "WebFetch(domain:arxiv.org)",
+      "Bash(node:*)"
+    ]
+  }
+}
