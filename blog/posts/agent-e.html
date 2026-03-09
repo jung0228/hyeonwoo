@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent-E: 웹 자동화에서 에이전틱 시스템 설계 원칙으로 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .55rem .9rem;
+      border-bottom: 2px solid var(--text);
+      color: var(--text); letter-spacing: .04em;
+    }
+    .post-content td {
+      padding: .5rem .9rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text); vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">Agent-E: 웹 자동화에서 에이전틱 시스템 설계 원칙으로</h1>
+  <p class="post-dek">계층적 아키텍처와 DOM 디노이징으로 WebVoyager 벤치마크 73.2%를 달성한 텍스트 전용 웹 에이전트.</p>
+
+  <div class="post-meta">
+    <span class="cat">Agent</span>
+    <span class="dot">·</span>
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span>Mar 2026</span>
+    <span class="dot">·</span>
+    <span>20 min read</span>
+  </div>
+
+  <div class="post-content">
+<h2>먼저 한 가지 사실부터</h2>
+<p>Agent-E는 텍스트만 본다. 스크린샷을 안 쓴다. 사이트별로 특화된 프롬프트도 없다. 그런데 WebVoyager 벤치마크에서 <strong>73.2%</strong> 를 기록했다.</p>
+<p>비교 대상을 보면 이게 얼마나 놀라운지 알 수 있다:</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.88rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.7rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트</th>
+      <th style="padding:0.7rem 1rem;text-align:center;border-bottom:2px solid #ddd;">타입</th>
+      <th style="padding:0.7rem 1rem;text-align:center;border-bottom:2px solid #ddd;">성공률</th>
+      <th style="padding:0.7rem 1rem;text-align:left;border-bottom:2px solid #ddd;">특이사항</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.7rem 1rem;border-bottom:1px solid #eee;"><strong>WebVoyager</strong></td>
+      <td style="padding:0.7rem 1rem;text-align:center;border-bottom:1px solid #eee;">멀티모달</td>
+      <td style="padding:0.7rem 1rem;text-align:center;border-bottom:1px solid #eee;">57.1%</td>
+      <td style="padding:0.7rem 1rem;border-bottom:1px solid #eee;">GPT-4V, 스크린샷 활용</td>
+    </tr>
+    <tr>
+      <td style="padding:0.7rem 1rem;border-bottom:1px solid #eee;"><strong>WILBUR</strong></td>
+      <td style="padding:0.7rem 1rem;text-align:center;border-bottom:1px solid #eee;">텍스트 전용</td>
+      <td style="padding:0.7rem 1rem;text-align:center;border-bottom:1px solid #eee;">52.6%</td>
+      <td style="padding:0.7rem 1rem;border-bottom:1px solid #eee;">사이트별 특화 프롬프트 사용</td>
+    </tr>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.7rem 1rem;"><strong>Agent-E</strong></td>
+      <td style="padding:0.7rem 1rem;text-align:center;"><strong>텍스트 전용</strong></td>
+      <td style="padding:0.7rem 1rem;text-align:center;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">73.2%</strong></td>
+      <td style="padding:0.7rem 1rem;">범용, 사이트 특화 없음</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>시각 능력도 없고 사이트별 맞춤도 없는데, 둘 다 갖춘 경쟁자들을 <strong>10~21%p</strong> 이상 앞선다. 어떻게 가능했을까?</p>
+<p>논문 제목이 힌트를 준다. <em>&quot;From Autonomous Web Navigation to Foundational Design Principles in Agentic Systems&quot;</em> — 단순히 에이전트 하나를 만든 것이 아니라, 에이전틱 시스템을 잘 만들기 위한 보편적 원칙을 도출했다고 주장한다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>시스템 개요: 두 에이전트의 분업</h2>
+<p>Agent-E는 두 개의 LLM 에이전트가 계층을 이루는 구조다.</p>
+<div style="margin:2.5rem 0;">
+<div><svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
+  <!-- background -->
+  <rect width="680" height="320" fill="#fafaf7" rx="8"/>
+  <!-- user -->
+  <rect x="20" y="130" width="110" height="60" rx="6" fill="#e8e8e2" stroke="#bbb" stroke-width="1.5"/>
+  <text x="75" y="157" text-anchor="middle" font-size="12" fill="#444" font-weight="600">사용자</text>
+  <text x="75" y="175" text-anchor="middle" font-size="11" fill="#666">태스크 입력</text>
+  <!-- arrow user -> planner -->
+  <line x1="132" y1="160" x2="188" y2="160" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- planner box -->
+  <rect x="190" y="90" width="150" height="140" rx="8" fill="#fff8ec" stroke="#e8b84b" stroke-width="2"/>
+  <text x="265" y="118" text-anchor="middle" font-size="13" fill="#8a6200" font-weight="700">Planner Agent</text>
+  <text x="265" y="138" text-anchor="middle" font-size="10.5" fill="#a07800">태스크 분해</text>
+  <text x="265" y="155" text-anchor="middle" font-size="10.5" fill="#a07800">서브태스크 위임</text>
+  <text x="265" y="172" text-anchor="middle" font-size="10.5" fill="#a07800">상태 관리</text>
+  <text x="265" y="192" text-anchor="middle" font-size="10" fill="#c08000">DOM 세부사항 차단됨</text>
+  <!-- arrows planner -> browser (multiple) -->
+  <line x1="342" y1="140" x2="400" y2="115" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <line x1="342" y1="160" x2="400" y2="160" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <line x1="342" y1="180" x2="400" y2="205" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <!-- subtask labels -->
+  <text x="368" y="108" text-anchor="middle" font-size="9" fill="#777">subtask 1</text>
+  <text x="368" y="153" text-anchor="middle" font-size="9" fill="#777">subtask 2</text>
+  <text x="368" y="198" text-anchor="middle" font-size="9" fill="#777">subtask 3</text>
+  <!-- browser box 1 -->
+  <rect x="402" y="80" width="150" height="70" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="2"/>
+  <text x="477" y="107" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700">Browser Nav</text>
+  <text x="477" y="123" text-anchor="middle" font-size="10.5" fill="#2a52bf">Agent (인스턴스 1)</text>
+  <text x="477" y="140" text-anchor="middle" font-size="9.5" fill="#6680cc">✦ 새로 초기화됨</text>
+  <!-- browser box 2 -->
+  <rect x="402" y="125" width="150" height="70" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+  <text x="477" y="152" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700" opacity="0.7">Browser Nav</text>
+  <text x="477" y="168" text-anchor="middle" font-size="10.5" fill="#2a52bf" opacity="0.7">Agent (인스턴스 2)</text>
+  <!-- browser box 3 -->
+  <rect x="402" y="170" width="150" height="70" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
+  <text x="477" y="197" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700" opacity="0.5">Browser Nav</text>
+  <text x="477" y="213" text-anchor="middle" font-size="10.5" fill="#2a52bf" opacity="0.5">Agent (인스턴스 3)</text>
+  <!-- browser arrow -> web -->
+  <line x1="554" y1="160" x2="612" y2="160" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- web box -->
+  <rect x="614" y="130" width="50" height="60" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="639" y="157" text-anchor="middle" font-size="11" fill="#166534" font-weight="600">웹</text>
+  <text x="639" y="173" text-anchor="middle" font-size="10" fill="#166534">브라우저</text>
+  <!-- result arrow back -->
+  <path d="M 614 175 Q 580 270 342 220" fill="none" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <text x="500" y="270" text-anchor="middle" font-size="9" fill="#888">결과 보고</text>
+  <!-- defs -->
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+    </marker>
+    <marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="2.5" orient="auto">
+      <path d="M0,0 L0,5 L6,2.5 z" fill="#aaa"/>
+    </marker>
+  </defs>
+</svg></div>
+</div>
+
+<p><strong>Planner Agent</strong>는 사용자의 고수준 요청을 받아 서브태스크로 분해하고, 하나씩 Browser Navigation Agent에게 위임한다. 플래너는 DOM의 세부 노이즈를 직접 보지 않는다. 큰 그림만 관리하는 것이다.</p>
+<p><strong>Browser Navigation Agent</strong>는 각 서브태스크를 받아 실제 웹 브라우저와 상호작용한다. 결정적으로, <strong>각 서브태스크마다 새로 초기화(freshly instantiated nested chat)된다.</strong> 이전 서브태스크의 기억이 없다. 브라우저 에이전트는 지금 당장 할 일에만 집중한다.</p>
+<p>이 설계가 왜 효과적일까?</p>
+<div class="callout">
+  <strong>계층 분리의 이점</strong>
+  <ul>
+    <li><strong>플래너 오염 방지:</strong> DOM의 수천 개 요소, 에러 메시지, 상태 변화 노이즈가 플래너 컨텍스트를 오염시키지 않는다.</li>
+    <li><strong>브라우저 에이전트 집중도 유지:</strong> 이전 서브태스크 이력 없이 매번 깨끗한 상태에서 시작하므로, 지금 해야 할 일에만 집중한다.</li>
+    <li><strong>에러 격리:</strong> 한 서브태스크에서 실패해도 플래너가 감지하고 재시도 또는 대안 경로를 선택할 수 있다.</li>
+  </ul>
+</div>
+
+<div class="ornament">· · ·</div>
+
+<h2>원칙 1: 도메인 특화 기본 스킬</h2>
+<p>Browser Navigation Agent가 쓸 수 있는 도구들부터 보자.</p>
+<p><strong>감지(Sensing) 스킬:</strong></p>
+<ul>
+<li><code>get_dom_with_content_type</code> — DOM을 세 가지 방식으로 가져옴 (아래에서 자세히 설명)</li>
+<li><code>get_url</code> — 현재 페이지 URL 반환</li>
+<li><code>get_screenshot</code> — 스크린샷 캡처 (텍스트 에이전트도 필요시 사용 가능)</li>
+</ul>
+<p><strong>행동(Action) 스킬:</strong></p>
+<ul>
+<li><code>click</code> — 요소 클릭 (mmid로 정밀 지정)</li>
+<li><code>enter_text</code> — 텍스트 입력</li>
+<li><code>press_key_combination</code> — 키보드 단축키</li>
+<li><code>open_url</code> — 새 URL 열기</li>
+<li><code>scroll</code> — 페이지 스크롤</li>
+</ul>
+<p>논문이 강조하는 핵심:</p>
+<div class="pullquote">
+  <strong>"A well crafted ensemble of foundational skills can serve as a building block to support more complex functionalities."</strong>
+</div>
+
+<p>스킬 목록이 단순해 보이지만, 이 스킬들이 웹 인터랙션의 <strong>원자적 단위</strong>를 정확히 커버한다. 마우스 클릭, 텍스트 입력, 키보드, URL 이동 — 인간이 웹을 쓸 때 하는 모든 행동이 여기서 조합된다.</p>
+<p>단, 특수한 사이트에서는 오른쪽 클릭처럼 추가 스킬이 필요할 수 있다. 이 경우 도메인 특화 확장이 필요하다. <strong>범용성과 특화의 균형</strong>이 원칙 1의 핵심이다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>원칙 2: 페이로드 디노이징 — 세 가지 DOM 표현</h2>
+<p>Agent-E의 가장 독창적인 기여 중 하나다. <code>get_dom_with_content_type</code>은 단순히 DOM을 가져오는 게 아니라, <strong>태스크 유형에 맞는 형태로 변환</strong>해서 반환한다.</p>
+<div style="margin:2.5rem 0;">
+<div><svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
+  <rect width="680" height="280" fill="#fafaf7" rx="8"/>
+  <!-- raw DOM -->
+  <rect x="20" y="30" width="130" height="220" rx="6" fill="#f5f5f0" stroke="#ccc" stroke-width="1.5"/>
+  <text x="85" y="55" text-anchor="middle" font-size="12" fill="#555" font-weight="600">Raw DOM</text>
+  <text x="85" y="75" text-anchor="middle" font-size="9" fill="#888">수천 개 요소</text>
+  <text x="32" y="100" font-size="8.5" fill="#aaa">&lt;div id="nav"&gt;</text>
+  <text x="32" y="114" font-size="8.5" fill="#aaa">  &lt;ul class="menu"&gt;</text>
+  <text x="32" y="128" font-size="8.5" fill="#aaa">    &lt;li&gt;...&lt;/li&gt;</text>
+  <text x="32" y="142" font-size="8.5" fill="#aaa">  &lt;/ul&gt;</text>
+  <text x="32" y="156" font-size="8.5" fill="#aaa">&lt;input type="text"</text>
+  <text x="32" y="170" font-size="8.5" fill="#aaa">  placeholder="..."</text>
+  <text x="32" y="184" font-size="8.5" fill="#aaa">  mmid="142" /&gt;</text>
+  <text x="32" y="198" font-size="8.5" fill="#aaa">&lt;button mmid="143"&gt;</text>
+  <text x="32" y="212" font-size="8.5" fill="#aaa">  Search</text>
+  <text x="32" y="226" font-size="8.5" fill="#aaa">&lt;/button&gt;</text>
+  <!-- arrow -->
+  <text x="162" y="145" text-anchor="middle" font-size="20" fill="#bbb">→</text>
+  <!-- text_only -->
+  <rect x="180" y="30" width="145" height="220" rx="6" fill="#fef9ee" stroke="#e8b84b" stroke-width="1.5"/>
+  <text x="252" y="55" text-anchor="middle" font-size="12" fill="#8a6200" font-weight="700">text_only</text>
+  <text x="252" y="72" text-anchor="middle" font-size="9.5" fill="#a07800">요약·정보 수집 태스크</text>
+  <text x="192" y="96" font-size="9" fill="#666">순수 텍스트 콘텐츠만</text>
+  <text x="192" y="112" font-size="9" fill="#666">추출</text>
+  <rect x="188" y="125" width="129" height="90" rx="4" fill="white" stroke="#ddd"/>
+  <text x="195" y="142" font-size="8.5" fill="#444">"Search Results"</text>
+  <text x="195" y="156" font-size="8.5" fill="#444">"Product: iPhone 15"</text>
+  <text x="195" y="170" font-size="8.5" fill="#444">"Price: $799"</text>
+  <text x="195" y="184" font-size="8.5" fill="#444">"In Stock"</text>
+  <text x="195" y="198" font-size="8.5" fill="#444">"Add to Cart"</text>
+  <!-- input_fields -->
+  <rect x="340" y="30" width="145" height="220" rx="6" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5"/>
+  <text x="412" y="55" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700">input_fields</text>
+  <text x="412" y="72" text-anchor="middle" font-size="9.5" fill="#2a52bf">검색·입력 태스크</text>
+  <text x="352" y="96" font-size="9" fill="#666">상호작용 가능한 요소만</text>
+  <text x="352" y="112" font-size="9" fill="#666">추출 (mmid 포함)</text>
+  <rect x="348" y="125" width="129" height="90" rx="4" fill="white" stroke="#ddd"/>
+  <text x="355" y="142" font-size="8.5" fill="#444">[input] mmid=142</text>
+  <text x="355" y="156" font-size="8.5" fill="#444">  "Search box"</text>
+  <text x="355" y="170" font-size="8.5" fill="#444">[button] mmid=143</text>
+  <text x="355" y="184" font-size="8.5" fill="#444">  "Search"</text>
+  <text x="355" y="198" font-size="8.5" fill="#444">[select] mmid=147</text>
+  <!-- all_fields -->
+  <rect x="500" y="30" width="160" height="220" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="580" y="55" text-anchor="middle" font-size="12" fill="#166534" font-weight="700">all_fields</text>
+  <text x="580" y="72" text-anchor="middle" font-size="9.5" fill="#166534">탐색·일반 태스크</text>
+  <text x="510" y="96" font-size="9" fill="#666">전체 요소 + 계층 구조</text>
+  <text x="510" y="112" font-size="9" fill="#666">부모-자식 관계 보존</text>
+  <rect x="508" y="125" width="144" height="90" rx="4" fill="white" stroke="#ddd"/>
+  <text x="515" y="142" font-size="8.5" fill="#444">[nav] mmid=10</text>
+  <text x="515" y="156" font-size="8.5" fill="#444">  [link] mmid=11 "Home"</text>
+  <text x="515" y="170" font-size="8.5" fill="#444">  [link] mmid=12 "Cart"</text>
+  <text x="515" y="184" font-size="8.5" fill="#444">[main] mmid=20</text>
+  <text x="515" y="198" font-size="8.5" fill="#444">  [h1] "Products"</text>
+</svg></div>
+</div>
+
+<p>세 가지 모드를 구분해서 쓰는 이유가 있다.</p>
+<p><strong><code>text_only</code></strong> 는 &quot;이 페이지에서 상품 가격은?&quot; 같은 정보 수집 태스크에 쓴다. 버튼, 입력창 같은 UI 요소는 제거하고 텍스트 콘텐츠만 뽑는다. LLM이 불필요한 인터랙티브 요소에 혼동받지 않는다.</p>
+<p><strong><code>input_fields</code></strong> 는 검색창에 입력하거나 폼을 작성할 때 쓴다. 상호작용 가능한 요소(<code>&lt;input&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;select&gt;</code>)만 추출하고, 각각에 <code>mmid</code>(mind map identifier)라는 고유 식별자를 붙인다. LLM이 &quot;mmid=142에 클릭&quot;이라고 지정하면, 에이전트가 정확히 그 요소를 찾아 실행한다.</p>
+<p><strong><code>all_fields</code></strong> 는 페이지 구조를 탐색하거나 다음 행동을 결정해야 할 때 쓴다. 전체 DOM 요소를 부모-자식 계층 구조를 보존하면서 추출한다. 경쟁 에이전트들이 평면적(flat) 인코딩을 쓰는 것과 다르다.</p>
+<div class="callout">
+  <strong>mmid 식별자가 왜 중요한가</strong><br>
+  기존 웹 에이전트들은 XPath나 CSS 셀렉터로 요소를 지정한다. 이 방식은 페이지가 조금만 바뀌어도 깨진다. Agent-E는 빌드 타임에 각 요소에 고유한 mmid를 주입한다. LLM이 mmid 숫자만 알면 된다 — XPath나 복잡한 CSS 선택자를 생성할 필요 없다.
+</div>
+
+<p>이것이 원칙 3 <strong>&quot;페이로드 디노이징&quot;</strong> 의 핵심이다:</p>
+<div class="pullquote">
+  <strong>"Mitigating noise in the payload is critical in creating reliable, cost and time efficient agents."</strong>
+</div>
+
+<p>상황에 따라 필요한 정보만 추출해서 LLM에게 전달하면, 판단이 정확해지고 토큰 비용도 줄어든다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>원칙 4: 언어적 행동 피드백 — 변화 관찰 메커니즘</h2>
+<p>이게 Agent-E에서 가장 흥미로운 부분이다.</p>
+<p>일반적인 웹 에이전트는 이렇게 동작한다:</p>
+<ol>
+<li>DOM을 가져온다</li>
+<li>어떤 요소를 클릭할지 결정한다</li>
+<li>클릭한다</li>
+<li>다시 DOM을 가져온다</li>
+</ol>
+<p>즉, 자기 행동의 결과를 직접 알지 못한다. 변화를 다음 스텝의 DOM에서 간접적으로 파악해야 한다.</p>
+<p>Agent-E는 다르다. <strong>행동을 실행한 직후에 무슨 일이 일어났는지를 언어로 보고한다.</strong></p>
+<div style="margin:2.5rem 0;">
+<div><svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
+  <rect width="680" height="260" fill="#fafaf7" rx="8"/>
+  <!-- before -->
+  <rect x="20" y="40" width="190" height="80" rx="6" fill="#f5f5f0" stroke="#ccc" stroke-width="1.5"/>
+  <text x="115" y="63" text-anchor="middle" font-size="11.5" fill="#555" font-weight="600">행동 전</text>
+  <text x="115" y="85" text-anchor="middle" font-size="10" fill="#777">버튼 mmid=25 (닫혀 있음)</text>
+  <text x="115" y="103" text-anchor="middle" font-size="10" fill="#777">aria-expanded="false"</text>
+  <!-- action box -->
+  <rect x="250" y="55" width="170" height="50" rx="6" fill="#fef9ee" stroke="#e8b84b" stroke-width="2"/>
+  <text x="335" y="77" text-anchor="middle" font-size="12" fill="#8a6200" font-weight="700">CLICK mmid=25</text>
+  <text x="335" y="95" text-anchor="middle" font-size="10" fill="#a07800">에이전트 행동</text>
+  <!-- arrows -->
+  <line x1="212" y1="80" x2="248" y2="80" stroke="#888" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="422" y1="80" x2="458" y2="80" stroke="#888" stroke-width="1.5" marker-end="url(#a1)"/>
+  <!-- after state -->
+  <rect x="460" y="40" width="200" height="80" rx="6" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5"/>
+  <text x="560" y="63" text-anchor="middle" font-size="11.5" fill="#1a3a8f" font-weight="600">행동 후 피드백</text>
+  <text x="560" y="83" text-anchor="middle" font-size="9.5" fill="#444">aria-expanded: false → true</text>
+  <text x="560" y="100" text-anchor="middle" font-size="9.5" fill="#444">팝업 열림: [A, B, C 옵션]</text>
+  <!-- feedback report box -->
+  <rect x="20" y="155" width="640" height="80" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="340" y="178" text-anchor="middle" font-size="12" fill="#166534" font-weight="700">언어 피드백 메시지</text>
+  <text x="340" y="200" text-anchor="middle" font-size="10.5" fill="#444">"Clicked element mmid 25. A popup appeared with following elements:</text>
+  <text x="340" y="218" text-anchor="middle" font-size="10.5" fill="#444">  [mmid=30] Option A,  [mmid=31] Option B,  [mmid=32] Option C"</text>
+  <!-- down arrow -->
+  <line x1="560" y1="122" x2="560" y2="152" stroke="#aaa" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="340" y1="122" x2="340" y2="152" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#a1)"/>
+  <defs>
+    <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+    </marker>
+  </defs>
+</svg></div>
+</div>
+
+<p>어떻게 구현했을까? <strong>Mutation Observer Web API</strong>를 사용한다. 브라우저 내장 API로, DOM이 변화할 때마다 실시간 콜백을 받는다. 여기에 <code>aria-expanded</code> 같은 접근성 속성 모니터링을 추가해, 클릭 한 번으로 어떤 변화가 일어났는지 감지한다.</p>
+<p>논문은 이를 Reflexion과 비교한다. Reflexion은 실패 이후에 회고하는 방식이지만, Agent-E의 변화 관찰은 <strong>매 행동마다 즉각적인 환경 피드백</strong>을 제공한다. 성공/실패와 무관하게 항상 작동한다.</p>
+<p>예를 들어 날씨 사이트에서 도시를 클릭하면:</p>
+<blockquote>
+<p><em>&quot;Clicked element mmid 48. Dropdown closed. Weather data loaded: 23°C, Sunny.&quot;</em></p>
+</blockquote>
+<p>다음 행동 결정에 필요한 맥락이 즉시 주어진다. 다시 DOM 전체를 가져오지 않아도 된다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>WebVoyager 벤치마크 결과: 숫자 뜯어보기</h2>
+<p>15개 실제 웹사이트, 643개 태스크. 사이트별 성적이 흥미롭다.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.7rem 1rem;text-align:left;border-bottom:2px solid #ddd;">웹사이트</th>
+      <th style="padding:0.7rem 1rem;text-align:center;border-bottom:2px solid #ddd;">성공률</th>
+      <th style="padding:0.7rem 1rem;text-align:left;border-bottom:2px solid #ddd;">비고</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><strong>WolframAlpha</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">95.7%</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">구조적이고 예측 가능한 인터페이스</td>
+    </tr>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><strong>Google Search</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">90.7%</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">단순하고 일관된 UI</td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">GitHub</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>82.9%</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"></td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">ESPN</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>77.3%</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"></td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">Apple</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>74.4%</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"></td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">Allrecipes</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">71.1%</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"></td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">Amazon</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">70.7%</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"></td>
+    </tr>
+    <tr style="background:#fff0f0;">
+      <td style="padding:0.6rem 1rem;"><strong>Booking.com</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;"><strong style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">27.3%</strong></td>
+      <td style="padding:0.6rem 1rem;">동적 달력 UI, 날짜 선택 복잡도 높음</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Booking.com의 27.3%가 눈에 띈다. 여행 예약 사이트의 날짜 선택기, 인원 선택기, 동적으로 갱신되는 가격 표시 등은 텍스트 전용 에이전트에게 특히 어렵다. 클릭 한 번에 달력 UI가 열리고, 월 이동 버튼을 여러 번 눌러야 원하는 날짜에 도달하는 복잡한 다단계 인터랙션이 필요하기 때문이다.</p>
+<p>반면 WolframAlpha처럼 검색창에 입력하고 결과를 읽는 구조적이고 예측 가능한 사이트에서는 95.7%를 기록했다.</p>
+<div class="callout">
+  <strong>운영 지표: 에이전트가 얼마나 걸리나</strong>
+  <ul>
+    <li>태스크당 평균 LLM 호출: <strong>25회</strong> (플래너 6.4회 + 브라우저 에이전트 18.6회)</li>
+    <li>성공 태스크 평균 소요 시간: <strong>150초</strong></li>
+    <li>실패 태스크 평균 소요 시간: <strong>220초</strong></li>
+    <li>자기 인식 실패(에이전트가 스스로 실패 보고): <strong>52% 이상</strong></li>
+  </ul>
+  실패 태스크가 성공보다 70초 더 걸린다는 건 에이전트가 실패를 즉각 인식하지 못하고 여러 번 시도한다는 의미다. 자기 인식 실패율 52%는 처음으로 웹 에이전트 평가에서 측정된 지표다.
+</div>
+
+<div class="ornament">· · ·</div>
+
+<h2>네 가지 설계 원칙 정리</h2>
+<p>논문이 Agent-E 개발 경험에서 도출한 보편 원칙들이다. 웹 에이전트에만 적용되는 게 아니라 에이전틱 시스템 일반에 대한 주장이다.</p>
+<h3>원칙 1 — 도메인 특화 기본 스킬 (Domain-Specific Primitive Skills)</h3>
+<p>범용 도구를 여러 개 두는 것보다, 해당 도메인의 원자적 행동을 정확히 커버하는 특화 스킬을 만들어라. 웹에서는 클릭·입력·스크롤이 원자적 단위다. 로봇공학에서는 이동·파지·방향 전환이 원자적 단위가 된다.</p>
+<p>단순해 보이지만, 스킬의 경계를 어디에 그을지가 실제로는 어려운 결정이다. 너무 세밀하게 쪼개면 LLM이 매번 여러 스킬을 조합해야 해서 오류가 늘어난다. 너무 추상화하면 예외 상황에서 실패한다.</p>
+<h3>원칙 2 — 계층적 아키텍처 (Hierarchical Architecture)</h3>
+<p>복잡한 태스크는 여러 추상화 레벨로 분리하라. 단, <strong>복잡성이 정당화될 때만</strong> 계층을 추가하라. 단순 태스크에 계층 구조를 넣으면 오히려 오버헤드만 늘어난다.</p>
+<p>병렬 실행 가능한 서브태스크 식별, 컴포넌트 격리, 에러 감지·복구가 계층화의 주요 이점이다.</p>
+<h3>원칙 3 — 페이로드 디노이징 (Payload Denoising)</h3>
+<p>LLM에게 전달하는 정보는 태스크에 맞게 필터링하라. 관련 없는 정보를 제거하고, LLM이 소비하기 좋은 형태로 변환하라. 이는 정확도와 비용 효율 두 가지에 모두 영향을 미친다.</p>
+<p>DOM 디노이징은 이 원칙의 웹 에이전트 버전이다. 로봇공학이라면 센서 데이터 필터링이 될 것이고, 코드 에이전트라면 관련 파일만 컨텍스트에 포함하는 것이 된다.</p>
+<h3>원칙 4 — 언어적 행동 피드백 (Linguistic Action Feedback)</h3>
+<p>결과가 중요한 행동을 수행할 때마다 언어로 된 결과 보고를 제공하라. 이 피드백이 에이전트의 인과 추론을 직접적으로 도와준다.</p>
+<div style="background:#f0f4ff;border-left:4px solid #7c9ef5;padding:1.2rem 1.4rem;margin:2rem 0;border-radius:0 6px 6px 0;">
+  <strong style="display:block;margin-bottom:0.8rem;">원칙 적용 예시 — 웹 바깥의 에이전틱 시스템</strong>
+  <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+    <thead>
+      <tr style="background:#e4eaff;">
+        <th style="padding:0.5rem 0.8rem;text-align:left;border-bottom:1px solid #c0caee;">도메인</th>
+        <th style="padding:0.5rem 0.8rem;text-align:left;border-bottom:1px solid #c0caee;">원칙 2 (계층)</th>
+        <th style="padding:0.5rem 0.8rem;text-align:left;border-bottom:1px solid #c0caee;">원칙 3 (디노이징)</th>
+        <th style="padding:0.5rem 0.8rem;text-align:left;border-bottom:1px solid #c0caee;">원칙 4 (피드백)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">로봇공학</td>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">계획↔실행 분리</td>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">관련 센서만 활성화</td>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">힘/위치 피드백</td>
+      </tr>
+      <tr>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">코드 에이전트</td>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">설계↔구현 분리</td>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">관련 파일만 컨텍스트 포함</td>
+        <td style="padding:0.5rem 0.8rem;border-bottom:1px solid #dde4ff;">테스트 결과 언어 보고</td>
+      </tr>
+      <tr>
+        <td style="padding:0.5rem 0.8rem;">데스크톱 자동화</td>
+        <td style="padding:0.5rem 0.8rem;">태스크↔스텝 분리</td>
+        <td style="padding:0.5rem 0.8rem;">현재 앱 UI만 추출</td>
+        <td style="padding:0.5rem 0.8rem;">창 상태 변화 보고</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="ornament">· · ·</div>
+
+<h2>자기 개선 메커니즘</h2>
+<p>논문은 다섯 번째 영역으로 에이전트의 자기 개선(Self-Improvement)도 다룬다. 실패한 태스크 이력을 분석해 반복적인 실수 패턴을 찾고, 이를 프롬프트나 내부 규칙에 반영해 성능을 점진적으로 높이는 방향이다.</p>
+<p>현재 구현은 완전히 자동화된 자기 개선보다는 로그 분석 기반의 수동 개선에 가깝다. 하지만 이 방향성 자체가 중요하다 — 에이전트가 자신의 실패를 인식하고(52% 이상이 자기 인식 실패로 보고됨), 그것을 학습에 활용하는 루프는 장기적으로 가장 강력한 개선 경로다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>WebVoyager 이후의 맥락에서</h2>
+<p>이 논문은 2024년 7월에 나왔다. 우리가 이미 다룬 WebVoyager(57.1%, 멀티모달, GPT-4V)보다 <strong>16%p</strong> 높은 성능을 텍스트만으로 달성했다는 게 핵심이다.</p>
+<p>이게 시사하는 바:</p>
+<p><strong>멀티모달이 항상 답이 아니다.</strong> 시각 정보를 쓰면 &quot;보이는&quot; 것에 의존하게 된다. 반면 DOM을 직접 읽으면 버튼의 실제 <code>aria-label</code>을 보고, 숨겨진 요소를 발견하고, 페이지 렌더링에 상관없이 구조를 파악한다. 웹이라는 도메인에서는 DOM이 시각보다 더 정확한 &quot;진실&quot;이다.</p>
+<p><strong>범용 에이전트가 특화 에이전트를 이겼다.</strong> WILBUR은 사이트별 특화 프롬프트로 52.6%였다. Agent-E는 범용 설계로 73.2%를 찍었다. 도메인 특화의 한계가 있고, 잘 설계된 범용 아키텍처가 그 한계를 넘어선다.</p>
+<p>물론 Booking.com 27.3%가 보여주듯, 아직 갈 길이 멀다. 동적이고 복잡한 UI, 로그인이 필요한 태스크, 여러 탭을 오가는 플로우 등은 여전히 어렵다.</p>
+<div class="pullquote">
+  <strong>"There is likely room for further improvement in Agent-E using some of these strategies."</strong>
+</div>
+
+<p>논문 자체가 인정한다. 멀티모달 통합, 강화학습, 더 나은 자기 개선 루프를 더하면 어디까지 갈 수 있을지 — 그게 이후 연구들이 탐구하는 방향이다.</p>
+<div class="footnote">
+  논문: <a href="https://arxiv.org/abs/2407.13032">Agent-E: From Autonomous Web Navigation to Foundational Design Principles in Agentic Systems (2024)</a><br>
+  저자: Aditya Vempaty, Scott Zimmerman, Oliver Rodriguez, Bianca Strohmer, Alex Grushin, Sailik Sengupta, Chitta Baral (Arizona State University, Stitch Fix)
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>
