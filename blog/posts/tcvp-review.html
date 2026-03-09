@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCVP 리뷰 & 개선 계획: ACL 이후 EMNLP를 향해 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1.1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem; font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule { border-top: none; padding-top: 0; }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-top: 1px solid var(--rule-lt);
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0; padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+    .callout.warn { border-left-color: #c47a1a; }
+    .callout.red  { border-left-color: #c0392b; }
+    .callout.green{ border-left-color: #1a7a4a; }
+
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .6rem .9rem;
+      border-bottom: 2px solid var(--text);
+      font-size: .78rem; text-transform: uppercase; letter-spacing: .06em;
+    }
+    .post-content td {
+      padding: .55rem .9rem; border-bottom: 1px solid var(--rule-lt);
+      vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+    .post-content td.hi  { font-weight: 700; }
+    .post-content td.bad { color: #c0392b; font-weight: 600; }
+    .post-content td.warn{ color: #c47a1a; font-weight: 600; }
+    .post-content td.good{ color: #1a7a4a; font-weight: 600; }
+
+    /* ─── ORNAMENT ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      margin-top: 3rem; padding-top: 1.2rem;
+      line-height: 1.6;
+    }
+
+    /* ─── SEVERITY BADGE ─── */
+    .badge {
+      display: inline-block;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; padding: .15rem .5rem;
+      border-radius: 3px; margin-right: .4rem; vertical-align: middle;
+    }
+    .badge.critical { background: #fde8e8; color: #c0392b; }
+    .badge.major    { background: #fef3e2; color: #c47a1a; }
+    .badge.minor    { background: #e8f5e9; color: #1a7a4a; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <div class="masthead-title">TCVP Review &amp; 개선 계획</div>
+    <div class="masthead-sub">Multimodal · Mar 10, 2026</div>
+  </div>
+</div>
+
+<div class="article-wrap">
+  <h1 class="post-title">ACL 이후 EMNLP를 향해: TCVP 약점 분석과 개선 로드맵</h1>
+  <p class="post-dek">직접 만든 논문을 가장 가혹하게 리뷰하는 것이 다음 버전을 만드는 가장 빠른 방법이다.</p>
+  <div class="post-meta">
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span>Mar 10, 2026</span>
+    <span class="dot">·</span>
+    <span>20 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">TCVP가 무엇인가</h2>
+    <p>
+      <strong>TCVP (Timestamped Comment-guided VMR Pipeline)</strong>는 Video Moment Retrieval(VMR) 데이터셋 구축 파이프라인이다.
+      기존 VMR 데이터셋은 비디오에서 무작위 구간을 뽑아 캡션을 생성하는 방식으로 만들어졌다.
+      이 방식의 문제는 두 가지다. 첫째, 뽑힌 구간이 시청자가 실제로 중요하게 여기는 순간과 무관할 수 있다.
+      둘째, LLM이 생성한 쿼리는 검색 쿼리가 아니라 시각적 설명에 가깝다.
+    </p>
+    <p>
+      TCVP는 YouTube의 타임스탬프 댓글에서 출발한다.
+      "[07:22] Flanders last words lol" 같은 댓글은 실제 시청자가 중요하다고 느낀 순간을 가리키고,
+      그 표현 자체가 실제 검색 의도를 담고 있다.
+      파이프라인은 댓글 수집 → 모달리티별 캡션 생성 → 댓글 필터링 &amp; 모달리티 게이팅 → 쿼리 생성
+      4단계로 이루어진다.
+    </p>
+
+    <div class="callout">
+      <strong>현재 데이터셋 규모:</strong> 300 videos · 4,500 queries · 평균 영상 길이 1,517초<br>
+      <strong>모달리티 분포:</strong> Audio-related 45.9% · Visual-related 39.8% · Unrelated(filtered) 14.3%
+    </div>
+
+    <div class="pullquote">
+      Human evaluation에서 TCVP 쿼리가 <strong>70% 선호</strong>되었고,
+      타임스탬프 기반 moment selection이 <strong>95% 선호</strong>되었다.
+      결과 자체는 설득력 있다. 문제는 그 결과를 뒷받침하는 실험의 규모와 깊이다.
+    </div>
+
+    <h2>약점 분석: 무엇이 리뷰어를 불편하게 만들었을까</h2>
+
+    <h3><span class="badge critical">Critical</span> 1. 데이터셋 규모</h3>
+    <p>
+      Table 3을 보면 TCVP는 300개 비디오, 4.5k 쿼리다.
+      같은 테이블에 있는 LongVALE는 8,411 videos / 105k queries, WavCaps는 400k / 400k다.
+      두 자릿수 차이가 난다. 데이터셋 논문에서 규모는 곧 신뢰성이다.
+      "왜 이 데이터로 모델을 학습시킬 수 있냐"는 질문에 답이 없다.
+    </p>
+
+    <h3><span class="badge critical">Critical</span> 2. Downstream Training Experiment 부재</h3>
+    <p>
+      이것이 가장 치명적인 약점이다. 논문 전체가 "우리 데이터가 더 자연스럽다"를 보여주는 데 집중하지만,
+      <strong>그 데이터로 학습한 모델이 실제로 더 좋은지를 보여주지 않는다.</strong>
+      현재 Section 5는 기존 모델을 TCVP에서 zero-shot 평가하는 것이다.
+    </p>
+    <p>
+      데이터셋 논문의 핵심 narrative는 이렇게 완성되어야 한다:
+    </p>
+    <div class="callout green">
+      <strong>필요한 narrative:</strong><br>
+      "우리 파이프라인으로 만든 데이터가 더 자연스럽고 (human eval) →
+      실제로 모델 학습에도 유용하다 (downstream training exp)"
+    </div>
+    <p>
+      이 실험이 없으면 논문은 "좋은 파이프라인 소개"에 머무르고,
+      "좋은 데이터셋 논문"이 되지 못한다.
+    </p>
+
+    <h3><span class="badge critical">Critical</span> 3. Human Evaluation 샘플 수</h3>
+    <p>
+      Moment selection: <strong>40 samples</strong>에서 95% 선호.<br>
+      Query realism: <strong>40 samples</strong>에서 70% 선호.
+    </p>
+    <p>
+      이 수치들이 강한 클레임을 지지하기에 40개는 너무 작다.
+      inter-annotator agreement (Cohen's κ)도 보고되지 않아 신뢰도에 의문이 생긴다.
+    </p>
+
+    <h3><span class="badge major">Major</span> 4. Binary Modality Gating의 한계</h3>
+    <p>
+      현재 파이프라인은 각 댓글을 Visual 또는 Audio 중 하나로만 분류한다.
+      하지만 "the moment the piano kicks in right as he scores the goal" 같은 댓글은
+      두 모달리티의 동시 상호작용을 참조한다.
+    </p>
+    <p>
+      논문은 이를 Appendix A.3에서 Mixed category로 언급하며 "future work"로 넘긴다.
+      그런데 실제로 Mixed가 존재한다는 것을 본인들이 인정하는 이상,
+      본론에서 다루지 않으면 리뷰어가 당연히 지적한다.
+    </p>
+
+    <h3><span class="badge major">Major</span> 5. Like 기반 선택의 Popularity Bias</h3>
+    <p>
+      좋아요 수 기준 상위 20개 댓글만 사용한다.
+      이는 "가장 많이 반응을 받은 순간"을 뽑는 것이지,
+      "사용자가 검색하고 싶은 순간"과 같지 않을 수 있다.
+      바이럴한 밈 장면이 실제 검색 intent와 일치하는지는 별개 문제다.
+    </p>
+
+    <h3><span class="badge major">Major</span> 6. "Ours w/o Comment"가 25% 득표</h3>
+    <p>
+      Figure 7 결과: LongVALE (5%), Watch&amp;Listen (0%), <strong>Ours w/o com. (25%)</strong>, Ours (70%).
+    </p>
+    <p>
+      댓글 없이도 기존 방법보다 훨씬 좋다는 뜻이다.
+      즉, 논문의 두 가지 기여인 (1) 더 좋은 moment selection과 (2) 댓글 기반 쿼리 생성이
+      명확하게 분리되지 않는다.
+      댓글 자체의 순수한 기여를 보여주는 더 정밀한 ablation이 필요하다.
+    </p>
+
+    <h3><span class="badge major">Major</span> 7. Temporal Boundary 정의의 불명확성</h3>
+    <p>
+      기존 VMR 데이터셋은 annotator가 명시적으로 start/end 타임스탬프를 표시한다.
+      TCVP는 comment timestamp ± 9s가 곧 정답 구간이다.
+      이 때문에 IoU 기반 평가 지표를 쓸 수 없고 Recall@K로 대체되었는데,
+      이는 두 데이터셋 간 직접 비교를 어렵게 만든다.
+    </p>
+
+    <h3><span class="badge minor">Minor</span> 8. GPT-4.1 의존성</h3>
+    <p>
+      Query generation에 GPT-4.1을 사용한다. 재현성 관점에서 문제가 될 수 있고,
+      open-source 대안으로 대체 시 성능이 얼마나 달라지는지 ablation이 없다.
+    </p>
+
+    <h3><span class="badge minor">Minor</span> 9. Audio Embedding 모델 성능 분석 부족</h3>
+    <p>
+      Table 2에서 CLAP, LanguageBind-Audio가 audio-related queries에서
+      visual 모델(LanguageBind)보다 낮은 성능을 보인다.
+      논문은 "많은 audio comments가 speech/transcript 기반이라 visual 모델도 잘 된다"고 설명하는데,
+      이 발견 자체가 흥미로운 분석 포인트가 될 수 있음에도 깊게 파고들지 않는다.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>약점 요약 테이블</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>약점</th>
+          <th>심각도</th>
+          <th>설명</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hi">데이터셋 규모 (300 videos)</td>
+          <td class="bad">Critical</td>
+          <td>LongVALE 대비 28배 작음</td>
+        </tr>
+        <tr>
+          <td class="hi">Downstream training exp 없음</td>
+          <td class="bad">Critical</td>
+          <td>데이터셋 논문의 핵심 증명 부재</td>
+        </tr>
+        <tr>
+          <td class="hi">Human eval 40 samples</td>
+          <td class="bad">Critical</td>
+          <td>통계적 유의성 확보 불가</td>
+        </tr>
+        <tr>
+          <td>Binary modality gating</td>
+          <td class="warn">Major</td>
+          <td>Mixed category를 Appendix로 묻음</td>
+        </tr>
+        <tr>
+          <td>Like 기반 popularity bias</td>
+          <td class="warn">Major</td>
+          <td>검색 intent와 불일치 가능성</td>
+        </tr>
+        <tr>
+          <td>w/o Comment ablation 약함</td>
+          <td class="warn">Major</td>
+          <td>댓글의 순수 기여 분리 미흡</td>
+        </tr>
+        <tr>
+          <td>Temporal boundary 불명확</td>
+          <td class="warn">Major</td>
+          <td>IoU 기반 평가 불가</td>
+        </tr>
+        <tr>
+          <td>GPT-4.1 의존</td>
+          <td class="good">Minor</td>
+          <td>재현성 문제</td>
+        </tr>
+        <tr>
+          <td>Audio embedding 분석 부족</td>
+          <td class="good">Minor</td>
+          <td>흥미로운 발견인데 스쳐 지나감</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>개선 계획: EMNLP 2026 타겟</h2>
+
+    <p>EMNLP 2026 ARR 데드라인은 <strong>2026년 5월 25일</strong>이다. 오늘(3월 10일)부터 약 2.5개월이다.</p>
+
+    <h3>1순위: Downstream Training Experiment</h3>
+    <p>
+      LanguageBind를 베이스 모델로 아래 세 조합을 비교한다:
+    </p>
+    <ol>
+      <li><strong>QVHighlights only</strong> — 기존 데이터셋 baseline</li>
+      <li><strong>QVHighlights + TCVP</strong> — TCVP의 추가 효과</li>
+      <li><strong>TCVP only</strong> — 파이프라인 데이터만의 한계/가능성</li>
+    </ol>
+    <p>
+      Contrastive fine-tuning이라 A100 기준 몇 시간이면 돌아간다.
+      결과를 기존 Table 2에 행으로 추가하면 narrative가 완성된다.
+    </p>
+
+    <div class="callout">
+      <strong>왜 LanguageBind인가?</strong><br>
+      Table 2에서 visual R@10 62.7로 가장 강력한 embedding baseline이다.
+      Visual/Audio 동시 지원이라 TCVP의 multimodal 특성을 그대로 활용할 수 있다.
+    </div>
+
+    <h3>2순위: 데이터셋 규모 확장</h3>
+    <p>
+      파이프라인이 이미 완성되어 있다. API 비용 + 실행 시간만 드는 일이다.
+      목표: <strong>300 → 1,000+ videos</strong>.
+      채널 목록에 이미 다양한 카테고리가 있으니 기존 채널의 비디오를 더 많이 수집하거나,
+      새 채널을 추가하면 된다. 학습 실험과 병렬로 진행 가능하다.
+    </p>
+
+    <h3>3순위: Human Evaluation 강화</h3>
+    <ul>
+      <li>샘플 수: 40 → <strong>100~150 samples</strong></li>
+      <li>Cohen's κ 보고 (inter-annotator agreement)</li>
+      <li>카테고리별 breakdown (Sports vs Podcast 등)</li>
+    </ul>
+
+    <h3>4순위: Mixed Modality 본론 편입</h3>
+    <p>
+      Appendix A.3의 Mixed category 분석을 Section 3으로 올리고,
+      Mixed query에 대한 평가도 포함한다.
+      단, Mixed query를 잘 처리하는 모델이 현재 없다는 것도 하나의 contribution이 될 수 있다.
+    </p>
+
+    <h2>타임라인</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>기간</th>
+          <th>할 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hi">3월 10일 ~ 3월 말</td>
+          <td>데이터 확장 파이프라인 재실행 + LanguageBind fine-tuning 코드 세팅</td>
+        </tr>
+        <tr>
+          <td class="hi">4월</td>
+          <td>Training experiment 실행 및 분석 · Human eval 확장</td>
+        </tr>
+        <tr>
+          <td class="hi">5월 초</td>
+          <td>논문 개정 · Mixed modality section 추가</td>
+        </tr>
+        <tr>
+          <td class="hi">5월 25일</td>
+          <td>EMNLP 2026 ARR 제출</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <strong>가장 중요한 것 하나만 고른다면:</strong><br>
+      Downstream training experiment. 이것 하나가 논문의 contribution 레벨을 완전히 바꾼다.
+      파이프라인 이야기에서 "실제로 유용한 데이터셋" 이야기로.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>회고</h2>
+    <p>
+      논문을 쓰면서 가장 어려운 일 중 하나는 자신의 작업에서 빠진 것을 보는 것이다.
+      TCVP의 아이디어 자체는 좋다. 타임스탬프 댓글이 실제 사용자 intent를 담고 있다는 관찰,
+      모달리티별로 다른 처리가 필요하다는 설계, 그리고 기존 파이프라인이 얼마나 "랜덤"했는지를
+      드러내는 비교 — 이것들은 설득력 있다.
+    </p>
+    <p>
+      부족한 것은 아이디어가 아니라 <strong>그 아이디어가 실제로 쓸모 있음을 보여주는 실험</strong>이다.
+      데이터셋이 자연스럽다는 것을 증명하는 것과, 그 데이터가 모델을 개선한다는 것을 증명하는 것은
+      다른 일이다. 다음 버전에서는 그 두 번째 증명을 채우면 된다.
+    </p>
+
+    <div class="footnote">
+      이 글은 TCVP (Timestamped Comment-guided VMR Pipeline) 논문의 ACL 제출 이후
+      자체 리뷰 및 개선 계획을 정리한 것입니다.
+      다음 제출 타겟: EMNLP 2026 (ARR May 25, 2026).
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
