@@ -338,12 +338,16 @@ function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');b
 <button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
 <div class="prob-ans">
 
-<p><strong>고유값 계산.</strong> 특성 방정식 $\det(A - \lambda I) = 0$:</p>
-<div class="prob-formula">$$(3-\lambda)^2 - 1 = 0 \implies \lambda^2 - 6\lambda + 8 = 0 \implies \lambda_1 = 4, \quad \lambda_2 = 2$$</div>
+<p><strong>용어 먼저 — 고유값과 고유벡터란?</strong> 행렬 $A$에 의한 선형 변환에서, 방향은 변하지 않고 크기만 $\lambda$배 변하는 벡터 $v$를 <span class="kw">고유벡터(eigenvector)</span>, 그 스케일 인수 $\lambda$를 <span class="kw">고유값(eigenvalue)</span>이라 한다. 즉 $Av = \lambda v$를 만족하는 쌍 $(\lambda, v)$.</p>
 
-<p><strong>고유벡터.</strong> $\lambda_1 = 4$: $(A-4I)v = 0$ → $\begin{pmatrix}-1&1\\1&-1\end{pmatrix}v = 0$ → $v_1 = \frac{1}{\sqrt{2}}\begin{pmatrix}1\\1\end{pmatrix}$. $\lambda_2 = 2$: → $v_2 = \frac{1}{\sqrt{2}}\begin{pmatrix}1\\-1\end{pmatrix}$.</p>
+<p><strong>고유값 계산.</strong> 특성 방정식 $\det(A - \lambda I) = 0$. $A - \lambda I = \begin{pmatrix}3-\lambda & 1 \\ 1 & 3-\lambda\end{pmatrix}$이므로:</p>
+<div class="prob-formula">$$\det(A - \lambda I) = (3-\lambda)^2 - 1 = \lambda^2 - 6\lambda + 8 = (\lambda-4)(\lambda-2) = 0$$
+$$\implies \lambda_1 = 4, \quad \lambda_2 = 2$$</div>
 
-<p><strong>기하학적 의미.</strong> 고유벡터는 이 변환이 "늘리거나 줄이기만 하는" 방향이다. 대각선 방향 $v_1 = [1,1]/\sqrt{2}$은 4배로 늘어나고, 반대 대각선 방향 $v_2 = [1,-1]/\sqrt{2}$는 2배로 늘어난다. 일반적인 방향의 벡터는 이 두 성분으로 분해되어 각각 다른 비율로 늘어나므로 <strong>방향이 바뀐다</strong>. 하지만 고유벡터 방향으로 입력하면 방향은 유지되고 크기만 $\lambda$배 변한다. 이 행렬은 두 주축 방향으로 서로 다른 비율로 늘리는 타원형 확장 변환이다.</p>
+<p><strong>고유벡터 계산.</strong> $\lambda_1 = 4$: $(A-4I)v = \begin{pmatrix}-1&1\\1&-1\end{pmatrix}v = 0$ → 두 방정식이 $v_1 = v_2$로 같음 → <span class="kw2">$v_1 = \frac{1}{\sqrt{2}}\begin{pmatrix}1\\1\end{pmatrix}$ (대각선 방향, 4배 확장)</span>.</p>
+<p>$\lambda_2 = 2$: $(A-2I)v = \begin{pmatrix}1&1\\1&1\end{pmatrix}v = 0$ → $v_1 = -v_2$ → <span class="kw2">$v_2 = \frac{1}{\sqrt{2}}\begin{pmatrix}1\\-1\end{pmatrix}$ (반대 대각선 방향, 2배 확장)</span>.</p>
+
+<p><strong>기하학적 의미.</strong> <span class="kw">고유벡터 방향으로 입력하면 방향은 유지되고 크기만 $\lambda$배 변한다.</span> 하지만 일반적인 방향의 벡터 $x = \alpha v_1 + \beta v_2$를 변환하면 $Ax = 4\alpha v_1 + 2\beta v_2$ — 두 성분이 서로 다른 비율로 늘어나므로 <span class="kw3">방향이 바뀐다.</span> 이 행렬은 대각선 방향으로 4배, 반대 대각선 방향으로 2배 늘리는 타원형 확장 변환이다.</p>
 
 </div>
 </div>
@@ -354,11 +358,20 @@ function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');b
 <button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
 <div class="prob-ans">
 
-<p><strong>(1) 에너지 비율의 의미.</strong> Frobenius 노름의 제곱은 $\|A\|_F^2 = \sum_{i,j} a_{ij}^2 = \sum_i \sigma_i^2$. 따라서:</p>
-<div class="prob-formula">$$\frac{\|A_k\|_F^2}{\|A\|_F^2} = \frac{\sum_{i=1}^k \sigma_i^2}{\sum_{i=1}^r \sigma_i^2}$$</div>
-<p>이 비율이 0.95면 "원본 이미지 에너지의 95%를 상위 $k$개 성분이 담고 있다"는 의미다. 자연 이미지는 특이값이 급격히 감소하는 경향이 있어 (저차원 구조), 작은 $k$로도 높은 에너지 보존이 가능하다. $k=10$이면 저주파 성분(전체적 형태)만, $k=50$이면 중주파 성분(세부 텍스처 일부)까지 포함된다.</p>
+<p><strong>SVD 이미지 압축 원리.</strong> 이미지 행렬 $A$의 SVD: $A = U \Sigma V^T = \sum_{i=1}^r \sigma_i u_i v_i^T$. 각 항 $\sigma_i u_i v_i^T$는 하나의 "패턴" (rank-1 행렬)이며, 특이값 $\sigma_i$가 클수록 이미지에서 더 중요한 패턴이다. <span class="kw">상위 $k$개만 유지하면 가장 중요한 $k$개의 패턴으로 이미지를 근사.</span></p>
 
-<p><strong>(2) Trade-off.</strong> 저장 비용: 원본 $512 \times 512 = 262,144$ 값. $A_k$ 표현: $k$개의 $\sigma_i$ + $k \times 512$개의 $u_i$ + $k \times 512$개의 $v_i$ = $k(1 + 1024)$ ≈ $1025k$ 값. $k < 255$이면 압축 효과. $k$가 커질수록 (a) 화질↑, (b) 압축률↓. 자연 이미지에서는 대체로 $k \approx 50$이면 육안으로 구분 어려울 정도의 품질을 유지하면서 상당한 압축이 가능하다.</p>
+<p><strong>(1) 에너지 비율의 의미.</strong> Frobenius 노름의 제곱 $\|A\|_F^2 = \sum_{i,j} a_{ij}^2 = \sum_i \sigma_i^2$이므로:</p>
+<div class="prob-formula">$$\frac{\|A_k\|_F^2}{\|A\|_F^2} = \frac{\sigma_1^2 + \sigma_2^2 + \cdots + \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots + \sigma_r^2}$$</div>
+<p>이 비율이 0.95면 <span class="kw2">"원본 이미지 에너지의 95%를 상위 $k$개 성분이 담고 있다"</span>는 의미. 자연 이미지는 특이값이 급격히 감소하는 경향(저차원 구조)이 있어 작은 $k$로도 높은 보존이 가능하다:
+<ul style="margin:.4rem 0 .4rem 1.2rem;line-height:1.7">
+  <li>$k=1$: 전체 밝기/명암 패턴만 (매우 흐릿)</li>
+  <li>$k=10$: 전체적 형태 (저주파 성분)</li>
+  <li>$k=50$: 세부 텍스처 일부까지 포함, 육안으로 원본과 구분하기 어려운 수준</li>
+</ul></p>
+
+<p><strong>(2) Trade-off — 저장 비용 계산.</strong> 원본: $512 \times 512 = 262,144$ 값. $A_k$ 표현 비용: $\sigma_i$ $k$개 + $u_i$ ($512k$개) + $v_i$ ($512k$개) = $k(1 + 1024) \approx 1025k$ 값.</p>
+<div class="prob-formula">$$k < \frac{262144}{1025} \approx 255 \text{ 일 때 압축 효과}$$</div>
+<p><span class="kw2">$k$가 커질수록: (a) 화질↑, (b) 압축률↓.</span> <span class="kw3">$k$가 너무 작으면: 에너지 비율이 낮아 세부가 뭉개짐.</span> 자연 이미지에서 $k \approx 50$이 흔히 좋은 균형점이다.</p>
 
 </div>
 </div>
@@ -369,13 +382,16 @@ function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');b
 <button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
 <div class="prob-ans">
 
-<p><strong>투영 분산 유도.</strong> 중심화된 데이터 $x_i$의 $w$ 방향 투영: $z_i = w^T x_i$. 투영의 분산:</p>
-<div class="prob-formula">$$\text{Var}(z) = \frac{1}{n}\sum_i (w^T x_i)^2 = w^T \left(\frac{1}{n}\sum_i x_i x_i^T\right) w = w^T C w$$</div>
-<p>$C = \frac{1}{n}X^TX$가 공분산 행렬이므로 투영 분산 = $w^T C w$. ∎</p>
+<p><strong>투영 분산 유도.</strong> 데이터를 미리 평균 0으로 중심화하면 $\sum_i x_i = 0$. 단위 벡터 $w$로의 투영: $z_i = w^T x_i$ (스칼라). 이 투영값들의 분산:</p>
+<div class="prob-formula">$$\text{Var}(z) = \frac{1}{n}\sum_i z_i^2 = \frac{1}{n}\sum_i (w^T x_i)^2 = \frac{1}{n}\sum_i w^T x_i x_i^T w = w^T \underbrace{\left(\frac{1}{n}\sum_i x_i x_i^T\right)}_{=\, C} w = w^T C w$$</div>
+<p><span class="kw">투영 분산 = $w^T C w$ (단, $C$는 데이터 공분산 행렬).</span> ∎</p>
 
-<p><strong>최대화 문제 (라그랑주 승수법).</strong> $\max_w w^T C w \quad \text{s.t.} \quad \|w\|^2 = 1$. 라그랑지안 $\mathcal{L} = w^T C w - \lambda(w^T w - 1)$. $\partial \mathcal{L}/\partial w = 2Cw - 2\lambda w = 0$, 즉 $Cw = \lambda w$. 이것은 고유값 방정식이다. 목적함수 값 = $w^T C w = w^T(\lambda w) = \lambda \|w\|^2 = \lambda$. 따라서 <strong>분산을 최대화하는 $w$는 $C$의 최대 고유값에 대응하는 고유벡터</strong>다. ∎</p>
+<p><strong>최대화 문제 — 라그랑주 승수법.</strong> $\|w\| = 1$ 제약 하에서 $w^T C w$를 최대화. 라그랑지안:</p>
+<div class="prob-formula">$$\mathcal{L} = w^T C w - \lambda(w^T w - 1)$$
+$$\frac{\partial \mathcal{L}}{\partial w} = 2Cw - 2\lambda w = 0 \implies Cw = \lambda w$$</div>
+<p>이것이 고유값 방정식이다! 최적값 = $w^T C w = w^T (\lambda w) = \lambda$. 따라서 <span class="kw2">분산을 최대화하는 $w$는 $C$의 최대 고유값에 대응하는 고유벡터</span>다. ∎</p>
 
-<p><strong>직관.</strong> 공분산 행렬의 고유벡터는 데이터 구름이 가장 "늘어난" 방향이다. 고유값이 클수록 그 방향으로 데이터가 많이 퍼져 있다. PCA는 이 "가장 많이 퍼진" 방향들을 순서대로 찾는 알고리즘이다.</p>
+<p><strong>직관으로 이해하기.</strong> 공분산 행렬 $C$의 고유벡터는 데이터 구름이 가장 "많이 퍼진" 방향이다. 고유값이 클수록 그 방향으로 데이터가 넓게 분포한다. <span class="kw">PCA = 데이터를 가장 많이 설명하는 방향들을 고유값 내림차순으로 찾는 알고리즘.</span></p>
 
 </div>
 </div>
@@ -386,11 +402,19 @@ function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');b
 <button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
 <div class="prob-ans">
 
-<p><strong>동치 증명.</strong> $\det(A) = \prod_i \lambda_i$이므로 $\det(A) = 0 \iff$ 어떤 $\lambda_i = 0$. 행렬이 가역 $\iff \det(A) \neq 0 \iff$ 모든 $\lambda_i \neq 0$. ∎ (고유값이 0이면 해당 고유벡터 방향으로의 정보가 완전히 손실되어 역변환이 불가능하다.)</p>
+<p><strong>동치 증명.</strong> 고유값 분해 $A = PDP^{-1}$에서 $\det(A) = \det(P)\det(D)\det(P^{-1}) = \det(D) = \prod_i \lambda_i$. 따라서:</p>
+<div class="prob-formula">$$\det(A) = 0 \iff \text{어떤 } \lambda_i = 0 \iff A \text{ 는 비가역(singular)}$$</div>
+<p><span class="kw">고유값이 0이면 해당 고유벡터 방향으로의 정보가 완전히 소멸 → 역변환 불가능.</span> ∎</p>
 
-<p><strong>순전파 문제.</strong> $W$가 rank-deficient면 선형 변환이 저차원 공간으로 붕괴된다. 예를 들어 $W \in \mathbb{R}^{10 \times 10}$이 rank 3이면 10차원 입력이 사실상 3차원으로 압축되어 나머지 7차원의 정보는 소멸한다. 이것이 의도된 병목이 아니라면 표현력 손실이다.</p>
+<p><strong>순전파 문제 — 수치 예시.</strong> $W \in \mathbb{R}^{10 \times 10}$이 rank 3이면 10차원 입력 $x$가 $Wx$를 거치면 사실상 3차원 부분공간에 갇힌다. <span class="kw3">나머지 7차원의 정보는 영구 소멸</span>한다. 이것이 의도된 병목(bottleneck)이 아니라면 모델 표현력의 심각한 손실이다. 예: 임베딩 차원을 줄이는 레이어가 의도치 않게 rank-deficient가 되면 정보가 손실되어 학습이 어려워진다.</p>
 
-<p><strong>역전파 문제.</strong> $W$의 특이값이 0에 가까우면 역행렬의 특이값이 $1/\sigma_{\min} \to \infty$가 되어 수치적으로 불안정해진다(조건수 $\kappa = \sigma_\max/\sigma_\min \to \infty$). 그래디언트가 역전파될 때 이 레이어를 통과하면서 폭발적으로 증폭될 수 있다. 이것이 딥러닝에서 가중치 초기화, Batch Normalization, Spectral Normalization 등으로 가중치의 특이값 분포를 통제하는 이유다.</p>
+<p><strong>역전파 문제 — 조건수와 기울기 폭발.</strong> 특이값이 $\sigma_{\min} \approx 0$이면 역행렬의 특이값은 $1/\sigma_{\min} \to \infty$. 조건수 $\kappa(W) = \sigma_\max / \sigma_\min \to \infty$이면 <span class="kw3">그래디언트가 이 레이어를 역전파하면서 폭발적으로 증폭</span>된다. 이것이 딥러닝에서:</p>
+<ul style="margin:.4rem 0 .4rem 1.2rem;line-height:1.7">
+  <li><span class="kw2">가중치 초기화</span> (He/Xavier): 특이값이 적절한 범위에 오도록</li>
+  <li><span class="kw2">Batch Normalization</span>: 레이어 출력 분포를 정규화하여 조건수 간접 통제</li>
+  <li><span class="kw2">Spectral Normalization</span>: $W$의 최대 특이값이 1이 되도록 명시적 통제</li>
+</ul>
+<p>... 같은 기법들이 필요한 이유다.</p>
 
 </div>
 </div>
@@ -401,11 +425,20 @@ function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');b
 <button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
 <div class="prob-ans">
 
-<p><strong>SVD 형태.</strong> $A = uv^T = \sigma_1 u_1 v_1^T$ where $\sigma_1 = \|u\|\|v\| = 1$, $u_1 = u$, $v_1 = v$. 이것이 단 하나의 특이삼중쌍 $(\sigma_1, u_1, v_1)$으로 이루어진 SVD다. 모든 다른 특이값은 0이므로 $\text{rank}(A) = 1$. ∎</p>
+<p><strong>SVD 형태와 rank = 1 증명.</strong> $A = uv^T$에서 $\|u\| = \|v\| = 1$이므로 SVD 형태로 쓰면:</p>
+<div class="prob-formula">$$A = uv^T = \underbrace{1}_{\sigma_1} \cdot \underbrace{u}_{u_1} \underbrace{v^T}_{v_1^T}$$</div>
+<p>단 하나의 특이삼중쌍 $(\sigma_1 = 1, u_1 = u, v_1 = v)$만 존재한다. 나머지 특이값은 모두 0이므로 <span class="kw">rank$(A) = 1$</span>. ∎</p>
 
-<p><strong>단일 출력 방향의 의미.</strong> 임의의 입력 $x$에 대해 $Ax = (uv^T)x = u(v^T x) = (v \cdot x) \cdot u$. 출력은 항상 $u$ 방향의 스칼라 배다. $v^T x$는 입력이 $v$ 방향으로 얼마나 정렬됐는지를 측정하고, 그 크기만큼 $u$ 방향으로 출력한다. 즉 <strong>$v$ 방향을 읽어서 $u$ 방향으로 쓰는 단순한 정보 전달</strong>이다.</p>
+<p><strong>단일 출력 방향의 의미 — 수치 예시.</strong> $u = [1,0]^T$, $v = [0,1]^T$이면 $A = [1,0]^T[0,1] = \begin{pmatrix}0&1\\0&0\end{pmatrix}$. 임의의 입력 $x = [3, 5]^T$에 대해:</p>
+<div class="prob-formula">$$Ax = (v^T x) \cdot u = (0 \cdot 3 + 1 \cdot 5) \cdot [1,0]^T = 5 \cdot [1,0]^T$$</div>
+<p>출력은 항상 $u = [1,0]^T$ 방향이다. <span class="kw2">Rank-1 행렬 = "$v$ 방향을 읽어서 $u$ 방향으로 쓰는" 단순한 정보 전달.</span></p>
 
-<p><strong>Attention head와의 연결.</strong> $W_{OV}$가 rank-1에 가까우면 그 head는 입력 잔차 스트림에서 $v$ 방향의 성분을 읽어 $u$ 방향으로 출력에 더한다는 단순한 역할을 한다. Mechanistic Interpretability 연구에서 이런 head들이 특정 토큰을 "복사"하거나 특정 특성(품사, 의미역 등)을 다음 위치로 전달하는 기능을 담당함이 발견되었다. Rank-1 구조는 해석가능성 분석을 크게 단순화한다.</p>
+<p><strong>Attention head와의 연결.</strong> $W_{OV} = W_O W_V$가 rank-1에 가까우면 그 head는 잔차 스트림에서 <span class="kw">$v_1$ 방향의 성분을 읽어 $u_1$ 방향으로 출력에 더하는</span> 단순한 역할만 한다. Elhage et al.(2021)의 Mechanistic Interpretability 연구에서:</p>
+<ul style="margin:.4rem 0 .4rem 1.2rem;line-height:1.7">
+  <li><span class="kw2">Induction head</span>: $[A][B]\cdots[A]$ 패턴에서 $[B]$ 예측 — $W_{OV}$가 거의 rank-1, 토큰 복사 방향</li>
+  <li><span class="kw2">Copying head</span>: 특정 위치의 토큰을 다음 위치로 복사 — $W_{OV} \approx I$ (identity와 유사한 저계수 구조)</li>
+</ul>
+<p><span class="kw3">Rank-1 구조는 해석가능성 분석을 크게 단순화한다</span> — "이 head가 무슨 특성을 읽어서 어디에 쓰는가"를 단 두 벡터 $(v_1, u_1)$로 기술할 수 있기 때문이다.</p>
 
 </div>
 </div>
