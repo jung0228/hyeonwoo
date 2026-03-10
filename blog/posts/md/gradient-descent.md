@@ -33,33 +33,36 @@ $$\theta_{t+1} = \theta_t - \eta \cdot \nabla_\theta \mathcal{L}(\theta_t)$$
   <strong>직관적 예시:</strong> 안개 낀 산에서 하산한다고 상상해보자. 시야가 없어 전체 지형을 볼 수 없지만, 발 아래 경사는 느낄 수 있다. 경사하강법은 바로 그 경사만 이용해 조금씩 아래로 내려가는 전략이다. 학습률이 너무 크면 건너편 산으로 튀어 오르고, 너무 작으면 아주 느리게 내려간다.
 </div>
 
-<svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:580px;display:block;margin:2rem auto;font-family:'Source Serif 4',serif">
-  <rect width="600" height="260" fill="#f9f8f4" rx="8"/>
-  <!-- Loss curve -->
-  <path d="M 60 50 Q 150 210 270 170 Q 360 140 430 80 Q 480 40 540 30" fill="none" stroke="#1a56c4" stroke-width="2.5"/>
-  <!-- Valley (local min) -->
-  <path d="M 60 50 Q 100 200 200 220 Q 300 235 350 180 Q 400 130 540 30" fill="none" stroke="#1a56c4" stroke-width="2.5" stroke-dasharray="0"/>
-  <!-- Simplified single loss curve -->
-  <path d="M 55 40 C 120 40 140 220 230 225 C 310 230 360 160 430 90 C 470 55 510 40 555 38" fill="none" stroke="#1a56c4" stroke-width="3"/>
-  <!-- Global min marker -->
-  <circle cx="230" cy="225" r="6" fill="#e84444"/>
-  <text x="230" y="248" text-anchor="middle" font-size="12" fill="#e84444">global min</text>
-  <!-- Local min marker -->
-  <circle cx="430" cy="90" r="5" fill="#f59e0b"/>
-  <text x="430" y="108" text-anchor="middle" font-size="12" fill="#f59e0b">local min</text>
-  <!-- Descent arrows -->
-  <line x1="520" y1="42" x2="480" y2="60" stroke="#555" stroke-width="1.8" marker-end="url(#arr)"/>
-  <line x1="480" y1="60" x2="455" y2="74" stroke="#555" stroke-width="1.8" marker-end="url(#arr)"/>
-  <line x1="455" y1="74" x2="440" y2="84" stroke="#555" stroke-width="1.8" marker-end="url(#arr)"/>
+<svg viewBox="0 0 600 270" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:580px;display:block;margin:2rem auto">
   <defs>
-    <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#555"/>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7 Z" fill="#e84444"/>
     </marker>
   </defs>
-  <!-- Axis labels -->
-  <text x="300" y="18" text-anchor="middle" font-size="13" fill="#333" font-style="italic">손실 함수 $\mathcal{L}(\theta)$ 의 지형</text>
-  <text x="305" y="258" text-anchor="middle" font-size="12" fill="#888">→ 파라미터 $\theta$</text>
-  <text x="18" y="135" text-anchor="middle" font-size="12" fill="#888" transform="rotate(-90,18,135)">Loss ↑</text>
+  <rect width="600" height="270" fill="#f9f8f4" rx="8"/>
+  <!-- Axes -->
+  <line x1="50" y1="20" x2="50" y2="230" stroke="#bbb" stroke-width="1.5"/>
+  <line x1="50" y1="230" x2="570" y2="230" stroke="#bbb" stroke-width="1.5"/>
+  <text x="295" y="258" text-anchor="middle" font-size="12" fill="#888" font-family="sans-serif">파라미터 θ →</text>
+  <text x="22" y="130" text-anchor="middle" font-size="12" fill="#888" font-family="sans-serif" transform="rotate(-90,22,130)">Loss ↑</text>
+  <!-- Single clean loss curve: high-left, global min ~x=160, saddle ~x=300, local min ~x=430, high-right -->
+  <path d="M 55,45 C 90,45 110,205 160,210 C 210,215 265,140 305,138 C 345,136 390,178 430,180 C 465,182 510,80 565,40"
+        fill="none" stroke="#1a56c4" stroke-width="2.8"/>
+  <!-- Global min -->
+  <circle cx="160" cy="210" r="6" fill="#e84444"/>
+  <text x="160" y="228" text-anchor="middle" font-size="11" fill="#e84444" font-family="sans-serif">global min</text>
+  <!-- Local min -->
+  <circle cx="430" cy="180" r="5" fill="#f59e0b"/>
+  <text x="430" y="198" text-anchor="middle" font-size="11" fill="#f59e0b" font-family="sans-serif">local min</text>
+  <!-- Descent steps (starting from right, stepping toward local min) -->
+  <circle cx="540" cy="55" r="4" fill="#e84444" opacity="0.7"/>
+  <circle cx="500" cy="68" r="4" fill="#e84444" opacity="0.7"/>
+  <circle cx="470" cy="110" r="4" fill="#e84444" opacity="0.7"/>
+  <circle cx="445" cy="158" r="4" fill="#e84444" opacity="0.7"/>
+  <line x1="540" y1="55" x2="503" y2="67" stroke="#e84444" stroke-width="1.6" marker-end="url(#arr)" stroke-dasharray="none"/>
+  <line x1="500" y1="68" x2="473" y2="108" stroke="#e84444" stroke-width="1.6" marker-end="url(#arr)"/>
+  <line x1="470" y1="110" x2="447" y2="156" stroke="#e84444" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="560" y="46" font-size="11" fill="#e84444" font-family="sans-serif" text-anchor="middle">시작</text>
 </svg>
 
 ## 배치 방식에 따른 세 가지 변형
