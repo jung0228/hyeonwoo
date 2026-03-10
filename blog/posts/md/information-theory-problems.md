@@ -19,8 +19,8 @@ katex: true
 .prob-q{font-size:1.04rem;font-weight:600;line-height:1.65;margin-bottom:1rem}
 .prob-toggle{border:1px solid #bbb;background:none;padding:.38rem 1.1rem;border-radius:5px;font-family:-apple-system,sans-serif;font-size:.82rem;cursor:pointer;color:#555}
 .prob-toggle:hover{background:#f0eeea}
-.prob-ans{margin-top:1rem;padding:1.2rem 1.4rem;background:#f4f2ec;border-radius:7px;font-size:.96rem;line-height:1.8;display:none}
-.prob-ans.open{display:block}
+.prob-ans{margin-top:0;padding:0 1.4rem;background:#f4f2ec;border-radius:7px;font-size:.96rem;line-height:1.8;visibility:hidden;max-height:0;overflow:hidden}
+.prob-ans.open{visibility:visible;max-height:9999px;margin-top:1rem;padding:1.2rem 1.4rem}.prob-lv{font-family:-apple-system,sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;margin:2rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid #d8d8d2}
 .prob-ans p{margin-bottom:.8rem}
 .prob-ans p:last-child{margin-bottom:0}
 .kw{background:#fef3c7;padding:.05em .35em;border-radius:3px;font-weight:600}
@@ -29,8 +29,94 @@ katex: true
 .prob-formula{background:#e8e5de;padding:.65rem 1rem;border-radius:5px;margin:.6rem 0;font-size:.94rem;overflow-x:auto}
 </style>
 <script>
-function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');btn.textContent=o?'답안 닫기 ▲':'모범 답안 보기 ▾';}
+function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');btn.textContent=o?'답안 닫기 ▲':'모범 답안 보기 ▾';if(o&&window.renderMathInElement){renderMathInElement(a,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});}}
 </script>
+
+<div class="prob-lv">학부 기초 문제 — 개념과 직관</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 1</span><span class="prob-tag">엔트로피 · 불확실성</span></div>
+<div class="prob-q">공정한 동전($p=0.5$)과 편향된 동전($p=0.9$)의 엔트로피를 각각 계산하라. 계산 결과를 바탕으로 "엔트로피는 불확실성의 척도"라는 말의 의미를 직관적으로 설명하고, 날씨 예보에서 "맑을 확률 99%"와 "맑을 확률 50%"의 엔트로피 차이가 일상적으로 어떤 의미를 갖는지 논하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>계산.</strong> $H = -p\log_2 p - (1-p)\log_2(1-p)$.</p>
+<div class="prob-formula">$$H(0.5) = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1 \text{ bit}$$
+$$H(0.9) = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.469 \text{ bit}$$</div>
+<p>공정한 동전의 엔트로피가 약 2.1배 크다.</p>
+
+<p><strong>직관.</strong> 편향된 동전($p=0.9$)을 던지기 전에 우리는 이미 "앞면이 나올 것 같다"고 꽤 확신한다. 결과를 알아도 새로 얻는 <strong>정보의 양이 적다</strong>. 반면 공정한 동전은 완전히 예측 불가능 — 결과를 알았을 때 최대의 정보를 얻는다. 엔트로피는 "결과를 알기 전 평균적으로 얼마나 놀랄 것인가"를 측정한다.</p>
+
+<p><strong>날씨 예보의 함의.</strong> "맑을 확률 99%"는 $H \approx 0.08$ bit — 내일 날씨에 대해 거의 확신이 있으므로 우산 챙길지 결정하기 쉽다. "50%"는 $H = 1$ bit — 완전히 불확실하므로 예보 자체가 의사결정에 도움이 안 된다. 기상 예보의 품질은 엔트로피를 얼마나 줄이는지(정보 이득)로 평가할 수 있다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 2</span><span class="prob-tag">교차 엔트로피 · 손실 계산</span></div>
+<div class="prob-q">이진 분류 모델이 두 가지 전략을 쓴다: (A) 항상 $[0.5, 0.5]$ 출력, (B) 정답을 맞추는 완벽한 모델. 레이블 분포가 균등(50/50)일 때 각 전략의 기대 교차 엔트로피 손실을 계산하고 비교하라. 전략 (B)에서 손실이 정확히 0이 아닌 이유를 설명하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>전략 (A) 손실.</strong> 정답이 클래스 0이든 1이든 $\hat{y}_\text{정답} = 0.5$. 기대 손실 = $-\log(0.5) = 1$ bit (log밑 2) 또는 $\ln 2 \approx 0.693$ (자연로그). 이것이 레이블의 엔트로피 $H(Y) = 1$ bit와 같다 — 우연이 아니다.</p>
+
+<p><strong>전략 (B) 손실.</strong> 완벽한 모델이라면 정답 클래스에 확률 1을 부여 → $-\log(1) = 0$. 기대 손실 = $0$. 단, 실제 소프트맥스 모델에서 확률이 정확히 1.0에 도달할 수 없다(지수 함수의 성질상). 따라서 <strong>실전에서 교차 엔트로피 손실이 0인 경우는 이론적 극한</strong>이다.</p>
+
+<p><strong>통찰.</strong> 전략 (A)의 손실 = 레이블 엔트로피 $H(Y)$. 전략 (B)의 손실 = 0. 교차 엔트로피 $H(p, q)$는 $H(p, q) = H(p) + D_{KL}(p\|q)$로 분해된다. 완벽한 모델이면 $q = p$이므로 $D_{KL} = 0$, 즉 $H(p,q) = H(p)$가 하한이다. 우리가 줄일 수 있는 것은 $D_{KL}$ 부분 뿐이고, 레이블 자체의 불확실성 $H(p)$는 줄일 수 없다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 3</span><span class="prob-tag">KL Divergence · 비대칭성</span></div>
+<div class="prob-q">분포 $P = [0.9, 0.1]$, $Q = [0.5, 0.5]$에 대해 $D_{KL}(P \| Q)$와 $D_{KL}(Q \| P)$를 각각 계산하라. 두 값이 다른 이유를 이 수치를 이용해 직관적으로 설명하고, "P를 Q로 근사할 때의 비효율성"이라는 해석과 연결하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>계산.</strong></p>
+<div class="prob-formula">$$D_{KL}(P\|Q) = 0.9\log\frac{0.9}{0.5} + 0.1\log\frac{0.1}{0.5} \approx 0.9(0.848) + 0.1(-1.609) \approx 0.602 \text{ nats}$$
+$$D_{KL}(Q\|P) = 0.5\log\frac{0.5}{0.9} + 0.5\log\frac{0.5}{0.1} \approx 0.5(-0.588) + 0.5(1.609) \approx 0.511 \text{ nats}$$</div>
+
+<p><strong>비대칭성의 직관.</strong> $D_{KL}(P\|Q)$는 "실제 분포 $P$의 관점에서 $Q$를 쓸 때의 비효율". $P$는 클래스 0에 90% 확신이 있는데, $Q$는 50%밖에 안 준다 — 이 차이가 크다. 반면 $D_{KL}(Q\|P)$는 "균등 분포 $Q$의 관점에서 $P$를 쓸 때의 비효율". $Q$는 클래스 1에도 50%를 부여하는데, $P$는 10%만 준다 — 클래스 1에 대한 비용이 크다.</p>
+
+<p><strong>"근사 비효율성" 해석.</strong> $D_{KL}(P\|Q) = 0.602$는 실제 분포가 $P$인데 $Q$ 기반 코드를 쓰면 샘플당 평균 0.602 nats의 추가 비트가 필요함을 의미한다. 방향이 바뀌면 비효율의 성격도 바뀐다. 이 비대칭성이 KL이 진정한 "거리"가 아닌 이유이고, VAE에서 어느 방향 KL을 쓰는지가 모델 행동에 큰 차이를 만드는 이유다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 4</span><span class="prob-tag">정보 이득 · 결정 트리</span></div>
+<div class="prob-q">결정 트리에서 "정보 이득(information gain)"은 어떤 특성으로 분기했을 때 레이블의 불확실성이 얼마나 줄어드는지를 측정한다. 이것을 조건부 엔트로피 $H(Y|X)$와 상호 정보량 $I(X;Y) = H(Y) - H(Y|X)$로 표현하고, 구체적인 수치 예시로 어떤 특성이 더 좋은 분기 기준인지 계산하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>개념 정의.</strong> 특성 $X$로 분기한 후 레이블 $Y$의 잔여 불확실성 = 조건부 엔트로피 $H(Y|X) = \sum_x p(x) H(Y|X=x)$. 정보 이득 = $I(X;Y) = H(Y) - H(Y|X)$. $I(X;Y)$가 클수록 $X$가 $Y$에 대한 정보를 많이 담고 있다.</p>
+
+<p><strong>수치 예시.</strong> 10개 샘플, 레이블 50/50 (5개 양성 5개 음성). $H(Y) = 1$ bit. 특성 A: $X=0$이면 4양성/1음성, $X=1$이면 1양성/4음성. 각 5개씩.</p>
+<div class="prob-formula">$$H(Y|A=0) = H(0.8, 0.2) \approx 0.722, \quad H(Y|A=1) = H(0.2, 0.8) \approx 0.722$$
+$$I(A;Y) = 1 - 0.722 = 0.278 \text{ bit}$$</div>
+<p>특성 B: $X=0$이면 5양성/0음성, $X=1$이면 0양성/5음성. $H(Y|B=0) = H(Y|B=1) = 0$. $I(B;Y) = 1 - 0 = 1$ bit. <strong>특성 B가 레이블을 완벽히 분리 → 정보 이득 최대</strong>. 결정 트리는 매 분기에서 $I(X;Y)$가 가장 큰 특성을 선택한다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 5</span><span class="prob-tag">교차 엔트로피 분해 · 하한</span></div>
+<div class="prob-q">교차 엔트로피가 $H(p, q) = H(p) + D_{KL}(p \| q)$로 분해됨을 보여라. 이 분해를 통해 (1) 교차 엔트로피의 최솟값이 엔트로피 $H(p)$임을 증명하고, (2) 딥러닝 모델을 학습할 때 우리가 실제로 줄이고 있는 것이 무엇인지 설명하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>분해 유도.</strong></p>
+<div class="prob-formula">$$H(p,q) = -\sum_x p(x)\log q(x) = -\sum_x p(x)\log p(x) + \sum_x p(x)\log\frac{p(x)}{q(x)} = H(p) + D_{KL}(p\|q)$$</div>
+
+<p><strong>(1) 최솟값 증명.</strong> $D_{KL}(p\|q) \geq 0$ (깁스 부등식, 등호는 $p = q$일 때). 따라서 $H(p, q) \geq H(p)$이고, 등호는 $q = p$일 때 성립. 즉 교차 엔트로피의 최솟값은 레이블 분포 $p$의 엔트로피 $H(p)$이다. ∎</p>
+
+<p><strong>(2) 무엇을 줄이는가.</strong> 훈련 과정에서 레이블 분포 $p$ (데이터)는 고정되어 있고 $H(p)$는 변하지 않는다. 모델 $q_\theta$만 바뀐다. 따라서 교차 엔트로피 손실을 최소화하는 것은 정확히 $D_{KL}(p \| q_\theta)$를 최소화하는 것 — <strong>모델 분포를 데이터 분포에 가깝게 만드는 것</strong>이다. 이것이 딥러닝 학습이 정보이론적으로 하는 일이다.</p>
+
+</div>
+</div>
+
+<div class="prob-lv">대학원 심화 문제 — 엄밀한 논증</div>
 
 <div class="prob-block">
 <div class="prob-meta"><span class="prob-num">문제 1</span><span class="prob-tag">VAE · ELBO · Jensen 부등식</span></div>

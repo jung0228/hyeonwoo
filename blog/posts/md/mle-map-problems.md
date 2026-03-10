@@ -19,8 +19,8 @@ katex: true
 .prob-q{font-size:1.04rem;font-weight:600;line-height:1.65;margin-bottom:1rem}
 .prob-toggle{border:1px solid #bbb;background:none;padding:.38rem 1.1rem;border-radius:5px;font-family:-apple-system,sans-serif;font-size:.82rem;cursor:pointer;color:#555}
 .prob-toggle:hover{background:#f0eeea}
-.prob-ans{margin-top:1rem;padding:1.2rem 1.4rem;background:#f4f2ec;border-radius:7px;font-size:.96rem;line-height:1.8;display:none}
-.prob-ans.open{display:block}
+.prob-ans{margin-top:0;padding:0 1.4rem;background:#f4f2ec;border-radius:7px;font-size:.96rem;line-height:1.8;visibility:hidden;max-height:0;overflow:hidden}
+.prob-ans.open{visibility:visible;max-height:9999px;margin-top:1rem;padding:1.2rem 1.4rem}.prob-lv{font-family:-apple-system,sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;margin:2rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid #d8d8d2}
 .prob-ans p{margin-bottom:.8rem}
 .prob-ans p:last-child{margin-bottom:0}
 .kw{background:#fef3c7;padding:.05em .35em;border-radius:3px;font-weight:600}
@@ -29,8 +29,91 @@ katex: true
 .prob-formula{background:#e8e5de;padding:.65rem 1rem;border-radius:5px;margin:.6rem 0;font-size:.94rem;overflow-x:auto}
 </style>
 <script>
-function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');btn.textContent=o?'답안 닫기 ▲':'모범 답안 보기 ▾';}
+function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');btn.textContent=o?'답안 닫기 ▲':'모범 답안 보기 ▾';if(o&&window.renderMathInElement){renderMathInElement(a,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});}}
 </script>
+
+<div class="prob-lv">학부 기초 문제 — 개념과 직관</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 1</span><span class="prob-tag">MLE · 베르누이</span></div>
+<div class="prob-q">동전을 10번 던져 앞면이 7번 나왔다. (1) MLE로 앞면 확률 $p$를 추정하라. (2) Beta(2, 2) 사전 분포를 사용한 MAP 추정값을 구하라. (3) 두 값이 다른 이유를 설명하고, 시행 횟수가 1000번으로 늘어나도 7:3 비율이 유지된다면 두 추정값이 어떻게 변하는지 논하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>(1) MLE.</strong> 베르누이 우도 $L(p) = p^7(1-p)^3$을 최대화. 로그 우도 미분: $\frac{d}{dp}[7\log p + 3\log(1-p)] = \frac{7}{p} - \frac{3}{1-p} = 0$. 풀면 $\hat{p}_\text{MLE} = 7/10 = 0.7$. 직관적으로 MLE는 "관측 빈도 그 자체"다.</p>
+
+<p><strong>(2) MAP.</strong> Beta(2,2) 사전 분포 $p(\theta) \propto \theta^{2-1}(1-\theta)^{2-1} = \theta(1-\theta)$. 사후 분포: $p(\theta|D) \propto \theta^{7+1}(1-\theta)^{3+1} = \theta^8(1-\theta)^4$ → Beta(9,5). MAP = 모드 = $(9-1)/(9+5-2) = 8/12 = 0.667$. 사전 분포가 0.5 방향으로 "당기는" 효과가 반영된다.</p>
+
+<p><strong>(3) 수렴 분석.</strong> 시행이 늘어도 7:3 비율이면 700앞/300뒤. MAP = $(700+1)/(1000+2) = 701/1002 \approx 0.6996$. MLE = 0.7. 사전 분포의 기여(Beta(2,2)의 가중치 2+2=4)가 데이터(1000)에 비해 무시할 정도로 작아진다. 이것이 <strong>Bernstein-von Mises 정리</strong>의 직관이다 — 데이터가 많을수록 사전 분포의 영향이 희석되어 MAP → MLE로 수렴한다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 2</span><span class="prob-tag">MLE · 가우시안 · MSE</span></div>
+<div class="prob-q">선형 회귀 $y = \theta^T x + \epsilon$에서 잔차 $\epsilon \sim \mathcal{N}(0, \sigma^2)$로 가정할 때, MLE를 최대화하는 $\theta$가 MSE 손실을 최소화하는 $\theta$와 동일함을 유도하라. 이 결과가 "MSE를 쓰는 것은 암묵적으로 가우시안 노이즈를 가정한다"는 말의 의미를 설명하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>유도.</strong> $\epsilon \sim \mathcal{N}(0,\sigma^2)$이면 $y|x,\theta \sim \mathcal{N}(\theta^T x, \sigma^2)$. $n$개 데이터의 로그 우도:</p>
+<div class="prob-formula">$$\log L(\theta) = -\frac{n}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum_{i=1}^n (y_i - \theta^T x_i)^2$$</div>
+<p>$\theta$에 관해 최대화 = $\sum(y_i - \theta^T x_i)^2$ 최소화. 앞의 상수 항은 $\theta$와 무관하므로 $\hat\theta_\text{MLE} = \arg\min_\theta \frac{1}{n}\sum_{i=1}^n (y_i - \theta^T x_i)^2 = \hat\theta_\text{MSE}$. ∎</p>
+
+<p><strong>함의.</strong> MSE 손실을 아무 생각 없이 쓰는 것은 <strong>"관측값과 예측값의 차이가 정규 분포를 따른다"</strong>는 강한 가정을 암묵적으로 채택하는 것이다. 이 가정이 틀리면(예: 이상치가 많은 데이터) MSE는 최적이 아니다. 라플라스 분포 노이즈 가정 → MAE(L1 손실)가 대응되며, 이상치에 더 강건하다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 3</span><span class="prob-tag">MLE vs MAP · 소표본</span></div>
+<div class="prob-q">의사가 희귀 질환을 진단하는 모델을 훈련한다. 훈련 데이터가 단 5명뿐이고 그 중 4명이 양성이다. MLE는 양성 확률을 0.8로 추정하지만, 실제로는 이 질환이 인구의 1%에게서 발생한다고 알려져 있다. 이 상황에서 MAP가 더 합리적인 이유를 설명하고, 적절한 사전 분포를 제안하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>MLE의 문제.</strong> 5개 데이터 기반 MLE = 4/5 = 0.8. 그러나 희귀 질환의 실제 유병률이 1%라는 사전 지식을 무시한 결과다. 소표본에서 MLE는 우연한 표본 편향에 극도로 취약하다 — 만약 진단 양성인 환자들만 데이터에 포함됐다면 더 극단적인 편향이 생긴다.</p>
+
+<p><strong>MAP의 해결.</strong> 사전 지식 "유병률 ≈ 1%"를 Beta 사전 분포로 인코딩한다. Beta($\alpha, \beta$)의 평균이 1%가 되려면 $\alpha/(\alpha+\beta) = 0.01$. 강한 사전 지식을 반영하려면 큰 $\alpha+\beta$를 선택, 예를 들어 Beta(1, 99). 사후 분포: Beta(1+4, 99+1) = Beta(5, 100). MAP = $(5-1)/(5+100-2) = 4/103 \approx 0.039$. 여전히 MLE(0.8)보다 훨씬 낮고, 사전 지식에 부합한다.</p>
+
+<p><strong>결론.</strong> 데이터가 적을수록 사전 분포의 정규화 효과가 크다. 이것이 <strong>의료, 법률, 안전 시스템처럼 소표본+강한 도메인 지식이 있는 분야에서 베이즈 방법론이 필수적</strong>인 이유다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 4</span><span class="prob-tag">사후 분포 · 불확실성</span></div>
+<div class="prob-q">MAP 추정은 사후 분포의 "최빈값(mode)"만 반환한다. 가우시안 사후 분포에서 MAP와 사후 평균(posterior mean)이 같은 이유를 설명하라. 반면 비대칭 분포(예: Beta 사후 분포)에서 이 두 값이 왜 달라지는지 논하고, 점 추정만 쓰는 것의 위험성을 불확실성 관점에서 설명하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>가우시안에서 mode = mean.</strong> 가우시안 분포 $\mathcal{N}(\mu, \sigma^2)$는 $\mu$에서 대칭이다. 대칭 분포에서 mode(최빈값), mean(평균), median(중앙값)이 모두 같다. 따라서 가우시안 사후 분포에서 MAP = 사후 평균 = $\mu$.</p>
+
+<p><strong>Beta 사후에서의 차이.</strong> Beta($\alpha, \beta$)의 mode = $(\alpha-1)/(\alpha+\beta-2)$ (단, $\alpha,\beta > 1$), mean = $\alpha/(\alpha+\beta)$. 예: Beta(2, 5): mode = 1/5 = 0.2, mean = 2/7 ≈ 0.286. 분포가 오른쪽으로 치우쳐(positively skewed) 있으면 mean > mode. 이처럼 비대칭 분포에서는 MAP가 사후 분포의 "중심"을 대표하지 못한다.</p>
+
+<p><strong>점 추정의 위험성.</strong> MAP는 사후 분포에서 가장 그럴듯한 파라미터 값 하나만 반환한다. 그러나 <strong>불확실성 정보가 사라진다</strong>: 사후 분포가 날카로운지(확신 높음) 퍼져있는지(불확실) 알 수 없다. 의사 결정에서 이것은 중요하다 — "예측값이 0.7"보다 "예측값이 0.7, 95% 신뢰 구간은 [0.4, 0.9]"가 훨씬 더 많은 정보를 담는다. 완전 베이즈(full Bayesian) 접근은 사후 분포 전체를 유지함으로써 이 불확실성을 다운스트림 의사결정에 전파한다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 5</span><span class="prob-tag">교차 엔트로피 · 소프트맥스 · MLE</span></div>
+<div class="prob-q">3-클래스 분류 문제에서 정답이 클래스 2일 때 (원핫: [0, 1, 0]), 모델이 [0.1, 0.7, 0.2]를 출력하는 경우와 [0.01, 0.98, 0.01]을 출력하는 경우의 교차 엔트로피 손실을 각각 계산하라. 교차 엔트로피가 카테고리 분포의 음의 로그 우도와 동치임을 보이고, 모델이 확신할수록 손실이 줄어드는 이유를 설명하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>교차 엔트로피 계산.</strong> $\mathcal{L} = -\sum_k y_k \log \hat{y}_k$. 정답 클래스만 $y_k = 1$이므로 $\mathcal{L} = -\log \hat{y}_\text{정답}$.</p>
+<div class="prob-formula">$$\mathcal{L}_1 = -\log(0.7) \approx 0.357 \qquad \mathcal{L}_2 = -\log(0.98) \approx 0.020$$</div>
+<p>정답 클래스에 더 높은 확률을 부여할수록 손실이 줄어든다.</p>
+
+<p><strong>카테고리 분포 MLE와의 동치.</strong> 카테고리 분포의 우도: $p(y|\hat{y}) = \prod_k \hat{y}_k^{y_k}$. 음의 로그 우도:</p>
+<div class="prob-formula">$$-\log p(y|\hat{y}) = -\sum_k y_k \log \hat{y}_k = H(y, \hat{y})$$</div>
+<p>이것이 정확히 교차 엔트로피다. 따라서 <strong>분류 모델에서 교차 엔트로피 손실을 최소화하는 것 = 카테고리 분포 MLE</strong>.</p>
+
+<p><strong>확신할수록 손실 감소의 이유.</strong> 로그 함수의 단조성 때문이다. $-\log(\hat{y})$는 $\hat{y} \to 1$일수록 0으로 수렴, $\hat{y} \to 0$일수록 $+\infty$로 발산. 모델이 정답 클래스에 확률 1을 부여하면 손실 = 0, 오답에 확률 1을 부여하면 손실 = $\infty$. 이 비대칭적 페널티가 모델을 정답에 대한 확신을 키우는 방향으로 학습시킨다.</p>
+
+</div>
+</div>
+
+<div class="prob-lv">대학원 심화 문제 — 엄밀한 논증</div>
 
 <div class="prob-block">
 <div class="prob-meta"><span class="prob-num">문제 1</span><span class="prob-tag">Fisher Information · Cramér-Rao</span></div>
