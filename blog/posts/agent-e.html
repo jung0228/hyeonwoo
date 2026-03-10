@@ -340,10 +340,56 @@
 <p>논문 제목이 힌트를 준다. <em>&quot;From Autonomous Web Navigation to Foundational Design Principles in Agentic Systems&quot;</em> — 단순히 에이전트 하나를 만든 것이 아니라, 에이전틱 시스템을 잘 만들기 위한 보편적 원칙을 도출했다고 주장한다.</p>
 <div class="ornament">· · ·</div>
 
-<h2>원칙 2: 계층적 아키텍처 — 두 에이전트의 분업</h2>
+<h2>시스템 개요: 두 에이전트의 분업</h2>
 <p>Agent-E는 두 개의 LLM 에이전트가 계층을 이루는 구조다.</p>
 <div style="margin:2.5rem 0;">
-<svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
+<div><svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
+  <!-- background -->
+  <rect width="680" height="320" fill="#fafaf7" rx="8"/>
+  <!-- user -->
+  <rect x="20" y="130" width="110" height="60" rx="6" fill="#e8e8e2" stroke="#bbb" stroke-width="1.5"/>
+  <text x="75" y="157" text-anchor="middle" font-size="12" fill="#444" font-weight="600">사용자</text>
+  <text x="75" y="175" text-anchor="middle" font-size="11" fill="#666">태스크 입력</text>
+  <!-- arrow user -> planner -->
+  <line x1="132" y1="160" x2="188" y2="160" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- planner box -->
+  <rect x="190" y="90" width="150" height="140" rx="8" fill="#fff8ec" stroke="#e8b84b" stroke-width="2"/>
+  <text x="265" y="118" text-anchor="middle" font-size="13" fill="#8a6200" font-weight="700">Planner Agent</text>
+  <text x="265" y="138" text-anchor="middle" font-size="10.5" fill="#a07800">태스크 분해</text>
+  <text x="265" y="155" text-anchor="middle" font-size="10.5" fill="#a07800">서브태스크 위임</text>
+  <text x="265" y="172" text-anchor="middle" font-size="10.5" fill="#a07800">상태 관리</text>
+  <text x="265" y="192" text-anchor="middle" font-size="10" fill="#c08000">DOM 세부사항 차단됨</text>
+  <!-- arrows planner -> browser (multiple) -->
+  <line x1="342" y1="140" x2="400" y2="115" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <line x1="342" y1="160" x2="400" y2="160" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <line x1="342" y1="180" x2="400" y2="205" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <!-- subtask labels -->
+  <text x="368" y="108" text-anchor="middle" font-size="9" fill="#777">subtask 1</text>
+  <text x="368" y="153" text-anchor="middle" font-size="9" fill="#777">subtask 2</text>
+  <text x="368" y="198" text-anchor="middle" font-size="9" fill="#777">subtask 3</text>
+  <!-- browser box 1 -->
+  <rect x="402" y="80" width="150" height="70" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="2"/>
+  <text x="477" y="107" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700">Browser Nav</text>
+  <text x="477" y="123" text-anchor="middle" font-size="10.5" fill="#2a52bf">Agent (인스턴스 1)</text>
+  <text x="477" y="140" text-anchor="middle" font-size="9.5" fill="#6680cc">✦ 새로 초기화됨</text>
+  <!-- browser box 2 -->
+  <rect x="402" y="125" width="150" height="70" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+  <text x="477" y="152" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700" opacity="0.7">Browser Nav</text>
+  <text x="477" y="168" text-anchor="middle" font-size="10.5" fill="#2a52bf" opacity="0.7">Agent (인스턴스 2)</text>
+  <!-- browser box 3 -->
+  <rect x="402" y="170" width="150" height="70" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
+  <text x="477" y="197" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700" opacity="0.5">Browser Nav</text>
+  <text x="477" y="213" text-anchor="middle" font-size="10.5" fill="#2a52bf" opacity="0.5">Agent (인스턴스 3)</text>
+  <!-- browser arrow -> web -->
+  <line x1="554" y1="160" x2="612" y2="160" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- web box -->
+  <rect x="614" y="130" width="50" height="60" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="639" y="157" text-anchor="middle" font-size="11" fill="#166534" font-weight="600">웹</text>
+  <text x="639" y="173" text-anchor="middle" font-size="10" fill="#166534">브라우저</text>
+  <!-- result arrow back -->
+  <path d="M 614 175 Q 580 270 342 220" fill="none" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <text x="500" y="270" text-anchor="middle" font-size="9" fill="#888">결과 보고</text>
+  <!-- defs -->
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
       <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
@@ -352,52 +398,7 @@
       <path d="M0,0 L0,5 L6,2.5 z" fill="#aaa"/>
     </marker>
   </defs>
-  <!-- background -->
-  <rect width="680" height="360" fill="#fafaf7" rx="8"/>
-  <!-- user box -->
-  <rect x="15" y="158" width="110" height="60" rx="6" fill="#e8e8e2" stroke="#bbb" stroke-width="1.5"/>
-  <text x="70" y="185" text-anchor="middle" font-size="12" fill="#444" font-weight="600">사용자</text>
-  <text x="70" y="203" text-anchor="middle" font-size="11" fill="#666">태스크 입력</text>
-  <!-- arrow user -> planner -->
-  <line x1="127" y1="188" x2="178" y2="188" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
-  <!-- planner box -->
-  <rect x="180" y="95" width="148" height="180" rx="8" fill="#fff8ec" stroke="#e8b84b" stroke-width="2"/>
-  <text x="254" y="122" text-anchor="middle" font-size="13" fill="#8a6200" font-weight="700">Planner Agent</text>
-  <text x="254" y="144" text-anchor="middle" font-size="10.5" fill="#a07800">태스크 분해</text>
-  <text x="254" y="163" text-anchor="middle" font-size="10.5" fill="#a07800">서브태스크 위임</text>
-  <text x="254" y="182" text-anchor="middle" font-size="10.5" fill="#a07800">상태 관리</text>
-  <text x="254" y="204" text-anchor="middle" font-size="10" fill="#c08000">DOM 세부사항 차단됨</text>
-  <!-- arrows planner -> browser instances (right edge x=328) -->
-  <line x1="328" y1="143" x2="388" y2="107" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
-  <line x1="328" y1="185" x2="388" y2="199" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
-  <line x1="328" y1="227" x2="388" y2="284" stroke="#888" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
-  <!-- subtask labels -->
-  <text x="357" y="118" text-anchor="middle" font-size="9" fill="#777">subtask 1</text>
-  <text x="357" y="180" text-anchor="middle" font-size="9" fill="#777">subtask 2</text>
-  <text x="354" y="262" text-anchor="middle" font-size="9" fill="#777">subtask 3</text>
-  <!-- browser box 1 (solid, primary): y=65–150 -->
-  <rect x="390" y="65" width="155" height="85" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="2"/>
-  <text x="467" y="93" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700">Browser Nav</text>
-  <text x="467" y="111" text-anchor="middle" font-size="10.5" fill="#2a52bf">Agent (인스턴스 1)</text>
-  <text x="467" y="129" text-anchor="middle" font-size="9.5" fill="#6680cc">✦ 새로 초기화됨</text>
-  <!-- browser box 2 (dashed): y=163–235, gap 13px -->
-  <rect x="390" y="163" width="155" height="72" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
-  <text x="467" y="190" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700" opacity="0.7">Browser Nav</text>
-  <text x="467" y="208" text-anchor="middle" font-size="10.5" fill="#2a52bf" opacity="0.7">Agent (인스턴스 2)</text>
-  <!-- browser box 3 (dashed, faint): y=248–320, gap 13px -->
-  <rect x="390" y="248" width="155" height="72" rx="8" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.45"/>
-  <text x="467" y="275" text-anchor="middle" font-size="12" fill="#1a3a8f" font-weight="700" opacity="0.45">Browser Nav</text>
-  <text x="467" y="293" text-anchor="middle" font-size="10.5" fill="#2a52bf" opacity="0.45">Agent (인스턴스 3)</text>
-  <!-- arrow browsers -> web (from box 2 center-right, horizontally) -->
-  <line x1="545" y1="199" x2="598" y2="199" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
-  <!-- web box (center y=200) -->
-  <rect x="600" y="169" width="62" height="62" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
-  <text x="631" y="196" text-anchor="middle" font-size="11" fill="#166534" font-weight="600">웹</text>
-  <text x="631" y="213" text-anchor="middle" font-size="10" fill="#166534">브라우저</text>
-  <!-- result arrow back (routes below all boxes) -->
-  <path d="M 631 231 L 631 330 Q 631 340 621 340 L 264 340 Q 254 340 254 330 L 254 275" fill="none" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
-  <text x="442" y="352" text-anchor="middle" font-size="9" fill="#888">결과 보고</text>
-</svg>
+</svg></div>
 </div>
 
 <p><strong>Planner Agent</strong>는 사용자의 고수준 요청을 받아 서브태스크로 분해하고, 하나씩 Browser Navigation Agent에게 위임한다. 플래너는 DOM의 세부 노이즈를 직접 보지 않는다. 큰 그림만 관리하는 것이다.</p>
@@ -439,7 +440,7 @@
 <p>단, 특수한 사이트에서는 오른쪽 클릭처럼 추가 스킬이 필요할 수 있다. 이 경우 도메인 특화 확장이 필요하다. <strong>범용성과 특화의 균형</strong>이 원칙 1의 핵심이다.</p>
 <div class="ornament">· · ·</div>
 
-<h2>원칙 3: 페이로드 디노이징 — 세 가지 DOM 표현</h2>
+<h2>원칙 2: 페이로드 디노이징 — 세 가지 DOM 표현</h2>
 <p>Agent-E의 가장 독창적인 기여 중 하나다. <code>get_dom_with_content_type</code>은 단순히 DOM을 가져오는 게 아니라, <strong>태스크 유형에 맞는 형태로 변환</strong>해서 반환한다.</p>
 <div style="margin:2.5rem 0;">
 <div><svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
