@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>웹 에이전트 심층 분석: 동작 원리, 벤치마크, 핵심 시스템 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .55rem .9rem;
+      border-bottom: 2px solid var(--text);
+      color: var(--text); letter-spacing: .04em;
+    }
+    .post-content td {
+      padding: .5rem .9rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text); vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">웹 에이전트 심층 분석: 동작 원리, 벤치마크, 핵심 시스템</h1>
+  <p class="post-dek">Playwright에서 Browser Use까지 — 웹 에이전트가 어떻게 브라우저를 조작하고, 어떻게 평가되고, 어떻게 설계되는지를 완전히 해부한다.</p>
+
+  <div class="post-meta">
+    <span class="cat">Agent</span>
+    <span class="dot">·</span>
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span>Mar 2026</span>
+    <span class="dot">·</span>
+    <span>35 min read</span>
+  </div>
+
+  <div class="post-content">
+<h2>이 포스트에 대해</h2>
+<p>웹 에이전트 논문들을 읽다 보면 세 가지 층이 뒤섞인다. <strong>어떻게 브라우저를 조작하는가</strong>(구현 레이어), <strong>어떻게 평가하는가</strong>(벤치마크 레이어), <strong>어떤 아키텍처가 좋은가</strong>(시스템 설계 레이어). 논문마다 자기 맥락에서만 설명하기 때문에 전체 그림이 잘 보이지 않는다.</p>
+<p>이 포스트는 세 레이어를 순서대로 쌓는다. 먼저 브라우저 자동화의 물리적 구조를 보고, 그 위에서 어떻게 에이전트를 평가하는지, 그리고 실제 연구들이 어떤 설계 선택을 했는지까지.</p>
+<div class="ornament">· · ·</div>
+
+<h2>Part 1 — 동작 방식: 브라우저와 LLM 사이</h2>
+<h3>LLM의 결정을 물리적 클릭으로</h3>
+<p>LLM이 &quot;검색 버튼을 클릭한다&quot;는 결정을 내려도 실제 클릭이 일어나려면 뭔가가 브라우저를 직접 조작해야 한다. 웹 에이전트가 쓰는 도구는 <strong>Playwright</strong> 또는 <strong>Puppeteer</strong> 같은 브라우저 자동화 라이브러리다.</p>
+<p>이 라이브러리들은 <strong>Chrome DevTools Protocol(CDP)</strong> 을 통해 Chrome 브라우저와 WebSocket으로 통신한다. CDP는 Chrome이 노출하는 저수준 API로, 마우스 이벤트 발송·DOM 조회·JavaScript 실행·스크린샷 캡처 등을 명령한다.</p>
+<pre><code class="language-python">import asyncio
+from playwright.async_api import async_playwright
+
+async def run_agent_step(task: str):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+
+        # 1. 페이지 이동
+        await page.goto(&quot;https://example-shop.com&quot;)
+
+        # 2. Accessibility Tree 추출 (LLM 입력용)
+        ax_tree = await page.accessibility.snapshot()
+
+        # 3. 스크린샷 캡처 (VLM 입력용)
+        screenshot = await page.screenshot(full_page=False)
+
+        # 4. LLM 결정 → 실행
+        await page.click(&#39;[aria-label=&quot;Search&quot;]&#39;)       # click
+        await page.fill(&#39;#search-input&#39;, &quot;red canvas shoes&quot;)  # type
+        await page.select_option(&#39;#size-select&#39;, &quot;10&quot;)  # select_option
+        await page.mouse.wheel(0, 500)                  # scroll
+        await page.hover(&quot;.nav-category&quot;)               # hover
+        await page.keyboard.press(&quot;Enter&quot;)              # key_press
+        await page.go_back()                            # go_back
+</code></pre>
+<p>에이전트 관점에서 <strong>액션 공간은 7~10개 기본 연산</strong>으로 구성된다: <code>click</code>, <code>type</code>, <code>select</code>, <code>scroll</code>, <code>hover</code>, <code>goto</code>, <code>go_back</code>, <code>key_press</code>, 그리고 태스크 완료를 선언하는 <code>stop</code>. 이게 LLM이 생성해야 하는 언어다.</p>
+<div class="ornament">· · ·</div>
+
+<h3>Observation: 에이전트는 뭘 보는가</h3>
+<p>브라우저에서 LLM으로 &quot;현재 상태&quot;를 전달하는 방법이 몇 가지 있고, 어떤 방법을 쓰느냐가 시스템 전체 성능과 토큰 비용을 크게 좌우한다.</p>
+<p><strong>Raw HTML</strong>은 페이지를 그대로 담지만, 수천 줄이 된다.</p>
+<pre><code class="language-html">&lt;!-- 수천 개 div 중 일부 --&gt;
+&lt;div class=&quot;nav-search-wrapper&quot; data-csa-c-type=&quot;widget&quot;&gt;
+  &lt;div id=&quot;nav-search-bar-form&quot;&gt;
+    &lt;input id=&quot;twotabsearchtextbox&quot;
+           type=&quot;text&quot;
+           placeholder=&quot;Search Amazon&quot;
+           aria-label=&quot;Search Amazon&quot;&gt;
+    &lt;input id=&quot;nav-search-submit-button&quot;
+           type=&quot;submit&quot; value=&quot;Go&quot;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- 이후 수천 줄 계속... --&gt;
+</code></pre>
+<p><strong>Accessibility Tree</strong>는 브라우저가 스크린 리더 같은 보조 기술을 위해 내부적으로 유지하는 구조다. 시각적 레이아웃 정보는 없지만 &quot;인터랙티브한 요소가 무엇이 있고 어떤 역할인가&quot;는 정확히 담겨 있다.</p>
+<pre><code class="language-json">{
+  &quot;role&quot;: &quot;WebArea&quot;,
+  &quot;name&quot;: &quot;Amazon.com&quot;,
+  &quot;children&quot;: [
+    { &quot;role&quot;: &quot;combobox&quot;, &quot;name&quot;: &quot;Search in&quot;, &quot;value&quot;: &quot;All&quot; },
+    { &quot;role&quot;: &quot;searchbox&quot;, &quot;name&quot;: &quot;Search Amazon&quot;, &quot;value&quot;: &quot;&quot; },
+    { &quot;role&quot;: &quot;button&quot;, &quot;name&quot;: &quot;Go&quot; }
+  ]
+}
+
+// 결과: ~80 토큰 (raw HTML은 ~800 토큰)
+// 전체 페이지: AX tree ~3K vs HTML ~50K
+</code></pre>
+<p>토큰 비용이 약 10배 차이난다. 텍스트 기반 에이전트에게는 AX Tree만으로도 충분한 경우가 많다.</p>
+<div class="callout">
+  <strong>Set-of-Mark (SoM) — VLM용 시각적 grounding</strong><br>
+  스크린샷만 있으면 "어디를 클릭해야 하는가"를 VLM이 픽셀 좌표로 특정해야 한다. Set-of-Mark(SoM)는 스크린샷 위에 인터랙티브 요소마다 번호 레이블을 오버레이하고, LLM이 "3번을 클릭하라"처럼 번호로 참조하게 한다. JavaScript 룰 기반으로 추출하기 때문에 가볍고 빠르다.
+</div>
+
+<div class="ornament">· · ·</div>
+
+<h3>LLM과 VLM 입출력 실제 샘플</h3>
+<p>같은 태스크를 두 방식으로 비교해보자.</p>
+<p><strong>태스크:</strong> <em>&quot;WebArena 쇼핑몰에서 &#39;Waffle Knit Beanie&#39;를 검색하고 리뷰가 가장 많은 제품을 장바구니에 담아라.&quot;</em></p>
+<p><strong>텍스트 기반 (WebArena 스타일)</strong></p>
+<pre><code>## SYSTEM PROMPT
+You are a web browsing agent. Output your next action:
+  Thought: [reasoning]
+  Action: [action_type] [arguments]
+
+## USER MESSAGE
+Task: Search for &#39;Waffle Knit Beanie&#39; and add the product
+with the most reviews to the cart.
+URL: http://shop.webarena.xyz/
+
+Accessibility Tree:
+[1] banner &quot;One Stop Shop&quot;
+[6] searchbox &quot;Search entire store here...&quot;
+[7] button &quot;Search&quot;
+...
+</code></pre>
+<pre><code>Thought: 검색창 [6]이 보인다. 검색어를 입력하자.
+Action: type [6] Waffle Knit Beanie
+
+------- 다음 턴 -------
+
+Thought: 검색 결과 4개. 리뷰 수 확인:
+- [23] &quot;2-Pack Waffle Knit Beanie&quot; - ★4.3 (127)
+- [31] &quot;Organic Waffle Beanie&quot; - ★4.1 (43)
+Product [23]이 127개로 가장 많다.
+Action: click [23]
+
+------- 다음 턴 -------
+
+Action: click [52]  # &quot;Add to Cart&quot; 버튼
+Action: stop [Task completed]
+</code></pre>
+<p>텍스트 기반은 요소 ID(<code>[6]</code>)를 AX Tree에서 직접 가져와서 확실히 존재하는 요소를 참조한다. 비전 기반(WebVoyager/SeeAct 스타일)은 동일한 스크린샷의 SoM 번호를 참조하는데, 이 번호는 JavaScript가 실시간으로 할당하므로 <strong>턴마다 달라질 수 있다.</strong></p>
+<div class="ornament">· · ·</div>
+
+<h3>End-to-End 추적: GitLab 이슈 태스크</h3>
+<p><strong>태스크:</strong> <em>&quot;WebArena GitLab에서 &#39;awesome-os&#39; 프로젝트의 open 이슈 수를 알려라.&quot;</em></p>
+<ol>
+<li><p><strong>초기화</strong> — Docker GitLab 인스턴스를 초기화. Playwright 브라우저 시작. 로그인 세션 설정.</p>
+</li>
+<li><p><strong>첫 번째 관찰 → LLM</strong> — AX Tree 추출: <code>[3] link &quot;awesome-os&quot;</code> ... LLM이 클릭.</p>
+</li>
+<li><p><strong>프로젝트 페이지 → 이슈 탭</strong> — <code>[12] link &quot;Issues (7)&quot;</code> 발견. LLM이 클릭.</p>
+</li>
+<li><p><strong>이슈 목록 확인</strong> — <code>[1] tab &quot;Open (5)&quot; [2] tab &quot;Closed (2)&quot;</code> → <code>stop [5]</code></p>
+</li>
+<li><p><strong>평가</strong> — <code>string_match(answer=&quot;5&quot;, reference=&quot;5&quot;)</code> → ✓ Success</p>
+</li>
+</ol>
+<p>이 4스텝 태스크는 단순한 편이다. 실제 WebArena 태스크들은 평균 10~15스텝이고, 어려운 것들은 30스텝을 넘는다. 각 스텝마다 LLM API 호출이 발생하므로 긴 태스크는 비용도 시간도 많이 든다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>Part 2 — 벤치마크 해부</h2>
+<p>벤치마크마다 근본적인 설계 철학이 다르다. 어느 숫자를 믿을 수 있는지, 어느 숫자를 조심해서 봐야 하는지를 이해하려면 각 벤치마크가 무엇을 측정하는지 알아야 한다.</p>
+<div class="ornament">· · ·</div>
+
+<h3>Mind2Web (NeurIPS 2023) — 오프라인 평가의 구조</h3>
+<p>Mind2Web은 Amazon Mechanical Turk를 통해 실제 사용자들이 웹을 탐색하는 과정을 녹화한 데이터셋이다. <strong>137개 사이트, 2,350개 태스크, 태스크당 평균 7.3개 스텝</strong>이 저장된 HTML 스냅샷으로 존재한다. 실제 브라우저는 없다.</p>
+<p>Mind2Web의 설계에서 종종 간과되는 부분이 <strong>세 가지 일반화 시나리오</strong>다.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.7rem 1rem;text-align:left;border-bottom:2px solid #ddd;">설정</th>
+      <th style="padding:0.7rem 1rem;text-align:left;border-bottom:2px solid #ddd;">핵심 질문</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><strong>Cross-Task</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">같은 사이트, 새 태스크도 되나?</td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><strong>Cross-Website</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">같은 도메인, 새 사이트도 되나?</td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;"><strong>Cross-Domain</strong></td>
+      <td style="padding:0.6rem 1rem;">완전히 새로운 도메인도 되나?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>성능은 Cross-Task &gt; Cross-Website &gt; Cross-Domain 순으로 떨어진다. 논문에서 &quot;우리 모델이 X%&quot;라고 보고할 때 <strong>어느 분할인지를 반드시 확인해야 한다.</strong></p>
+<p><strong>네 가지 지표</strong>는 스텝 하나를 (요소 선택, 액션 타입, 액션 값) 세 부분으로 분해해서 각 레벨에서 정확도를 측정한다.</p>
+<ul>
+<li><strong>Element Accuracy</strong> — 1,135개 DOM 요소 중 올바른 요소를 골랐는가. 오퍼레이션·값은 무관.</li>
+<li><strong>Operation F1</strong> — CLICK은 exact match, TYPE/SELECT는 토큰 레벨 F1.</li>
+<li><strong>Step SR</strong> — 요소 + 오퍼레이션 + 값 <strong>셋 다 맞아야 1점</strong>. 부분 점수 없음.</li>
+<li><strong>Task SR</strong> — <strong>모든 스텝이 전부 Step SR = 1</strong>이어야 성공. 하나라도 틀리면 0.</li>
+</ul>
+<div class="callout">
+  <strong>Step SR 50%의 수학적 현실</strong><br>
+  Step SR 50%라는 숫자만 보면 나쁘지 않아 보인다. 하지만 태스크당 평균 7.3스텝을 가정하면 Task SR ≈ 0.5<sup>7.3</sup> ≈ 0.6%. 실제 최고 성능도 Task SR 5~7%에 그치는 건 이 수학적 귀결이다. 두 숫자를 같이 봐야 한다.
+</div>
+
+<p><strong>MindAct 2단계 파이프라인이 필요한 이유</strong> — 페이지당 평균 1,135개 DOM 요소를 LLM에 그대로 넣으면 컨텍스트 한계를 초과한다. MindAct는 이를 두 단계로 해결한다.</p>
+<p><strong>Stage 1 — Candidate Ranker (DeBERTa-v3-base):</strong> 전체 DOM 요소 중 상위 50개를 추린다. Task query와 각 DOM 요소를 쌍으로 묶어 cross-encoder에 넣고 관련성 점수를 뽑는다. 정확도보다 <strong>재현율(Recall)</strong> 이 중요한 단계다.</p>
+<p><strong>Stage 2 — Action Predictor (GPT-4):</strong> 50개 후보를 객관식 QA 형태로 LLM에게 제시한다. LLM은 정답 요소 선택 + 오퍼레이션 예측 + 값(TYPE/SELECT의 경우) 예측을 수행한다.</p>
+<p>논문의 핵심 주장:</p>
+<div class="pullquote">
+  <strong>"Training LMs for discrimination rather than generation is more generalizable."</strong>
+</div>
+
+<p>생성보다 판별(객관식 선택)이 더 잘 일반화된다. 실험에서도 이 직관이 확인된다.</p>
+<div class="ornament">· · ·</div>
+
+<h3>WebArena (ICLR 2024) — 기능적 검증</h3>
+<p>WebArena의 근본적 혁신은 &quot;<strong>에이전트가 무엇을 클릭했는가</strong>&quot;가 아니라 &quot;<strong>환경이 올바른 상태에 도달했는가</strong>&quot;를 묻는다는 점이다.</p>
+<p><strong>두 가지 평가 함수</strong>:</p>
+<p><strong>r_info — 정보 검색 태스크:</strong> <code>stop [answer]</code>의 텍스트를 세 가지 방법으로 검증한다.</p>
+<ul>
+<li><code>exact_match</code>: 완전 일치</li>
+<li><code>must_include</code>: 포함 여부 (리스트 답변 등)</li>
+<li><code>fuzzy_match</code>: GPT-4가 심판 → 인간 대비 99.7% 일치</li>
+</ul>
+<p><strong>r_prog — 상태 변경 태스크:</strong> 에이전트 실행 후 환경 상태를 직접 검증한다.</p>
+<pre><code class="language-python"># GitLab API 호출
+task: &quot;Create issue &#39;Fix login bug&#39; in project &#39;awesome-os&#39;&quot;
+validator: gitlab_api.get_issues(project=&quot;awesome-os&quot;)
+           .filter(title=&quot;Fix login bug&quot;)
+# 존재하면 1.0, 없으면 0.0
+
+# DOM/JavaScript 검사
+task: &quot;Add Waffle Beanie to cart&quot;
+validator: page.evaluate(
+    &quot;document.querySelector(&#39;.cart-count&#39;).textContent&quot;
+) == &quot;1&quot;
+
+# 데이터베이스 직접 쿼리
+task: &quot;Post comment on r/LocalLLaMA&quot;
+validator: db.query(&quot;SELECT * FROM comments WHERE user=?&quot;,
+                    [agent_user]).first().text == expected_text
+</code></pre>
+<p>에이전트가 GitLab 이슈를 API로 직접 만들었든, 웹 폼을 채워 제출했든, 단축키를 썼든 — <strong>결과물이 DB에 존재하면 정답이다.</strong> Mind2Web에서 &quot;정답 경로&quot;만 인정하던 것과 근본적으로 다르다.</p>
+<p>WebArena에는 실제로 수행 불가능한 태스크도 포함된다. 이때 에이전트는 <code>stop [N/A]</code>를 출력해야 한다. 동일 관찰에서 같은 액션을 3번 반복하거나, 파싱 불가능한 액션을 3번 연속 생성하면 태스크 실패 처리된다.</p>
+<p><strong>2년간 SOTA 변화:</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">발표</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Task SR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">GPT-4 (최초 베이스라인)</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">2023.07</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">14.41%</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">SeeAct (GPT-4V + SoM)</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">2024.01</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">~23%</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">GPT-4o (experience replay)</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">2024.07</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">~36.7%</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Claude Computer Use 3.5</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">2024.10</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">~49.0%</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Claude Computer Use 3.7</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">2025.02</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">~56.3%</td>
+    </tr>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"><strong>OpenAI Operator</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>2025.01</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">~61.3%</strong></td>
+    </tr>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.55rem 1rem;"><strong>인간 (CS 대학원생 5명)</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;">—</td>
+      <td style="padding:0.55rem 1rem;text-align:center;"><strong>78.24%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="ornament">· · ·</div>
+
+<h3>WebVoyager (ACL 2024) — GPT-4V 심판 방식</h3>
+<p>WebVoyager는 Mind2Web도, WebArena도 커버하지 못하는 지점을 겨냥했다: <strong>실제 라이브 웹사이트에서 멀티모달 에이전트를 평가</strong>하는 것. Google·Amazon·GitHub·Booking.com 등 15개 실제 사이트, 643개 태스크.</p>
+<p>WebArena는 Docker로 격리된 환경에서 DB 상태를 직접 검증한다. 하지만 실제 Amazon이나 GitHub에서는 그게 불가능하다. WebVoyager는 이 문제를 <strong>GPT-4V를 심판으로 써서</strong> 해결했다.</p>
+<p>심판에게 주어지는 입력: (1) 태스크 지시문, (2) 에이전트 최종 응답 텍스트, (3) 마지막 k장의 스크린샷.</p>
+<pre><code>[Evaluation prompt]
+&quot;Based on the task, the agent&#39;s answer, and the screenshots,
+did the agent successfully complete the task?
+Answer: Yes / No, with brief reason.&quot;
+
+# 인간 평가자와의 일치율: 85.3% (전체 궤적 기준)
+# Cohen&#39;s kappa (전체 궤적): 0.70
+# Cohen&#39;s kappa (마지막 1장만): 0.51
+</code></pre>
+<p>k를 얼마로 설정하냐가 평가 신뢰도를 크게 좌우한다:</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">제공 스크린샷</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">인간과의 일치율</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Cohen's κ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">마지막 1장만</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">~73%</span></td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">0.51</span></td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">마지막 3장</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">~80%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">0.63</td>
+    </tr>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.55rem 1rem;"><strong>전체 궤적</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">85.3%</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">0.70</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>kappa 0.51은 &quot;moderate agreement&quot;로, 동전 뒤집기보다 약간 낫다는 의미다. 많은 후속 연구들이 비용 절감을 위해 마지막 1~3장만 쓰는데, 이 경우 평가 신뢰도가 크게 낮아진다.</p>
+<p><strong>사이트별 텍스트 vs 멀티모달 비교:</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">사이트</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">텍스트 전용</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">WebVoyager (멀티모달)</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">차이</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Booking.com</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">2.3%</span></td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">43.2%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>+40.9%p</strong></td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Google Flights</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">41.5%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">70.7%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>+29.2%p</strong></td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Amazon</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">36.6%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">58.5%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">+21.9%p</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">ArXiv</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">48.8%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">51.2%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">+2.4%p</td>
+    </tr>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.55rem 1rem;"><strong>전체 평균</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;"><strong>40.1%</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;"><strong>59.1%</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;"><strong>+19.0%p</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Booking.com에서 텍스트 전용이 2.3%인 것이 눈에 띈다. 달력 UI와 가격 비교 레이아웃은 DOM만으로 파악하기 극히 어렵다. <strong>시각적 의존도 높은 사이트에서 멀티모달의 이점이 극대화된다.</strong></p>
+<div class="ornament">· · ·</div>
+
+<h3>VisualWebArena (ACL 2024) — 시각 이해 없이는 못 푸는 태스크</h3>
+<p>WebArena 태스크들은 이론적으로 DOM/AX Tree만으로 전부 해결 가능하다. VisualWebArena는 이 한계를 직접 공략한다: <strong>시각 이해 없이는 원천적으로 풀 수 없는 태스크.</strong></p>
+<p>태스크의 25.2%는 이미지를 태스크 설명에 직접 포함한다:</p>
+<blockquote>
+<p><em>[이미지: 파란 스트라이프 셔츠 사진] &quot;이 셔츠와 동일한 스타일인데 빨간색인 제품을 찾아서 장바구니에 담아라.&quot;</em></p>
+</blockquote>
+<p>이 태스크는 AX Tree나 HTML에서 &quot;파란 스트라이프 셔츠&quot;라는 정보를 찾을 수 없다. 에이전트는 이미지를 보고 시각적 특성을 이해해야 한다.</p>
+<p>시각적 정답 검증을 위해 새로운 검증자도 추가했다:</p>
+<ul>
+<li><strong><code>eval_vqa</code></strong> — VQA 모델로 스크린샷에 질문 (&quot;이 상품의 색상은 빨간색인가?&quot;)</li>
+<li><strong><code>eval_fuzzy_image_match</code></strong> — SSIM으로 스크린샷과 참조 이미지 비교</li>
+<li><strong><code>must_exclude</code></strong> — 특정 내용이 없어야 함</li>
+</ul>
+<p>결과적으로 GPT-4o + SoM 최고 성능이 **19.78%**인데, 인간은 **88.70%**다. WebArena(78% vs 14%)보다 격차가 더 크다. 이미지를 텍스트로 변환한 뒤 텍스트 에이전트에 주는 Caption 방식은 12.75%에 그쳤다 — 이미지를 설명으로 요약하면 시각적 세부 정보가 손실된다는 것을 보여준다.</p>
+<div class="ornament">· · ·</div>
+
+<h3>&quot;Illusion of Progress&quot; — 2025년의 메타 비판</h3>
+<p>2025년에 발표된 논문 한 편이 기존 벤치마크 수치들을 전면 재검토한다.</p>
+<p><strong>핵심 발견 1:</strong> <em>Google에서 검색하고 첫 결과 페이지의 정보를 답변으로 제출하는</em> 단순한 에이전트가 WebVoyager 태스크의 **51%**를 통과한다. 즉 WebVoyager 태스크의 상당 부분은 실제 멀티스텝 웹 탐색이 필요 없다.</p>
+<p>이에 대한 대안으로 <strong>Online-Mind2Web</strong> 벤치마크를 제안한다:</p>
+<ul>
+<li>300개 태스크, <strong>136개 사이트</strong> (다양성 확보)</li>
+<li>모든 태스크를 <strong>라이브 웹사이트에서 인간이 직접 검증</strong></li>
+<li>난이도 분류: 쉬움(≤5스텝) / 중간(6~10스텝) / 어려움(≥11스텝)</li>
+</ul>
+<p>자동 평가도 개선했다. <strong>WebJudge</strong>는 기존 GPT-4V 심판 방식의 한계(인간 일치율 66~79%)를 개선한다:</p>
+<pre><code class="language-python"># 1단계: 요구사항 추출
+requirements = o4_mini.extract(task)
+→ [&quot;navigate to youtube.com&quot;,
+   &quot;search &#39;python tutorial beginners&#39;&quot;,
+   &quot;apply sort by view count filter&quot;,
+   &quot;identify top result title &amp; views&quot;]
+
+# 2단계: 관련 스크린샷만 필터링 (관련성 점수 δ=3 이상)
+# 3단계: o4-mini 이진 판정
+verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
+</code></pre>
+<p><strong>제대로 측정하면 숫자가 어떻게 달라지나:</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">발표된 수치</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Online-Mind2Web</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"><strong>OpenAI Operator</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">WebArena ~65%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">61.3%</strong></td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Claude CU 3.7</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">WebArena ~58%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">56.3%</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Browser Use</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">자체 벤치 ~80%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">~30%</span></td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Agent-E</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">WebArena ~73%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">~28%</span></td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;">SeeAct (2024 베이스라인)</td>
+      <td style="padding:0.55rem 1rem;text-align:center;">WebVoyager 59%</td>
+      <td style="padding:0.55rem 1rem;text-align:center;">~26%</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="pullquote">
+  <strong>2024년에 나온 수많은 웹 에이전트들이 엄격한 평가에서 2024년 초 베이스라인과 비슷한 성능을 보인다. 발표된 높은 수치들의 상당 부분은 쉬운 벤치마크나 느슨한 자동 평가의 인플레이션이다.</strong>
+</div>
+
+<div class="ornament">· · ·</div>
+
+<h2>Part 3 — 핵심 시스템 분석</h2>
+<h3>Mind2Web + MindAct</h3>
+<p>Mind2Web 데이터 수집 과정이 흥미롭다. Amazon Mechanical Turk 작업자들이 ChatGPT로 생성한 시드 태스크 50개를 참고해 실제 태스크를 제안하고, Playwright 기반 커스텀 툴로 녹화했다. 전체 2,411개 중 61개는 거절, 390개는 태스크 설명을 수정했다.</p>
+<p>수집 원칙:</p>
+<blockquote>
+<p><em>&quot;Diverse types, require multiple rounds of interaction, and describe the high-level goal instead of step-by-step instructions.&quot;</em></p>
+</blockquote>
+<p>MindAct 결과에서 중요한 다섯 가지 발견:</p>
+<p><strong>발견 1 — 일반화 갭은 10%p 이상이다.</strong> Cross-Task 52.0% → Cross-Website 38.9%. 웹사이트별 레이아웃, 버튼 구조, 네이밍 컨벤션이 모두 다르기 때문이다.</p>
+<p><strong>발견 2 — Cross-Website ≈ Cross-Domain.</strong> 직관과 달리 완전히 새로운 도메인과 같은 도메인의 새 사이트 간 성능 차이가 거의 없다. &quot;도메인 지식보다 UI 패턴 다양성이 더 큰 장벽&quot;이라는 의미다. 도메인 특화 에이전트보다 <strong>다양한 UI 패턴에 강인한 에이전트</strong>가 더 중요하다.</p>
+<p><strong>발견 3 — Task SR이 낮은 건 수학적으로 당연하다.</strong> 최고 성능 Cross-Task에서도 Task SR = 5.2%. Step SR 52%, 평균 7.3스텝이면 0.52^7 ≈ 0.9%. 실제 5.2%는 스텝들이 컨텍스트를 공유하기 때문에 이보다 높다.</p>
+<p><strong>발견 4 — GPT-4가 파인튜닝 없이도 강하다.</strong> In-context learning만으로 Element Accuracy 41.6%. GPT-3.5-turbo(20.3%)와 비교하면 압도적이다.</p>
+<p><strong>발견 5 — 파인튜닝이 필수다.</strong> 제로샷 Flan-T5-XL은 Element Accuracy 10.8%. 파인튜닝 후 52.0%. 대형 모델이라도 이 태스크에서는 파인튜닝이 필수다.</p>
+<div class="ornament">· · ·</div>
+
+<h3>WebVoyager 시스템</h3>
+<p>WebVoyager는 Set-Label(SoM)과 GPT-4V를 결합한 첫 본격적 멀티모달 웹 에이전트다.</p>
+<p><strong>Context Clipping 문제:</strong> 15스텝을 돌면 스크린샷 15장이 쌓인다. 7,000+ 토큰이 필요하다. 해결책은 단순하다 — <strong>스크린샷은 최근 3장만, Thought+Action 텍스트는 전부 유지.</strong></p>
+<p><strong>7가지 액션 공간:</strong></p>
+<ul>
+<li><code>Click [N]</code> — N번 요소 클릭</li>
+<li><code>Type [N]; [텍스트]</code> — 입력창에 텍스트 입력 (자동으로 Enter까지)</li>
+<li><code>Scroll [N 또는 WINDOW]; [up/down]</code></li>
+<li><code>Wait</code> — 페이지 로딩 대기</li>
+<li><code>GoBack</code> — 이전 페이지로</li>
+<li><code>Google</code> — 구글 검색으로 새로 시작 (막혔을 때 탈출용)</li>
+<li><code>ANSWER; [내용]</code> — 최종 답변 제출</li>
+</ul>
+<p><strong>실패 300개 분류:</strong></p>
+<ul>
+<li><strong>44.4% — Navigation Stuck:</strong> 길을 잃고 같은 행동 반복 (부정확한 검색어, 잘못된 스크롤 방향, context clipping으로 이전 실수 망각)</li>
+<li><strong>24.8% — Visual Grounding 오류:</strong> 발음 기호·수식 기호 못 읽음, 미세한 변화 감지 실패, 달력 숫자와 SoM 번호 혼동</li>
+<li><strong>21.8% — Hallucination:</strong> 태스크 일부 누락, 엉뚱한 입력창에 텍스트 입력</li>
+<li><strong>9.0% — Prompt Misalignment:</strong> Thought만 출력하거나, 미완성 상태에서 <code>ANSWER</code> 조기 종료</li>
+</ul>
+<p>WebVoyager의 의의는 두 가지다. <strong>첫째, 시각 정보가 결정적이라는 실증.</strong> 텍스트 40.1% → 멀티모달 59.1%, +19%p. <strong>둘째, GPT-4V를 심사위원으로 활용하는 자동 평가 프로토콜</strong>이 이후 웹 에이전트 연구의 평가 기준에 직접적인 영향을 줬다.</p>
+<div class="ornament">· · ·</div>
+
+<h3>Agent-E — 계층적 분리와 DOM 디노이징</h3>
+<p>Agent-E는 텍스트만 본다. 스크린샷을 안 쓴다. 사이트별 특화 프롬프트도 없다. 그런데 WebVoyager 벤치마크에서 <strong>73.2%</strong> 를 기록했다 — 멀티모달 WebVoyager(57.1%)보다 16%p 높다.</p>
+<p><strong>두 에이전트의 분업:</strong></p>
+<div style="margin:2rem 0;">
+<div><svg viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:660px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
+  <rect width="660" height="200" fill="#fafaf7" rx="8"/>
+  <rect x="15" y="75" width="95" height="50" rx="5" fill="#e8e8e2" stroke="#bbb" stroke-width="1.5"/>
+  <text x="62" y="98" text-anchor="middle" font-size="11" fill="#444" font-weight="600">사용자</text>
+  <text x="62" y="114" text-anchor="middle" font-size="10" fill="#666">태스크</text>
+  <line x1="112" y1="100" x2="160" y2="100" stroke="#888" stroke-width="1.5" marker-end="url(#da1)"/>
+  <rect x="162" y="45" width="145" height="110" rx="7" fill="#fff8ec" stroke="#e8b84b" stroke-width="2"/>
+  <text x="234" y="72" text-anchor="middle" font-size="12" fill="#8a6200" font-weight="700">Planner Agent</text>
+  <text x="234" y="90" text-anchor="middle" font-size="10" fill="#a07800">태스크 분해</text>
+  <text x="234" y="106" text-anchor="middle" font-size="10" fill="#a07800">서브태스크 위임</text>
+  <text x="234" y="122" text-anchor="middle" font-size="9.5" fill="#c08000">DOM 노이즈 차단</text>
+  <text x="234" y="140" text-anchor="middle" font-size="9.5" fill="#c08000">에러 감지·복구</text>
+  <line x1="309" y1="78" x2="355" y2="68" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#da2)"/>
+  <line x1="309" y1="100" x2="355" y2="100" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#da2)"/>
+  <line x1="309" y1="122" x2="355" y2="132" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#da2)"/>
+  <text x="330" y="61" text-anchor="middle" font-size="8.5" fill="#999">sub 1</text>
+  <text x="330" y="96" text-anchor="middle" font-size="8.5" fill="#999">sub 2</text>
+  <text x="330" y="138" text-anchor="middle" font-size="8.5" fill="#999">sub 3</text>
+  <rect x="357" y="40" width="145" height="60" rx="6" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.8"/>
+  <text x="430" y="64" text-anchor="middle" font-size="11.5" fill="#1a3a8f" font-weight="700">Browser Nav</text>
+  <text x="430" y="81" text-anchor="middle" font-size="10" fill="#2a52bf">Agent (매번 새로 초기화)</text>
+  <rect x="357" y="100" width="145" height="60" rx="6" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.5" opacity="0.5"/>
+  <text x="430" y="124" text-anchor="middle" font-size="11.5" fill="#1a3a8f" font-weight="700" opacity="0.5">Browser Nav</text>
+  <text x="430" y="141" text-anchor="middle" font-size="10" fill="#2a52bf" opacity="0.5">Agent</text>
+  <line x1="504" y1="100" x2="554" y2="100" stroke="#888" stroke-width="1.5" marker-end="url(#da1)"/>
+  <rect x="556" y="75" width="85" height="50" rx="5" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="598" y="98" text-anchor="middle" font-size="11" fill="#166534" font-weight="600">웹</text>
+  <text x="598" y="114" text-anchor="middle" font-size="10" fill="#166534">브라우저</text>
+  <defs>
+    <marker id="da1" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#888"/></marker>
+    <marker id="da2" markerWidth="6" markerHeight="6" refX="4" refY="2.5" orient="auto"><path d="M0,0 L0,5 L6,2.5 z" fill="#aaa"/></marker>
+  </defs>
+</svg></div>
+</div>
+
+<p><strong>Planner Agent</strong>는 큰 그림만 관리한다. DOM의 세부 노이즈를 직접 보지 않는다. <strong>Browser Navigation Agent</strong>는 각 서브태스크마다 새로 초기화된다 — 이전 서브태스크의 기억이 없다. 지금 당장 할 일에만 집중한다.</p>
+<p><strong>세 가지 DOM 표현 (페이로드 디노이징):</strong></p>
+<ul>
+<li><strong><code>text_only</code></strong> — 정보 수집 태스크. UI 요소 제거, 텍스트만 추출.</li>
+<li><strong><code>input_fields</code></strong> — 검색·폼 입력 태스크. <code>&lt;input&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;select&gt;</code>만 추출 + <code>mmid</code>(mind map identifier) 식별자 부여. LLM이 <code>&quot;mmid=142에 클릭&quot;</code>이라고 지정하면 정확히 그 요소를 찾아 실행. XPath나 CSS 셀렉터보다 훨씬 안정적이다.</li>
+<li><strong><code>all_fields</code></strong> — 탐색·일반 태스크. 전체 요소 + 부모-자식 계층 구조 보존. 경쟁 에이전트들의 flat 인코딩과 다르다.</li>
+</ul>
+<p><strong>언어적 행동 피드백:</strong> 일반적인 에이전트는 행동 결과를 다음 스텝의 DOM에서 간접적으로 파악한다. Agent-E는 <strong>Mutation Observer Web API</strong>를 써서 DOM이 변화할 때마다 실시간 콜백을 받고, 클릭 직후 무슨 일이 일어났는지 언어로 보고한다.</p>
+<blockquote>
+<p><em>&quot;Clicked element mmid 25. A popup appeared with following elements: [mmid=30] Option A, [mmid=31] Option B, [mmid=32] Option C&quot;</em></p>
+</blockquote>
+<p>논문에서 도출한 네 가지 보편 원칙: <strong>도메인 특화 기본 스킬 → 계층적 아키텍처 → 페이로드 디노이징 → 언어적 행동 피드백.</strong> 이 원칙들은 웹 에이전트에만 적용되는 게 아니라 에이전틱 시스템 일반에 대한 주장이다.</p>
+<div class="ornament">· · ·</div>
+
+<h3>Browser Use — 단일 루프, 오픈소스 SOTA</h3>
+<p><strong>&quot;Make websites accessible for AI agents.&quot;</strong></p>
+<p>Browser Use는 Agent-E의 계층 구조와 달리 <strong>단일 에이전트 루프</strong>다. 하나의 Agent가 모든 결정과 실행을 담당한다. 성능을 만드는 건 세 가지 엔지니어링 디테일이다.</p>
+<div style="margin:2rem 0;">
+<div><svg viewBox="0 0 660 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:660px;display:block;margin:0 auto;font-family:'Source Serif 4',Georgia,serif;">
+  <rect width="660" height="130" fill="#fafaf7" rx="8"/>
+  <rect x="10" y="30" width="108" height="70" rx="6" fill="#fff8ec" stroke="#e8b84b" stroke-width="1.8"/>
+  <text x="64" y="58" text-anchor="middle" font-size="11" fill="#8a6200" font-weight="700">Phase 1</text>
+  <text x="64" y="74" text-anchor="middle" font-size="9.5" fill="#a07800">State Capture</text>
+  <text x="64" y="90" text-anchor="middle" font-size="9" fill="#bbb">DOM + 스크린샷</text>
+  <line x1="120" y1="65" x2="138" y2="65" stroke="#ccc" stroke-width="1.5" marker-end="url(#bu1)"/>
+  <rect x="140" y="30" width="108" height="70" rx="6" fill="#edf2ff" stroke="#7c9ef5" stroke-width="1.8"/>
+  <text x="194" y="58" text-anchor="middle" font-size="11" fill="#1a3a8f" font-weight="700">Phase 2</text>
+  <text x="194" y="74" text-anchor="middle" font-size="9.5" fill="#2a52bf">Prompt Build</text>
+  <text x="194" y="90" text-anchor="middle" font-size="9" fill="#bbb">히스토리 + DOM</text>
+  <line x1="250" y1="65" x2="268" y2="65" stroke="#ccc" stroke-width="1.5" marker-end="url(#bu1)"/>
+  <rect x="270" y="30" width="108" height="70" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.8"/>
+  <text x="324" y="58" text-anchor="middle" font-size="11" fill="#166534" font-weight="700">Phase 3</text>
+  <text x="324" y="74" text-anchor="middle" font-size="9.5" fill="#166534">LLM Call</text>
+  <text x="324" y="90" text-anchor="middle" font-size="9" fill="#bbb">structured output</text>
+  <line x1="380" y1="65" x2="398" y2="65" stroke="#ccc" stroke-width="1.5" marker-end="url(#bu1)"/>
+  <rect x="400" y="30" width="108" height="70" rx="6" fill="#fdf0ff" stroke="#c084fc" stroke-width="1.8"/>
+  <text x="454" y="58" text-anchor="middle" font-size="11" fill="#7e22ce" font-weight="700">Phase 4</text>
+  <text x="454" y="74" text-anchor="middle" font-size="9.5" fill="#7e22ce">Action Execute</text>
+  <text x="454" y="90" text-anchor="middle" font-size="9" fill="#bbb">CDP → 브라우저</text>
+  <line x1="510" y1="65" x2="528" y2="65" stroke="#ccc" stroke-width="1.5" marker-end="url(#bu1)"/>
+  <rect x="530" y="30" width="120" height="70" rx="6" fill="#fff5f5" stroke="#f87171" stroke-width="1.8"/>
+  <text x="590" y="58" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="700">Phase 5</text>
+  <text x="590" y="74" text-anchor="middle" font-size="9.5" fill="#991b1b">History Record</text>
+  <text x="590" y="90" text-anchor="middle" font-size="9" fill="#bbb">다음 Phase 2 입력</text>
+  <defs>
+    <marker id="bu1" markerWidth="6" markerHeight="6" refX="4" refY="2.5" orient="auto"><path d="M0,0 L0,5 L6,2.5 z" fill="#ccc"/></marker>
+  </defs>
+</svg></div>
+</div>
+
+<p><strong>Phase 3에서 LLM이 반환하는 네 가지:</strong> <code>thinking</code>(내부 추론), <code>evaluation_previous_goal</code>(이전 액션 평가), <code>memory</code>(영속 메모리 노트), <code>action</code>(실행할 액션 목록).</p>
+<p><strong>DOM 처리: 10,000+에서 200으로.</strong> Browser Use는 페이지 전체 요소에서 <strong>~200개의 인터랙티브 요소</strong>만 추려 숫자 인덱스로 표현한다. 토큰 약 95% 절감. 인덱스는 스텝마다 재할당되므로 XPath 같은 복잡한 셀렉터가 필요 없다.</p>
+<p><strong>DOM 우선, Vision은 보조.</strong> 스크린샷 한 장이 LLM 파이프라인에 추가될 때마다 이미지 인코더 처리 시간이 붙는다. Browser Use 측정값으로 스텝당 약 0.8초. 이 설계 선택이 속도에서 극적인 차이를 만든다:</p>
+<ul>
+<li>Browser Use: <strong>평균 68초</strong></li>
+<li>Gemini Computer Use: 225초</li>
+<li>Claude Sonnet 4.5: 285초</li>
+<li>OpenAI Computer-Using Model: 330초</li>
+</ul>
+<p><strong>세 가지 안정화 메커니즘:</strong></p>
+<p><strong>① ActionLoopDetector</strong> — 에이전트가 같은 액션을 반복하는 것을 감지해, 다음 LLM 프롬프트에 &quot;nudge&quot; 메시지를 주입한다. 에이전트가 다른 접근을 시도하도록 유도한다.</p>
+<p><strong>② Message Compaction</strong> — 에이전트가 15스텝을 실행하면 히스토리만으로 43,000+ 토큰이 된다. 임계값을 넘으면 보조 LLM을 불러서 오래된 스텝들을 요약한다. 압축 후 토큰 사용량은 약 12,600으로 안정화된다.</p>
+<p><strong>③ KV Cache 인식 프롬프트 구조</strong> — 히스토리(상대적으로 변하지 않는 부분)를 프롬프트 앞에 배치하고, 동적으로 바뀌는 DOM 상태를 뒤에 배치한다. 입력 토큰(29.1ms/1K)보다 출력 토큰(62.6ms/1K)이 215배 비싸기 때문에, 액션 출력도 스텝당 10~15 토큰으로 최소화했다.</p>
+<p><strong>WebVoyager 벤치마크 성능:</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트</th>
+      <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">성공률</th>
+      <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">특이사항</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"><strong>Browser Use (GPT-4o)</strong></td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">89.1%</strong></td>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">단일 루프, 오픈소스</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">OpenAI Operator</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">87%</td>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">상용 서비스</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Agent-E</td>
+      <td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">73.2%</td>
+      <td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">계층적 구조</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 1rem;">Anthropic Computer Use</td>
+      <td style="padding:0.55rem 1rem;text-align:center;">56%</td>
+      <td style="padding:0.55rem 1rem;">스크린샷 기반</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>단, &quot;Illusion of Progress&quot; 논문이 지적했듯이, 동일한 에이전트가 엄격한 Online-Mind2Web에서는 ~30%로 뚝 떨어진다. <strong>WebVoyager 벤치마크의 쉬운 태스크 분포가 수치를 크게 부풀린다.</strong></p>
+<p>Browser Use는 커스텀 액션을 <code>@tools.action</code> 데코레이터로 등록해 확장할 수 있다. 복잡한 태스크를 플래너 없이 처리하려면, 커스텀 액션으로 &quot;인라인 플래닝&quot;을 구현하는 것이다 — 결과를 중간에 파일에 저장하고, 다음 단계에서 읽어서 판단하는 방식.</p>
+<div class="ornament">· · ·</div>
+
+<h2>종합: 무엇을 믿고 무엇을 조심해야 하나</h2>
+<p>지금까지 세 레이어를 쌓았다. 마지막으로 전체 그림을 정리하자.</p>
+<p><strong>벤치마크 선택이 수치를 결정한다.</strong> 같은 에이전트가 WebVoyager에서는 89%, Online-Mind2Web에서는 30%일 수 있다. 논문의 수치를 볼 때 항상 어느 벤치마크인지, 어느 분할인지, 자동 평가인지 인간 평가인지 확인해야 한다.</p>
+<p><strong>텍스트 vs 멀티모달의 답은 도메인에 따라 다르다.</strong> 웹에서는 DOM이 픽셀보다 더 정확한 &quot;진실&quot;인 경우가 많다. Booking.com처럼 시각적 UI가 핵심인 사이트에서는 멀티모달이 압도적이지만, ArXiv 같이 텍스트 중심인 사이트에서는 차이가 거의 없다.</p>
+<p><strong>아키텍처 선택이 성능을 만든다.</strong> Agent-E의 계층 분리, DOM 디노이징, 언어적 피드백 — Browser Use의 인덱스 기반 DOM 압축, ActionLoopDetector, KV Cache 인식 구조 — 이 엔지니어링 디테일들이 모델 자체 능력만큼 중요하다.</p>
+<p><strong>현재 위치:</strong> 인간 78~89%(벤치마크별)에 비해 최고 에이전트들이 60% 언저리다. 갭의 대부분은 동적이고 복잡한 UI (달력, 다단계 폼), 여러 탭을 오가는 플로우, 장기 태스크에서의 에러 누적에서 온다. 개별 스텝의 정확도는 많이 올랐지만, 긴 체인을 오류 없이 완주하는 것은 여전히 어렵다.</p>
+<div class="footnote">
+  참고 논문:
+  <a href="https://arxiv.org/abs/2306.06070">Mind2Web (NeurIPS 2023)</a> ·
+  <a href="https://arxiv.org/abs/2307.13854">WebArena (ICLR 2024)</a> ·
+  <a href="https://arxiv.org/abs/2401.13919">WebVoyager (ACL 2024)</a> ·
+  <a href="https://arxiv.org/abs/2401.13649">VisualWebArena (ACL 2024)</a> ·
+  <a href="https://arxiv.org/abs/2407.13032">Agent-E (arXiv 2024)</a>
+</div>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>
