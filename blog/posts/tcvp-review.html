@@ -190,6 +190,32 @@
       line-height: 1.6;
     }
 
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      position: sticky; top: 50px; z-index: 99; background: var(--bg);
+    }
+    .filter-bar-inner-wrap { max-width: 1080px; margin: 0 auto; padding: 0 3rem; }
+    .filter-inner { display: flex; border-bottom: 3px double var(--text); }
+    .tag-btn {
+      background: none; border: none; flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt); transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover, .tag-btn.active { color: var(--accent); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .72rem; color: var(--muted);
+      padding: 2.5rem 1rem 3rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+
     /* ─── SEVERITY BADGE ─── */
     .badge {
       display: inline-block;
@@ -218,6 +244,21 @@
   <div class="masthead-inner">
     <h1 class="masthead-title">Research Blog</h1>
     <div class="masthead-sub">Multimodal · Mar 10, 2026</div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
   </div>
 </div>
 
@@ -259,6 +300,55 @@
       타임스탬프 기반 moment selection이 <strong>95% 선호</strong>되었다.
       결과 자체는 설득력 있다. 문제는 그 결과를 뒷받침하는 실험의 규모와 깊이다.
     </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>메타 리뷰 결과 (ACL ARR)</h2>
+
+    <div class="callout red">
+      <strong>Overall Assessment: 2 — Resubmit next cycle</strong><br>
+      "Substantial revisions that can be completed by the next ARR cycle." 단순 minor revision이 아니라 구조적 개선을 요구한다.
+    </div>
+
+    <h3>리뷰어들이 동의한 긍정 포인트</h3>
+    <ul>
+      <li>타임스탬프 댓글이 moment selection에 유효한 단서가 된다는 아이디어 (3Z5s, fm3t, BKiQ)</li>
+      <li>Human evaluation이 제공됨 (fm3t)</li>
+      <li>파이프라인이 실용적·확장 가능·재현 가능 (fm3t, BKiQ)</li>
+    </ul>
+
+    <h3>리뷰어들이 지적한 문제</h3>
+    <ul>
+      <li>논문의 novelty와 contribution이 제한적 (3Z5s, fm3t)</li>
+      <li>데이터셋 규모가 제한적 (3Z5s, BKiQ)</li>
+      <li>YouTube 댓글과 모달리티 캡션을 쿼리 생성에 쓰는 것의 타당성 (3Z5s)</li>
+      <li>캡션 생성이 uni-modality에 머무름 (BKiQ)</li>
+      <li>모델 특화 bias 가능성 (BKiQ)</li>
+    </ul>
+
+    <h3><span class="badge critical">핵심</span> 메타 리뷰어가 가장 중요하게 지적한 것</h3>
+    <p>
+      메타 리뷰어는 일부 우려가 rebuttal에서 해소됐다고 인정하면서도,
+      <strong>human evaluation의 근본적 불일치</strong>를 지적하며 accept 불가 결정을 내렸다.
+    </p>
+    <div class="callout red">
+      <strong>Section 4.5 (본문 클레임):</strong> "어느 구간이 검색될 가능성이 더 높은가?" — 검색 의도(search intent) 평가<br><br>
+      <strong>Appendix B.1 (실제 지시문):</strong> "어느 구간이 더 많은 내용을 담고 있는가? 더 대표적이고 정보가 풍부한가?" — 콘텐츠 품질 평가<br><br>
+      <strong>메타 리뷰어 판단:</strong> "I'm not sure how relevant this human evaluation is to query intents. Because of this inconsistency, the main claim of the paper does not seem to be fully justified."
+    </div>
+    <p>
+      이것은 단순한 표현 문제가 아니다. 논문의 핵심 주장이 "우리 데이터가 실제 사용자 검색 의도를 반영한다"는 것인데,
+      그것을 검증한 human eval이 사실은 <strong>콘텐츠 풍부함</strong>을 측정했다.
+      "내용이 풍부한 순간"과 "사람들이 실제로 검색하는 순간"은 다르다.
+      말 그대로 논문의 가장 강한 클레임이 검증되지 않은 상태다.
+    </p>
+    <p>
+      기존 자체 리뷰에서는 이 불일치를 명시적으로 인식하지 못했다.
+      가장 먼저 수정해야 할 것은 downstream training experiment가 아니라
+      <strong>이 human evaluation의 재설계</strong>일 수 있다.
+    </p>
+
+    <div class="ornament">· · ·</div>
 
     <h2>약점 분석: 무엇이 리뷰어를 불편하게 만들었을까</h2>
 
@@ -415,7 +505,27 @@
 
     <h2>개선 계획: EMNLP 2026 타겟</h2>
 
-    <p>EMNLP 2026 ARR 데드라인은 <strong>2026년 5월 25일</strong>이다. 오늘(3월 10일)부터 약 2.5개월이다.</p>
+    <p>EMNLP 2026 ARR 데드라인은 <strong>2026년 5월 25일</strong>이다. 메타 리뷰 결과를 반영해 우선순위를 재조정했다.</p>
+
+    <h3>0순위: Human Evaluation 재설계 — 메타 리뷰 핵심 지적</h3>
+    <p>
+      현재 human eval의 지시문을 수정해야 한다. "more content / more representative"가 아니라
+      <strong>"실제로 이 장면을 보고 싶어서 검색할 것 같은 쿼리인가?"</strong>를 직접 묻도록 바꿔야 한다.
+    </p>
+    <p>
+      구체적인 재설계 방향:
+    </p>
+    <ul>
+      <li><strong>Moment selection eval:</strong> "두 구간 중 어느 쪽을 검색해서 찾고 싶은가?" — search intent 직접 질문</li>
+      <li><strong>Query realism eval:</strong> "이 쿼리가 실제 검색창에 입력할 것 같은 표현인가?" — 자연스러움 평가 유지</li>
+      <li>두 평가를 별도 태스크로 분리, annotator 지시문과 논문 클레임을 완전히 일치시킴</li>
+      <li>샘플 수: 40 → <strong>100~150</strong>, Cohen's κ 보고</li>
+    </ul>
+    <div class="callout green">
+      <strong>왜 0순위인가?</strong><br>
+      이것이 논문의 핵심 클레임을 직접 지지하는 유일한 증거다. Downstream training experiment가 추가되어도,
+      human eval의 논리적 일관성이 없으면 메타 리뷰어의 핵심 비판이 해소되지 않는다.
+    </div>
 
     <h3>1순위: Downstream Training Experiment</h3>
     <p>
@@ -470,7 +580,11 @@
       </thead>
       <tbody>
         <tr>
-          <td class="hi">3월 10일 ~ 3월 말</td>
+          <td class="hi">3월 (지금)</td>
+          <td><strong>Human eval 재설계</strong> — 지시문 수정, 태스크 분리, annotator 재모집</td>
+        </tr>
+        <tr>
+          <td class="hi">3월 말</td>
           <td>데이터 확장 파이프라인 재실행 + LanguageBind fine-tuning 코드 세팅</td>
         </tr>
         <tr>
@@ -489,9 +603,9 @@
     </table>
 
     <div class="callout warn">
-      <strong>가장 중요한 것 하나만 고른다면:</strong><br>
-      Downstream training experiment. 이것 하나가 논문의 contribution 레벨을 완전히 바꾼다.
-      파이프라인 이야기에서 "실제로 유용한 데이터셋" 이야기로.
+      <strong>메타 리뷰 이후 우선순위 재조정:</strong><br>
+      <strong>0순위 — Human eval 재설계:</strong> 지시문을 search intent 직접 평가로 수정. 논문의 핵심 클레임을 실제로 검증하는 유일한 증거.<br>
+      <strong>1순위 — Downstream training:</strong> 이것이 contribution 레벨을 올린다. "자연스러운 파이프라인" → "실제로 유용한 데이터셋"으로.
     </div>
 
     <div class="ornament">· · ·</div>
@@ -510,13 +624,15 @@
     </p>
 
     <div class="footnote">
-      이 글은 TCVP (Timestamped Comment-guided VMR Pipeline) 논문의 ACL 제출 이후
-      자체 리뷰 및 개선 계획을 정리한 것입니다.
-      다음 제출 타겟: EMNLP 2026 (ARR May 25, 2026).
+      이 글은 TCVP (Timestamped Comment-guided VMR Pipeline) 논문의 ACL ARR 메타 리뷰 이후
+      자체 리뷰 및 개선 계획을 정리한 것입니다. Overall Assessment: 2 = Resubmit next cycle.<br>
+      다음 제출 타겟: EMNLP 2026 ARR (May 25, 2026).
     </div>
 
   </div>
 </div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
 
 </body>
 </html>
