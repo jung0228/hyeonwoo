@@ -572,17 +572,22 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
 
 **제대로 측정하면 숫자가 어떻게 달라지나:**
 
+<div class="callout">
+  <strong>주의: 아래 두 열은 직접 비교 불가</strong><br>
+  2024년 이후 에이전트들(Operator, Claude CU, Browser Use, Agent-E)은 원래 Mind2Web 오프라인 벤치마크로 평가된 기록이 없다. 각 에이전트가 자기 논문에서 선택한 벤치마크 점수와, 공통 기준인 Online-Mind2Web 점수를 나란히 놓은 것이다. 숫자 크기를 직접 비교하는 게 아니라 <em>각자 얼마나 낙관적인 숫자를 골랐는가</em>를 보는 표다.
+</div>
+
 <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
   <thead><tr style="background:#f5f5f0;">
     <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트</th>
-    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">발표된 수치</th>
-    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Online-Mind2Web</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">자체 선택 벤치마크 점수</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Online-Mind2Web<br><span style="font-weight:400;font-size:0.8rem;">(공통 엄격 기준)</span></th>
   </tr></thead>
   <tbody>
     <tr style="background:#fffbf0;"><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"><strong>OpenAI Operator</strong></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">WebArena ~65%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">61.3%</strong></td></tr>
     <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Claude CU 3.7</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">WebArena ~58%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">56.3%</td></tr>
     <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Browser Use</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">자체 벤치 ~80%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">~30%</span></td></tr>
-    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Agent-E</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">WebArena ~73%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">~28%</span></td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Agent-E</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">WebVoyager ~73%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">~28%</span></td></tr>
     <tr><td style="padding:0.55rem 1rem;">SeeAct (2024 베이스라인)</td><td style="padding:0.55rem 1rem;text-align:center;">WebVoyager 59%</td><td style="padding:0.55rem 1rem;text-align:center;">~26%</td></tr>
   </tbody>
 </table>
