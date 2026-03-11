@@ -477,7 +477,7 @@
     let vis = 0;
     cards.forEach(c => {
       const show = tag === 'all' || (c.dataset.tags || '').includes(tag);
-      c.style.display = show ? 'block' : 'none';
+      c.style.display = show ? 'flex' : 'none';
       if (show) vis++;
     });
     document.getElementById('section-label').textContent = tag === 'all' ? 'Posts' : tag;
