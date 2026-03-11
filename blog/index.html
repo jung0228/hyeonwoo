@@ -280,29 +280,18 @@
 
 <div class="blog-main">
 
-  <div class="featured" id="featured-section">
-    <div class="eyebrow">Latest</div>
-    <a class="featured-headline" href="posts/tcvp-review.html">
-      ACL 이후 EMNLP를 향해: TCVP 약점 분석과 개선 로드맵
-    </a>
-    <p class="featured-dek">
-      직접 만든 논문을 가장 가혹하게 리뷰하는 것이 다음 버전을 만드는 가장 빠른 방법이다. 데이터셋 규모, downstream training experiment 부재, human eval의 한계 — 9가지 약점을 분석하고 EMNLP 2026 타겟 개선 로드맵을 정리한다.
-    </p>
-    <div class="post-meta-line">
-      <span style="color:var(--accent);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;">Multimodal</span>
-      <span style="color:var(--rule-lt);">·</span>
-      <span>Mar 10, 2026</span>
-      <span style="color:var(--rule-lt);">·</span>
-      <span>20 min read</span>
-    </div>
-  </div>
-
   <div class="section-header">
     <span class="section-name" id="section-label">Posts</span>
     <div class="section-rule"></div>
   </div>
 
   <div class="post-grid" id="post-grid">
+    <a class="post-card" href="posts/tcvp-review.html" data-tags="Multimodal">
+      <div class="card-cat">Multimodal</div>
+      <div class="card-title">ACL 이후 EMNLP를 향해: TCVP 약점 분석과 개선 로드맵</div>
+      <div class="card-desc">데이터셋 규모 · downstream training exp 부재 · 40-sample human eval — 9가지 약점 분석과 EMNLP 2026 타겟 로드맵.</div>
+      <div class="card-meta">Mar 10, 2026 · 20 min read</div>
+    </a>
     <a class="post-card" href="posts/web-agent-deep-dive.html" data-tags="Agent,LLM,Multimodal">
       <div class="card-cat">Agent</div>
       <div class="card-title">웹 에이전트 심층 분석: 동작 원리, 벤치마크, 핵심 시스템</div>
@@ -484,8 +473,6 @@
     });
     document.getElementById('section-label').textContent = tag === 'all' ? 'Posts' : tag;
     document.getElementById('empty-msg').style.display = vis === 0 ? 'block' : 'none';
-    const featured = document.getElementById('featured-section');
-    if (featured) featured.style.display = tag === 'all' ? 'block' : 'none';
   }
 </script>
 </body>
