@@ -678,25 +678,51 @@ Action: stop [Task completed]
   </tbody>
 </table>
 
-<p>k를 얼마로 설정하냐가 평가 신뢰도를 크게 좌우한다. 많은 후속 연구들이 비용 절감을 위해 마지막 1~3장만 쓰는데, 이 경우 κ = 0.51 수준으로 <strong>동전 뒤집기보다 약간 나은</strong> 신뢰도다. 전체 궤적(k = 전부)을 제공하면 κ = 0.70으로 올라간다.</p>
+<p>k를 얼마로 설정하냐가 평가 신뢰도를 크게 좌우한다. 많은 후속 연구들이 비용 절감을 위해 마지막 1장만 쓰는데, 이 경우 κ = 0.51로 <strong>동전 뒤집기보다 약간 나은</strong> 수준이다.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">제공 스크린샷</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">인간 일치율</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Cohen's κ</th>
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">실용성</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#fff8f8;"><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">마지막 1장만</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">~73%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">0.51</span></td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">비용 저렴, 신뢰도 낮음</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">마지막 3장</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">~80%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">0.63</td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">균형점</td></tr>
+    <tr style="background:#f0fdf4;"><td style="padding:0.55rem 1rem;"><strong>전체 궤적</strong></td><td style="padding:0.55rem 1rem;text-align:center;"><strong>85.3%</strong></td><td style="padding:0.55rem 1rem;text-align:center;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">0.70</strong></td><td style="padding:0.55rem 1rem;">비용 높음, 가장 신뢰</td></tr>
+  </tbody>
+</table>
+
+<details>
+<summary><strong>643개 태스크는 어떻게 만들었나 — 3단계 Self-Instruct</strong></summary>
+
+<p><strong>Stage 1 — 시드 태스크 수집:</strong> Google Flights, Google Maps, Google Search, Booking, Wolfram Alpha 5개 사이트에 Mind2Web 태스크를 샘플링하고 수동 편집해 시드 풀을 만든다.</p>
+<p><strong>Stage 2 — GPT-4 Turbo 생성 + 인간 검수:</strong> 시드 태스크를 in-context 예시로 주고 GPT-4 Turbo에게 사이트당 약 100개 태스크를 20회 반복 생성. 사람이 직접 검토·수정 후 Task Pool에 추가.</p>
+<p><strong>Stage 3 — 다양성 확보:</strong> Stage 2 풀에서 다양한 예시를 샘플링해 GPT-4 Turbo로 추가 생성. 직접 검증 후 추가 → 사이트당 40개 이상, <strong>총 643개</strong>.</p>
+<p>이 과정에서 &quot;단순 검색 한 번으로 해결 가능한 태스크&quot;가 많이 포함된 것이 &quot;Illusion of Progress&quot; 논문의 비판 대상이 됐다.</p>
+</details>
+
 <p><strong>사이트별 텍스트 vs 멀티모달 비교:</strong></p>
 <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
   <thead><tr style="background:#f5f5f0;">
     <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">사이트</th>
     <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">텍스트 전용</th>
-    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">WebVoyager (멀티모달)</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">멀티모달</th>
     <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">차이</th>
   </tr></thead>
   <tbody>
-    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Booking.com</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">2.3%</span></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">43.2%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>+40.9%p</strong></td></tr>
+    <tr style="background:#fff8f8;"><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Booking.com</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><span style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">2.3%</span></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">43.2%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>+40.9%p</strong></td></tr>
     <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Google Flights</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">41.5%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">70.7%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong>+29.2%p</strong></td></tr>
     <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Amazon</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">36.6%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">58.5%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">+21.9%p</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">BBC News</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">52.4%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">61.9%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">+9.5%p</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Cambridge Dict.</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">55.0%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">65.1%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">+10.1%p</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Google Search</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">68.3%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">76.7%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">+8.4%p</td></tr>
     <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">ArXiv</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">48.8%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">51.2%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">+2.4%p</td></tr>
     <tr style="background:#fffbf0;"><td style="padding:0.55rem 1rem;"><strong>전체 평균</strong></td><td style="padding:0.55rem 1rem;text-align:center;"><strong>40.1%</strong></td><td style="padding:0.55rem 1rem;text-align:center;"><strong>59.1%</strong></td><td style="padding:0.55rem 1rem;text-align:center;"><strong>+19.0%p</strong></td></tr>
   </tbody>
 </table>
 
-<p>Booking.com에서 텍스트 전용이 2.3%인 것이 눈에 띈다. 달력 UI와 가격 비교 레이아웃은 DOM만으로 파악하기 극히 어렵다.</p>
+<p>Booking.com에서 텍스트 전용이 2.3%인 것이 눈에 띈다. 달력 UI와 가격 비교 레이아웃은 DOM만으로 파악하기 극히 어렵다. 반면 ArXiv(+2.4%p)나 Google Search(+8.4%p)처럼 텍스트 정보가 대부분인 사이트는 멀티모달의 이점이 거의 없다.</p>
 <div class="ornament">· · ·</div>
 
 <h3>VisualWebArena (ACL 2024) — 시각 이해 없이는 못 푸는 태스크</h3>
@@ -779,6 +805,112 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
 <p><strong>발견 3 — Task SR이 낮은 건 수학적으로 당연.</strong> Step SR 52%, 평균 7.3스텝 → 0.52^7 ≈ 0.9%. 실제 5.2%는 스텝들이 컨텍스트를 공유해서 이보다 높다.</p>
 <p><strong>발견 4 — 파인튜닝이 필수.</strong> 제로샷 Flan-T5-XL은 Element Accuracy 10.8%. 파인튜닝 후 52.0%. 대형 모델도 이 태스크에선 파인튜닝이 필수다.</p>
 <p><strong>발견 5 — GPT-4가 의외로 강하다.</strong> 파인튜닝 없이 in-context learning만으로 Element Accuracy 41.6%. GPT-3.5-turbo(20.3%)와 비교하면 압도적이다.</p>
+<p><strong>발견 6 — 스케일이 일관되게 도움이 된다.</strong> Flan-T5-B(Step SR 41.0%) → L(50.3%) → XL(52.0%). 파라미터가 클수록 성능이 오른다. 흥미로운 점: GPT-4(Step SR 36.2%)가 파인튜닝된 Flan-T5-XL(52.0%)을 밑돈다. 이 태스크에서는 <strong>모델 크기보다 파인튜닝이 더 중요하다.</strong></p>
+<details>
+<summary><strong>전체 실험 결과 테이블 (모든 모델 × 분할)</strong></summary>
+
+<table>
+<thead>
+<tr>
+<th>모델</th>
+<th>분할</th>
+<th>Ele. Acc</th>
+<th>Op. F1</th>
+<th>Step SR</th>
+<th>Task SR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DeBERTa (분류 전용)</td>
+<td>Cross-Task</td>
+<td>26.8%</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Flan-T5-B (생성, 파인튜닝 없음)</td>
+<td>Cross-Task</td>
+<td>20.2%</td>
+<td>52.0%</td>
+<td>17.5%</td>
+<td>0.0%</td>
+</tr>
+<tr>
+<td>GPT-3.5-turbo</td>
+<td>Cross-Task</td>
+<td>20.3%</td>
+<td>56.6%</td>
+<td>17.4%</td>
+<td>0.8%</td>
+</tr>
+<tr>
+<td><strong>MindAct (Flan-T5-B)</strong></td>
+<td>Cross-Task</td>
+<td>43.6%</td>
+<td>76.8%</td>
+<td>41.0%</td>
+<td>4.0%</td>
+</tr>
+<tr>
+<td><strong>MindAct (Flan-T5-L)</strong></td>
+<td>Cross-Task</td>
+<td>53.4%</td>
+<td>75.7%</td>
+<td>50.3%</td>
+<td>7.1%</td>
+</tr>
+<tr>
+<td><strong>MindAct (Flan-T5-XL)</strong></td>
+<td>Cross-Task</td>
+<td><strong>55.1%</strong></td>
+<td><strong>75.7%</strong></td>
+<td><strong>52.0%</strong></td>
+<td><strong>5.2%</strong></td>
+</tr>
+<tr>
+<td><strong>MindAct (Flan-T5-XL)</strong></td>
+<td>Cross-Website</td>
+<td><strong>42.0%</strong></td>
+<td><strong>65.2%</strong></td>
+<td><strong>38.9%</strong></td>
+<td><strong>5.1%</strong></td>
+</tr>
+<tr>
+<td><strong>MindAct (Flan-T5-XL)</strong></td>
+<td>Cross-Domain</td>
+<td><strong>42.1%</strong></td>
+<td><strong>66.5%</strong></td>
+<td><strong>39.6%</strong></td>
+<td><strong>2.9%</strong></td>
+</tr>
+<tr>
+<td>GPT-4 (50 tasks, in-context)</td>
+<td>Cross-Task</td>
+<td>41.6%</td>
+<td>60.6%</td>
+<td>36.2%</td>
+<td>2.0%</td>
+</tr>
+<tr>
+<td>GPT-4 (50 tasks, in-context)</td>
+<td>Cross-Domain</td>
+<td>37.1%</td>
+<td>46.5%</td>
+<td>26.4%</td>
+<td>2.0%</td>
+</tr>
+</tbody></table>
+</details>
+
+<details>
+<summary><strong>데이터 수집 파이프라인 — 3단계</strong></summary>
+
+<p><strong>Stage 1 — Task Proposal:</strong> Amazon Mechanical Turk 작업자들이 태스크를 제안한다. 완전한 백지 상태가 아니라, ChatGPT로 생성한 시드 태스크 50개를 참고한다. 핵심 원칙: <em>&quot;diverse types, require multiple rounds of interaction, and describe the high-level goal instead of step-by-step instructions.&quot;</em></p>
+<p><strong>Stage 2 — Task Demonstration:</strong> Playwright 기반 커스텀 툴로 실제 브라우저에서 액션 시퀀스를 녹화한다. 작업자는 DOM 요소를 선택한 뒤 세 가지 오퍼레이션(CLICK / TYPE / SELECT) 중 하나를 고른다. 각 액션 시점의 스냅샷은 MHTML(raw HTML), DOM snapshot(레이아웃 포함), HAR(네트워크 트래픽), trace(재현용) 네 가지 포맷으로 저장된다.</p>
+<p><strong>Stage 3 — Verification:</strong> 저자들이 직접 리뷰. 전체 2,411개 중 <strong>61개 거절</strong>, <strong>390개 태스크 설명 수정</strong>. 최종 2,350개.</p>
+</details>
+
 <div class="ornament">· · ·</div>
 
 <h3>WebVoyager 시스템</h3>
@@ -847,6 +979,26 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
 <blockquote>
 <p><em>&quot;Clicked element mmid 25. A popup appeared with following elements: [mmid=30] Option A, [mmid=31] Option B, [mmid=32] Option C&quot;</em></p>
 </blockquote>
+<p><strong>사이트별 성능 — 텍스트 전용의 강점과 한계:</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">사이트</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">성공률</th>
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">이유</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#f0fdf4;"><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"><strong>WolframAlpha</strong></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">95.7%</strong></td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">구조적이고 예측 가능한 인터페이스 — DOM으로 충분</td></tr>
+    <tr style="background:#f0fdf4;"><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"><strong>Google Search</strong></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">90.7%</strong></td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">단순하고 일관된 UI</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">GitHub</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">82.9%</td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">텍스트 중심, DOM 구조 명확</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">ESPN</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">77.3%</td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"></td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Apple</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">74.4%</td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"></td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Allrecipes</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">71.1%</td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"></td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">Amazon</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">70.7%</td><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;"></td></tr>
+    <tr style="background:#fff8f8;"><td style="padding:0.55rem 1rem;"><strong>Booking.com</strong></td><td style="padding:0.55rem 1rem;text-align:center;"><strong style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">27.3%</strong></td><td style="padding:0.55rem 1rem;">달력 UI — 월 이동 버튼 반복 클릭·동적 가격 갱신</td></tr>
+  </tbody>
+</table>
+
+<p>Booking.com 27.3%가 명확히 보여준다: 텍스트 에이전트의 천장은 <strong>달력·날짜 선택기</strong> 같은 다단계 시각적 인터랙션이다. 클릭 한 번에 달력이 열리고, 월 이동 버튼을 여러 번 눌러야 원하는 날짜에 도달하는 플로우는 DOM 텍스트만으론 파악이 어렵다. 반면 WolframAlpha/Google Search처럼 쿼리-결과 구조가 명확한 사이트에서는 스크린샷 없이도 압도적이다.</p>
 <p>논문에서 도출한 네 가지 보편 원칙: <strong>도메인 특화 기본 스킬 → 계층적 아키텍처 → 페이로드 디노이징 → 언어적 행동 피드백.</strong></p>
 <div class="ornament">· · ·</div>
 
