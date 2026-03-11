@@ -52,17 +52,31 @@ const EXTRA_CSS = `
     .post-content tr:last-child td { border-bottom: none; }
 
     /* ─── CODE BLOCKS ─── */
+    /* ─── CODE BLOCKS ─── */
     pre {
-      background: #1a1a1a;
-      border-radius: 6px; padding: 1.3rem 1.5rem;
+      background: #282c34;
+      border-radius: 6px; padding: 1.2rem 1.5rem;
       margin: 1.6rem 0; overflow-x: auto;
       font-family: 'SF Mono','Fira Code',monospace;
       font-size: .82rem; line-height: 1.65;
-      color: #e8e8e8;
+      color: #abb2bf;
     }
-    pre code {
-      background: none; border: none; padding: 0;
+    pre code, pre code.hljs {
+      background: none !important; border: none; padding: 0 !important;
       font-size: inherit; color: inherit;
+    }
+
+    /* ─── IMAGES ─── */
+    .post-content img {
+      max-width: 100%; height: auto;
+      display: block; margin: 2rem auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule-lt);
+    }
+    .post-content figure { margin: 2rem 0; text-align: center; }
+    .post-content figcaption {
+      font-size: .78rem; color: var(--muted); margin-top: .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
 `;
 
@@ -104,6 +118,12 @@ function postMetaHtml(fm) {
     <span>${fm.readtime}</span>`;
 }
 
+function highlightHtml() {
+  return `  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>`;
+}
+
 function katexHtml() {
   return `  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -129,7 +149,7 @@ function generateHtml(fm, body, css) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-${fm.katex ? katexHtml() : ''}  <style>${css}${EXTRA_CSS}  </style>
+${fm.katex ? katexHtml() : ''}${fm.highlight ? highlightHtml() : ''}  <style>${css}${EXTRA_CSS}  </style>
 </head>
 <body>
 
