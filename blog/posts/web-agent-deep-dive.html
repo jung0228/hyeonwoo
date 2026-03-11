@@ -518,7 +518,22 @@ Action: stop [Task completed]
   <figcaption>세 가지 테스트 분할. 성능은 Cross-Task > Cross-Website > Cross-Domain 순으로 떨어진다.</figcaption>
 </figure>
 
-<p><strong>네 가지 지표</strong> — 스텝 하나를 (요소, 액션, 값) 세 부분으로 분해해서 각 레벨에서 정확도를 측정한다. 수식보다 예시로 보는 게 훨씬 빠르다.</p>
+<p><strong>네 가지 지표</strong> — 스텝 하나를 (요소, 액션, 값) 세 부분으로 분해해서 각 레벨에서 정확도를 측정한다.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.86rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">지표</th>
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">무엇을 보는가</th>
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">통과 조건</th>
+  </tr></thead>
+  <tbody>
+    <tr><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><strong>Element Accuracy</strong></td><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">올바른 DOM 요소를 골랐는가</td><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">요소만 맞으면 OK (액션·값 무관)</td></tr>
+    <tr><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><strong>Operation F1</strong></td><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">오퍼레이션(CLICK/TYPE/SELECT) + 값이 맞는가</td><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">요소는 맞았다고 가정하고 채점. F1으로 부분 점수 있음</td></tr>
+    <tr><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><strong>Step SR</strong></td><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">스텝 하나가 완전히 맞는가</td><td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">요소 + 오퍼레이션 + 값 <strong>셋 다</strong> 맞아야 1점. 하나라도 틀리면 0점</td></tr>
+    <tr><td style="padding:0.6rem 1rem;"><strong>Task SR</strong></td><td style="padding:0.6rem 1rem;">태스크 전체가 맞는가</td><td style="padding:0.6rem 1rem;">모든 스텝의 Step SR = 1이어야 성공. 하나라도 틀리면 태스크 전체 실패</td></tr>
+  </tbody>
+</table>
+
+<p>수식보다 예시로 보는 게 훨씬 빠르다.</p>
 <p><strong>예시 태스크:</strong> <em>&quot;우편번호 10002 근처 자동차 수리점 리뷰를 보여줘&quot;</em> — 10개 스텝 중 Step 3:</p>
 <div class="callout">
   <strong>정답(Ground Truth):</strong> <code>[textbox] Near</code> → TYPE: <code>10002</code>
@@ -570,11 +585,26 @@ Action: stop [Task completed]
   Step SR 50%라는 숫자만 보면 나쁘지 않아 보인다. 하지만 태스크당 평균 7.3스텝을 가정하면 Task SR ≈ 0.5<sup>7.3</sup> ≈ 0.6%. 실제 최고 성능도 Task SR 5~7%에 그치는 건 이 수학적 귀결이다. 두 숫자를 항상 같이 봐야 한다.
 </div>
 
-<p><strong>실제 벤치마크 결과 (Cross-Website 기준):</strong></p>
-<figure>
-  <img src="img/web-agent-deep-dive/mindact-results.png" alt="MindAct 성능 결과 표 (Cross-Website 기준)">
-  <figcaption>Cross-Website 기준 성능. GPT-4 + SoM (MindAct)이 Ele. Acc 58.1%, Step SR 52.3%로 가장 높다.</figcaption>
-</figure>
+<p><strong>실제 벤치마크 결과:</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.86rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">모델</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">분할</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Ele. Acc</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Op. F1</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Step SR</th>
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Task SR</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#fafaf8;"><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">GPT-3.5-turbo</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">Cross-Task</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">20.3%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">56.6%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">17.4%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">0.8%</td></tr>
+    <tr style="background:#fafaf8;"><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">GPT-4 (in-context)</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">Cross-Task</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">41.6%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">60.6%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">36.2%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">2.0%</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">MindAct (Flan-T5-B)</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">Cross-Task</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">43.6%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">76.8%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">41.0%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">4.0%</td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">MindAct (Flan-T5-L)</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">Cross-Task</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">53.4%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">75.7%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">50.3%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">7.1%</td></tr>
+    <tr style="background:#fffbf0;"><td style="padding:0.55rem 1rem;border-bottom:2px solid #ddd;"><strong>MindAct (Flan-T5-XL)</strong></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Cross-Task</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:2px solid #ddd;"><strong>55.1%</strong></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:2px solid #ddd;"><strong>75.7%</strong></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:2px solid #ddd;"><strong>52.0%</strong></td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:2px solid #ddd;"><strong>5.2%</strong></td></tr>
+    <tr><td style="padding:0.55rem 1rem;border-bottom:1px solid #eee;">MindAct (Flan-T5-XL)</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">Cross-Website</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">42.0%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">65.2%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">38.9%</td><td style="padding:0.55rem 1rem;text-align:center;border-bottom:1px solid #eee;">5.1%</td></tr>
+    <tr><td style="padding:0.55rem 1rem;">MindAct (Flan-T5-XL)</td><td style="padding:0.55rem 1rem;text-align:center;">Cross-Domain</td><td style="padding:0.55rem 1rem;text-align:center;">42.1%</td><td style="padding:0.55rem 1rem;text-align:center;">66.5%</td><td style="padding:0.55rem 1rem;text-align:center;">39.6%</td><td style="padding:0.55rem 1rem;text-align:center;">2.9%</td></tr>
+  </tbody>
+</table>
 
 <div class="ornament">· · ·</div>
 
