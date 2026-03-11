@@ -167,11 +167,45 @@ Action: stop [Task completed]
 
 **태스크:** *"WebArena GitLab에서 'awesome-os' 프로젝트의 open 이슈 수를 알려라."*
 
-1. **초기화** — Docker GitLab 인스턴스를 초기화. Playwright 브라우저 시작.
-2. **첫 번째 관찰 → LLM** — `[3] link "awesome-os"` 발견 → `click [3]`
-3. **프로젝트 페이지** — `[12] link "Issues (7)"` 발견 → `click [12]`
-4. **이슈 목록** — `[1] tab "Open (5)" [2] tab "Closed (2)"` → `stop [5]`
-5. **평가** — `string_match(answer="5", reference="5")` → ✓ Success
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.86rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.6rem 1rem;text-align:center;border-bottom:2px solid #ddd;width:3rem;">스텝</th>
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">상태</th>
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">관찰 (AX Tree)</th>
+    <th style="padding:0.6rem 1rem;text-align:left;border-bottom:2px solid #ddd;">액션</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#fafaf8;">
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">0</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">초기화</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">Docker GitLab 인스턴스 시작</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">Playwright 브라우저 시작</td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">1</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">GitLab 홈</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>[3] link "awesome-os"</code></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>click [3]</code></td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">2</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">프로젝트 페이지</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>[12] link "Issues (7)"</code></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>click [12]</code></td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">3</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">이슈 목록</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>[1] tab "Open (5)"</code> &nbsp;<code>[2] tab "Closed (2)"</code></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>stop [5]</code></td>
+    </tr>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;text-align:center;">✓</td>
+      <td style="padding:0.6rem 1rem;">평가</td>
+      <td style="padding:0.6rem 1rem;" colspan="2"><code>string_match(answer="5", reference="5")</code> → <strong style="color:#166534;">Success</strong></td>
+    </tr>
+  </tbody>
+</table>
 
 이 4스텝 태스크는 단순한 편이다. 실제 WebArena 태스크들은 평균 10~15스텝, 어려운 것들은 30스텝을 넘는다.
 
