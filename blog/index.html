@@ -175,7 +175,8 @@
     }
     .post-card {
       text-decoration: none; color: inherit;
-      display: block; padding-bottom: 1.8rem;
+      display: flex; flex-direction: column;
+      padding-bottom: 1.8rem;
       border-bottom: 1px solid var(--rule-lt);
     }
     .card-cat {
@@ -194,7 +195,7 @@
     .post-card:hover .card-title { color: var(--accent); }
     .card-desc {
       font-size: .88rem; color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.7; flex: 1;
       display: -webkit-box; -webkit-line-clamp: 3;
       -webkit-box-orient: vertical; overflow: hidden;
       margin-bottom: .65rem;
@@ -202,6 +203,7 @@
     .card-meta {
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: .67rem; color: var(--muted);
+      margin-top: auto;
     }
 
     .empty {
