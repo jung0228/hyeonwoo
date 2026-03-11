@@ -602,6 +602,8 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
 
 ### Mind2Web + MindAct
 
+**핵심 문제:** 페이지당 평균 1,135개 DOM 요소. LLM의 컨텍스트에 전부 집어넣으면 수만 토큰이다. 그렇다고 임의로 자르면 정답 요소가 잘릴 수 있다. Mind2Web 논문이 함께 제안한 에이전트 시스템 **MindAct**는 이 문제를 "필터링과 예측을 분리한다"는 아이디어로 해결한다.
+
 <figure>
   <img src="img/web-agent-deep-dive/mind2web-stats.png" alt="Mind2Web 데이터셋 통계">
   <figcaption>Mind2Web 데이터셋 통계. 2,350개 태스크, 137개 사이트, 31개 도메인, 페이지당 평균 1,135개 DOM 요소.</figcaption>
@@ -612,21 +614,27 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
   <figcaption>MindAct 전체 아키텍처. HTML Document에서 Candidate Elements를 Ranking LM으로 50개로 줄이고, Prediction LLM이 최종 Target Element와 Operation을 예측한다.</figcaption>
 </figure>
 
-**MindAct의 2단계 파이프라인** — 페이지당 평균 1,135개 DOM 요소를 LLM이 직접 처리하는 것은 불가능하다. MindAct는 이 문제를 두 단계로 나눠 해결한다.
+**MindAct의 2단계 파이프라인** — 두 가지 전문화된 모델이 역할을 나눈다.
 
 <figure class="fig-sm">
   <img src="img/web-agent-deep-dive/mindact-stage1.png" alt="MindAct Stage 1 — DeBERTa Ranking LM이 1,135개 DOM 요소를 50개로 압축">
   <figcaption>Stage 1: 파인튜닝된 DeBERTa Ranking LM이 태스크-DOM 요소 쌍의 관련성을 점수화해 Top-50 후보로 압축. 전체 요소의 4%만 남긴다.</figcaption>
 </figure>
 
+**Stage 1 모델 — DeBERTa-v3-base:** 86M 파라미터의 인코더 전용 모델. 왜 DeBERTa인가? **Cross-encoder** 구조로 학습시키면 태스크 설명과 DOM 요소를 하나의 시퀀스로 이어붙여 한번에 인코딩하므로, 둘 사이의 세밀한 상호작용을 직접 볼 수 있다. bi-encoder보다 느리지만 Stage 1의 목표는 정확도보다 **재현율(Recall)** — 정답 요소를 Top-50 안에 포함시키는 것 — 이므로 이 트레이드오프가 맞다. Binary cross-entropy + random negative sampling으로 파인튜닝한다.
+
 <figure class="fig-sm">
   <img src="img/web-agent-deep-dive/mindact-stage2.png" alt="MindAct Stage 2 — Prediction LLM이 Top-50 후보에서 최종 요소와 오퍼레이션 선택">
   <figcaption>Stage 2: Prediction LLM(GPT-3.5/4 또는 Flan-T5)이 Top-50 후보 + 태스크 + 히스토리를 보고 최종 Target Element와 Operation(CLICK/TYPE/SELECT)을 예측한다.</figcaption>
 </figure>
 
+**Stage 2 모델 — Flan-T5 또는 GPT-4:** 50개 후보를 **객관식 QA** 형태로 변환해 LLM에 제시한다. "다음 중 클릭할 요소를 고르시오: (A) [button] Search (B) [input] Query ..." 형식이다. 논문은 Flan-T5-B/L/XL을 파인튜닝한 버전과 GPT-3.5/GPT-4 in-context 버전을 비교했다.
+
 <div class="pullquote">
   "Training LMs for discrimination rather than generation is more generalizable." — 경로를 생성(generate)하는 것보다 요소를 식별(discriminate)하도록 학습시키는 방식이 새로운 사이트와 도메인에 더 잘 일반화된다는 논문의 핵심 주장이다.
 </div>
+
+왜 생성이 아니라 판별인가? 생성 방식은 모델이 정답 요소의 XPath나 CSS 셀렉터를 직접 만들어야 하는데, 이는 사이트마다 다른 구조를 외우는 것에 가깝다. 판별 방식은 "이 요소가 이 태스크에 맞는가?"를 묻는 것으로, 사이트별 외형 지식이 아닌 **태스크-요소 의미 매칭** 능력을 학습한다.
 
 5가지 핵심 발견:
 
@@ -675,12 +683,23 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
 
 ### WebVoyager 시스템
 
+**핵심 문제:** GPT-4V는 스크린샷을 볼 수 있지만, "이 스크린샷에서 어떤 요소를 클릭하라"는 명령을 실행하려면 픽셀 좌표나 요소 식별자가 필요하다. 기존 텍스트 에이전트는 AX Tree ID로 요소를 참조하지만, 비전 모델은 스크린샷만 보고 그 ID를 알 수 없다. WebVoyager는 **Set-of-Mark** 방식으로 이 간격을 메운다.
+
+**시스템 구성:**
+- **모델:** GPT-4V (GPT-4 with vision capability)
+- **브라우저 자동화:** Selenium
+- **관찰 방식:** 스크린샷 + SoM 번호 레이블 (JavaScript로 인터랙티브 요소 감지 후 번호 오버레이)
+- **액션 공간:** click, type, scroll, go\_back, go\_forward, answer (6가지)
+- **추론 형식:** ReAct — Thought(추론) 다음 Action(행동), 최대 15스텝
+
+GPT-4V-ACT라고 부르는 SoM 구현은 JavaScript 기반이다. 별도의 object detection 모델 없이 브라우저 내 JS 규칙으로 인터랙티브 요소를 감지하므로 가볍다. 각 요소에서 추출하는 정보는 네 가지: 번호 레이블, 텍스트 콘텐츠, 요소 타입, aria-label.
+
 <figure>
   <img src="img/web-agent-deep-dive/webvoyager-loop.png" alt="WebVoyager 에이전트 루프">
   <figcaption>WebVoyager 에이전트 루프. 태스크 입력 → 스크린샷+번호 레이블 관측 → GPT-4V 추론(Thought/Action) → Selenium 실행 → 최대 15회 반복.</figcaption>
 </figure>
 
-**Context Clipping:** 15스텝을 돌면 스크린샷 15장이 쌓여 7,000+ 토큰이 된다.
+**Context Clipping — 왜 3장인가:** 15스텝을 돌면 스크린샷 15장이 쌓여 7,000+ 토큰이 된다. 전부 유지하면 GPT-4V 컨텍스트 한도에 금방 닿고 비용도 폭발한다. 논문에서 실험한 결과, **최근 3장의 스크린샷으로도 현재 상태를 파악하기에 충분**했다. 반면 텍스트 히스토리(Thought+Action)는 장기 의존성이 있으므로 15개 전부 유지한다. 이미지는 자르고 텍스트는 유지하는 비대칭 전략이다.
 
 <figure>
   <img src="img/web-agent-deep-dive/context-clipping.png" alt="Context Clipping — 스크린샷은 최근 3장, Thought+Action은 전부 유지">
@@ -705,6 +724,14 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
 ### Agent-E — 계층적 분리와 DOM 디노이징
 
 Agent-E는 텍스트만 본다. 스크린샷을 안 쓴다. 사이트별 특화 프롬프트도 없다. 그런데 WebVoyager 벤치마크에서 **73.2%**를 기록했다 — 멀티모달 WebVoyager(57.1%)보다 16%p 높다.
+
+**핵심 문제:** 단일 에이전트 루프는 장기 태스크에서 두 가지 이유로 무너진다. 첫째, 히스토리가 길어질수록 컨텍스트에 노이즈가 쌓여 앞서 완료한 서브태스크 정보가 현재 결정을 간섭한다. 둘째, 에이전트가 "전체 진행 상황"과 "현재 페이지 조작"을 동시에 추적해야 해서 인지 부하가 크다. Agent-E는 이 두 책임을 명확히 분리한다.
+
+**시스템 구성:**
+- **프레임워크:** Microsoft AutoGen (multi-agent orchestration)
+- **모델:** GPT-4 Turbo — Planner Agent와 Browser Navigation Agent 모두에 사용
+- **브라우저 자동화:** Playwright (Selenium 대비 더 안정적인 async API)
+- **요소 식별:** mmid (mind map identifier) — JavaScript로 각 DOM 요소에 커스텀 attribute 주입. XPath/CSS 셀렉터보다 페이지 변화에 강인하다
 
 **두 에이전트의 분업:**
 
@@ -732,16 +759,18 @@ Agent-E는 텍스트만 본다. 스크린샷을 안 쓴다. 사이트별 특화 
 
 - **`text_only`** — 정보 수집 태스크. UI 요소 제거, 텍스트만.
 - **`input_fields`** — 검색·폼 입력. `<input>`, `<button>`, `<select>`만 + `mmid` 식별자 부여. XPath나 CSS 셀렉터보다 안정적이다.
-- **`all_fields`** — 탐색. 전체 요소 + 부모-자식 계층 구조 보존.
+- **`all_fields`** — 탐색. 전체 요소 + 부모-자식 계층 구조 보존. 경쟁 에이전트들이 평면적(flat) 인코딩을 쓰는 것과 달리, 계층을 유지하면 "이 버튼이 어떤 섹션 안에 있는지"를 LLM이 파악할 수 있다.
 
-**언어적 행동 피드백:**
+왜 태스크 유형마다 다른 DOM 표현인가? 정보 수집 태스크에서 `all_fields`를 쓰면 버튼과 입력창 노이즈로 정작 읽어야 할 텍스트가 묻힌다. 폼 입력 태스크에서 `text_only`를 쓰면 클릭할 요소가 없다. 태스크의 **의도에 맞게 DOM 표현을 선택**하는 것 자체가 하나의 스킬이다.
+
+**언어적 행동 피드백 — 왜 필요한가:**
 
 <figure class="fig-sm">
   <img src="img/web-agent-deep-dive/agent-e-feedback.png" alt="Agent-E 언어적 행동 피드백 — Mutation Observer API">
   <figcaption>언어적 행동 피드백. CLICK mmid=25 실행 후 DOM 변화를 Mutation Observer API로 감지해, "팝업 열림: [A, B, C 옵션]" 같은 피드백을 즉시 생성한다.</figcaption>
 </figure>
 
-일반적인 에이전트는 행동 결과를 다음 스텝의 DOM에서 간접적으로 파악한다. Agent-E는 **Mutation Observer Web API**를 써서 DOM이 변화할 때마다 실시간 콜백을 받고, 클릭 직후 무슨 일이 일어났는지 언어로 보고한다.
+일반적인 에이전트는 클릭 후 다음 스텝에서 DOM을 다시 가져와야 결과를 안다. 이 사이클에서 "클릭이 드롭다운을 열었는지, 페이지를 이동시켰는지, 아무것도 안 했는지"를 구분하려면 이전 DOM과 비교 분석이 필요하다. Agent-E는 **Mutation Observer Web API** — 브라우저 내장 DOM 변화 감지 API — 를 사용해 클릭 직후 즉각적인 피드백을 언어로 생성한다. Reflexion처럼 실패 후 회고하는 방식이 아니라, **성공·실패와 무관하게 매 행동마다** 작동한다.
 
 > *"Clicked element mmid 25. A popup appeared with following elements: [mmid=30] Option A, [mmid=31] Option B, [mmid=32] Option C"*
 
@@ -775,14 +804,24 @@ Booking.com 27.3%가 명확히 보여준다: 텍스트 에이전트의 천장은
 
 **"Make websites accessible for AI agents."**
 
-Agent-E의 계층 구조와 달리 **단일 에이전트 루프**다. 하나의 Agent가 모든 결정과 실행을 담당한다.
+**핵심 문제:** 기존 웹 자동화 도구(Selenium, Playwright 스크립트)는 경직된 CSS 셀렉터에 의존한다. 사이트가 조금만 바뀌면 깨진다. LLM이 XPath를 직접 생성하게 해도 hallucination이 잦다. Browser Use는 다른 접근을 택했다 — **DOM을 LLM이 이해할 수 있는 형태로 정규화**하고, LLM이 숫자 인덱스로만 요소를 참조하게 한다.
+
+**시스템 구성:**
+- **모델 독립적:** GPT-4o, Claude 3.5, Gemini, Mistral 등 어떤 LLM이든 백엔드로 사용 가능 (LangChain 통합)
+- **브라우저 자동화:** Playwright (CDP 기반)
+- **요소 식별:** 숫자 인덱스 — 스텝마다 재할당. XPath/CSS 셀렉터 hallucination 원천 차단
+- **아키텍처:** 단일 에이전트 루프 (Agent-E와 달리 플래너 없음). 계층 구조의 오버헤드 없이 `memory` 필드로 인라인 플래닝
+
+Agent-E의 계층 구조와 달리 **단일 에이전트 루프**다. 하나의 Agent가 모든 결정과 실행을 담당한다. 복잡한 태스크의 계획은 LLM 출력의 `memory` 필드에 메모를 남기는 방식으로 처리한다 — 별도의 Planner Agent 없이 동일한 루프 안에서 "인라인 플래닝"한다.
 
 <figure>
   <img src="img/web-agent-deep-dive/browser-use-loop.png" alt="Browser Use 5-phase 에이전트 루프">
   <figcaption>Browser Use의 5-Phase 루프. State Capture → Prompt Build → LLM Call → Action Execute → History Record. 각 Phase를 매 스텝 반복한다.</figcaption>
 </figure>
 
-Phase 3에서 LLM이 반환하는 네 가지: `thinking`(내부 추론), `evaluation_previous_goal`(이전 액션 평가), `memory`(영속 메모리), `action`(실행할 액션 목록).
+**5개 Phase 상세:** Phase 1(State Capture)에서 `BrowserSession.get_state()`가 현재 DOM을 수집한다. Phase 2(Prompt Build)에서 MessageManager가 시스템 프롬프트 + 태스크 + DOM + 히스토리 요약을 조합한다. Phase 3(LLM Call)에서 LLM은 Pydantic 기반 `AgentOutput` 스키마로 structured output을 반환한다 — 네 개 필드: `thinking`(내부 추론), `evaluation_previous_goal`(이전 액션 평가), `memory`(영속 메모리 노트), `action`(실행할 액션 목록). Phase 4(Action Execute)에서 CDP 명령으로 실행. Phase 5(History Record)에서 다음 스텝을 위한 히스토리 레코드 생성.
+
+Pydantic 스키마 강제가 중요한 이유: LLM이 자유 형식으로 출력하면 파싱 오류가 잦다. 구조화된 출력을 강제하면 "thinking은 있는데 action이 없는" 불완전 출력이 사라지고, 에이전트 루프가 예측 가능하게 작동한다.
 
 **DOM 처리: 10,000+에서 200으로:**
 
@@ -791,7 +830,7 @@ Phase 3에서 LLM이 반환하는 네 가지: `thinking`(내부 추론), `evalua
   <figcaption>Browser Use의 DOM 압축. 전체 DOM 요소에서 인터랙티브 요소만 약 200개로 추려 숫자 인덱스를 부여한다. 토큰 약 95% 절감.</figcaption>
 </figure>
 
-**DOM 우선, Vision은 보조.** 스크린샷 한 장이 추가될 때마다 스텝당 약 0.8초가 더 걸린다. 이 설계 선택이 속도를 결정한다:
+**DOM 우선, Vision은 보조.** 웹 페이지에서 DOM은 픽셀보다 더 신뢰할 수 있는 "진실"이다. 버튼의 텍스트, 링크의 href, 입력창의 placeholder — 이것들은 DOM에 명확히 있다. 스크린샷은 이 정보를 렌더링한 시각적 표현일 뿐이다. 스크린샷 한 장이 추가될 때마다 이미지 인코더 처리 시간이 스텝당 약 0.8초 붙는다. 이 설계 선택이 속도를 결정한다:
 
 | 에이전트 | 평균 태스크 완료 시간 |
 |---|---|
