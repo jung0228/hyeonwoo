@@ -81,6 +81,19 @@ async def run_agent_step():
 <!-- 이후 수천 줄 계속... -->
 ```
 
+**Filtered DOM**은 Raw HTML에서 스크립트·스타일·숨겨진 요소 등 에이전트에게 불필요한 부분을 제거하고 인터랙티브 요소 중심으로 압축한 형태다. Raw HTML ~50K 토큰이 ~1.5K까지 줄어든다.
+
+```html
+<!-- Filtered DOM 예시 — 핵심 인터랙티브 요소만 남김 -->
+<input id="twotabsearchtextbox" type="text"
+       placeholder="Search Amazon" aria-label="Search Amazon">
+<input id="nav-search-submit-button" type="submit" value="Go">
+<a href="/deals">Today's Deals</a>
+<a href="/gp/cart/view.html">Cart (3)</a>
+```
+
+HTML 태그와 속성이 유지되므로 에이전트가 XPath나 CSS 셀렉터로 직접 요소를 지정할 수 있다는 장점이 있다. 단, 페이지가 조금만 바뀌어도 셀렉터가 깨지는 취약점이 있고, AX Tree보다 여전히 노이즈가 많다.
+
 **Accessibility Tree**는 브라우저가 스크린 리더를 위해 내부적으로 유지하는 구조다. 시각적 레이아웃 정보는 없지만 인터랙티브 요소와 역할은 정확히 담겨 있다.
 
 ```json
