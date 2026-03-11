@@ -476,79 +476,141 @@ Action: stop [Task completed]
   <figcaption>세 가지 테스트 분할. 성능은 Cross-Task > Cross-Website > Cross-Domain 순으로 떨어진다.</figcaption>
 </figure>
 
-<p><strong>네 가지 지표</strong> — 스텝 하나를 (요소, 액션, 값) 세 부분으로 분해해서 각 레벨에서 정확도를 측정한다.</p>
-<pre><code class="language-python"># Element Accuracy
-Ele.Acc = 1 if predicted_element in pos_candidates else 0
-# pos_candidates: 의미론적으로 동등한 DOM 요소들의 집합
+<p><strong>네 가지 지표</strong> — 스텝 하나를 (요소, 액션, 값) 세 부분으로 분해해서 각 레벨에서 정확도를 측정한다. 수식보다 예시로 보는 게 훨씬 빠르다.</p>
+<p><strong>예시 태스크:</strong> <em>&quot;우편번호 10002 근처 자동차 수리점 리뷰를 보여줘&quot;</em> — 10개 스텝 중 Step 3:</p>
+<div class="callout">
+  <strong>정답(Ground Truth):</strong> <code>[textbox] Near</code> → TYPE: <code>10002</code>
+</div>
 
-# Operation F1
-# CLICK: exact match
-# TYPE / SELECT: SQuAD 스타일 토큰 레벨 F1
-common = len(pred_tokens &amp; gt_tokens)
-F1 = 2 * (common/len(pred)) * (common/len(gt)) / (common/len(pred) + common/len(gt))
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.86rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트 예측</th>
+    <th style="padding:0.65rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Ele. Acc</th>
+    <th style="padding:0.65rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Op. F1</th>
+    <th style="padding:0.65rem 1rem;text-align:center;border-bottom:2px solid #ddd;">Step SR</th>
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">이유</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>[textbox] Near</code> → TYPE: <code>10002</code></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="color:#166534;">✓</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="color:#166534;">✓</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">✓ 1점</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">요소·오퍼레이션·값 전부 정답</td>
+    </tr>
+    <tr style="background:#fff8f8;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>[textbox] Near</code> → TYPE: <code>New York</code></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="color:#166534;">✓</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="color:#991b1b;">✗</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:2px 8px;border-radius:3px;">✗ 0점</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">요소는 맞지만 값이 틀림 — Step SR은 부분 점수 없음</td>
+    </tr>
+    <tr style="background:#fff8f8;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>[searchbox] Find</code> → TYPE: <code>10002</code></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="color:#991b1b;">✗</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="color:#991b1b;">✗</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:2px 8px;border-radius:3px;">✗ 0점</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">값은 맞지만 요소가 틀림 — Ele.Acc 실패 시 Op.F1도 0</td>
+    </tr>
+    <tr style="background:#fff8f8;">
+      <td style="padding:0.6rem 1rem;"><code>[textbox] Near</code> → CLICK</td>
+      <td style="padding:0.6rem 1rem;text-align:center;"><strong style="color:#166534;">✓</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;"><strong style="color:#991b1b;">✗</strong></td>
+      <td style="padding:0.6rem 1rem;text-align:center;"><strong style="background:#ffd6d6;padding:2px 8px;border-radius:3px;">✗ 0점</strong></td>
+      <td style="padding:0.6rem 1rem;">요소는 맞지만 오퍼레이션(CLICK ≠ TYPE)이 틀림</td>
+    </tr>
+  </tbody>
+</table>
 
-# Step SR: 요소 + 오퍼레이션 + 값 셋 다 맞아야 1점
-Step_SR = 1 if (Ele_Acc == 1) and (Op_F1 == 1) else 0
-
-# Task SR: 모든 스텝이 전부 Step SR = 1이어야 성공
-Task_SR = 1 if all(step_sr == 1 for step in task) else 0
-</code></pre>
+<p>이 Step 3 하나만 봐도 지표 간 관계가 명확해진다: <strong>Ele. Acc는 요소만, Op. F1은 오퍼레이션+값만, Step SR은 셋 다 맞아야 1점.</strong> Task SR은 이 10개 스텝 전부가 Step SR = 1이어야 성공 — 하나라도 틀리면 0이다.</p>
 <div class="callout">
   <strong>Step SR 50%의 수학적 현실</strong><br>
   Step SR 50%라는 숫자만 보면 나쁘지 않아 보인다. 하지만 태스크당 평균 7.3스텝을 가정하면 Task SR ≈ 0.5<sup>7.3</sup> ≈ 0.6%. 실제 최고 성능도 Task SR 5~7%에 그치는 건 이 수학적 귀결이다. 두 숫자를 항상 같이 봐야 한다.
 </div>
 
-<p><strong>MindAct 2단계 파이프라인</strong> — 페이지당 평균 1,135개 DOM 요소를 LLM에 그대로 넣으면 컨텍스트 한계를 초과한다. MindAct는 이를 두 단계로 해결한다.</p>
-<figure>
-  <img src="img/web-agent-deep-dive/mindact-stage1.png" alt="MindAct Stage 1 — Candidate Ranker (DeBERTa)">
-  <figcaption>Stage 1 — Candidate Ranker. Task query + 각 DOM 요소를 DeBERTa cross-encoder에 넣어 관련성 점수를 계산하고 상위 50개를 추린다.</figcaption>
-</figure>
-
-<figure>
-  <img src="img/web-agent-deep-dive/mindact-stage2.png" alt="MindAct Stage 2 — Action Predictor (GPT-4)">
-  <figcaption>Stage 2 — Action Predictor. 50개 후보를 객관식 QA 형태로 LLM에게 제시한다. Direct Generation vs Multichoice 비교.</figcaption>
-</figure>
-
-<p>논문의 핵심 주장:</p>
-<div class="pullquote">
-  <strong>"Training LMs for discrimination rather than generation is more generalizable."</strong>
-</div>
-
-<p>생성보다 판별(객관식 선택)이 더 잘 일반화된다. 실험에서도 이 직관이 확인된다.</p>
+<p><strong>실제 벤치마크 결과 (Cross-Website 기준):</strong></p>
 <figure>
   <img src="img/web-agent-deep-dive/mindact-results.png" alt="MindAct 성능 결과 표 (Cross-Website 기준)">
-  <figcaption>Cross-Website 기준 성능. GPT-4 + SoM (MindAct)이 58.1%로 가장 높다.</figcaption>
+  <figcaption>Cross-Website 기준 성능. GPT-4 + SoM (MindAct)이 Ele. Acc 58.1%, Step SR 52.3%로 가장 높다.</figcaption>
 </figure>
 
 <div class="ornament">· · ·</div>
 
 <h3>WebArena (ICLR 2024) — 기능적 검증</h3>
 <p>WebArena의 근본적 혁신은 &quot;<strong>에이전트가 무엇을 클릭했는가</strong>&quot;가 아니라 &quot;<strong>환경이 올바른 상태에 도달했는가</strong>&quot;를 묻는다는 점이다.</p>
-<p><strong>두 가지 평가 함수:</strong></p>
-<pre><code class="language-python"># r_info — 정보 검색 태스크: stop [answer] 텍스트 검증
-# 1. exact_match
-gt: &quot;Fix login timeout bug&quot; / pred: &quot;Fix login timeout bug&quot; → r_info = 1.0
+<p><strong>두 가지 평가 함수</strong> — 어떤 태스크냐에 따라 r_info(정보 검색)와 r_prog(상태 변경) 중 하나로 평가한다.</p>
+<p><strong>r_info — 정보 검색 태스크:</strong> 에이전트가 <code>stop [answer]</code>로 텍스트 답변을 제출. 세 가지 매칭 방식 중 하나를 적용한다.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.86rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">태스크 예시</th>
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">정답</th>
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트 답변</th>
+    <th style="padding:0.65rem 1rem;text-align:center;border-bottom:2px solid #ddd;">방식</th>
+    <th style="padding:0.65rem 1rem;text-align:center;border-bottom:2px solid #ddd;">r_info</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">GitLab open 이슈 수</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>"5"</code></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>"5"</code></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">exact_match</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">1.0</strong></td>
+    </tr>
+    <tr style="background:#fff8f8;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">GitLab open 이슈 수</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>"5"</code></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>"7"</code></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">exact_match</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:2px 8px;border-radius:3px;">0.0</strong></td>
+    </tr>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">열린 이슈 제목들 나열</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;"><code>["Fix login", "Add tests"]</code></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"이슈: Fix login, Add tests, Update docs"</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">must_include</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">1.0</strong></td>
+    </tr>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">병원 이름</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"UPMC Mercy"</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"Mercy Hospital (UPMC)"</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;">fuzzy_match<br><span style="font-size:0.78rem;color:#666">(GPT-4 심판)</span></td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">1.0</strong></td>
+    </tr>
+  </tbody>
+</table>
 
-# 2. must_include
-gt: [&quot;Fix login&quot;, &quot;Add tests&quot;]
-pred: &quot;The open issues are: Fix login, Add tests, Update docs&quot;
-→ r_info = 1.0  # 포함하면 OK
+<p><strong>r_prog — 상태 변경 태스크:</strong> 에이전트가 어떤 경로를 걸었든 <strong>환경의 실제 상태를 직접 검증</strong>한다. DB 쿼리, GitLab API, DOM JavaScript 평가 등을 조합한다.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.86rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">태스크 예시</th>
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">검증 방법</th>
+    <th style="padding:0.65rem 1rem;text-align:center;border-bottom:2px solid #ddd;">r_prog</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"GitLab에서 'Fix login bug' 이슈 생성"</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">GitLab API → 해당 이슈 존재 여부</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">1.0 (존재)</strong></td>
+    </tr>
+    <tr style="background:#fff8f8;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"GitLab에서 'Fix login bug' 이슈 생성"</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">GitLab API → 이슈 없음</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:2px 8px;border-radius:3px;">0.0 (없음)</strong></td>
+    </tr>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"장바구니에 상품 1개 추가"</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">DOM: <code>.cart-count</code> textContent == "1"</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">1.0</strong></td>
+    </tr>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"Reddit에 특정 댓글 게시"</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">DB 쿼리 → 최신 댓글 텍스트 일치 확인</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">1.0</strong></td>
+    </tr>
+  </tbody>
+</table>
 
-# 3. fuzzy_match (GPT-4 심판, 인간 대비 99.7% 일치)
-gt: &quot;UPMC Mercy&quot; / pred: &quot;Mercy Hospital (UPMC)&quot; → 1.0
-
-# r_prog — 상태 변경 태스크: 환경 상태를 직접 검증
-# GitLab API 호출
-gitlab_api.get_issues(project=&quot;awesome-os&quot;).filter(title=&quot;Fix login bug&quot;)
-# → 존재하면 1.0, 없으면 0.0
-
-# DOM/JavaScript 검사
-page.evaluate(&quot;document.querySelector(&#39;.cart-count&#39;).textContent&quot;) == &quot;1&quot;
-
-# 데이터베이스 직접 쿼리
-db.query(&quot;SELECT * FROM comments WHERE user=? ORDER BY id DESC&quot;,
-         [agent_user]).first().text == expected_text
-</code></pre>
 <p>에이전트가 어떤 경로로 목표를 달성했든 <strong>결과물이 DB에 존재하면 정답이다.</strong> Mind2Web에서 &quot;정답 경로&quot;만 인정하던 것과 근본적으로 다르다.</p>
 <p>WebArena에는 수행 불가능한 태스크도 포함된다. 이때 에이전트는 <code>stop [N/A]</code>를 출력해야 한다. 동일 관찰에서 같은 액션을 3번 반복하거나, 파싱 불가능한 액션을 3번 연속 생성하면 태스크 실패 처리된다.</p>
 <p><strong>2년간 SOTA 변화:</strong></p>
@@ -580,17 +642,43 @@ db.query(&quot;SELECT * FROM comments WHERE user=? ORDER BY id DESC&quot;,
 </figure>
 
 <p>WebArena는 Docker 격리 환경에서 DB를 직접 검증한다. 하지만 실제 Amazon이나 GitHub에서는 그게 불가능하다. WebVoyager는 이 문제를 <strong>GPT-4V를 심판으로 써서</strong> 해결했다.</p>
-<pre><code class="language-text">[Evaluation prompt to GPT-4V]
-Task: Search for a round-trip flight from NYC to Paris...
-Agent&#39;s Answer: &quot;The cheapest round-trip is $487 on Air France&quot;
-Screenshots: [마지막 k장]
+<p>GPT-4V 심판에게 (1) 태스크 설명, (2) 에이전트의 최종 답변, (3) 궤적의 마지막 k장 스크린샷을 주고 &quot;태스크가 완료됐는가?&quot;를 Yes/No + 이유로 판정하도록 요청한다.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.86rem;">
+  <thead><tr style="background:#f5f5f0;">
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">태스크</th>
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">에이전트 답변</th>
+    <th style="padding:0.65rem 1rem;text-align:center;border-bottom:2px solid #ddd;">GPT-4V 판정</th>
+    <th style="padding:0.65rem 1rem;text-align:left;border-bottom:2px solid #ddd;">판정 이유</th>
+  </tr></thead>
+  <tbody>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">뉴욕→파리 왕복 최저가 항공권 찾기</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"$487 Air France"</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">Yes</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">스크린샷에 검색 결과 $487 Air France 항목이 보임</td>
+    </tr>
+    <tr style="background:#fff8f8;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">뉴욕→파리 왕복 최저가 항공권 찾기</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"검색 결과 없음"</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:2px 8px;border-radius:3px;">No</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">스크린샷에 실제 검색 결과가 표시되어 있음에도 에이전트가 실패로 보고</td>
+    </tr>
+    <tr style="background:#f0fdf4;">
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">GitHub 특정 이슈의 첫 댓글 내용</td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">"Fix the CI pipeline"</td>
+      <td style="padding:0.6rem 1rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:2px 8px;border-radius:3px;">Yes</strong></td>
+      <td style="padding:0.6rem 1rem;border-bottom:1px solid #eee;">스크린샷의 첫 댓글 텍스트와 일치</td>
+    </tr>
+    <tr style="background:#fff8f8;">
+      <td style="padding:0.6rem 1rem;">Booking.com 2박 숙박 예약 확인</td>
+      <td style="padding:0.6rem 1rem;">"예약 완료 확인했습니다"</td>
+      <td style="padding:0.6rem 1rem;text-align:center;"><strong style="background:#ffd6d6;padding:2px 8px;border-radius:3px;">No</strong></td>
+      <td style="padding:0.6rem 1rem;">마지막 스크린샷이 결제 페이지가 아닌 검색 결과 페이지 — 예약 완료 화면이 없음</td>
+    </tr>
+  </tbody>
+</table>
 
-&quot;Did the agent successfully complete the task? Yes/No + reason.&quot;
-
-→ Human agreement: 85.3% (전체 궤적 기준), κ = 0.70
-→ Last 1 screenshot only: κ = 0.51 (&quot;moderate agreement&quot;)
-</code></pre>
-<p>k를 얼마로 설정하냐가 평가 신뢰도를 크게 좌우한다. 많은 후속 연구들이 비용 절감을 위해 마지막 1~3장만 쓰는데, 이 경우 κ = 0.51 수준으로 <strong>동전 뒤집기보다 약간 나은</strong> 신뢰도다.</p>
+<p>k를 얼마로 설정하냐가 평가 신뢰도를 크게 좌우한다. 많은 후속 연구들이 비용 절감을 위해 마지막 1~3장만 쓰는데, 이 경우 κ = 0.51 수준으로 <strong>동전 뒤집기보다 약간 나은</strong> 신뢰도다. 전체 궤적(k = 전부)을 제공하면 κ = 0.70으로 올라간다.</p>
 <p><strong>사이트별 텍스트 vs 멀티모달 비교:</strong></p>
 <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
   <thead><tr style="background:#f5f5f0;">
@@ -669,6 +757,21 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
   <img src="img/web-agent-deep-dive/mindact-arch.png" alt="MindAct 아키텍처 — HTML Document → Ranking LM → Prediction LLM">
   <figcaption>MindAct 전체 아키텍처. HTML Document에서 Candidate Elements를 Ranking LM으로 50개로 줄이고, Prediction LLM이 최종 Target Element와 Operation을 예측한다.</figcaption>
 </figure>
+
+<p><strong>MindAct의 2단계 파이프라인</strong> — 페이지당 평균 1,135개 DOM 요소를 LLM이 직접 처리하는 것은 불가능하다. MindAct는 이 문제를 두 단계로 나눠 해결한다.</p>
+<figure>
+  <img src="img/web-agent-deep-dive/mindact-stage1.png" alt="MindAct Stage 1 — DeBERTa Ranking LM이 1,135개 DOM 요소를 50개로 압축">
+  <figcaption>Stage 1: 파인튜닝된 DeBERTa Ranking LM이 태스크-DOM 요소 쌍의 관련성을 점수화해 Top-50 후보로 압축. 전체 요소의 4%만 남긴다.</figcaption>
+</figure>
+
+<figure>
+  <img src="img/web-agent-deep-dive/mindact-stage2.png" alt="MindAct Stage 2 — Prediction LLM이 Top-50 후보에서 최종 요소와 오퍼레이션 선택">
+  <figcaption>Stage 2: Prediction LLM(GPT-3.5/4 또는 Flan-T5)이 Top-50 후보 + 태스크 + 히스토리를 보고 최종 Target Element와 Operation(CLICK/TYPE/SELECT)을 예측한다.</figcaption>
+</figure>
+
+<div class="pullquote">
+  "Training LMs for discrimination rather than generation is more generalizable." — 경로를 생성(generate)하는 것보다 요소를 식별(discriminate)하도록 학습시키는 방식이 새로운 사이트와 도메인에 더 잘 일반화된다는 논문의 핵심 주장이다.
+</div>
 
 <p>5가지 핵심 발견:</p>
 <p><strong>발견 1 — 일반화 갭은 10%p 이상.</strong> Cross-Task 52.0% → Cross-Website 38.9%. 웹사이트별 레이아웃이 모두 다르기 때문이다.</p>
