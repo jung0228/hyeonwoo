@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMNLP를 향해: TCVP 개선 계획 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── PASSWORD GATE ─── */
+    #gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(249,248,244,0.97);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gate-box {
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .gate-lock {
+      font-size: 2rem; margin-bottom: 1.2rem; color: var(--muted);
+    }
+    .gate-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .gate-sub {
+      font-size: .8rem; color: var(--muted); margin-bottom: 1.8rem;
+    }
+    .gate-input {
+      display: block; width: 220px; margin: 0 auto 1rem;
+      padding: .7rem 1rem;
+      border: 1px solid var(--rule-lt);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 1rem; color: var(--text);
+      text-align: center; letter-spacing: .3em;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .gate-input:focus { border-color: var(--accent); }
+    .gate-input.error { border-color: #c0392b; animation: shake .3s; }
+    .gate-btn {
+      display: block; width: 220px; margin: 0 auto;
+      padding: .7rem 1rem;
+      background: var(--text); color: var(--bg);
+      border: none; cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .8rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: opacity .15s;
+    }
+    .gate-btn:hover { opacity: .8; }
+    .gate-error {
+      font-size: .75rem; color: #c0392b;
+      margin-top: .8rem; min-height: 1rem;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1.1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem; font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule { border-top: none; padding-top: 0; }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-top: 1px solid var(--rule-lt);
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0; padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+    .callout.warn { border-left-color: #c47a1a; }
+    .callout.red  { border-left-color: #c0392b; }
+    .callout.green{ border-left-color: #1a7a4a; }
+
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .6rem .9rem;
+      border-bottom: 2px solid var(--text);
+      font-size: .78rem; text-transform: uppercase; letter-spacing: .06em;
+    }
+    .post-content td {
+      padding: .55rem .9rem; border-bottom: 1px solid var(--rule-lt);
+      vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+    .post-content td.hi  { font-weight: 700; }
+    .post-content td.bad { color: #c0392b; font-weight: 600; }
+    .post-content td.warn{ color: #c47a1a; font-weight: 600; }
+    .post-content td.good{ color: #1a7a4a; font-weight: 600; }
+
+    /* ─── ORNAMENT ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── BADGE ─── */
+    .badge {
+      display: inline-block;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; padding: .15rem .5rem;
+      border-radius: 3px; margin-right: .4rem; vertical-align: middle;
+    }
+    .badge.critical { background: #fde8e8; color: #c0392b; }
+    .badge.major    { background: #fef3e2; color: #c47a1a; }
+    .badge.minor    { background: #e8f5e9; color: #1a7a4a; }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      margin-top: 3rem; padding-top: 1.2rem;
+      line-height: 1.6;
+    }
+
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      position: sticky; top: 50px; z-index: 99; background: var(--bg);
+    }
+    .filter-bar-inner-wrap { max-width: 1080px; margin: 0 auto; padding: 0 3rem; }
+    .filter-inner { display: flex; border-bottom: 3px double var(--text); }
+    .tag-btn {
+      background: none; border: none; flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt); transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover, .tag-btn.active { color: var(--accent); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .72rem; color: var(--muted);
+      padding: 2.5rem 1rem 3rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-lock">🔒</div>
+    <div class="gate-title">비공개 포스트</div>
+    <div class="gate-sub">비밀번호를 입력해주세요</div>
+    <input id="gate-input" class="gate-input" type="password" placeholder="····" maxlength="10" />
+    <button class="gate-btn" onclick="checkPassword()">입장</button>
+    <div class="gate-error" id="gate-error"></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <div class="masthead-sub">Multimodal · Mar 12, 2026</div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+  <h1 class="post-title">EMNLP를 향해: TCVP 리뷰 분석과 개선 계획</h1>
+  <p class="post-dek">ACL ARR 리뷰어들이 지적한 것들을 정리하고, EMNLP 2026을 타겟으로 무엇을 어떻게 보강할지 구체화한다.</p>
+  <div class="post-meta">
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span>Mar 12, 2026</span>
+    <span class="dot">·</span>
+    <span>15 min read</span>
+  </div>
+
+  <div class="post-content">
+
+    <h2 class="no-rule">리뷰어들이 지적한 것</h2>
+    <p>
+      리뷰어들은 유튜브 타임스탬프 댓글을 활용하는 아이디어 자체는 참신하다고 인정했다.
+      하지만 크게 네 가지를 문제로 지적했다.
+    </p>
+
+    <ul>
+      <li><strong>Novelty와 contribution이 부족하다</strong> — 3Z5s, fm3t 공통 지적</li>
+      <li><strong>데이터셋 규모가 너무 작다</strong> — 3Z5s, BKiQ 공통 지적</li>
+      <li><strong>캡션 생성이 단일 모달리티에 머문다</strong> — 댓글을 Visual/Audio 둘 중 하나로만 분류해, 두 모달리티가 동시에 관여하는 경우를 처리하지 못함 (BKiQ)</li>
+      <li><strong>Human evaluation이 핵심 클레임과 불일치</strong> — 메타 리뷰어 핵심 지적</li>
+    </ul>
+
+    <div class="callout red">
+      <strong>메타 리뷰어 거절 이유:</strong><br>
+      논문의 핵심 클레임은 "TCVP가 실제 사용자의 search intent를 반영한다"는 것인데,
+      Section 4.5에서는 "검색될 가능성이 높은 구간"을 평가한다고 했으면서,
+      실제 Appendix B.1의 annotator 지시문은 <em>"more representative and more informative"</em>를 고르라고 되어 있다.
+      측정한 것(콘텐츠 품질)과 주장한 것(search intent)이 다르다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>개선 계획: 다섯 가지 방향</h2>
+
+    <h3><span class="badge critical">1</span> Visual Query 추가</h3>
+    <p>
+      예전에 논의했던 대로 visual query를 활용하는 것이 새로운 contribution 중 하나가 될 수 있다.
+      이미지나 클립 형태로 입력을 줘서 사용자가 원하는 결과를 더 정확하게 찾을 수 있다는 접근이다.
+      텍스트 쿼리만 존재하는 기존 VMR 태스크에서 벗어나 새로운 태스크를 정의하면,
+      데이터 규모가 작아도 "새로운 태스크의 첫 데이터셋"으로 포지셔닝이 가능하다.
+    </p>
+    <div class="callout warn">
+      <strong>방법론은 아직 구체화 필요.</strong> Visual query를 어떻게 생성하고 어떤 모델로 평가할지
+      방향을 먼저 잡아야 한다.
+    </div>
+
+    <h3><span class="badge critical">2</span> Mixed Modality 본론 편입</h3>
+    <p>
+      리버탈에서 언급했던 부분인데, 이번에는 실제로 구현해서 본론에 제대로 넣는다.
+      현재 파이프라인은 댓글을 Visual 또는 Audio 둘 중 하나로만 처리한다.
+      그러나 "the moment the piano kicks in right as he scores the goal" 같은 댓글은
+      두 모달리티가 동시에 관여한다.
+    </p>
+    <p>
+      Mixed category를 Appendix A.3에서 Section 3으로 올리고,
+      Mixed query에 대한 평가를 별도로 포함한다.
+      현재 이를 잘 처리하는 모델이 없다는 것 자체도 하나의 contribution이 될 수 있다.
+    </p>
+
+    <h3><span class="badge critical">3</span> LanguageBind Downstream Training</h3>
+    <p>
+      현재 논문은 기존 모델을 zero-shot으로 평가하는 데 그친다.
+      논문 실험에서 가장 강한 성능을 보인 LanguageBind(visual R@10 62.7)를 TCVP로 fine-tuning해서
+      실제 학습 효과를 보여준다.
+    </p>
+    <div class="callout green">
+      <strong>왜 LanguageBind인가?</strong><br>
+      Visual/Audio 멀티모달을 동시에 지원해서 TCVP 데이터셋 특성과 잘 맞는다.
+      이미 Table 2에서 검증된 가장 강한 베이스라인이므로 narrative의 일관성도 유지된다.
+    </div>
+    <p>아래 세 조합을 비교한다:</p>
+    <ol>
+      <li><strong>QVHighlights only</strong> — 기존 데이터셋 baseline</li>
+      <li><strong>QVHighlights + TCVP</strong> — TCVP 추가 효과</li>
+      <li><strong>TCVP only</strong> — 파이프라인 데이터만의 가능성</li>
+    </ol>
+
+    <h3><span class="badge critical">4</span> Human Evaluation 재설계</h3>
+    <p>
+      메타 리뷰어가 가장 크게 지적한 부분이다.
+      현재 moment selection 지시문은 <em>"more representative and more informative"</em>를 묻고 있어
+      논문의 핵심 클레임인 search intent 검증과 불일치한다.
+    </p>
+    <p>
+      <strong>"Which moment would you actually want to search for?"</strong>를 직접 묻는 방식으로 수정하고,
+      샘플 수도 40개에서 100개 이상으로 늘린다. Cohen's κ도 함께 보고한다.
+      이 부분이 해소되면 댓글과 캡션으로 쿼리를 생성하는 타당성 지적도 함께 해소된다.
+    </p>
+
+    <h3><span class="badge major">5</span> 데이터셋 규모 확장</h3>
+    <p>
+      현재 300 videos / 4,500 queries로, 비교 대상인 LongVALE(8,411 videos)에 비해 규모가 크게 작다.
+      파이프라인이 이미 완성되어 있으므로 추가 수집을 통해 규모를 늘린다.
+      목표: <strong>300 → 1,000+ videos</strong>.
+    </p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>타임라인</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>기간</th>
+          <th>할 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hi">3월 3주차</td>
+          <td>Human eval 지시문 수정, Visual Query 구현 방향 확정</td>
+        </tr>
+        <tr>
+          <td class="hi">3월 말</td>
+          <td>데이터 추가 수집, LanguageBind fine-tuning 코드 세팅</td>
+        </tr>
+        <tr>
+          <td class="hi">4월 말</td>
+          <td>실험 마무리, 논문 개정 시작</td>
+        </tr>
+        <tr>
+          <td class="hi">5월 15일</td>
+          <td>논문 완성</td>
+        </tr>
+        <tr>
+          <td class="hi bad">5월 25일</td>
+          <td><strong>EMNLP 2026 ARR 제출</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footnote">
+      이 포스트는 TCVP (Timestamped Comment-guided VMR Pipeline) ACL ARR 리뷰 이후
+      EMNLP 2026을 타겟으로 한 개선 계획을 정리한 것입니다.
+    </div>
+
+  </div>
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+<script>
+  (function() {
+    if (sessionStorage.getItem('tcvp-plan-auth') === '1') {
+      document.getElementById('gate').style.display = 'none';
+    }
+  })();
+
+  function checkPassword() {
+    const input = document.getElementById('gate-input');
+    const error = document.getElementById('gate-error');
+    if (input.value === '1004') {
+      sessionStorage.setItem('tcvp-plan-auth', '1');
+      document.getElementById('gate').style.display = 'none';
+    } else {
+      input.classList.add('error');
+      error.textContent = '비밀번호가 틀렸습니다.';
+      setTimeout(() => input.classList.remove('error'), 400);
+      input.value = '';
+    }
+  }
+
+  document.getElementById('gate-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+</script>
+
+</body>
+</html>
