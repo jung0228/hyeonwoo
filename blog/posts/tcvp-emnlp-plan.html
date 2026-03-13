@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EMNLP를 향해: TCVP 개선 계획 – Hyeonwoo Jung</title>
+  <title>TCVP 리뷰 분석과 개선 계획 – Hyeonwoo Jung</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -331,8 +331,8 @@
 </div>
 
 <div class="article-wrap">
-  <h1 class="post-title">EMNLP를 향해: TCVP 리뷰 분석과 개선 계획</h1>
-  <p class="post-dek">ACL ARR 리뷰어들이 지적한 것들을 정리하고, EMNLP 2026을 타겟으로 무엇을 어떻게 보강할지 구체화한다.</p>
+  <h1 class="post-title">TCVP 리뷰 분석과 개선 계획</h1>
+  <p class="post-dek">ACL ARR 리뷰어들이 지적한 것들, 리버탈에서 어떻게 대응했는지, 그리고 EMNLP 2026을 타겟으로 무엇을 보강할지 정리한다.</p>
   <div class="post-meta">
     <span class="cat">Multimodal</span>
     <span class="dot">·</span>
@@ -362,6 +362,102 @@
       Section 4.5에서는 "검색될 가능성이 높은 구간"을 평가한다고 했으면서,
       실제 Appendix B.1의 annotator 지시문은 <em>"more representative and more informative"</em>를 고르라고 되어 있다.
       측정한 것(콘텐츠 품질)과 주장한 것(search intent)이 다르다.
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h2>리버탈에서 대응한 것들</h2>
+    <p>
+      리버탈에서 각 리뷰어의 지적에 대해 아래와 같이 대응했다.
+      일부는 충분히 해소됐지만, 메타 리뷰어가 지적한 핵심 문제는 리버탈로 커버되지 않았다.
+    </p>
+
+    <h3>Reviewer 3Z5s</h3>
+    <table>
+      <thead><tr><th>지적</th><th>대응</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Novelty 부족</td>
+          <td>TCVP는 실제 사용자 intent 기반 최초 데이터셋. Figure 5에서 70% 쿼리 선호도</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+        <tr>
+          <td>데이터 규모 작음</td>
+          <td>300 videos는 proof-of-concept. 파이프라인 자체가 확장 가능하며 19개 카테고리 커버</td>
+          <td class="warn">△ 부분 대응</td>
+        </tr>
+        <tr>
+          <td>9초 윈도우 근거</td>
+          <td>100샘플 empirical validation: [−9s,+9s] 구간이 97% coverage 달성</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+        <tr>
+          <td>쿼리 생성 타당성</td>
+          <td>모달리티별 캡션 사용은 LongVALE·Watch&Listen과 동일한 방식. 14.3% 노이즈 필터링</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Reviewer fm3t</h3>
+    <table>
+      <thead><tr><th>지적</th><th>대응</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Incremental contribution</td>
+          <td>쿼리 선호도 70%, 구간 선호도 95% (Figure 5, 7)</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+        <tr>
+          <td>Heuristic filtering 근거</td>
+          <td>τ = 0.20~0.40 ablation table 제시. 질적 예시 포함</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+        <tr>
+          <td>댓글 희소한 경우</td>
+          <td>구독자 100만+ 채널 기반. "w/o comments" 변형도 25% 선호</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+        <tr>
+          <td>Training 실험 부재</td>
+          <td>A100 1장으론 불가, H100 8장+ 필요. Compute 한계 인정</td>
+          <td class="bad">✗ 미해소 → 개선 필요</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Reviewer BKiQ</h3>
+    <table>
+      <thead><tr><th>지적</th><th>대응</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>단일 모달리티 캡션</td>
+          <td>Mixed category 제안: balance ratio R + absolute floor M 기준으로 분류. Visual+Audio 동시 캡션 생성 방식 제시. Ablation 결과 포함</td>
+          <td class="warn">△ 리버탈에서만 언급 → 실제 구현 필요</td>
+        </tr>
+        <tr>
+          <td>중복 댓글 처리</td>
+          <td>같은 타임스탬프 내 YouTube 좋아요 수 1위 댓글만 유지</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+        <tr>
+          <td>MLLM bias/hallucination</td>
+          <td>댓글 grounding이 generic 설명을 구체적 intent로 바꿈. 예시로 증명</td>
+          <td class="good">✓ 대응</td>
+        </tr>
+        <tr>
+          <td>데이터 규모</td>
+          <td>Pipeline utility는 human eval로 검증. 코드 공개로 커뮤니티 확장 가능</td>
+          <td class="warn">△ 부분 대응</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout red">
+      <strong>메타 리뷰어 최종 판단:</strong><br>
+      리버탈로 일부 우려는 해소됐지만, <strong>human evaluation의 논리적 불일치는 리버탈에서 전혀 언급하지 않았다.</strong>
+      Section 4.5는 "search intent"를 검증한다고 주장하고, Appendix B.1의 실제 지시문은
+      <em>"more representative and more informative"</em>를 묻는다. 이 불일치가 거절의 결정적 이유였다.
     </div>
 
     <div class="ornament">· · ·</div>
