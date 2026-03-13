@@ -864,6 +864,14 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
   <figcaption>MindAct 전체 아키텍처. HTML Document에서 Candidate Elements를 Ranking LM으로 50개로 줄이고, Prediction LLM이 최종 Target Element와 Operation을 예측한다.</figcaption>
 </figure>
 
+<p><strong>시스템 구성:</strong></p>
+<ul>
+<li><strong>모델:</strong> DeBERTa-v3-base (Stage 1, Ranking LM) + Flan-T5-XL 또는 GPT-4 (Stage 2, Prediction LLM)</li>
+<li><strong>브라우저 자동화:</strong> 없음 — 오프라인 평가. 실제 브라우저 대신 저장된 DOM 스냅샷에서 작동</li>
+<li><strong>요소 식별:</strong> HTML 요소 후보 50개로 압축 후 객관식 선택</li>
+<li><strong>액션 공간:</strong> <code>CLICK</code>, <code>TYPE</code>, <code>SELECT</code> (3가지 오퍼레이션)</li>
+<li><strong>추론 방식:</strong> 2단계 파이프라인 — Ranking LM 필터링 → Prediction LLM 오퍼레이션 예측</li>
+</ul>
 <p><strong>MindAct의 2단계 파이프라인</strong> — 두 가지 전문화된 모델이 역할을 나눈다.</p>
 <figure class="fig-sm">
   <img src="img/web-agent-deep-dive/mindact-stage1.png" alt="MindAct Stage 1 — DeBERTa Ranking LM이 1,135개 DOM 요소를 50개로 압축">
