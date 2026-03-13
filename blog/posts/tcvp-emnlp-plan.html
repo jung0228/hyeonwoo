@@ -343,188 +343,129 @@
 
   <div class="post-content">
 
-    <h2 class="no-rule">리뷰어들이 지적한 것</h2>
-    <p>
-      리뷰어들은 유튜브 타임스탬프 댓글을 활용하는 아이디어 자체는 참신하다고 인정했다.
-      하지만 크게 네 가지를 문제로 지적했다.
-    </p>
+    <h2 class="no-rule">리뷰 + 리버탈 한눈에 보기</h2>
+    <p>아이디어 자체(유튜브 타임스탬프 댓글 활용)는 세 리뷰어 모두 인정. 문제는 그 아이디어를 충분히 증명했냐는 것이다.</p>
 
-    <ul>
-      <li><strong>Novelty와 contribution이 부족하다</strong> — 3Z5s, fm3t 공통 지적</li>
-      <li><strong>데이터셋 규모가 너무 작다</strong> — 3Z5s, BKiQ 공통 지적</li>
-      <li><strong>캡션 생성이 단일 모달리티에 머문다</strong> — 댓글을 Visual/Audio 둘 중 하나로만 분류해, 두 모달리티가 동시에 관여하는 경우를 처리하지 못함 (BKiQ)</li>
-      <li><strong>Human evaluation이 핵심 클레임과 불일치</strong> — 메타 리뷰어 핵심 지적</li>
-    </ul>
-
-    <div class="callout red">
-      <strong>메타 리뷰어 거절 이유:</strong><br>
-      논문의 핵심 클레임은 "TCVP가 실제 사용자의 search intent를 반영한다"는 것인데,
-      Section 4.5에서는 "검색될 가능성이 높은 구간"을 평가한다고 했으면서,
-      실제 Appendix B.1의 annotator 지시문은 <em>"more representative and more informative"</em>를 고르라고 되어 있다.
-      측정한 것(콘텐츠 품질)과 주장한 것(search intent)이 다르다.
-    </div>
-
-    <div class="ornament">· · ·</div>
-
-    <h2>리버탈에서 대응한 것들</h2>
-    <p>
-      리버탈에서 각 리뷰어의 지적에 대해 아래와 같이 대응했다.
-      일부는 충분히 해소됐지만, 메타 리뷰어가 지적한 핵심 문제는 리버탈로 커버되지 않았다.
-    </p>
-
-    <h3>Reviewer 3Z5s</h3>
     <table>
-      <thead><tr><th>지적</th><th>대응</th><th>결과</th></tr></thead>
+      <thead>
+        <tr>
+          <th>리뷰어</th>
+          <th>지적</th>
+          <th>리버탈 대응</th>
+          <th>결과</th>
+        </tr>
+      </thead>
       <tbody>
         <tr>
+          <td><strong>3Z5s</strong></td>
           <td>Novelty 부족</td>
-          <td>TCVP는 실제 사용자 intent 기반 최초 데이터셋. Figure 5에서 70% 쿼리 선호도</td>
-          <td class="good">✓ 대응</td>
+          <td>실제 user intent 기반 최초 데이터셋. 쿼리 선호도 70% (Fig. 5)</td>
+          <td class="good">✓</td>
         </tr>
         <tr>
-          <td>데이터 규모 작음</td>
-          <td>300 videos는 proof-of-concept. 파이프라인 자체가 확장 가능하며 19개 카테고리 커버</td>
-          <td class="warn">△ 부분 대응</td>
+          <td><strong>3Z5s, BKiQ</strong></td>
+          <td>데이터 규모 작음 (300 videos)</td>
+          <td>proof-of-concept, 19개 카테고리, 파이프라인 확장 가능</td>
+          <td class="warn">△</td>
         </tr>
         <tr>
-          <td>9초 윈도우 근거</td>
-          <td>100샘플 empirical validation: [−9s,+9s] 구간이 97% coverage 달성</td>
-          <td class="good">✓ 대응</td>
+          <td><strong>3Z5s</strong></td>
+          <td>9초 윈도우 근거 없음</td>
+          <td>100샘플 검증: [−9s,+9s]가 97% coverage</td>
+          <td class="good">✓</td>
         </tr>
         <tr>
+          <td><strong>3Z5s</strong></td>
           <td>쿼리 생성 타당성</td>
-          <td>모달리티별 캡션 사용은 LongVALE·Watch&Listen과 동일한 방식. 14.3% 노이즈 필터링</td>
-          <td class="good">✓ 대응</td>
+          <td>LongVALE·Watch&Listen과 동일 방식. 14.3% 노이즈 필터링</td>
+          <td class="good">✓</td>
         </tr>
-      </tbody>
-    </table>
-
-    <h3>Reviewer fm3t</h3>
-    <table>
-      <thead><tr><th>지적</th><th>대응</th><th>결과</th></tr></thead>
-      <tbody>
         <tr>
+          <td><strong>fm3t</strong></td>
           <td>Incremental contribution</td>
-          <td>쿼리 선호도 70%, 구간 선호도 95% (Figure 5, 7)</td>
-          <td class="good">✓ 대응</td>
+          <td>쿼리 선호도 70%, 구간 선호도 95% (Fig. 5, 7)</td>
+          <td class="good">✓</td>
         </tr>
         <tr>
-          <td>Heuristic filtering 근거</td>
-          <td>τ = 0.20~0.40 ablation table 제시. 질적 예시 포함</td>
-          <td class="good">✓ 대응</td>
+          <td><strong>fm3t</strong></td>
+          <td>Training 실험 없음</td>
+          <td>A100 1장으론 불가, H100 8장+ 필요 — compute 한계 인정</td>
+          <td class="bad">✗ 미해소</td>
         </tr>
         <tr>
-          <td>댓글 희소한 경우</td>
-          <td>구독자 100만+ 채널 기반. "w/o comments" 변형도 25% 선호</td>
-          <td class="good">✓ 대응</td>
-        </tr>
-        <tr>
-          <td>Training 실험 부재</td>
-          <td>A100 1장으론 불가, H100 8장+ 필요. Compute 한계 인정</td>
-          <td class="bad">✗ 미해소 → 개선 필요</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>Reviewer BKiQ</h3>
-    <table>
-      <thead><tr><th>지적</th><th>대응</th><th>결과</th></tr></thead>
-      <tbody>
-        <tr>
+          <td><strong>BKiQ</strong></td>
           <td>단일 모달리티 캡션</td>
-          <td>Mixed category 제안: balance ratio R + absolute floor M 기준으로 분류. Visual+Audio 동시 캡션 생성 방식 제시. Ablation 결과 포함</td>
-          <td class="warn">△ 리버탈에서만 언급 → 실제 구현 필요</td>
+          <td>Mixed category 제안 (balance ratio R + floor M). Ablation 포함</td>
+          <td class="warn">△ 리버탈만, 미구현</td>
         </tr>
         <tr>
+          <td><strong>BKiQ</strong></td>
           <td>중복 댓글 처리</td>
-          <td>같은 타임스탬프 내 YouTube 좋아요 수 1위 댓글만 유지</td>
-          <td class="good">✓ 대응</td>
+          <td>타임스탬프별 YouTube 좋아요 수 1위 댓글만 유지</td>
+          <td class="good">✓</td>
         </tr>
         <tr>
-          <td>MLLM bias/hallucination</td>
-          <td>댓글 grounding이 generic 설명을 구체적 intent로 바꿈. 예시로 증명</td>
-          <td class="good">✓ 대응</td>
-        </tr>
-        <tr>
-          <td>데이터 규모</td>
-          <td>Pipeline utility는 human eval로 검증. 코드 공개로 커뮤니티 확장 가능</td>
-          <td class="warn">△ 부분 대응</td>
+          <td><strong>BKiQ</strong></td>
+          <td>MLLM hallucination</td>
+          <td>댓글 grounding으로 generic 설명 → 구체적 intent. 예시 제시</td>
+          <td class="good">✓</td>
         </tr>
       </tbody>
     </table>
 
     <div class="callout red">
-      <strong>메타 리뷰어 최종 판단:</strong><br>
-      리버탈로 일부 우려는 해소됐지만, <strong>human evaluation의 논리적 불일치는 리버탈에서 전혀 언급하지 않았다.</strong>
-      Section 4.5는 "search intent"를 검증한다고 주장하고, Appendix B.1의 실제 지시문은
-      <em>"more representative and more informative"</em>를 묻는다. 이 불일치가 거절의 결정적 이유였다.
+      <strong>메타 리뷰어 거절 이유 — 리버탈에서 아예 언급 안 함:</strong><br>
+      Section 4.5: "검색될 가능성이 높은 구간"을 평가한다고 주장 →
+      Appendix B.1 실제 지시문: <em>"more representative and more informative"</em>를 고르라고 함.<br>
+      <strong>측정한 것(콘텐츠 품질) ≠ 주장한 것(search intent)</strong>. 이 불일치가 결정적 거절 이유.
     </div>
 
     <div class="ornament">· · ·</div>
 
-    <h2>개선 계획: 다섯 가지 방향</h2>
+    <h2>개선 계획</h2>
 
-    <h3><span class="badge critical">1</span> Visual Query 추가</h3>
-    <p>
-      예전에 논의했던 대로 visual query를 활용하는 것이 새로운 contribution 중 하나가 될 수 있다.
-      이미지나 클립 형태로 입력을 줘서 사용자가 원하는 결과를 더 정확하게 찾을 수 있다는 접근이다.
-      텍스트 쿼리만 존재하는 기존 VMR 태스크에서 벗어나 새로운 태스크를 정의하면,
-      데이터 규모가 작아도 "새로운 태스크의 첫 데이터셋"으로 포지셔닝이 가능하다.
-    </p>
-    <div class="callout warn">
-      <strong>방법론은 아직 구체화 필요.</strong> Visual query를 어떻게 생성하고 어떤 모델로 평가할지
-      방향을 먼저 잡아야 한다.
-    </div>
-
-    <h3><span class="badge critical">2</span> Mixed Modality 본론 편입</h3>
-    <p>
-      리버탈에서 언급했던 부분인데, 이번에는 실제로 구현해서 본론에 제대로 넣는다.
-      현재 파이프라인은 댓글을 Visual 또는 Audio 둘 중 하나로만 처리한다.
-      그러나 "the moment the piano kicks in right as he scores the goal" 같은 댓글은
-      두 모달리티가 동시에 관여한다.
-    </p>
-    <p>
-      Mixed category를 Appendix A.3에서 Section 3으로 올리고,
-      Mixed query에 대한 평가를 별도로 포함한다.
-      현재 이를 잘 처리하는 모델이 없다는 것 자체도 하나의 contribution이 될 수 있다.
-    </p>
-
-    <h3><span class="badge critical">3</span> LanguageBind Downstream Training</h3>
-    <p>
-      현재 논문은 기존 모델을 zero-shot으로 평가하는 데 그친다.
-      논문 실험에서 가장 강한 성능을 보인 LanguageBind(visual R@10 62.7)를 TCVP로 fine-tuning해서
-      실제 학습 효과를 보여준다.
-    </p>
-    <div class="callout green">
-      <strong>왜 LanguageBind인가?</strong><br>
-      Visual/Audio 멀티모달을 동시에 지원해서 TCVP 데이터셋 특성과 잘 맞는다.
-      이미 Table 2에서 검증된 가장 강한 베이스라인이므로 narrative의 일관성도 유지된다.
-    </div>
-    <p>아래 세 조합을 비교한다:</p>
-    <ol>
-      <li><strong>QVHighlights only</strong> — 기존 데이터셋 baseline</li>
-      <li><strong>QVHighlights + TCVP</strong> — TCVP 추가 효과</li>
-      <li><strong>TCVP only</strong> — 파이프라인 데이터만의 가능성</li>
-    </ol>
-
-    <h3><span class="badge critical">4</span> Human Evaluation 재설계</h3>
-    <p>
-      메타 리뷰어가 가장 크게 지적한 부분이다.
-      현재 moment selection 지시문은 <em>"more representative and more informative"</em>를 묻고 있어
-      논문의 핵심 클레임인 search intent 검증과 불일치한다.
-    </p>
-    <p>
-      <strong>"Which moment would you actually want to search for?"</strong>를 직접 묻는 방식으로 수정하고,
-      샘플 수도 40개에서 100개 이상으로 늘린다. Cohen's κ도 함께 보고한다.
-      이 부분이 해소되면 댓글과 캡션으로 쿼리를 생성하는 타당성 지적도 함께 해소된다.
-    </p>
-
-    <h3><span class="badge major">5</span> 데이터셋 규모 확장</h3>
-    <p>
-      현재 300 videos / 4,500 queries로, 비교 대상인 LongVALE(8,411 videos)에 비해 규모가 크게 작다.
-      파이프라인이 이미 완성되어 있으므로 추가 수집을 통해 규모를 늘린다.
-      목표: <strong>300 → 1,000+ videos</strong>.
-    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>방향</th>
+          <th>내용</th>
+          <th>해소하는 지적</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hi">1</td>
+          <td><strong>Visual Query 추가</strong></td>
+          <td>이미지·클립 형태 입력으로 새로운 태스크 정의. "새로운 태스크의 첫 데이터셋"으로 포지셔닝 → 규모 압박 완화. 방법론은 구체화 필요</td>
+          <td class="warn">Novelty 부족</td>
+        </tr>
+        <tr>
+          <td class="hi">2</td>
+          <td><strong>Mixed Modality 구현</strong></td>
+          <td>리버탈에서 제안만 했던 것을 실제 구현. Appendix A.3 → Section 3으로 편입. Mixed query 평가 추가</td>
+          <td class="warn">단일 모달리티 캡션</td>
+        </tr>
+        <tr>
+          <td class="hi">3</td>
+          <td><strong>LanguageBind Fine-tuning</strong></td>
+          <td>zero-shot 평가에서 벗어나 실제 학습 효과 증명. QVHighlights only / +TCVP / TCVP only 세 조합 비교</td>
+          <td class="bad">Training 실험 없음</td>
+        </tr>
+        <tr>
+          <td class="hi">4</td>
+          <td><strong>Human Eval 재설계</strong></td>
+          <td>지시문 수정: "more informative" → "Which moment would you actually search for?". 샘플 40 → 100+. Cohen's κ 보고</td>
+          <td class="bad">메타 리뷰어 핵심 지적</td>
+        </tr>
+        <tr>
+          <td class="hi">5</td>
+          <td><strong>데이터 규모 확장</strong></td>
+          <td>파이프라인 완성, 추가 수집만 하면 됨. 목표: 300 → 1,000+ videos</td>
+          <td class="warn">규모 작음</td>
+        </tr>
+      </tbody>
+    </table>
 
     <div class="ornament">· · ·</div>
 
@@ -532,38 +473,19 @@
 
     <table>
       <thead>
-        <tr>
-          <th>기간</th>
-          <th>할 일</th>
-        </tr>
+        <tr><th>기간</th><th>할 일</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="hi">3월 3주차</td>
-          <td>Human eval 지시문 수정, Visual Query 구현 방향 확정</td>
-        </tr>
-        <tr>
-          <td class="hi">3월 말</td>
-          <td>데이터 추가 수집, LanguageBind fine-tuning 코드 세팅</td>
-        </tr>
-        <tr>
-          <td class="hi">4월 말</td>
-          <td>실험 마무리, 논문 개정 시작</td>
-        </tr>
-        <tr>
-          <td class="hi">5월 15일</td>
-          <td>논문 완성</td>
-        </tr>
-        <tr>
-          <td class="hi bad">5월 25일</td>
-          <td><strong>EMNLP 2026 ARR 제출</strong></td>
-        </tr>
+        <tr><td class="hi">3월 3주차</td><td>Human eval 지시문 수정, Visual Query 구현 방향 확정</td></tr>
+        <tr><td class="hi">3월 말</td><td>데이터 추가 수집, LanguageBind fine-tuning 코드 세팅</td></tr>
+        <tr><td class="hi">4월 말</td><td>실험 마무리, 논문 개정 시작</td></tr>
+        <tr><td class="hi">5월 15일</td><td>논문 완성</td></tr>
+        <tr><td class="hi bad">5월 25일</td><td><strong>EMNLP 2026 ARR 제출</strong></td></tr>
       </tbody>
     </table>
 
     <div class="footnote">
-      이 포스트는 TCVP (Timestamped Comment-guided VMR Pipeline) ACL ARR 리뷰 이후
-      EMNLP 2026을 타겟으로 한 개선 계획을 정리한 것입니다.
+      TCVP (Timestamped Comment-guided VMR Pipeline) · ACL ARR Overall Assessment: 2 = Resubmit · 다음 타겟: EMNLP 2026 ARR (May 25, 2026)
     </div>
 
   </div>
