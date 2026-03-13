@@ -689,7 +689,7 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
 - **모델:** GPT-4V (GPT-4 with vision capability)
 - **브라우저 자동화:** Selenium
 - **관찰 방식:** 스크린샷 + SoM 번호 레이블 (JavaScript로 인터랙티브 요소 감지 후 번호 오버레이)
-- **액션 공간:** click, type, scroll, go\_back, go\_forward, answer (6가지)
+- **액션 공간:** `Click`, `Type`, `Scroll`, `Wait`, `GoBack`, `Google`, `ANSWER` (7가지)
 - **추론 형식:** ReAct — Thought(추론) 다음 Action(행동), 최대 15스텝
 
 GPT-4V-ACT라고 부르는 SoM 구현은 JavaScript 기반이다. 별도의 object detection 모델 없이 브라우저 내 JS 규칙으로 인터랙티브 요소를 감지하므로 가볍다. 각 요소에서 추출하는 정보는 네 가지: 번호 레이블, 텍스트 콘텐츠, 요소 타입, aria-label.
@@ -745,9 +745,11 @@ Agent-E가 Playwright를 선택한 이유는 async/await 기반의 더 안정적
 
 **Q. 관찰(Observation)에 텍스트는 안 들어가나요?**
 
-WebVoyager는 **스크린샷만** 넘긴다. HTML도, AX Tree도 포함하지 않는다.
+현재 페이지 상태는 **스크린샷만** 넘긴다. HTML도, AX Tree도 포함하지 않는다. 그래서 GPT-4V(멀티모달 모델)를 쓴 거다 — 텍스트 없이 이미지만 보고 현재 상태를 판단해야 하니까.
 
-그래서 GPT-4V(멀티모달 모델)를 쓴 거다 — 텍스트 없이 이미지만 보고 판단해야 하니까. 다만 SoM 레이블을 붙일 때 각 요소의 텍스트 콘텐츠·타입·aria-label을 JavaScript로 추출하긴 하지만, 이걸 텍스트 문자열로 LLM에 넘기는 게 아니라 **이미지 위에 번호를 시각적으로 오버레이**하는 데만 사용한다.
+단, GPT-4V 입력은 현재 스크린샷만이 아니다. **이전 스텝들의 Thought+Action 텍스트 히스토리도 함께 넘긴다.** 즉 "현재 화면은 이미지, 과거 행동 기록은 텍스트"라는 혼합 구조다. Context Clipping 전략도 이 구조에서 나온다 — 이미지(스크린샷)는 최근 3장만, 텍스트(Thought+Action)는 전체 15개 유지.
+
+다만 SoM 레이블을 붙일 때 각 요소의 텍스트 콘텐츠·타입·aria-label을 JavaScript로 추출하긴 하지만, 이걸 텍스트 문자열로 LLM에 넘기는 게 아니라 **이미지 위에 번호를 시각적으로 오버레이**하는 데만 사용한다.
 
 텍스트 에이전트(AX Tree 방식)와 비교하면:
 
