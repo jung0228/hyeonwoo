@@ -1020,6 +1020,65 @@ verdict = o4_mini.judge(task, requirements, key_screenshots, final_answer)
   <figcaption>WebVoyager 에이전트 루프. 태스크 입력 → 스크린샷+번호 레이블 관측 → GPT-4V 추론(Thought/Action) → Selenium 실행 → 최대 15회 반복.</figcaption>
 </figure>
 
+<p><strong>액션 결정 방식 — ReAct 루프:</strong></p>
+<p>GPT-4V는 매 스텝마다 현재 스크린샷(SoM 번호 포함) + 이전 Thought/Action 히스토리를 보고 두 가지를 순서대로 출력한다.</p>
+<pre><code>Thought: 지금 상황 분석 + 다음에 뭘 해야 하는지 추론
+Action:  실행할 액션 코드
+</code></pre>
+<p>각 액션을 언제 쓰는지:</p>
+<table>
+<thead>
+<tr>
+<th>액션</th>
+<th>언제</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Click [N]</code></td>
+<td>버튼·링크·탭 등 클릭이 필요할 때</td>
+</tr>
+<tr>
+<td><code>Type [N]; 텍스트</code></td>
+<td>검색창·폼 입력창에 텍스트 입력할 때 (Enter 자동 포함)</td>
+</tr>
+<tr>
+<td><code>Scroll [WINDOW]; down/up</code></td>
+<td>보이지 않는 영역이 더 있을 때</td>
+</tr>
+<tr>
+<td><code>Wait</code></td>
+<td>페이지가 아직 로딩 중일 때</td>
+</tr>
+<tr>
+<td><code>GoBack</code></td>
+<td>잘못된 페이지로 왔을 때 이전으로</td>
+</tr>
+<tr>
+<td><code>Google</code></td>
+<td>완전히 막혔을 때 — Google 검색으로 처음부터</td>
+</tr>
+<tr>
+<td><code>ANSWER; 내용</code></td>
+<td>태스크 목표 달성됐다고 판단할 때 종료</td>
+</tr>
+</tbody></table>
+<p>실제 흐름 예시 — &quot;Amazon에서 AirPods Pro 가격 찾기&quot;:</p>
+<pre><code>[스텝 1]
+스크린샷: Amazon 홈, [1] 검색창 보임
+Thought:  AirPods Pro를 검색해야 한다. 검색창은 1번이다.
+Action:   Type [1]; AirPods Pro
+
+[스텝 2]
+스크린샷: 검색 결과, [3] AirPods Pro 상품 링크
+Thought:  결과가 나왔다. 상품 페이지로 들어가야 가격을 볼 수 있다.
+Action:   Click [3]
+
+[스텝 3]
+스크린샷: 상품 상세 페이지, 가격 &quot;$249.00&quot; 보임
+Thought:  가격이 화면에 있다. 태스크 완료.
+Action:   ANSWER; AirPods Pro의 가격은 $249.00입니다.
+</code></pre>
+<p>별도의 규칙 엔진이나 스케줄러 없이 <strong>GPT-4V의 추론 자체</strong>가 상황 판단과 액션 선택을 전부 담당한다. 검색창이 보이면 <code>Type</code>, 버튼이 있으면 <code>Click</code>, 원하는 정보가 화면에 있으면 <code>ANSWER</code>, 뭘 해도 안 되면 <code>Google</code>로 탈출 — 이 판단을 LLM이 자연어 추론으로 매 스텝 수행한다.</p>
 <p><strong>Context Clipping — 왜 3장인가:</strong> 15스텝을 돌면 스크린샷 15장이 쌓여 7,000+ 토큰이 된다. 전부 유지하면 GPT-4V 컨텍스트 한도에 금방 닿고 비용도 폭발한다. 논문에서 실험한 결과, <strong>최근 3장의 스크린샷으로도 현재 상태를 파악하기에 충분</strong>했다. 반면 텍스트 히스토리(Thought+Action)는 장기 의존성이 있으므로 15개 전부 유지한다. 이미지는 자르고 텍스트는 유지하는 비대칭 전략이다.</p>
 <figure>
   <img src="img/web-agent-deep-dive/context-clipping.png" alt="Context Clipping — 스크린샷은 최근 3장, Thought+Action은 전부 유지">
