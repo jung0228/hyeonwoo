@@ -400,9 +400,9 @@
         </tr>
         <tr>
           <td><strong>BKiQ</strong></td>
-          <td>MLLM hallucination</td>
-          <td>댓글 grounding으로 generic 설명 → 구체적 intent. 예시 제시</td>
-          <td class="good">✓</td>
+          <td>MLLM hallucination / 모델 편향</td>
+          <td>댓글 grounding으로 예시 제시 — 근본적으로 미해소. limitation으로 남기거나 다른 모델 ablation 필요</td>
+          <td class="warn">△ 실질 미해소</td>
         </tr>
       </tbody>
     </table>
@@ -431,32 +431,32 @@
         <tr>
           <td class="hi">1</td>
           <td><strong>Visual Query 추가</strong></td>
-          <td>이미지·클립 형태 입력으로 새로운 태스크 정의. "새로운 태스크의 첫 데이터셋"으로 포지셔닝 → 규모 압박 완화. 방법론은 구체화 필요</td>
+          <td>이미지·클립 형태 입력으로 사용자가 원하는 결과를 더 직접적으로 찾을 수 있는 접근. 새로운 태스크 정의로 novelty 확보. 방법론은 구체화 필요</td>
           <td class="bad">Novelty 부족 (핵심)</td>
         </tr>
         <tr>
           <td class="hi">2</td>
-          <td><strong>Mixed Modality 구현</strong></td>
-          <td>리버탈에서 제안만 했던 것을 실제 구현. Appendix A.3 → Section 3으로 편입. Mixed query 평가 추가</td>
-          <td class="warn">단일 모달리티 캡션</td>
-        </tr>
-        <tr>
-          <td class="hi">3</td>
           <td><strong>LanguageBind Fine-tuning</strong></td>
-          <td>zero-shot 평가에서 벗어나 실제 학습 효과 증명. QVHighlights only / +TCVP / TCVP only 세 조합 비교</td>
+          <td>zero-shot 평가에서 벗어나 실제 학습 효과 증명. 논문에서 가장 강한 성능의 LanguageBind를 TCVP로 fine-tuning. Visual/Audio 멀티모달 동시 지원으로 데이터셋 특성과 잘 맞음</td>
           <td class="bad">Training 실험 없음</td>
         </tr>
         <tr>
-          <td class="hi">4</td>
+          <td class="hi">3</td>
           <td><strong>Human Eval 재설계</strong></td>
-          <td>지시문 수정: "more informative" → "Which moment would you actually search for?". 샘플 40 → 100+. Cohen's κ 보고</td>
+          <td>지시문 수정: "more representative and more informative" → "Which moments do you want to find?". 샘플 40 → 100+</td>
           <td class="bad">메타 리뷰어 핵심 지적</td>
         </tr>
         <tr>
-          <td class="hi">5</td>
+          <td class="hi">4</td>
           <td><strong>데이터 규모 확장</strong></td>
           <td>파이프라인 완성, 추가 수집만 하면 됨. 목표: 300 → 1,000+ videos</td>
           <td class="warn">규모 작음</td>
+        </tr>
+        <tr>
+          <td class="hi">5</td>
+          <td><strong>Mixed Modality 구현</strong></td>
+          <td>리버탈에서 제안만 했던 것을 실제 구현. Appendix A.3 → Section 3으로 편입. Mixed query 평가 추가</td>
+          <td class="warn">단일 모달리티 캡션</td>
         </tr>
       </tbody>
     </table>
