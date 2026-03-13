@@ -1177,9 +1177,10 @@ Action:  Type [1]; WebVoyager
 
 <p>Booking.com 27.3%가 명확히 보여준다: 텍스트 에이전트의 천장은 <strong>달력·날짜 선택기</strong> 같은 다단계 시각적 인터랙션이다. 클릭 한 번에 달력이 열리고, 월 이동 버튼을 여러 번 눌러야 원하는 날짜에 도달하는 플로우는 DOM 텍스트만으론 파악이 어렵다. 반면 WolframAlpha/Google Search처럼 쿼리-결과 구조가 명확한 사이트에서는 스크린샷 없이도 압도적이다.</p>
 <p>논문에서 도출한 네 가지 보편 원칙: <strong>도메인 특화 기본 스킬 → 계층적 아키텍처 → 페이로드 디노이징 → 언어적 행동 피드백.</strong></p>
+<details>
+<summary><strong>Q&A — 네 가지 보편 원칙, 구체적으로 뭘 한 건가요?</strong></summary>
 <div class="callout">
 
-<p><strong>Q&amp;A — 네 가지 보편 원칙, 구체적으로 뭘 한 건가요?</strong></p>
 <hr>
 <p><strong>① 도메인 특화 기본 스킬 — &quot;웹 조작 전용 함수 세트를 미리 만든다&quot;</strong></p>
 <p>LLM에게 &quot;이 버튼을 클릭해&quot;라고 시키는 방법은 두 가지다. 하나는 &quot;JavaScript나 XPath를 직접 작성해서 실행해&quot;라고 하는 것, 다른 하나는 이미 만들어 둔 <code>click(mmid=25)</code> 함수를 호출하게 하는 것이다. Agent-E는 후자를 택했다.</p>
@@ -1241,6 +1242,7 @@ press_key(key=&quot;Enter&quot;)                                   # 키 입력
 </code></pre>
 <p>이게 없으면 LLM은 &quot;클릭했으니 뭔가 됐겠지&quot;라고 가정하고 다음 단계로 넘어간다. 실제로는 아무것도 안 바뀌었는데도. 행동 직후 피드백을 받으면 LLM이 <strong>같은 자리에서 즉시 수정</strong>할 수 있다.</p>
 </div>
+</details>
 
 <div class="ornament">· · ·</div>
 
