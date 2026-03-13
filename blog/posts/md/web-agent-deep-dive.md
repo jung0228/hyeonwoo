@@ -719,6 +719,83 @@ GPT-4V-ACT라고 부르는 SoM 구현은 JavaScript 기반이다. 별도의 obje
 - **21.8%** — Hallucination: 태스크 일부 누락, 엉뚱한 입력창에 입력
 - **9.0%** — Prompt Misalignment: Thought만 출력하거나 미완성인데 ANSWER 조기 종료
 
+<div class="callout">
+
+**Q&A — WebVoyager 동작 방식, 더 깊이**
+
+**Q. Selenium이 정확히 뭔가요? Playwright랑 어떻게 다른가요?**
+
+Selenium은 브라우저 자동화 라이브러리다. 코드로 실제 Chrome을 띄우고, 클릭·입력·스크롤 같은 동작을 프로그래밍으로 실행할 수 있다.
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+driver = webdriver.Chrome()
+driver.get("https://google.com")
+driver.find_element(By.NAME, "q").send_keys("WebVoyager")
+driver.find_element(By.NAME, "btnK").click()
+```
+
+WebVoyager에서 Selenium의 역할은 단순하다. GPT-4V가 "7번 요소를 클릭해"라고 결정하면, Selenium이 그 요소를 찾아 실제로 클릭한다. **LLM이 두뇌, Selenium이 손발**이다.
+
+Agent-E가 Playwright를 선택한 이유는 async/await 기반의 더 안정적인 API 때문이다. Selenium은 동기식이라 복잡한 AJAX 페이지에서 타이밍 문제가 생기기 쉽다.
+
+---
+
+**Q. 관찰(Observation)에 텍스트는 안 들어가나요?**
+
+WebVoyager는 **스크린샷만** 넘긴다. HTML도, AX Tree도 포함하지 않는다.
+
+그래서 GPT-4V(멀티모달 모델)를 쓴 거다 — 텍스트 없이 이미지만 보고 판단해야 하니까. 다만 SoM 레이블을 붙일 때 각 요소의 텍스트 콘텐츠·타입·aria-label을 JavaScript로 추출하긴 하지만, 이걸 텍스트 문자열로 LLM에 넘기는 게 아니라 **이미지 위에 번호를 시각적으로 오버레이**하는 데만 사용한다.
+
+텍스트 에이전트(AX Tree 방식)와 비교하면:
+
+| | 텍스트 에이전트 (Agent-E 등) | WebVoyager |
+|---|---|---|
+| 관찰 입력 | AX Tree (텍스트) | 스크린샷 (이미지) |
+| 요소 참조 방식 | `[6]` — AX Tree에서 추출한 ID | `7번` — SoM 오버레이 번호 |
+| 요소 ID 안정성 | 높음 (항상 동일) | 낮음 (턴마다 달라질 수 있음) |
+| 달력·차트 이해 | 불가 | 가능 |
+
+---
+
+**Q. 스크린샷 + SoM 번호 레이블, 정확히 어떻게 동작하나요?**
+
+SoM(Set-of-Mark) 파이프라인은 5단계다:
+
+```
+1. Selenium으로 현재 페이지 스크린샷 캡처
+2. JavaScript로 클릭 가능한 요소(버튼·링크·입력창) DOM에서 추출
+3. 각 요소 위에 빨간 번호 박스를 이미지에 직접 그림 (PIL/Pillow)
+4. 번호 붙은 스크린샷을 GPT-4V에게 넘김
+5. GPT-4V가 "7번 클릭" → Selenium이 7번 요소 실행
+```
+
+시각적으로 이런 구조다:
+
+```
+┌─────────────────────────────────────┐
+│  Google              [1] 검색창     │
+│                                     │
+│  [2] 뉴스  [3] 이미지  [4] 지도     │
+│                                     │
+│           [5] Google 검색           │
+└─────────────────────────────────────┘
+```
+
+GPT-4V의 출력 예시:
+
+```
+Thought: 검색창에 "WebVoyager"를 입력해야 한다.
+         검색창은 1번 요소다.
+Action:  Type [1]; WebVoyager
+```
+
+SoM 번호는 JavaScript가 **턴마다 실시간으로 할당**하므로 페이지가 바뀌면 번호도 바뀐다. 그래서 "달력 숫자와 SoM 번호 혼동"이 실패 원인 2위(24.8%)를 차지한다 — 달력에 "15"가 있고 SoM 번호도 "15"이면 GPT-4V가 둘을 착각한다.
+
+</div>
+
 <div class="ornament">· · ·</div>
 
 ### Agent-E — 계층적 분리와 DOM 디노이징
