@@ -249,27 +249,77 @@
     .badge.major    { background: #fef3e2; color: #c47a1a; }
     .badge.minor    { background: #e8f5e9; color: #1a7a4a; }
 
-    /* ─── REBUTTAL TOGGLE ─── */
-    .rb { margin-top: .5rem; }
-    .rb summary {
-      display: inline-flex; align-items: center; gap: .3rem;
+    /* ─── REBUTTAL FULL ─── */
+    .rb-full { margin-top: 1.8rem; }
+    .rb-full > summary {
+      display: inline-flex; align-items: center; gap: .45rem;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: .7rem; font-weight: 700; letter-spacing: .06em;
+      font-size: .78rem; font-weight: 700; letter-spacing: .06em;
       text-transform: uppercase; color: var(--accent);
       cursor: pointer; list-style: none; user-select: none;
+      padding: .5rem .9rem;
+      border: 1px solid var(--accent);
     }
-    .rb summary::-webkit-details-marker { display: none; }
-    .rb summary::before { content: '▶'; font-size: .55rem; transition: transform .2s; }
-    .rb[open] summary::before { transform: rotate(90deg); }
-    .rb-body {
-      margin-top: .6rem;
-      padding: .7rem .9rem;
-      background: var(--bg2);
-      border-left: 2px solid var(--accent);
+    .rb-full > summary::-webkit-details-marker { display: none; }
+    .rb-full > summary::before { content: '▶'; font-size: .55rem; transition: transform .2s; }
+    .rb-full[open] > summary::before { transform: rotate(90deg); }
+
+    .rb-section {
+      margin-top: 1rem;
+      border: 1px solid var(--rule-lt);
+      border-radius: 2px;
+    }
+    .rb-section > summary {
+      display: flex; align-items: center; gap: .4rem;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: .78rem; color: var(--muted); line-height: 1.65;
+      font-size: .75rem; font-weight: 700; letter-spacing: .05em;
+      text-transform: uppercase; color: var(--text);
+      cursor: pointer; list-style: none; user-select: none;
+      padding: .7rem 1rem;
+      background: var(--bg2);
     }
-    .rb-body strong { color: var(--text); }
+    .rb-section > summary::-webkit-details-marker { display: none; }
+    .rb-section > summary::before { content: '▶'; font-size: .5rem; color: var(--muted); transition: transform .2s; }
+    .rb-section[open] > summary::before { transform: rotate(90deg); }
+
+    .rb-body {
+      padding: 1.2rem 1.4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .82rem; color: var(--text); line-height: 1.75;
+    }
+    .rb-body p { margin-bottom: .9rem; }
+    .rb-body strong { color: var(--text); font-weight: 700; }
+    .rb-body em { font-style: italic; }
+    .rb-body .rb-label {
+      display: inline-block;
+      font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: .3rem;
+    }
+    .rb-body table {
+      width: 100%; border-collapse: collapse;
+      margin: .8rem 0 1.2rem;
+      font-size: .78rem;
+    }
+    .rb-body th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .45rem .75rem;
+      border-bottom: 2px solid var(--text);
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .05em;
+    }
+    .rb-body td {
+      padding: .4rem .75rem;
+      border-bottom: 1px solid var(--rule-lt);
+      vertical-align: top;
+    }
+    .rb-body tr:last-child td { border-bottom: none; }
+    .rb-body td strong { font-weight: 700; }
+    .rb-body .sep td {
+      font-size: .7rem; color: var(--muted); font-style: italic;
+      padding: .3rem .75rem; background: var(--bg2);
+      border-top: 1px dashed var(--rule-lt);
+      border-bottom: 1px dashed var(--rule-lt);
+    }
 
     /* ─── FOOTNOTE ─── */
     .footnote {
@@ -381,81 +431,49 @@
         <tr>
           <td><strong>3Z5s, fm3t</strong></td>
           <td>Novelty 부족</td>
-          <td>실제 user intent 기반 최초 데이터셋. 쿼리 선호도 70% (Fig. 5) — 말은 했지만 근본적으로 해소 안 됨
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">TCVP is the first VMR dataset grounded in actual user search intent. Unlike existing datasets (QVHighlights, Ego4D-NLQ) that rely on caption-style descriptions written by annotators, TCVP uses real YouTube timestamp comments left by users who wanted to revisit a specific moment — directly capturing what users actually searched for. Our human evaluation (Figure 5) confirms this: 70% of annotators preferred TCVP queries over caption-generated alternatives.</div>
-            </details>
-          </td>
+          <td>실제 user intent 기반 최초 데이터셋. 쿼리 선호도 70% (Fig. 5) — 말은 했지만 근본적으로 해소 안 됨</td>
           <td class="bad">✗ 실질 미해소</td>
         </tr>
         <tr>
           <td><strong>3Z5s, BKiQ</strong></td>
           <td>데이터 규모 작음 (300 videos)</td>
-          <td>proof-of-concept, 19개 카테고리, 파이프라인 확장 가능
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">300 videos across 19 diverse categories serve as a proof-of-concept for our pipeline. Our pipeline accepts any YouTube URL as input, allowing straightforward scaling without additional annotation effort. The current scale is a deliberate design choice to validate the pipeline before full deployment. We will release the complete pipeline and code to enable community-driven scaling to thousands of videos.</div>
-            </details>
-          </td>
+          <td>proof-of-concept, 19개 카테고리, 파이프라인 확장 가능</td>
           <td class="warn">△</td>
         </tr>
         <tr>
           <td><strong>3Z5s</strong></td>
           <td>9초 윈도우 근거 없음</td>
-          <td>100샘플 검증: [−9s,+9s]가 97% coverage
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">Scene-change based segmentation produces segments that are either too long (when scene changes are infrequent) or too short (during rapid cuts). Centering on the comment timestamp captures the natural reaction latency — users tend to comment shortly after the moment they react to. Empirical validation on 100 sampled comments confirms that the [−9s, +9s] window achieves 97% moment coverage.</div>
-            </details>
-          </td>
+          <td>100샘플 검증: [−9s,+9s]가 97% coverage</td>
           <td class="good">✓</td>
         </tr>
         <tr>
           <td><strong>3Z5s</strong></td>
           <td>쿼리 생성 타당성</td>
-          <td>LongVALE·Watch&Listen과 동일 방식. 14.3% 노이즈 필터링
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">We use modality-specific captions rather than raw video/audio because our videos average 25.3 minutes — processing full video would be computationally prohibitive and would yield overly generic descriptions. This approach mirrors LongVALE and Watch&Listen, both of which use caption-based query generation. For noise, 14.3% of comments are filtered via cosine similarity threshold τ=0.3, removing semantically irrelevant comments before caption generation.</div>
-            </details>
-          </td>
+          <td>LongVALE·Watch&amp;Listen과 동일 방식. 14.3% 노이즈 필터링</td>
           <td class="good">✓</td>
         </tr>
         <tr>
           <td><strong>fm3t</strong></td>
           <td>Training 실험 없음</td>
-          <td>A100 1장으론 불가, H100 8장+ 필요 — compute 한계 인정
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">Training experiments on LanguageBind-scale models require significant compute. With our current setup (single A100 80GB), full fine-tuning is not feasible — it would require 8+ H100s. We acknowledge this as a current limitation and prioritize downstream training experiments as future work, made tractable by releasing our pipeline code for community use.</div>
-            </details>
-          </td>
+          <td>A100 1장으론 불가, H100 8장+ 필요 — compute 한계 인정</td>
           <td class="bad">✗ 미해소</td>
         </tr>
         <tr>
           <td><strong>BKiQ</strong></td>
           <td>단일 모달리티 캡션</td>
-          <td>Mixed category 제안 (balance ratio R + floor M). Ablation 포함
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">We propose a <strong>Mixed category</strong> for comments where both visual and audio modalities are jointly relevant. A comment is classified as Mixed when: (1) the balance ratio min(v,a)/max(v,a) ≥ R, and (2) both scores exceed an absolute floor M (v ≥ M and a ≥ M). Mixed moments are prompted with both visual and audio captions simultaneously.<br><br>Ablation over R and M thresholds: R=0.5, M=0.4 → 28.6% Mixed; R=0.7, M=0.4 → 19.4% Mixed; R=0.9, M=0.4 → 12.5% Mixed. We adopt R=0.7, M=0.4 as default.</div>
-            </details>
-          </td>
+          <td>Mixed category 제안 (balance ratio R + floor M). Ablation 포함</td>
           <td class="warn">△ 리버탈만, 미구현</td>
         </tr>
         <tr>
           <td><strong>BKiQ</strong></td>
           <td>중복 댓글 처리</td>
-          <td>타임스탬프별 YouTube 좋아요 수 1위 댓글만 유지
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">For each timestamp, we retain only the single most-liked comment (ranked by YouTube like count), ensuring each moment is represented by the most community-endorsed description. This deduplication step is applied before modality classification.</div>
-            </details>
-          </td>
+          <td>타임스탬프별 YouTube 좋아요 수 1위 댓글만 유지</td>
           <td class="good">✓</td>
         </tr>
         <tr>
           <td><strong>BKiQ</strong></td>
           <td>MLLM hallucination / 모델 편향</td>
-          <td>댓글 grounding으로 예시 제시 — 근본적으로 미해소. limitation으로 남기거나 다른 모델 ablation 필요
-            <details class="rb"><summary>리버탈 원문</summary>
-            <div class="rb-body">Comment grounding significantly mitigates hallucination. Without timestamp comments, MLLMs produce generic scene descriptions. With comments, output reflects the specific user intent captured in the comment.<br><br><strong>Example:</strong> Comment-guided → <em>"the part where the man tears the dollar bill into five pieces while explaining"</em>. Without comments → generic description of the same scene with no specificity about the tearing action.</div>
-            </details>
-          </td>
+          <td>댓글 grounding으로 예시 제시 — 근본적으로 미해소. limitation으로 남기거나 다른 모델 ablation 필요</td>
           <td class="warn">△ 실질 미해소</td>
         </tr>
       </tbody>
@@ -467,6 +485,120 @@
       Appendix B.1 실제 지시문: <em>"more representative and more informative"</em>를 고르라고 함.<br>
       <strong>측정한 것(콘텐츠 품질) ≠ 주장한 것(search intent)</strong>. 이 불일치가 결정적 거절 이유.
     </div>
+
+    <details class="rb-full">
+      <summary>리버탈 전문 보기</summary>
+
+      <details class="rb-section">
+        <summary>Reviewer 3Z5s — W1: Novelty</summary>
+        <div class="rb-body">
+          <p>We believe the concern regarding novelty may stem from the apparent simplicity of the pipeline, but we view this simplicity as a feature rather than a limitation. TCVP is the first dataset to construct queries based on <em>real-world user intent</em>. While existing datasets rely on automated captions that often produce verbose, non-search-oriented queries, TCVP captures what viewers actually find noteworthy — a perspective largely overlooked in prior VMR dataset construction.</p>
+          <p>Human evaluation confirms this: <strong>70% of users prefer TCVP's queries over standard caption-based baselines (Figure 5)</strong>, demonstrating that this paradigm shift produces qualitatively superior retrieval-oriented queries.</p>
+        </div>
+      </details>
+
+      <details class="rb-section">
+        <summary>Reviewer 3Z5s — W2: Dataset Size &amp; Category Analysis</summary>
+        <div class="rb-body">
+          <p>Our primary contribution lies in the <strong>efficiency and scalability of the pipeline itself</strong>, rather than in the static volume of the initial dataset. The 4.5k queries serve as a proof-of-concept. Our pipeline can generate a new moment-query pair in a short amount of time simply by providing a YouTube URL, and we will release the full pipeline code to allow researchers to scale data collection effortlessly.</p>
+          <p>Our dataset covers <strong>19 distinct categories</strong> (Table 1):</p>
+          <table>
+            <thead><tr><th>Category</th><th>Channels</th></tr></thead>
+            <tbody>
+              <tr><td>Variety / Entertainment</td><td>MrBeast, TopGear</td></tr>
+              <tr><td>Sports</td><td>NBA, FIFA, Olympics</td></tr>
+              <tr><td>Podcast (Long-form)</td><td>HubermanLab, LexFridman, JoeRogan, TimFerriss</td></tr>
+              <tr><td>Knowledge / Education</td><td>TED, BigThink, Kurzgesagt, Veritasium, Vsauce</td></tr>
+              <tr><td>Travel / Lifestyle</td><td>KaraandNate, AbroadinJapan, YesTheory</td></tr>
+            </tbody>
+          </table>
+          <p>Modality distribution per category:</p>
+          <table>
+            <thead><tr><th>Category</th><th>Audio</th><th>Visual</th><th>Unrelated</th></tr></thead>
+            <tbody>
+              <tr><td>Entertainment</td><td>39.0%</td><td>51.0%</td><td>10.0%</td></tr>
+              <tr><td>Sports</td><td>34.4%</td><td>56.2%</td><td>9.4%</td></tr>
+              <tr><td>Podcast</td><td>72.4%</td><td>22.4%</td><td>5.0%</td></tr>
+              <tr><td>Knowledge / Education</td><td>56.6%</td><td>36.6%</td><td>6.3%</td></tr>
+              <tr><td>Travel</td><td>47.9%</td><td>49.7%</td><td>2.4%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="rb-section">
+        <summary>Reviewer 3Z5s — W3: 9초 윈도우 근거</summary>
+        <div class="rb-body">
+          <p>Scene-change based segmentation produces segments that are too long (infrequent cuts) or too short (rapid cuts). Centering on the comment timestamp captures the natural reaction latency — users tend to comment shortly after the moment they react to.</p>
+          <p>Empirical validation on 100 sampled comments:</p>
+          <table>
+            <thead><tr><th>Window</th><th>Coverage</th></tr></thead>
+            <tbody>
+              <tr><td>[−3s, +3s]</td><td>85%</td></tr>
+              <tr><td>[−9s, +3s]</td><td>92%</td></tr>
+              <tr><td>[−3s, +9s]</td><td>92%</td></tr>
+              <tr><td><strong>[−9s, +9s]</strong></td><td><strong>97%</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="rb-section">
+        <summary>Reviewer 3Z5s — W4-2: Comment Filtering Threshold τ Ablation</summary>
+        <div class="rb-body">
+          <table>
+            <thead><tr><th>Threshold τ</th><th>Audio (%)</th><th>Visual (%)</th><th>Unrelated (%)</th></tr></thead>
+            <tbody>
+              <tr><td>0.20</td><td>52.8%</td><td>47.0%</td><td>0.2%</td></tr>
+              <tr><td>0.25</td><td>49.2%</td><td>43.6%</td><td>7.1%</td></tr>
+              <tr><td><strong>0.30 (채택)</strong></td><td><strong>45.9%</strong></td><td><strong>39.8%</strong></td><td><strong>14.3%</strong></td></tr>
+              <tr><td>0.35</td><td>43.3%</td><td>36.5%</td><td>20.2%</td></tr>
+              <tr><td>0.40</td><td>35.0%</td><td>27.9%</td><td>37.0%</td></tr>
+            </tbody>
+          </table>
+          <p>Qualitative examples:</p>
+          <table>
+            <thead><tr><th>Comment</th><th>Score</th><th>Decision</th></tr></thead>
+            <tbody>
+              <tr><td>"her voice breaks here, this part always gets me"</td><td>0.48</td><td class="good">Retained</td></tr>
+              <tr><td>"the way he tears the dollar bill while explaining is genius"</td><td>0.43</td><td class="good">Retained</td></tr>
+              <tr><td>"insane goal at the last second"</td><td>0.35</td><td class="good">Retained</td></tr>
+              <tr class="sep"><td colspan="3">── τ = 0.3 threshold ──</td></tr>
+              <tr><td>"this is so good"</td><td>0.22</td><td class="bad">Filtered</td></tr>
+              <tr><td>"wow just wow"</td><td>0.18</td><td class="bad">Filtered</td></tr>
+              <tr><td>"lol"</td><td>0.11</td><td class="bad">Filtered</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="rb-section">
+        <summary>Reviewer 3Z5s — W5: Human Evaluation 상세</summary>
+        <div class="rb-body">
+          <p><strong>샘플 수:</strong> 40 samples per task, balanced across 19 video categories</p>
+          <p><strong>평가자 수:</strong> 3 independent evaluators per sample = 120 total assessments per task</p>
+        </div>
+      </details>
+
+      <details class="rb-section">
+        <summary>Reviewer BKiQ — W1: Mixed Modality Ablation</summary>
+        <div class="rb-body">
+          <p>A comment is classified as <strong>Mixed</strong> when: (1) balance ratio min(v,a)/max(v,a) ≥ R, and (2) both scores exceed absolute floor M (v ≥ M and a ≥ M). Mixed moments are prompted with both visual and audio captions simultaneously.</p>
+          <table>
+            <thead><tr><th>R</th><th>M</th><th>Audio (%)</th><th>Visual (%)</th><th>Mixed (%)</th></tr></thead>
+            <tbody>
+              <tr><td>0.5</td><td>0.3</td><td>12.4%</td><td>9.1%</td><td>78.6%</td></tr>
+              <tr><td>0.5</td><td>0.4</td><td>39.1%</td><td>32.3%</td><td>28.6%</td></tr>
+              <tr><td>0.7</td><td>0.3</td><td>21.2%</td><td>12.8%</td><td>66.0%</td></tr>
+              <tr><td><strong>0.7 (채택)</strong></td><td><strong>0.4</strong></td><td><strong>40.9%</strong></td><td><strong>32.8%</strong></td><td><strong>26.3%</strong></td></tr>
+              <tr><td>0.9</td><td>0.3</td><td>38.8%</td><td>31.2%</td><td>30.0%</td></tr>
+              <tr><td>0.9</td><td>0.4</td><td>47.5%</td><td>40.0%</td><td>12.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+    </details>
 
     <div class="ornament">· · ·</div>
 
