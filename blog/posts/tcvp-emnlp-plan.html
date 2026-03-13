@@ -249,6 +249,28 @@
     .badge.major    { background: #fef3e2; color: #c47a1a; }
     .badge.minor    { background: #e8f5e9; color: #1a7a4a; }
 
+    /* ─── REBUTTAL TOGGLE ─── */
+    .rb { margin-top: .5rem; }
+    .rb summary {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--accent);
+      cursor: pointer; list-style: none; user-select: none;
+    }
+    .rb summary::-webkit-details-marker { display: none; }
+    .rb summary::before { content: '▶'; font-size: .55rem; transition: transform .2s; }
+    .rb[open] summary::before { transform: rotate(90deg); }
+    .rb-body {
+      margin-top: .6rem;
+      padding: .7rem .9rem;
+      background: var(--bg2);
+      border-left: 2px solid var(--accent);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted); line-height: 1.65;
+    }
+    .rb-body strong { color: var(--text); }
+
     /* ─── FOOTNOTE ─── */
     .footnote {
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -359,49 +381,81 @@
         <tr>
           <td><strong>3Z5s, fm3t</strong></td>
           <td>Novelty 부족</td>
-          <td>실제 user intent 기반 최초 데이터셋. 쿼리 선호도 70% (Fig. 5) — 말은 했지만 근본적으로 해소 안 됨</td>
+          <td>실제 user intent 기반 최초 데이터셋. 쿼리 선호도 70% (Fig. 5) — 말은 했지만 근본적으로 해소 안 됨
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">TCVP is the first VMR dataset grounded in actual user search intent. Unlike existing datasets (QVHighlights, Ego4D-NLQ) that rely on caption-style descriptions written by annotators, TCVP uses real YouTube timestamp comments left by users who wanted to revisit a specific moment — directly capturing what users actually searched for. Our human evaluation (Figure 5) confirms this: 70% of annotators preferred TCVP queries over caption-generated alternatives.</div>
+            </details>
+          </td>
           <td class="bad">✗ 실질 미해소</td>
         </tr>
         <tr>
           <td><strong>3Z5s, BKiQ</strong></td>
           <td>데이터 규모 작음 (300 videos)</td>
-          <td>proof-of-concept, 19개 카테고리, 파이프라인 확장 가능</td>
+          <td>proof-of-concept, 19개 카테고리, 파이프라인 확장 가능
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">300 videos across 19 diverse categories serve as a proof-of-concept for our pipeline. Our pipeline accepts any YouTube URL as input, allowing straightforward scaling without additional annotation effort. The current scale is a deliberate design choice to validate the pipeline before full deployment. We will release the complete pipeline and code to enable community-driven scaling to thousands of videos.</div>
+            </details>
+          </td>
           <td class="warn">△</td>
         </tr>
         <tr>
           <td><strong>3Z5s</strong></td>
           <td>9초 윈도우 근거 없음</td>
-          <td>100샘플 검증: [−9s,+9s]가 97% coverage</td>
+          <td>100샘플 검증: [−9s,+9s]가 97% coverage
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">Scene-change based segmentation produces segments that are either too long (when scene changes are infrequent) or too short (during rapid cuts). Centering on the comment timestamp captures the natural reaction latency — users tend to comment shortly after the moment they react to. Empirical validation on 100 sampled comments confirms that the [−9s, +9s] window achieves 97% moment coverage.</div>
+            </details>
+          </td>
           <td class="good">✓</td>
         </tr>
         <tr>
           <td><strong>3Z5s</strong></td>
           <td>쿼리 생성 타당성</td>
-          <td>LongVALE·Watch&Listen과 동일 방식. 14.3% 노이즈 필터링</td>
+          <td>LongVALE·Watch&Listen과 동일 방식. 14.3% 노이즈 필터링
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">We use modality-specific captions rather than raw video/audio because our videos average 25.3 minutes — processing full video would be computationally prohibitive and would yield overly generic descriptions. This approach mirrors LongVALE and Watch&Listen, both of which use caption-based query generation. For noise, 14.3% of comments are filtered via cosine similarity threshold τ=0.3, removing semantically irrelevant comments before caption generation.</div>
+            </details>
+          </td>
           <td class="good">✓</td>
         </tr>
         <tr>
           <td><strong>fm3t</strong></td>
           <td>Training 실험 없음</td>
-          <td>A100 1장으론 불가, H100 8장+ 필요 — compute 한계 인정</td>
+          <td>A100 1장으론 불가, H100 8장+ 필요 — compute 한계 인정
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">Training experiments on LanguageBind-scale models require significant compute. With our current setup (single A100 80GB), full fine-tuning is not feasible — it would require 8+ H100s. We acknowledge this as a current limitation and prioritize downstream training experiments as future work, made tractable by releasing our pipeline code for community use.</div>
+            </details>
+          </td>
           <td class="bad">✗ 미해소</td>
         </tr>
         <tr>
           <td><strong>BKiQ</strong></td>
           <td>단일 모달리티 캡션</td>
-          <td>Mixed category 제안 (balance ratio R + floor M). Ablation 포함</td>
+          <td>Mixed category 제안 (balance ratio R + floor M). Ablation 포함
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">We propose a <strong>Mixed category</strong> for comments where both visual and audio modalities are jointly relevant. A comment is classified as Mixed when: (1) the balance ratio min(v,a)/max(v,a) ≥ R, and (2) both scores exceed an absolute floor M (v ≥ M and a ≥ M). Mixed moments are prompted with both visual and audio captions simultaneously.<br><br>Ablation over R and M thresholds: R=0.5, M=0.4 → 28.6% Mixed; R=0.7, M=0.4 → 19.4% Mixed; R=0.9, M=0.4 → 12.5% Mixed. We adopt R=0.7, M=0.4 as default.</div>
+            </details>
+          </td>
           <td class="warn">△ 리버탈만, 미구현</td>
         </tr>
         <tr>
           <td><strong>BKiQ</strong></td>
           <td>중복 댓글 처리</td>
-          <td>타임스탬프별 YouTube 좋아요 수 1위 댓글만 유지</td>
+          <td>타임스탬프별 YouTube 좋아요 수 1위 댓글만 유지
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">For each timestamp, we retain only the single most-liked comment (ranked by YouTube like count), ensuring each moment is represented by the most community-endorsed description. This deduplication step is applied before modality classification.</div>
+            </details>
+          </td>
           <td class="good">✓</td>
         </tr>
         <tr>
           <td><strong>BKiQ</strong></td>
           <td>MLLM hallucination / 모델 편향</td>
-          <td>댓글 grounding으로 예시 제시 — 근본적으로 미해소. limitation으로 남기거나 다른 모델 ablation 필요</td>
+          <td>댓글 grounding으로 예시 제시 — 근본적으로 미해소. limitation으로 남기거나 다른 모델 ablation 필요
+            <details class="rb"><summary>리버탈 원문</summary>
+            <div class="rb-body">Comment grounding significantly mitigates hallucination. Without timestamp comments, MLLMs produce generic scene descriptions. With comments, output reflects the specific user intent captured in the comment.<br><br><strong>Example:</strong> Comment-guided → <em>"the part where the man tears the dollar bill into five pieces while explaining"</em>. Without comments → generic description of the same scene with no specificity about the tearing action.</div>
+            </details>
+          </td>
           <td class="warn">△ 실질 미해소</td>
         </tr>
       </tbody>
