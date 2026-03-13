@@ -808,7 +808,7 @@ Action: stop [Task completed]
 <p>결과: 인간 <strong>88.70%</strong> vs 최고 모델(GPT-4o + SoM) <strong>19.78%</strong>. WebArena(78% vs 14%)보다 격차가 더 크다. 이미지를 텍스트로 변환하는 Caption 방식은 12.75%에 그쳤다 — 텍스트 설명으로 요약하면 시각적 세부 정보가 손실된다.</p>
 <div class="ornament">· · ·</div>
 
-<h3>&quot;Illusion of Progress&quot; — 2025년의 메타 비판</h3>
+<h3><em>&quot;An Illusion of Progress? Assessing the Current State of Web Agents&quot;</em> (COLM 2025)</h3>
 <p><strong>핵심 발견:</strong> <em>Google에서 검색하고 첫 결과 페이지 정보를 답변으로 제출하는</em> 단순한 에이전트가 WebVoyager 태스크의 **51%**를 통과한다. 즉 WebVoyager 태스크의 상당 부분은 실제 멀티스텝 웹 탐색이 필요 없다.</p>
 <p>대안으로 제안된 <strong>Online-Mind2Web</strong>: 300개 태스크, 136개 사이트, 모든 태스크를 라이브 웹에서 인간이 직접 검증.</p>
 <p>자동 평가도 개선했다. <strong>WebJudge</strong>:</p>
@@ -1177,6 +1177,71 @@ Action:  Type [1]; WebVoyager
 
 <p>Booking.com 27.3%가 명확히 보여준다: 텍스트 에이전트의 천장은 <strong>달력·날짜 선택기</strong> 같은 다단계 시각적 인터랙션이다. 클릭 한 번에 달력이 열리고, 월 이동 버튼을 여러 번 눌러야 원하는 날짜에 도달하는 플로우는 DOM 텍스트만으론 파악이 어렵다. 반면 WolframAlpha/Google Search처럼 쿼리-결과 구조가 명확한 사이트에서는 스크린샷 없이도 압도적이다.</p>
 <p>논문에서 도출한 네 가지 보편 원칙: <strong>도메인 특화 기본 스킬 → 계층적 아키텍처 → 페이로드 디노이징 → 언어적 행동 피드백.</strong></p>
+<div class="callout">
+
+<p><strong>Q&amp;A — 네 가지 보편 원칙, 구체적으로 뭘 한 건가요?</strong></p>
+<hr>
+<p><strong>① 도메인 특화 기본 스킬 — &quot;웹 조작 전용 함수 세트를 미리 만든다&quot;</strong></p>
+<p>LLM에게 &quot;이 버튼을 클릭해&quot;라고 시키는 방법은 두 가지다. 하나는 &quot;JavaScript나 XPath를 직접 작성해서 실행해&quot;라고 하는 것, 다른 하나는 이미 만들어 둔 <code>click(mmid=25)</code> 함수를 호출하게 하는 것이다. Agent-E는 후자를 택했다.</p>
+<p><strong>Skills Library</strong> — Agent-E가 미리 만들어 둔 다섯 가지 웹 전용 함수:</p>
+<pre><code class="language-python"># LLM이 직접 생성하는 게 아니라, 미리 만들어 둔 함수를 호출
+get_dom_with_content_type(content_type=&quot;input_fields&quot;)  # DOM 추출
+click(mmid=25)                                           # 클릭
+enter_text(mmid=12, text=&quot;서울&quot;)                         # 텍스트 입력
+open_url(url=&quot;https://booking.com&quot;)                      # URL 이동
+press_key(key=&quot;Enter&quot;)                                   # 키 입력
+</code></pre>
+<p>왜 &quot;도메인 특화&quot;인가? 이 함수들은 <strong>웹 브라우저 조작에만</strong> 쓸 수 있도록 설계됐다. 일반 Python 코드 실행이나 파일 시스템 접근 같은 건 없다. 범용 코드 실행을 허용하면 LLM이 엉뚱한 코드를 작성할 여지가 생기지만, 이렇게 기본 스킬을 한정하면 <strong>행동 공간이 명확히 좁아</strong>진다.</p>
+<p><strong>mmid(mind map identifier)</strong> 가 핵심이다. 페이지를 로드할 때 JavaScript를 주입해서 모든 DOM 요소에 <code>mmid=1</code>, <code>mmid=2</code>... 숫자를 붙인다. LLM은 XPath(<code>/html/body/div[3]/button[2]</code>)나 CSS 셀렉터(<code>.nav &gt; .btn-primary</code>) 같은 취약한 식별자 대신 <code>mmid=25</code>로만 참조한다. 사이트 구조가 바뀌어도 mmid는 해당 요소에 그대로 붙어 있으므로 훨씬 안정적이다.</p>
+<hr>
+<p><strong>② 계층적 아키텍처 — &quot;계획하는 뇌와 실행하는 손을 분리한다&quot;</strong></p>
+<p>단일 루프 에이전트는 &quot;지금 어느 단계까지 왔는지&quot;와 &quot;지금 이 버튼을 눌러야 하는지&quot;를 동시에 추적한다. 히스토리가 길어질수록 두 관심사가 뒤섞여 성능이 떨어진다. Agent-E는 이 두 역할을 아예 다른 에이전트에 맡긴다.</p>
+<ul>
+<li><strong>Planner Agent</strong>: &quot;항공권 예약&quot; 태스크를 받아 <code>[출발지 입력 → 도착지 입력 → 날짜 선택 → 검색 → 최저가 선택 → 결제]</code> 서브태스크 목록으로 분해. 현재 어느 서브태스크가 완료됐는지 추적.</li>
+<li><strong>Browser Navigation Agent</strong>: Planner에게 &quot;출발지 입력&quot;이라는 서브태스크 하나를 받아서 실행. 완료하면 다음 서브태스크를 다시 받음. <strong>서브태스크마다 컨텍스트를 초기화</strong>하므로 이전 서브태스크 노이즈가 간섭하지 않는다.</li>
+</ul>
+<hr>
+<p><strong>③ 페이로드 디노이징 — &quot;태스크 유형에 맞는 DOM만 잘라서 넘긴다&quot;</strong></p>
+<p>Amazon 상품 페이지의 전체 DOM은 10,000개 이상의 요소로 이루어져 있다. 이걸 전부 LLM에 넘기면 정작 필요한 정보가 노이즈에 묻힌다. Agent-E는 태스크 유형에 따라 DOM을 세 가지로 잘라서 넘긴다:</p>
+<table>
+<thead>
+<tr>
+<th>태스크 유형</th>
+<th>DOM 모드</th>
+<th>포함 내용</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>정보 읽기 (&quot;가격이 얼마야?&quot;)</td>
+<td><code>text_only</code></td>
+<td>텍스트만, 버튼·입력창 제거</td>
+</tr>
+<tr>
+<td>폼 입력 (&quot;서울 입력해&quot;)</td>
+<td><code>input_fields</code></td>
+<td><code>&lt;input&gt;</code> <code>&lt;button&gt;</code> <code>&lt;select&gt;</code> + mmid</td>
+</tr>
+<tr>
+<td>페이지 탐색·일반</td>
+<td><code>all_fields</code></td>
+<td>전체 요소 + 계층 구조 보존</td>
+</tr>
+</tbody></table>
+<p>&quot;노이즈를 줄인다&quot;는 뜻이 여기서 나온다 — 필요 없는 DOM 요소를 <strong>애초에 LLM 입력에서 제거</strong>한다.</p>
+<hr>
+<p><strong>④ 언어적 행동 피드백 — &quot;클릭 직후 뭐가 바뀌었는지 말로 알려준다&quot;</strong></p>
+<p>일반 에이전트는 클릭 후 다음 스텝에서 DOM을 다시 가져와서야 결과를 안다. Agent-E는 브라우저 내장 <strong>Mutation Observer API</strong>를 사용해 클릭 직후 즉각적으로 DOM 변화를 감지하고, 이를 자연어로 변환해 LLM에 돌려준다.</p>
+<pre><code>액션: CLICK mmid=25
+피드백: &quot;Clicked element mmid 25. A popup appeared with following elements:
+         [mmid=30] Option A, [mmid=31] Option B, [mmid=32] Option C&quot;
+</code></pre>
+<p>실패해도 알려준다:</p>
+<pre><code>액션: CLICK mmid=42
+피드백: &quot;Clicked element mmid 42. No visible DOM changes detected.&quot;
+</code></pre>
+<p>이게 없으면 LLM은 &quot;클릭했으니 뭔가 됐겠지&quot;라고 가정하고 다음 단계로 넘어간다. 실제로는 아무것도 안 바뀌었는데도. 행동 직후 피드백을 받으면 LLM이 <strong>같은 자리에서 즉시 수정</strong>할 수 있다.</p>
+</div>
+
 <div class="ornament">· · ·</div>
 
 <h3>Browser Use — 단일 루프, 오픈소스 SOTA</h3>
@@ -1195,7 +1260,42 @@ Action:  Type [1]; WebVoyager
   <figcaption>Browser Use의 5-Phase 루프. State Capture → Prompt Build → LLM Call → Action Execute → History Record. 각 Phase를 매 스텝 반복한다.</figcaption>
 </figure>
 
-<p><strong>5개 Phase 상세:</strong> Phase 1(State Capture)에서 <code>BrowserSession.get_state()</code>가 현재 DOM을 수집한다. Phase 2(Prompt Build)에서 MessageManager가 시스템 프롬프트 + 태스크 + DOM + 히스토리 요약을 조합한다. Phase 3(LLM Call)에서 LLM은 Pydantic 기반 <code>AgentOutput</code> 스키마로 structured output을 반환한다 — 네 개 필드: <code>thinking</code>(내부 추론), <code>evaluation_previous_goal</code>(이전 액션 평가), <code>memory</code>(영속 메모리 노트), <code>action</code>(실행할 액션 목록). Phase 4(Action Execute)에서 CDP 명령으로 실행. Phase 5(History Record)에서 다음 스텝을 위한 히스토리 레코드 생성.</p>
+<p><strong>5개 Phase 상세:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>담당</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. State Capture</strong></td>
+<td><code>BrowserSession.get_state()</code></td>
+<td>현재 DOM + 스크린샷(선택) 수집</td>
+</tr>
+<tr>
+<td><strong>2. Prompt Build</strong></td>
+<td><code>MessageManager</code></td>
+<td>시스템 프롬프트 + 태스크 + DOM + 히스토리 요약 조합</td>
+</tr>
+<tr>
+<td><strong>3. LLM Call</strong></td>
+<td>LLM</td>
+<td>Pydantic <code>AgentOutput</code> 스키마로 structured output 반환</td>
+</tr>
+<tr>
+<td><strong>4. Action Execute</strong></td>
+<td>Playwright (CDP)</td>
+<td>LLM 출력의 <code>action</code> 필드 실행</td>
+</tr>
+<tr>
+<td><strong>5. History Record</strong></td>
+<td><code>AgentHistory</code></td>
+<td>다음 스텝을 위한 히스토리 레코드 생성</td>
+</tr>
+</tbody></table>
+<p>Phase 3에서 LLM이 반환하는 <code>AgentOutput</code> 필드는 네 가지: <code>thinking</code>(내부 추론), <code>evaluation_previous_goal</code>(이전 액션 평가), <code>memory</code>(영속 메모리 노트), <code>action</code>(실행할 액션 목록).</p>
 <p>Pydantic 스키마 강제가 중요한 이유: LLM이 자유 형식으로 출력하면 파싱 오류가 잦다. 구조화된 출력을 강제하면 &quot;thinking은 있는데 action이 없는&quot; 불완전 출력이 사라지고, 에이전트 루프가 예측 가능하게 작동한다.</p>
 <p><strong>DOM 처리: 10,000+에서 200으로:</strong></p>
 <figure class="fig-sm">
