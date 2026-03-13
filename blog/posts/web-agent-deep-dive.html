@@ -1118,6 +1118,7 @@ Action:  Type [1]; WebVoyager
 <li><strong>모델:</strong> GPT-4 Turbo — Planner Agent와 Browser Navigation Agent 모두에 사용</li>
 <li><strong>브라우저 자동화:</strong> Playwright (Selenium 대비 더 안정적인 async API)</li>
 <li><strong>요소 식별:</strong> mmid (mind map identifier) — JavaScript로 각 DOM 요소에 커스텀 attribute 주입. XPath/CSS 셀렉터보다 페이지 변화에 강인하다</li>
+<li><strong>액션 공간 (Skills Library):</strong> <code>get_page_dom()</code>, <code>click(mmid)</code>, <code>enter_text(mmid, text)</code>, <code>open_url(url)</code>, <code>press_key(key)</code> (5가지 Python 함수)</li>
 </ul>
 <p><strong>두 에이전트의 분업:</strong></p>
 <figure class="fig-sm">
@@ -1256,6 +1257,7 @@ press_key(key=&quot;Enter&quot;)                                   # 키 입력
 <li><strong>브라우저 자동화:</strong> Playwright (CDP 기반)</li>
 <li><strong>요소 식별:</strong> 숫자 인덱스 — 스텝마다 재할당. XPath/CSS 셀렉터 hallucination 원천 차단</li>
 <li><strong>아키텍처:</strong> 단일 에이전트 루프 (Agent-E와 달리 플래너 없음). 계층 구조의 오버헤드 없이 <code>memory</code> 필드로 인라인 플래닝</li>
+<li><strong>액션 공간:</strong> <code>click_element_by_index</code>, <code>input_text</code>, <code>scroll_down</code>/<code>scroll_up</code>, <code>go_to_url</code>, <code>go_back</code>, <code>search_google</code>, <code>extract_content</code>, <code>open_tab</code>/<code>close_tab</code>/<code>switch_tab</code>, <code>done</code> (총 17가지 빌트인 + 커스텀 확장 가능)</li>
 </ul>
 <p>Agent-E의 계층 구조와 달리 <strong>단일 에이전트 루프</strong>다. 하나의 Agent가 모든 결정과 실행을 담당한다. 복잡한 태스크의 계획은 LLM 출력의 <code>memory</code> 필드에 메모를 남기는 방식으로 처리한다 — 별도의 Planner Agent 없이 동일한 루프 안에서 &quot;인라인 플래닝&quot;한다.</p>
 <figure>
@@ -1402,6 +1404,75 @@ agent = Agent(
 result = await agent.run()
 </code></pre>
 <p><code>@tools.action</code> 데코레이터로 커스텀 액션을 등록하면 에이전트가 일반 액션처럼 사용할 수 있다. 복잡한 태스크를 플래너 없이 처리하는 &quot;인라인 플래닝&quot; 방식이다.</p>
+<p><strong>MCP (Model Context Protocol) 통합:</strong></p>
+<p>Browser Use는 MCP 서버를 외부 도구로 연결할 수 있다. MCP가 뭔지부터 짚고 가자.</p>
+<p><strong>MCP (Model Context Protocol)</strong> 는 Anthropic이 2024년 11월 공개한 오픈 표준 프로토콜이다. 한 줄로 요약하면 <strong>&quot;LLM이 외부 도구를 호출하는 방법을 표준화한 인터페이스&quot;</strong> 다.</p>
+<p>기존에는 에이전트마다 도구 연동 방식이 달랐다. LangChain Tool, OpenAI Function Calling, 각 프레임워크 자체 plugin 시스템 — 전부 제각각이었다. MCP는 이 문제를 해결하기 위해 등장했다. 도구를 제공하는 쪽(MCP Server)과 도구를 사용하는 쪽(MCP Client — LLM 앱)이 따라야 할 공통 규격을 정의한다.</p>
+<pre><code>[MCP 구조]
+
+MCP Client (Browser Use Agent)
+    │
+    │  표준화된 JSON-RPC 요청
+    ▼
+MCP Server (파일 시스템 / DB / 외부 API / 사내 서비스 등)
+    │
+    │  도구 목록 + 실행 결과 반환
+    ▼
+Agent가 결과를 다음 액션 결정에 활용
+</code></pre>
+<p>웹 에이전트에서 MCP가 중요한 이유: 브라우저 조작만으로는 못 하는 일이 있다. 파일을 읽어서 웹폼에 입력한다거나, 크롤링한 데이터를 DB에 바로 저장하거나, 사내 API를 호출해서 결과를 웹에 반영하는 태스크들. 이런 경우 브라우저 액션과 외부 도구 호출을 <strong>같은 에이전트 루프 안에서</strong> 섞어야 한다.</p>
+<p>Browser Use에서 MCP 서버를 연결하면 <code>@tools.action</code> 커스텀 액션처럼 쓸 수 있다:</p>
+<pre><code class="language-python">from browser_use import Agent, Browser
+from browser_use.mcp import MCPClient
+from langchain_anthropic import ChatAnthropic
+
+# MCP 서버 연결 (파일 시스템 MCP 서버 예시)
+mcp_client = MCPClient(&quot;npx @modelcontextprotocol/server-filesystem /data&quot;)
+
+agent = Agent(
+    task=&quot;reports/ 폴더의 PDF 파일 목록을 읽어서 각 파일명을 회사 인트라넷에 등록해줘&quot;,
+    llm=ChatAnthropic(model=&quot;claude-sonnet-4-6&quot;),
+    browser=Browser(),
+    mcp_clients=[mcp_client],  # MCP 도구가 built-in 액션처럼 추가됨
+)
+result = await agent.run()
+</code></pre>
+<p>LLM 입장에서는 <code>list_directory(path)</code> MCP 도구나 <code>click_element_by_index(3)</code> 브라우저 액션이나 동일하게 호출 가능한 함수다. 어떤 도구가 브라우저 액션이고 어떤 게 MCP 서버인지 구분할 필요 없이, <strong>하나의 액션 공간 안에서 선택</strong>한다.</p>
+<div class="callout">
+
+<p><strong>MCP vs 기존 Tool Use — 핵심 차이</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>OpenAI Function Calling / LangChain Tool</th>
+<th>MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>표준화</td>
+<td>프레임워크별로 다름</td>
+<td>공개 표준 (누구나 구현 가능)</td>
+</tr>
+<tr>
+<td>재사용성</td>
+<td>A 프레임워크 도구를 B에서 못 씀</td>
+<td>MCP 서버 하나를 Claude/GPT/Gemini 모두 연결 가능</td>
+</tr>
+<tr>
+<td>도구 제공 방식</td>
+<td>코드에 직접 정의</td>
+<td>독립 서버 프로세스로 실행</td>
+</tr>
+<tr>
+<td>도구 목록 탐색</td>
+<td>정적 (코드에 하드코딩)</td>
+<td>동적 (<code>tools/list</code> 요청으로 런타임에 조회)</td>
+</tr>
+</tbody></table>
+<p>MCP의 핵심은 <strong>도구 서버가 LLM 앱과 독립적으로 존재</strong>한다는 점이다. 회사의 DB 조회 도구를 MCP 서버로 한번 만들어두면, Claude Desktop에서도 쓰고, Browser Use에서도 쓰고, 사내 챗봇에서도 쓸 수 있다.</p>
+</div>
+
 <div class="ornament">· · ·</div>
 
 <h2>종합: 무엇을 믿고 무엇을 조심해야 하나</h2>
