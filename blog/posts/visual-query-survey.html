@@ -376,41 +376,97 @@
 <p><strong>핵심 메시지:</strong> 이미지 쿼리는 종종 under-specified하다. 사용자의 의도를 disambiguate하는 메커니즘이 필수다.</p>
 <hr>
 <h3>4. MomentSeeker: Long-Video Moment Retrieval 벤치마크</h3>
-<p><strong>arXiv 2502.12558 (2025)</strong></p>
-<p>Huaying Yuan 외. 긴 영상(평균 1200초)에서의 moment retrieval을 체계적으로 벤치마킹한다. 세 가지 레벨을 포함한다.</p>
+<p><strong>arXiv 2502.12558 (2025) · 268개 영상, 평균 1,202초</strong></p>
+<p>Huaying Yuan 외. 긴 영상에서의 moment retrieval을 체계적으로 벤치마킹한다.</p>
+<p><strong>세 가지 쿼리 형태 (5:2:2 비율):</strong></p>
 <table>
 <thead>
 <tr>
-<th>레벨</th>
-<th>설명</th>
-<th>예시 태스크</th>
+<th>태스크</th>
+<th>입력</th>
+<th>쿼리 수</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Global</td>
-<td>영상 전체 맥락</td>
-<td>이벤트 인식</td>
+<td>TMR (텍스트)</td>
+<td>q_T</td>
+<td>900</td>
 </tr>
 <tr>
-<td>Event</td>
-<td>특정 사건 구간</td>
-<td>행동 로컬라이제이션</td>
+<td>IMR (이미지+텍스트)</td>
+<td>q_T + q_I</td>
+<td>360</td>
 </tr>
 <tr>
-<td>Object</td>
-<td>특정 객체 추적</td>
-<td>객체 위치 확인</td>
+<td>VMR (영상+텍스트)</td>
+<td>q_T + q_V</td>
+<td>360</td>
 </tr>
 </tbody></table>
-<p>그리고 세 가지 쿼리 형태를 지원한다: <strong>텍스트 쿼리</strong>, <strong>이미지 조건 쿼리(IMS)</strong>, <strong>영상 조건 쿼리</strong>.</p>
-<p>IMS(Image-conditioned Moment Search)에서 LanguageBind의 R@1이 <strong>4.8</strong>에 불과하다는 것이 확인됐다. 태스크가 그만큼 어렵다는 뜻이다.</p>
 <div class="callout">
-<strong>IMS 태스크 정의 (MomentSeeker)</strong><br>
-입력: 이미지 q_v + 긴 영상 V<br>
-출력: V 내에서 q_v와 가장 관련 있는 순간 (t_start, t_end)<br>
-현재 SOTA LanguageBind R@1 = 4.8 — 아직 매우 어려운 태스크
+<strong>IMR 정확한 입출력 정의</strong><br><br>
+입력: 텍스트 쿼리 q_T <strong>+ 레퍼런스 이미지 q_I</strong> + 긴 영상 V<br>
+출력: [[t_start_1, t_end_1], ..., [t_start_n, t_end_n]] (1≤n≤5)<br><br>
+이미지 q_I는 같은 영상의 keyframe이거나 다른 영상의 관련 프레임. 어노테이터가 직접 선택.
 </div>
 
+<p><strong>주요 베이스라인 성능 (Overall R@1, IoU=0.3):</strong></p>
+<table>
+<thead>
+<tr>
+<th>모델</th>
+<th>타입</th>
+<th>R@1</th>
+<th>mAP@5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gemini-2.5-Pro</td>
+<td>Generation</td>
+<td><strong>29.6</strong></td>
+<td>31.4</td>
+</tr>
+<tr>
+<td>GPT-4o</td>
+<td>Generation</td>
+<td>18.2</td>
+<td>18.9</td>
+</tr>
+<tr>
+<td>Qwen2.5VL-72B</td>
+<td>Generation</td>
+<td>17.2</td>
+<td>16.9</td>
+</tr>
+<tr>
+<td>InternVideo2</td>
+<td>Retrieval</td>
+<td>19.7</td>
+<td>26.6</td>
+</tr>
+<tr>
+<td>LanguageBind</td>
+<td>Retrieval</td>
+<td>18.2</td>
+<td>25.4</td>
+</tr>
+<tr>
+<td>CoVR</td>
+<td>Retrieval</td>
+<td>13.0</td>
+<td>18.5</td>
+</tr>
+</tbody></table>
+<p><strong>핵심 발견 — 왜 IMR 성능이 낮은가:</strong></p>
+<p>논문이 명시적으로 밝힌 이유:</p>
+<blockquote>
+<p>&quot;No model was specifically designed or fine-tuned for IMR. All tested models fail at deeper multi-modal integration and reasoning across modalities.&quot;</p>
+</blockquote>
+<p>즉 태스크가 근본적으로 어려운 게 아니라, <strong>IMR로 학습한 모델이 하나도 없기 때문</strong>이다. 현재 모델들은 전부 zero-shot으로 IMR을 수행하고 있다.</p>
+<p>논문은 명시적으로 이렇게 제안한다:</p>
+<blockquote>
+<p>&quot;Better multi-modal query fusion and training data specifically designed for IMR would significantly improve performance.&quot;</p>
+</blockquote>
 <hr>
 <h3>5. SketchQL: 스케치로 영상 순간 찾기</h3>
 <p><strong>VLDB 2024 · arXiv 2405.18334</strong></p>
@@ -589,10 +645,39 @@ Unified Multimodal Retrieval
 </tbody></table>
 <hr>
 <h2>TCVP에 주는 시사점</h2>
-<p><strong>첫째</strong>, Composed Retrieval 트렌드에서 데이터가 핵심 병목이다. CoVR-2조차 자동 생성 데이터를 쓴다. TCVP는 실제 사용자가 남긴 타임스탬프 댓글에서 쿼리를 추출하므로, <strong>real user intent 기반 데이터</strong>라는 차별점이 살아있다.</p>
-<p><strong>둘째</strong>, MomentSeeker IMS에서 LanguageBind R@1이 4.8이라는 숫자는 기회다. 태스크는 정의됐지만 <strong>학습에 쓸 데이터가 없어서</strong> 성능이 낮다. TCVP가 real-world IMS 학습 데이터를 제공하면 직접적인 기여가 된다.</p>
-<p><strong>셋째</strong>, MINOTAUR와 EAGLE이 Ego4D에서만 이미지 쿼리를 다뤘다는 한계는 TCVP에게 포지셔닝 기회다. <strong>일반 YouTube 영상 + real user intent + 이미지 쿼리</strong>의 교집합은 아직 비어있다.</p>
-<p><strong>넷째</strong>, HUD가 지적한 것처럼 이미지 쿼리는 under-specified하다. 이 모호성을 댓글 텍스트가 해소하는 TCVP의 <code>(q_t, q_v)</code> 구조가 이 문제에 대한 자연스러운 답이 된다.</p>
+<p><strong>첫째 — 입출력이 정확히 일치한다.</strong></p>
+<p>MomentSeeker IMR의 입력이 <code>(q_T, q_I)</code> 쌍이라는 게 확인됐다. TCVP가 타임스탬프 댓글에서 자연스럽게 만드는 게 바로 <code>(댓글 텍스트, keyframe)</code> 쌍이다. 구조가 완벽하게 맞아떨어진다.</p>
+<pre><code>MomentSeeker IMR 요구: (q_T, q_I) → (t_start, t_end)
+TCVP가 제공:          (댓글 쿼리, 타임스탬프 keyframe) → 타임스탬프
+</code></pre>
+<p><strong>둘째 — 성능이 낮은 이유가 &quot;데이터 없음&quot;이다.</strong></p>
+<p>논문이 명확히 밝혔다: 모든 모델이 zero-shot으로 IMR을 수행하고 있다. IMR 전용 학습 데이터가 존재하지 않기 때문이다. TCVP가 real user intent 기반 IMR 학습 데이터를 제공하면, LanguageBind를 fine-tuning해서 MomentSeeker IMR 성능을 직접 끌어올릴 수 있다. 이게 <strong>downstream training 실험</strong>이 된다.</p>
+<pre><code>현재: LanguageBind zero-shot IMR → 낮은 성능
+TCVP fine-tuning 후: MomentSeeker IMR 성능 ↑
+→ &quot;real user intent 데이터가 IMR 성능의 핵심이었다&quot;
+</code></pre>
+<p><strong>셋째 — Ego4D 한계가 TCVP의 기회다.</strong></p>
+<p>MINOTAUR, EAGLE 모두 Ego4D(1인칭) 전용이다. 일반 YouTube 영상(3인칭)에서 real user intent 기반 IMR 데이터는 아직 없다.</p>
+<p><strong>넷째 — HUD의 disambiguation 문제를 구조적으로 해결한다.</strong></p>
+<p>이미지 단독 쿼리는 under-specified하다(HUD). TCVP의 댓글 텍스트가 이 모호성을 자연스럽게 해소한다. 모델이 해결하려던 문제를 데이터 구조가 처음부터 막아준다.</p>
+<hr>
+<h2>TCVP 다음 버전의 그림</h2>
+<p>지금까지 조사한 내용을 종합하면, TCVP v2의 contribution 구조가 이렇게 잡힌다.</p>
+<pre><code>[데이터 기여]
+YouTube 타임스탬프 댓글
+  → (q_T, q_I) IMR 쌍 자동 생성
+  → real user intent 기반 최초 IMR 학습 데이터
+
+[태스크 기여]
+MomentSeeker IMR을 baseline으로
+  → TCVP 데이터로 LanguageBind fine-tuning
+  → IMR 성능 향상 증명
+
+[분석 기여]
+Mixed modality 본론 편입
+  → 댓글의 시각/청각/혼합 분포 분석
+  → IMR에서 각 모달리티의 역할 ablation
+</code></pre>
 
   </div>
 
