@@ -437,6 +437,16 @@
 <p>Kevin Flanagan 외. 쿼리가 가리키는 순간이 영상에 존재하지 않는 경우를 체계적으로 다룬 최초 연구. Negative-Aware VMR(NA-VMR) 제안. UniVTG-NA가 98.4% negative rejection accuracy 달성.</p>
 <p><strong>TCVP에 주는 시사점:</strong> 이미지 쿼리가 코퍼스 내 어떤 영상에도 없는 장면을 가리킬 수 있다. 이를 gracefully reject하는 메커니즘이 real-world 시스템에서 필수다.</p>
 <hr>
+<h3>10. MINOTAUR: Multi-task Video Grounding From Multimodal Queries</h3>
+<p><strong>arXiv 2302.08063 (Meta AI, 2023)</strong></p>
+<p>Raghav Goyal 외 (Meta). 이미지 crop, 텍스트, 액티비티 레이블 세 가지 쿼리 형태를 단일 통합 모델로 처리한다. Ego4D 에피소딕 메모리 태스크 세 가지를 하나의 아키텍처로 해결하며, 크로스-태스크 학습이 개별 태스크 성능을 개선함을 보였다.</p>
+<p><strong>중요한 한계:</strong> 시각적 쿼리(이미지 crop)가 같은 Ego4D 영상 도메인에서 추출된 것이다. 일반 웹 이미지를 쿼리로 사용하는 시나리오는 다루지 않는다.</p>
+<hr>
+<h3>11. EAGLE: Episodic Appearance- and Geometry-aware Memory</h3>
+<p><strong>AAAI 2026 · arXiv 2511.08007</strong></p>
+<p>Yifei Cao 외. 1인칭 에고센트릭 영상에서 이미지 쿼리(객체 crop)가 주어지면 2D 세그멘테이션 마스크와 3D 공간 좌표까지 동시에 찾아준다. Dual memory 시스템(외형 + 기하학)으로 시점 변화에도 강인하다.</p>
+<p><strong>중요한 한계:</strong> Ego4D 전용. 카메라가 물체를 직접 본 기록이 있는 1인칭 영상에서만 작동한다.</p>
+<hr>
 <h2>연구 지형 요약</h2>
 <pre><code>Composed Video Retrieval (이미지+텍스트 동시 쿼리)
 ├── 태스크 정의: CoVR-2 (TPAMI&#39;24)
@@ -444,9 +454,13 @@
 ├── Disambiguation: HUD (MM&#39;25)
 └── 시계열 확장: TF-CoVR (2025)
 
-Image-Conditioned Moment Search (IMS)
-└── 벤치마크: MomentSeeker (2025)
-    → LanguageBind R@1 = 4.8 (여전히 매우 어려운 태스크)
+Image-Conditioned Moment Search — 일반 영상
+└── 벤치마크만 있음: MomentSeeker (2025)
+    → LanguageBind R@1 = 4.8, 데이터셋은 없음 ← 공백
+
+Image Query — Ego4D 한정
+├── MINOTAUR (Meta, 2023) — 멀티태스크 통합
+└── EAGLE (AAAI&#39;26) — 2D+3D 위치 추정
 
 Visual-only Query
 └── Sketch 기반: SketchQL (VLDB&#39;24)
@@ -460,11 +474,125 @@ Unified Multimodal Retrieval
 └── Negative query: WACV&#39;25
 </code></pre>
 <hr>
+<h2>핵심 공백: 아직 아무도 안 한 것</h2>
+<p>두 에이전트가 수십 편의 논문을 조사한 결과, 하나의 명확한 공백이 드러났다.</p>
+<div class="callout" style="border-left-color: #c0392b;">
+<strong>발견된 공백</strong><br><br>
+일반 YouTube 영상(3인칭)에서, 실제 사용자의 의도에서 비롯된 이미지 쿼리로 모멘트를 찾는 데이터셋은 2025년 기준으로 존재하지 않는다.<br><br>
+• Ego4D 이미지 쿼리 → MINOTAUR, EAGLE이 이미 다룸<br>
+• 일반 영상 이미지 쿼리 벤치마크 → MomentSeeker가 정의했지만 데이터셋은 없음<br>
+• Real user intent 기반 이미지+텍스트 쿼리 쌍 → <strong>아무것도 없음</strong>
+</div>
+
+<p>TCVP는 타임스탬프 댓글에서 텍스트 쿼리와 keyframe을 동시에 추출할 수 있다. 이 구조가 위 공백을 자연스럽게 채운다.</p>
+<hr>
+<h2>전체 논문 정리표</h2>
+<table>
+<thead>
+<tr>
+<th>논문</th>
+<th>연도</th>
+<th>베뉴</th>
+<th>쿼리 타입</th>
+<th>영상 도메인</th>
+<th>핵심</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CoVR-2</td>
+<td>2024</td>
+<td>TPAMI</td>
+<td>이미지+텍스트</td>
+<td>일반 웹</td>
+<td>Composed Retrieval 정립</td>
+</tr>
+<tr>
+<td>CVPR&#39;24 Thawakar</td>
+<td>2024</td>
+<td>CVPR</td>
+<td>이미지+텍스트</td>
+<td>일반 웹</td>
+<td>모달리티 분리 인코딩</td>
+</tr>
+<tr>
+<td>HUD</td>
+<td>2025</td>
+<td>MM</td>
+<td>이미지+텍스트</td>
+<td>일반 웹</td>
+<td>Disambiguation</td>
+</tr>
+<tr>
+<td>MomentSeeker</td>
+<td>2025</td>
+<td>arXiv</td>
+<td>텍스트/이미지/영상</td>
+<td>일반 (영화 등)</td>
+<td>IMS 벤치마크</td>
+</tr>
+<tr>
+<td>MINOTAUR</td>
+<td>2023</td>
+<td>arXiv</td>
+<td>이미지 crop+텍스트</td>
+<td><strong>Ego4D만</strong></td>
+<td>멀티태스크 통합</td>
+</tr>
+<tr>
+<td>EAGLE</td>
+<td>2026</td>
+<td>AAAI</td>
+<td>이미지 crop</td>
+<td><strong>Ego4D만</strong></td>
+<td>2D+3D 위치 추정</td>
+</tr>
+<tr>
+<td>SketchQL</td>
+<td>2024</td>
+<td>VLDB</td>
+<td>스케치</td>
+<td>일반</td>
+<td>순수 시각 쿼리</td>
+</tr>
+<tr>
+<td>VIRTUE</td>
+<td>2026</td>
+<td>arXiv</td>
+<td>텍스트+composed</td>
+<td>일반</td>
+<td>통합 멀티모달</td>
+</tr>
+<tr>
+<td>GranAlign</td>
+<td>2026</td>
+<td>AAAI</td>
+<td>텍스트</td>
+<td>일반</td>
+<td>쿼리 granularity</td>
+</tr>
+<tr>
+<td>Object-Centric VMR</td>
+<td>2026</td>
+<td>AAAI</td>
+<td>텍스트</td>
+<td>일반</td>
+<td>객체 중심 접근</td>
+</tr>
+<tr>
+<td>Moment of Untruth</td>
+<td>2025</td>
+<td>WACV</td>
+<td>텍스트</td>
+<td>일반</td>
+<td>Negative query</td>
+</tr>
+</tbody></table>
+<hr>
 <h2>TCVP에 주는 시사점</h2>
-<p>세 가지를 정리할 수 있다.</p>
 <p><strong>첫째</strong>, Composed Retrieval 트렌드에서 데이터가 핵심 병목이다. CoVR-2조차 자동 생성 데이터를 쓴다. TCVP는 실제 사용자가 남긴 타임스탬프 댓글에서 쿼리를 추출하므로, <strong>real user intent 기반 데이터</strong>라는 차별점이 살아있다.</p>
-<p><strong>둘째</strong>, MomentSeeker IMS에서 LanguageBind R@1이 4.8이라는 숫자는 기회다. 태스크는 정의됐지만 데이터가 없어서 성능이 낮다. TCVP가 real-world IMS 데이터를 제공하면 의미 있는 기여가 된다.</p>
-<p><strong>셋째</strong>, HUD가 지적한 것처럼 이미지 쿼리는 under-specified하다. 이 모호성을 텍스트 쿼리(댓글)가 해소하는 구조 — 즉 TCVP의 <code>(댓글 텍스트, 타임스탬프 keyframe)</code> 쌍 — 가 자연스럽게 이 문제를 해결한다. 이것이 단순한 기능 추가가 아닌 구조적 기여가 될 수 있는 이유다.</p>
+<p><strong>둘째</strong>, MomentSeeker IMS에서 LanguageBind R@1이 4.8이라는 숫자는 기회다. 태스크는 정의됐지만 <strong>학습에 쓸 데이터가 없어서</strong> 성능이 낮다. TCVP가 real-world IMS 학습 데이터를 제공하면 직접적인 기여가 된다.</p>
+<p><strong>셋째</strong>, MINOTAUR와 EAGLE이 Ego4D에서만 이미지 쿼리를 다뤘다는 한계는 TCVP에게 포지셔닝 기회다. <strong>일반 YouTube 영상 + real user intent + 이미지 쿼리</strong>의 교집합은 아직 비어있다.</p>
+<p><strong>넷째</strong>, HUD가 지적한 것처럼 이미지 쿼리는 under-specified하다. 이 모호성을 댓글 텍스트가 해소하는 TCVP의 <code>(q_t, q_v)</code> 구조가 이 문제에 대한 자연스러운 답이 된다.</p>
 
   </div>
 
