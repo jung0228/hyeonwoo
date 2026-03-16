@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCVP-IMR: 타임스탬프 댓글로 IMR 학습 데이터 자동 구축하기 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .55rem .9rem;
+      border-bottom: 2px solid var(--text);
+      color: var(--text); letter-spacing: .04em;
+    }
+    .post-content td {
+      padding: .5rem .9rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text); vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+
+    /* ─── CODE BLOCKS ─── */
+    /* ─── CODE BLOCKS ─── */
+    pre {
+      background: #282c34;
+      border-radius: 6px; padding: 1.2rem 1.5rem;
+      margin: 1.6rem 0; overflow-x: auto;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .82rem; line-height: 1.65;
+      color: #abb2bf;
+    }
+    pre code, pre code.hljs {
+      background: none !important; border: none; padding: 0 !important;
+      font-size: inherit; color: inherit;
+    }
+
+    /* ─── IMAGES ─── */
+    .post-content img {
+      max-width: 100%; height: auto;
+      display: block; margin: 2rem auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule-lt);
+    }
+    .post-content figure { margin: 2rem 0; text-align: center; }
+    .post-content figure.fig-sm { max-width: 52%; margin: 2rem auto; }
+    .post-content figure.fig-sm img { max-width: 100%; }
+    .post-content figcaption {
+      font-size: .78rem; color: var(--muted); margin-top: .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+  <style>
+    #gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(249,248,244,0.97);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gate-box { text-align: center; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    .gate-lock { font-size: 2rem; margin-bottom: 1.2rem; color: var(--muted); }
+    .gate-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
+    .gate-sub { font-size: .8rem; color: var(--muted); margin-bottom: 1.8rem; }
+    .gate-input {
+      display: block; width: 220px; margin: 0 auto 1rem;
+      padding: .7rem 1rem; border: 1px solid var(--rule-lt);
+      background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 1rem; color: var(--text); text-align: center; letter-spacing: .3em;
+      outline: none; transition: border-color .15s;
+    }
+    .gate-input:focus { border-color: var(--accent); }
+    .gate-input.error { border-color: #c0392b; animation: shake .3s; }
+    .gate-btn {
+      display: block; width: 220px; margin: 0 auto;
+      padding: .7rem 1rem; background: var(--text); color: var(--bg);
+      border: none; cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      transition: opacity .15s;
+    }
+    .gate-btn:hover { opacity: .8; }
+    .gate-error { font-size: .75rem; color: #c0392b; margin-top: .8rem; min-height: 1rem; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+  </style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-lock">🔒</div>
+    <div class="gate-title">비공개 포스트</div>
+    <div class="gate-sub">비밀번호를 입력해주세요</div>
+    <input id="gate-input" class="gate-input" type="password" placeholder="····" maxlength="10" />
+    <button class="gate-btn" onclick="checkPassword()">입장</button>
+    <div class="gate-error" id="gate-error"></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <ul class="nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">TCVP-IMR: 타임스탬프 댓글로 IMR 학습 데이터 자동 구축하기</h1>
+  <p class="post-dek">MomentSeeker가 수동으로 만든 것을 YouTube 댓글로 자동화할 수 있을까.</p>
+
+  <div class="post-meta">
+    <span class="cat">Video</span>
+    <span class="dot">·</span>
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span>2026-03-15</span>
+    <span class="dot">·</span>
+    <span>10 min read</span>
+  </div>
+
+  <div class="post-content">
+<h2>배경: IMR이라는 과제</h2>
+<p>기존 VMR(Video Moment Retrieval)은 텍스트 쿼리 하나로 영상 속 특정 구간을 찾는 문제다. 그런데 실제 유저의 검색 의도는 텍스트만으로 표현하기 어려울 때가 많다. &quot;이 장면이랑 비슷한 부분 찾아줘&quot;처럼, <strong>이미지와 텍스트를 함께</strong> 써야 자연스러운 경우다.</p>
+<p>**IMR(Image-conditioned Moment Retrieval)**은 이 공백을 채운다:</p>
+<div class="callout">
+  <strong>IMR 정의</strong><br>
+  Input: 텍스트 쿼리 q<sub>T</sub> + 참조 이미지 q<sub>I</sub> + 영상 V<br>
+  Output: 영상 내 타임스탬프 구간 [t<sub>start</sub>, t<sub>end</sub>]
+</div>
+
+<p>MomentSeeker(2025)는 장시간 영상(평균 1,202초)을 대상으로 TMR / IMR / VMR 세 가지 쿼리 유형을 포괄하는 벤치마크를 발표했다. 이 중 IMR 쿼리는 약 360개. 핵심은 이것이 <strong>전부 수동 어노테이션</strong>이라는 점이다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>MomentSeeker가 IMR 데이터를 만든 방식</h2>
+<p>구축 과정은 간단하지만 손이 많이 간다.</p>
+<ol>
+<li><strong>q_I 선택:</strong> 어노테이터가 참조 이미지를 직접 고른다. 같은 영상에서 &quot;핵심 장면의 keyframe&quot;을 뽑거나, 다른 영상에서 의미적으로 관련된 프레임을 가져온다.</li>
+<li><strong>q_T 작성:</strong> 선택한 이미지에 &quot;묶인&quot; 질문을 자연어로 직접 쓴다. 예: <em>&quot;What&#39;s the color of the dog that once appeared on this road?&quot;</em></li>
+<li><strong>타임스탬프 마킹:</strong> 대상 영상에서 그 질문의 답이 되는 구간을 직접 표시한다.</li>
+<li><strong>논리 일관성 검증:</strong> (q_I, q_T, 정답 구간) 세 요소가 서로 맞는지 확인한다.</li>
+</ol>
+<p>결과: 정교하지만 스케일이 안 된다. 360개가 한계다. 그리고 논문 자체도 말한다.</p>
+<div class="pullquote">
+  "No model was specifically designed or fine-tuned for IMR — better training data specifically designed for IMR is needed."
+</div>
+
+<p>현재 MomentSeeker IMR 최고 성능은 Gemini-2.5-Pro(29.6 R@1). 전용 학습 데이터가 없는 상태에서 retrieval 모델인 LanguageBind는 18.2 R@1에 그친다. <strong>IMR 전용 학습 데이터가 존재하지 않는다는 게 병목이다.</strong></p>
+<div class="ornament">· · ·</div>
+
+<h2>TCVP가 가진 것</h2>
+<p>TCVP(Timestamped Comment-guided VMR Pipeline)는 YouTube의 타임스탬프 댓글을 활용해 VMR 학습 데이터를 구축한다. 유저가 남긴 댓글은 이런 형태다:</p>
+<pre><code>Video V
+├── &quot;2:15 - circuit board 처음 등장&quot;         @ t=135s
+├── &quot;8:30 - circuit board 완성 후 테스트&quot;    @ t=510s
+└── &quot;12:00 - 최종 동작 확인&quot;                @ t=720s
+</code></pre>
+<p>각 (댓글 텍스트, 타임스탬프)는 영상 내 특정 순간을 <strong>실제 유저가 가리킨 것</strong>이다. keyframe도 추출할 수 있고, 텍스트도 있다.</p>
+<p>여기서 핵심을 발견할 수 있다. 같은 영상 안에서 <strong>같은 대상(circuit board)이 서로 다른 타임스탬프에 등장한다.</strong> 이 두 타임스탬프를 연결하면 자연스럽게 IMR 쌍이 만들어진다.</p>
+<div class="callout">
+  <strong>핵심 아이디어</strong><br>
+  t<sub>i</sub>의 keyframe = q<sub>I</sub><br>
+  t<sub>j</sub>의 댓글 텍스트 → LLM으로 질문 변환 = q<sub>T</sub><br>
+  [t<sub>j</sub> - δ, t<sub>j</sub> + δ] = ground truth<br><br>
+  사람이 하나도 개입하지 않는다.
+</div>
+
+<div class="ornament">· · ·</div>
+
+<h2>자동 구축 파이프라인</h2>
+<h3>Step 1: keyframe 추출 + CLIP 임베딩</h3>
+<p>각 타임스탬프 댓글에 대해 해당 시점의 keyframe을 추출하고 CLIP visual embedding을 계산한다.</p>
+<pre><code class="language-python">for video V:
+    for (comment C_i, timestamp t_i) in V.comments:
+        K_i = extract_keyframe(V, t_i)
+        e_i = CLIP.encode_image(K_i)
+</code></pre>
+<h3>Step 2: 시각적 유사 쌍 탐색</h3>
+<p>같은 영상 내에서 &quot;관련 있지만 동일하지 않은&quot; 프레임 쌍을 찾는다. 유사도 범위가 핵심이다.</p>
+<pre><code class="language-python">for all pairs (i, j) in same video V:
+    temporal_gap = |t_i - t_j|
+    visual_sim   = cosine_similarity(e_i, e_j)
+
+    if temporal_gap &gt; 30s and 0.55 &lt; visual_sim &lt; 0.82:
+        valid_pairs.add((i, j))  # i → j 방향
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>visual_sim</th>
+<th>의미</th>
+<th>판단</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&gt; 0.85</td>
+<td>거의 동일한 프레임</td>
+<td>탈락: 너무 쉬움</td>
+</tr>
+<tr>
+<td>0.55 ~ 0.82</td>
+<td>같은 대상, 다른 상황</td>
+<td><strong>채택</strong></td>
+</tr>
+<tr>
+<td>&lt; 0.50</td>
+<td>관련 없는 장면</td>
+<td>탈락: 시각 힌트 무의미</td>
+</tr>
+</tbody></table>
+<h3>Step 3: q_T 자동 생성 (LLM)</h3>
+<p>댓글 텍스트를 자연어 질문으로 변환한다. q_I(참조 이미지)를 함께 제공해 질문이 이미지와 &quot;묶이도록&quot; 유도한다.</p>
+<pre><code>Prompt:
+  아래 댓글은 영상의 특정 순간을 설명합니다.
+  첨부된 이미지(q_I)를 참조 시각 힌트로 활용하여,
+  영상에서 댓글이 묘사하는 순간을 묻는 자연어 질문을 작성하세요.
+
+  댓글: &quot;8:30 - circuit board 완성 후 테스트 장면&quot;
+
+Output q_T:
+  &quot;When does the person test the circuit board
+   that first appeared in this image?&quot;
+</code></pre>
+<h3>Step 4: 품질 필터링</h3>
+<p>자동 생성된 쌍을 다층 필터로 걸러낸다.</p>
+<table>
+<thead>
+<tr>
+<th>필터</th>
+<th>기준</th>
+<th>이유</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>q_T 형식</td>
+<td>&quot;?&quot; 포함 여부</td>
+<td>질문이 아닌 경우 제거</td>
+</tr>
+<tr>
+<td>q_I ↔ GT 시각 관련성</td>
+<td>CLIP(K_i, K_j) &gt; 0.5</td>
+<td>참조 이미지가 정답과 무관한 경우</td>
+</tr>
+<tr>
+<td>q_T ↔ q_I 정합성</td>
+<td>CLIP_text(q_T, K_i) &gt; threshold</td>
+<td>텍스트와 이미지가 어긋난 경우</td>
+</tr>
+<tr>
+<td>영상별 쌍 수 제한</td>
+<td>영상당 최대 N쌍</td>
+<td>특정 영상 과표현 방지</td>
+</tr>
+</tbody></table>
+<h3>Step 5: Ground truth 구간 확정</h3>
+<pre><code>Ground truth = [t_j - 15s, t_j + 15s]
+</code></pre>
+<p>기존 TCVP 논문의 temporal window 방식을 그대로 계승한다. Shot boundary detection을 추가 적용하면 더 정밀한 구간 설정이 가능하다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>전체 파이프라인 그림</h2>
+<div style="overflow-x:auto; margin: 2rem 0;">
+<div><svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:720px;font-family:'Source Serif 4',serif;">
+  <!-- Background -->
+  <rect width="720" height="420" fill="#fafaf8" rx="8"/>
+  <!-- Title -->
+  <text x="360" y="34" text-anchor="middle" font-size="15" font-weight="700" fill="#1a1a1a">TCVP-IMR 자동 구축 파이프라인</text>
+  <!-- Step boxes -->
+  <!-- Step 1 -->
+  <rect x="30" y="60" width="150" height="72" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="105" y="85" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">Step 1</text>
+  <text x="105" y="101" text-anchor="middle" font-size="10" fill="#78350f">Keyframe 추출</text>
+  <text x="105" y="116" text-anchor="middle" font-size="10" fill="#78350f">+ CLIP 임베딩</text>
+  <text x="105" y="131" text-anchor="middle" font-size="9" fill="#a16207">(e_i per timestamp)</text>
+  <!-- Arrow 1→2 -->
+  <line x1="180" y1="96" x2="205" y2="96" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Step 2 -->
+  <rect x="205" y="60" width="155" height="72" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="282" y="85" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">Step 2</text>
+  <text x="282" y="101" text-anchor="middle" font-size="10" fill="#1e3a8a">유사 쌍 탐색</text>
+  <text x="282" y="116" text-anchor="middle" font-size="10" fill="#1e3a8a">0.55 &lt; sim &lt; 0.82</text>
+  <text x="282" y="131" text-anchor="middle" font-size="9" fill="#1d4ed8">temporal gap &gt; 30s</text>
+  <!-- Arrow 2→3 -->
+  <line x1="360" y1="96" x2="385" y2="96" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Step 3 -->
+  <rect x="385" y="60" width="145" height="72" rx="6" fill="#d4f7d4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="457" y="85" text-anchor="middle" font-size="11" font-weight="700" fill="#14532d">Step 3</text>
+  <text x="457" y="101" text-anchor="middle" font-size="10" fill="#166534">LLM으로 q_T 생성</text>
+  <text x="457" y="116" text-anchor="middle" font-size="10" fill="#166534">댓글 → 질문 변환</text>
+  <text x="457" y="131" text-anchor="middle" font-size="9" fill="#15803d">(q_I 이미지 참조)</text>
+  <!-- Arrow 3→4 -->
+  <line x1="530" y1="96" x2="555" y2="96" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Step 4 -->
+  <rect x="555" y="60" width="135" height="72" rx="6" fill="#ffd6d6" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="622" y="85" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Step 4</text>
+  <text x="622" y="101" text-anchor="middle" font-size="10" fill="#7f1d1d">품질 필터링</text>
+  <text x="622" y="116" text-anchor="middle" font-size="10" fill="#7f1d1d">CLIP 정합성 검증</text>
+  <text x="622" y="131" text-anchor="middle" font-size="9" fill="#991b1b">+ 형식 검사</text>
+  <!-- Down arrow from Step 4 -->
+  <line x1="622" y1="132" x2="622" y2="165" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Output box -->
+  <rect x="180" y="165" width="480" height="60" rx="6" fill="#f3f0ea" stroke="#78716c" stroke-width="1.5"/>
+  <text x="420" y="189" text-anchor="middle" font-size="11" font-weight="700" fill="#292524">TCVP-IMR Dataset</text>
+  <text x="420" y="207" text-anchor="middle" font-size="10" fill="#57534e">(q_T, q_I, Video V) → Ground truth [t_j − 15s, t_j + 15s]</text>
+  <text x="420" y="222" text-anchor="middle" font-size="9" fill="#78716c">수만 개 규모 · 자동 생성 · 실제 유저 의도</text>
+  <!-- Down arrow to fine-tune -->
+  <line x1="420" y1="225" x2="420" y2="258" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Fine-tune box -->
+  <rect x="260" y="258" width="320" height="50" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="420" y="280" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">LanguageBind Fine-tuning (IMR)</text>
+  <text x="420" y="297" text-anchor="middle" font-size="9" fill="#5b21b6">TCVP-IMR으로 학습 → MomentSeeker IMR 평가</text>
+  <!-- Down arrow to result -->
+  <line x1="420" y1="308" x2="420" y2="340" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Result box -->
+  <rect x="230" y="340" width="380" height="55" rx="6" fill="#1a1a1a" stroke="#1a1a1a"/>
+  <text x="420" y="362" text-anchor="middle" font-size="11" font-weight="700" fill="#fef3c7">MomentSeeker IMR R@1</text>
+  <text x="420" y="380" text-anchor="middle" font-size="10" fill="#d6d3d1">baseline 18.2 (LanguageBind)  →  ??? (TCVP-LB)</text>
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+</svg></div>
+</div>
+
+<div class="ornament">· · ·</div>
+
+<h2>MomentSeeker 대비 비교</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MomentSeeker IMR</th>
+<th>TCVP-IMR (자동)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>규모</td>
+<td>~360개</td>
+<td>수만 개 예상</td>
+</tr>
+<tr>
+<td>구축 방법</td>
+<td>인간 어노테이션</td>
+<td>완전 자동</td>
+</tr>
+<tr>
+<td>q_I 출처</td>
+<td>어노테이터가 선택</td>
+<td>타임스탬프 keyframe</td>
+</tr>
+<tr>
+<td>q_T 출처</td>
+<td>어노테이터가 작성</td>
+<td>LLM(댓글 → 질문 변환)</td>
+</tr>
+<tr>
+<td>의도의 자연성</td>
+<td>인위적 구성</td>
+<td>실제 유저 검색 의도</td>
+</tr>
+<tr>
+<td>q_I 영상 관계</td>
+<td>동/타 영상 혼합</td>
+<td>동일 영상 내 (v1)</td>
+</tr>
+</tbody></table>
+<div class="ornament">· · ·</div>
+
+<h2>남은 과제와 한계</h2>
+<p><strong>Threshold 결정이 핵심이다.</strong> CLIP 유사도 범위 <code>[0.55, 0.82]</code>는 pilot 실험 없이는 임의적이다. 너무 좁히면 쌍이 부족하고, 너무 열면 품질이 떨어진다. 소규모 영상 집합으로 threshold를 먼저 잡아야 한다.</p>
+<p><strong>Cross-video 쌍은 v1 범위 밖이다.</strong> MomentSeeker IMR은 다른 영상에서 가져온 q_I도 포함한다. TCVP v1은 같은 영상 내 쌍에 집중하고, cross-video는 다음 단계로 미룬다.</p>
+<p><strong>LLM 변환 품질.</strong> 댓글이 너무 짧거나(&quot;2:30 ㅋㅋ&quot;) 비시각적이면 q_T 생성 품질이 낮다. Visual 타입 댓글 필터링(Mixed Modality 분류기)과 연동하면 이 문제를 줄일 수 있다.</p>
+<p><strong>Shot boundary 활용 미비.</strong> 현재 ground truth window는 ±15초로 단순하다. Shot boundary detection을 도입하면 더 정밀한 구간 레이블이 가능하다.</p>
+<div class="footnote">
+  참고: <a href="https://arxiv.org/abs/2502.12558">MomentSeeker: A Comprehensive Benchmark for Long-Video Moment Retrieval (2025)</a>
+</div>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+<script>
+  (function() {
+    if (sessionStorage.getItem('tcvp-imr-auth') === '1') {
+      document.getElementById('gate').style.display = 'none';
+    }
+  })();
+
+  function checkPassword() {
+    const input = document.getElementById('gate-input');
+    const error = document.getElementById('gate-error');
+    if (input.value === '1004') {
+      sessionStorage.setItem('tcvp-imr-auth', '1');
+      document.getElementById('gate').style.display = 'none';
+    } else {
+      input.classList.add('error');
+      error.textContent = '비밀번호가 틀렸습니다.';
+      setTimeout(() => input.classList.remove('error'), 400);
+      input.value = '';
+    }
+  }
+
+  document.getElementById('gate-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+</script>
+
+</body>
+</html>
