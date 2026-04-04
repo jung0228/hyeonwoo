@@ -1,0 +1,502 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+% \usepackage[review]{acl}
+\usepackage[preprint]{acl}
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{kotex}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{amsmath} 
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{tabularx}
+\usepackage{capt-of}
+\usepackage{placeins}
+% \usepackage[most]{tcolorbox}
+% \tcbuselibrary{skins,breakable}
+
+
+\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\Eg}{\emph{E.g.}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\Ie}{\emph{I.e.}}
+\newcommand{\cf}{\emph{cf.}}
+\newcommand{\Cf}{\emph{Cf.}}
+\newcommand{\etc}{\emph{etc.}}
+\newcommand{\vs}{\emph{vs.}}
+\newcommand{\wrt}{w.r.t.}
+\newcommand{\dof}{d.o.f.}
+\newcommand{\iid}{i.i.d.}
+\newcommand{\wolog}{w.l.o.g.}
+
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\equref}[1]{Eq.~(\ref{#1})}
+\newcommand{\algref}[1]{Alg.~(\ref{#1})}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  showstringspaces=false
+}
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\usepackage{pifont} % <-- \ding 사용에 필요
+\usepackage{siunitx}
+\usepackage{arydshln}
+
+\sisetup{
+  round-mode      = places,
+  round-precision = 1,
+  round-half      = up,
+  detect-all      = true
+}
+
+\definecolor{Green}{RGB}{30,130,30}
+% \newcommand{\cmark}{\textcolor{Green}{\ding{51}}} 
+% \newcommand{\xmark}{\textcolor{red}{\ding{55}}}   
+\newcommand{\cmark}{\ding{51}} 
+\newcommand{\xmark}{\ding{55}}   
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{TCVP: A Practical Pipeline for Video Moment Retrieval Datasets \\Leveraging Timestamped Video Comments}
+
+\input{input/author}
+
+\begin{document}
+\maketitle
+\begin{abstract} 
+Video Moment Retrieval (VMR) aims to identify a temporal moment in a video that corresponds to a user query.
+Most existing VMR datasets are constructed by randomly selecting temporal moments and generating queries from the corresponding visual and auditory content. 
+We find that this process often produces moments with limited importance and queries that resemble captions rather than user-driven searches.
+To address these limitations, we propose a practical pipeline for VMR dataset generation, named TCVP, where we leverage timestamped YouTube comments to identify interesting moments and reflect actual search intent.
+A naive use of YouTube comments introduces several challenges, as many comments are uninformative (\eg, “07:22 lol”), and comments may correspond to different modalities, requiring modality-aware handling.
+Our pipeline alleviates them by introducing comment filtering and modality gating as key methodological components.
+Our qualitative analysis shows that users prefer our dataset by a substantial margin (\ie, 70\%) over existing baselines. 
+Moreover, benchmarking models on our dataset highlights limitations of current VMR methods and offers insights for future work.
+Our dataset and code are publicly available at \url{https://jung0228.github.io/TCVP/}. 
+\end{abstract}
+
+\input{figure/pipeline_comparison}
+\vspace{+1em}
+\section{Introduction}
+Given a natural language query, the goal of Video Moment Retrieval (VMR) is to locate the corresponding temporal moments within a video~\cite{lei2021detecting, moon2023query, ren2024timechat, pan2025timesearch}.
+This capability is useful in diverse scenarios, such as assisting video editors in identifying salient moments from lengthy recordings~\cite{huh2025videodiff, croitoru2023moment}, or enabling Netflix users to search for specific scenes they wish to revisit in previously watched videos~\cite{chen2023invideosearch}.
+By reducing the need for manual exploration, VMR can serve as a practical tool in user-facing applications.
+
+% To enable the development and evaluation of VMR models, existing studies~\cite{gao2017tall,lei2020tvr,lei2021detecting,lin2023univtg, soldan2022mad} have introduced VMR datasets.
+To enable the development and evaluation of VMR models, existing studies have introduced VMR datasets~\cite{gao2017tall,lei2020tvr,lei2021detecting,lin2023univtg, soldan2022mad}. 
+
+\figref{fig:pipeline} (red boxes) illustrates a representative data generation pipeline used in these works.
+As shown, this pipeline often yields moments that are weakly aligned with real user interest and queries that are verbose and descriptive rather than search-oriented. 
+We \textit{identify} this mismatch as a fundamental limitation of existing VMR datasets, motivating the need for datasets that better reflect real user intent.
+
+To address this gap, we present a new perspective by leveraging timestamped YouTube comments.
+These comments naturally indicate which moments users consider important and how they refer to them in practice. 
+Based on this observation, we propose a simple-yet-effective dataset construction pipeline, termed the \textbf{T}imestamped \textbf{C}omment-guided \textbf{V}MR \textbf{P}ipeline (\textbf{TCVP}).
+Directly using the comments poses challenges, as many are uninformative and user reactions may focus on different modalities, which necessitates modality-specific data construction procedures. For example, some comments express general reactions or emotions, while others target specific either visual events or audio content. Hence, TCVP incorporates comment filtering and modality gating.
+Comment filtering removes irrelevant or weakly grounded comments, while modality gating assigns the remaining ones to either visual or auditory cues to ensure proper grounding of each moment–query pair.
+
+To validate the efficacy of the proposed pipeline, we present extensive qualitative comparisons that demonstrate the naturalness of the generated moments.
+We further perform quantitative human evaluations, which show a strong user preference for our dataset compared to those constructed using standard methodologies.
+Finally, we benchmark a range of existing VMR models on our dataset, revealing limitations of current approaches and offering insights that may guide future research.
+
+Our contributions are summarized as follows:
+\begin{itemize}[leftmargin=*, itemsep=.2pt, topsep=1.5pt]
+    \item We identify limitations of existing VMR datasets, including less meaningful moments and caption-like queries.
+    \item We introduce a novel perspective on VMR dataset construction by leveraging timestamped YouTube comments.
+    \item We propose a simple and effective dataset construction pipeline, TCVP, that incorporates comment filtering and modality gating.
+    \item We conduct extensive qualitative and quantitative evaluations, as well as model benchmarking.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%section 2%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{+1em}
+\section{VMR: Where do we stand?}
+\label{sec:section2}
+\input{figure/tcvp_overview}
+\paragraph{VMR Dataset Generation}   
+Existing work on VMR datasets can be divided into human-annotated and machine-generated approaches. 
+Human-annotated datasets~\cite{gao2017tall, lei2020tvr, momentseeker} are constructed by asking annotators to \textit{briefly} watch videos, write a search query, and then localize the corresponding temporal moment.
+Specifically, QVHighlights~\cite{QVHighlights} is constructed by asking annotators to write a query for each video and mark the matching time spans and rate how important each clip is for that query. 
+Machine-generated datasets typically segment videos into multiple clips according to abrupt changes in visual or audio content, treating all resulting segments as sampled (which we regard as effectively \textit{random}). 
+Captions are then generated for each clip to serve as user queries, with recent work such as Watch\&Listen leveraging large language models (LLMs)~\cite{longvale2025,watchandlisten}.
+
+\paragraph{Current Limitations}
+Despite such advances in VMR datasets, we identify several limitations in existing pipelines.
+In human-annotated settings~\cite{gao2017tall, QVHighlights, momentseeker}, annotators are typically constrained by limited time budgets, which hinders thorough viewing of a video and the selection of moments corresponding to globally important or truly salient events.
+In machine-generated approaches~\cite{longvale2025, watchandlisten}, most segments from a long video are adopted regardless of their importance. 
+As a result, the moments in the dataset may differ from those that real viewers would want to retrieve. 
+Furthermore, the search queries are produced without access to prior knowledge about real user intent. 
+This straightforward generation process often results in queries that are overly descriptive, as shown in \figref{fig:pipeline}.
+Finally, several studies~\cite{momentseeker} rely exclusively on visual information. However, an analysis of YouTube comments in YTCommentQA~\cite{yang2024ytcommentqa} reveals that about half of user comments refer to audio content. VMR datasets built solely on visual cues therefore fail to capture this substantial portion of user behavior.
+% Such datasets may not be beneficial for improving the VMR ability during model training and may not be optimal for reliable model evaluation. This highlights the need for new ideas and pipelines.
+Such datasets may not effectively support VMR model training or reliable model evaluation. 
+This highlights the need for new ideas and pipelines.
+
+\vspace{+2em}
+\section{TCVP: Timestamped Comment-guided VMR Pipeline} 
+We present a novel idea to leverage timestamped YouTube comments, which contain both an important moment and real user intent.
+% However, directly using comments is challenging because many are uninformative and they often do not show whether the reaction is to what the viewer saw or to what the viewer heard. This makes the user intent unclear.
+A naive use of such comments, however, introduces several challenges. First, many comments are uninformative—for example, generic reactions such as ``lol" or ``this is amazing,".
+Second, user comments may rely on different modalities, such as visual or audio information, and these comments require distinct data construction procedures.
+To address these issues, we propose a realistic VMR dataset generation pipeline, named \textbf{TCVP}.
+\figref{fig:generation} illustrates the pipeline, which proceeds through (1) videos and comments collection, (2) modality specific captioning, (3) comment filtering \& modality gating, and (4) query generation.
+
+\vspace{+1.em}
+\subsection{Collecting videos and comments}
+\input{table/video-categories}
+\vspace{+.5em}
+We collect videos from Youtube channels listed in Table~\ref{tab:video-categories}, focusing on channels with more than one million subscribers. Such channels host contents that are widely viewed and contain sufficient user comments. For each video, we crawl all comments and retain only those that include timestamps. When multiple comments share the same timestamp, we deduplicate by retaining only the single most-liked comment per timestamp, as the reaction reflects viewer intent at that moment. We then sort these timestamped comments by the number of likes, as likes indicate that many viewers regard the moment as important. For each video, we keep the top 20 timestamped comments and use them in the next steps.
+
+% We collect videos from Youtube channels listed in Table~\ref{tab:video-categories}, focusing on channels with more than one million subscribers. Such channels host contents that are widely viewed and contain sufficient user comments. For each video, we crawl all comments and retain only those that include timestamps. We then sort these timestamped comments by the number of likes, as likes indicate that many viewers regard the moment as important. For each video, we keep the top 20 timestamped comments and use them in the next steps.
+
+\subsection{Modality specific captioning}
+\vspace{+.5em}
+For each timestamped comment $u_i$, we perform modality-specific captioning.
+Specifically, we prompt Qwen2.5-Omni~\cite{qwen2.5omni} to generate short sentences of at most 20 words, producing both visual and audio captions for a 9-second window before and after the timestamp.
+% We denote the resulting caption sets as ${c_{i,k}^v}$ and ${c_{i,k}^a}$, respectively, as illustrated in \figref{fig:generation}.
+We denote the resulting visual and audio caption sets as ${c_{i,k}^v}$ and  ${c_{i,k}^a}$, respectively, as illustrated in \figref{fig:generation}.
+% We adopt a symmetric $[-9\mathrm{s}, +9\mathrm{s}]$ window centered at each timestamp. 
+% The empirical justification is provided in Appendix~\ref{sec:ablation_appendix}.
+We adopt a symmetric $[-9\mathrm{s}, +9\mathrm{s}]$ window centered at each timestamp, which achieves 97\% moment coverage while larger windows yield diminishing returns (see Appendix~\ref{sec:ablation_appendix}).  
+          
+% For each timestamped comment $u_i$, we perform modality-specific captioning.
+% Specifically, we prompt Qwen2.5-Omni~\cite{qwen2.5omni} to generate short sentences of at most 20 words, producing both visual and audio captions for a 9-second window before and after the timestamp. 
+% We denote the resulting caption sets as ${c_{i,k}^v}$ and ${c_{i,k}^a}$, respectively, as illustrated in \figref{fig:generation}.
+% The motivation for short sentences is discussed in the following section.
+
+\subsection{Comment filtering \& Modality gating}
+\vspace{+.5em}
+As noted above, directly using the collected timestamped comments can introduce several issues.
+To mitigate these issues, we first introduce a comment filtering mechanism to reduce vague or uninformative comments.
+To determine whether a comment contains information relevant to the video content, for each timestamped comment, we compute similarity scores with both visual and audio caption sentences generated in the surrounding temporal window.
+The similarity between the comment $u_i$ and the $k$-th visual or audio caption sentence is defined as:
+\begin{equation}
+\resizebox{0.85\linewidth}{!}{$
+s_{i,k}^v=\mathrm{Sim}\left(u_i, c_{i,k}^v\right),
+\quad
+s_{i,k}^a=\mathrm{Sim}\left(u_i, c_{i,k}^a\right).
+$}
+\end{equation}
+where $\mathrm{Sim}(\cdot,\cdot)$ denotes the cosine similarity computed in the embedding space from the Qwen-3 embedding model.
+The maximum similarity for each modality can refer to:
+\begin{equation}
+s_i^v=\max_k s_{i,k}^v,
+\quad
+s_i^a=\max_k s_{i,k}^a.
+\end{equation}
+If $\max(s_i^v, s_i^a)$ is below a predefined threshold $\tau$, we label the comment as unrelated and discard it. In our experiments, we set $\tau = 0.3$.
+We observe that overly long caption sentences $c_{i,k}^v \,\text{ or }\, c_{i,k}^a$ tend to yield low similarity scores, as the collected comments are typically short (around 20 words), and we mitigate this issue by encouraging concise captions in the captioning stage.
+
+After comment filtering, we assign each comment to either the visual or audio modality.
+Using the maximum similarity scores computed for visual and audio captions, we determine the dominant modality for each comment. Formally, the modality assignment is defined as:
+\begin{equation}
+\resizebox{0.8\linewidth}{!}{$
+m_i=
+\begin{cases}
+\mathrm{unrelated} & \text{if } \max(s_i^v, s_i^a) < \tau, \\
+\mathrm{vision\mbox{-}related} & \text{if } s_i^v \ge s_i^a, \\
+\mathrm{audio\mbox{-}related} & \text{if } s_i^a > s_i^v.
+\end{cases}
+$}
+\end{equation}
+This modality gating step enables subsequent stages to apply modality-specific processing for moment grounding and query generation.
+
+Figure~\ref{fig:generation} shows an example of modality gating.
+% The comment at 07:22 contains a quoted line and yields a higher similarity score with audio captions ($55\%$) than with visual captions ($26\%$), and is therefore assigned to the audio modality and passed to the next stage.
+The comment at 07:22 contains a quoted line and yields a higher similarity score with audio captions ($s_{i,2}^a = 55\%$) than with visual captions ($s_{i,4}^v = 26\%$), and is therefore assigned to the audio modality and passed to the next stage. 
+
+\vspace{+2.em}
+\subsection{User query generation}
+\input{figure/modality_stat}
+% In this step, we generate user queries $q_i$ by leveraging the information collected in the previous stages.
+By grounding query generation in the timestamped comment itself, we ensure that each $q_i$ captures real user intent and key expressions rather than generic video descriptions. 
+Specifically, we prompt GPT-4.1~\citep{openai_gpt41} with the comment and modality-specific captions, instructing it to extract keywords directly from the comment and formulate a natural, search-oriented query. 
+Query generation is conditioned on the assigned modality, visual captions for vision-related comments and audio captions for audio-related ones, preventing mismatched evidence and grounding each query in the correct modality. 
+We release our dataset, including our code, video links, collected comments, modality labels, and user-like queries. The prompts used in our pipeline are provided in the appendix~\ref{sec:generation_prompts}.
+
+% We prompt GPT-4.1~\citep{openai_gpt41} with the timestamped comment and the modality-specific captions to produce a $q_i$.
+% Unlike prior approaches, we explicitly instruct the GPT to referring the underlying user intent in user comments and extracting keywords from the comment. 
+% The $q_i$ is then formulated based on these keywords to resemble a natural search query rather than a descriptive caption.
+% Moreover, query generation is conditioned on the assigned modality, using visual captions for vision-related comments and audio or speech captions for audio-related comments. 
+% This prevents the model from relying on mismatched evidence and helps generate queries grounded in the correct modality.
+
+% We will release our dataset, which includes our code, video links, collected comments, modality labels, and user-like queries. 
+
+
+% We release our dataset, including our code, video links, collected comments, modality labels, and user-like queries. The prompts used in our pipeline are provided in the appendix~\ref{sec:generation_prompts}.             
+% A comparison between our dataset and existing VMR datasets is provided in Table~\ref{tab:benchmark_comparison}.
+
+\input{figure/moment_selection_qual}
+
+\section{Analysis of TCVP}
+
+In this section, we analyze our dataset generated by TCVP. 
+We examine its modality statistics and conduct a qualitative comparison of both moments and user queries against existing VMR datasets, followed by human evaluation results. 
+Detailed evaluation protocols are provided in Appendix~\ref{sec:human_appendix}.
+
+\subsection{Results of our filtering \& gating}
+Figure~\ref{fig:stat} reports the results after applying the third stage of our pipeline.
+Overall, 45.9\% of comments are labeled as audio-related and 39.8\% as vision-related, while 14.3\% are filtered out as unrelated.
+The results show that many comments point to audio or speech cues, aligning with findings from YT-CommentQA~\cite{yang2024ytcommentqa} discussed in \secref{sec:section2}.
+This underscores the importance of audio modeling for realistic VMR datasets.
+We set $\tau\!=\!0.3$, which retains semantically grounded comments (\eg, ``insane goal at the last second'') while filtering generic reactions (\eg, ``lol''); sensitivity analysis is provided in Appendix~\ref{sec:ablation_appendix}.             
+
+% The effect of varying $\tau$ on the modality distribution is reported in Appendix~\ref{sec:ablation_appendix}.
+
+\subsection{Qualitative comparison of moment selection}
+Figure~\ref{fig:qualitative_result} compares moments selected at comment timestamps with random selection from the same videos.
+In the horror gameplay video shown in \figref{fig:qualitative_result}, the comment-aligned moment captures a sudden monster attack that results in a game over, whereas the randomly selected moment (\eg, red arrow) depicts the player checking CCTV cameras, which is less relevant to viewer interest.
+In the cooking video, the random moment captures a routine preparation action (\eg, pressing a patty) with limited distinctive retrieval cues.
+We further present a human evaluation on moment selection in the following subsection.
+
+
+
+\subsection{Human evaluation: Timestamped moment vs. randomly selected moment}
+We randomly select 40 samples balanced across all video categories, yielding 120 total assessments per task.
+For each sample, annotators compare two candidate moments, one from timestamped comments and one from random sampling, and choose the moment that is more likely to be searched to retrieve.
+Judgments from three independent annotators are aggregated by majority vote.
+Figure~\ref{fig:moment_survey} shows that annotators prefer comment-based selection in 95\% of videos, while random sampling is preferred in 5\%.
+These results demonstrate that timestamped comments are effective signals for identifying moments that align with user search intent.
+
+\input{figure/moment_human_eval}
+\input{figure/query_gen_qual}
+
+\subsection{Qualitative comparison of user queries}
+An example in Figure~\ref{fig:query_qualitative_result} shows a timestamped comment querying the reason a dollar bill is torn into five pieces, with the corresponding clip depicting the speaker explaining the action.
+In LongVALE and Watch\&Listen, the query is driven by broad clip descriptions, remaining tied to the lecture context and incorporating peripheral details (e.g., the Banach–Tarski explanation).
+Without the comment (\ie, ours w/o com.), the query stays at a generic description such as holding the bill and speaking, so the key action that viewers want to retrieve is not singled out.
+In contrast, conditioning on the timestamped comment (\ie, ours) yields a query directly targets the bill being torn into five pieces, closely reflecting the underlying user intent.
+
+\subsection{Human evaluation: are our queries realistic?}
+To support the qualitative comparison, we conduct a human evaluation study that assesses the naturalness and realism of the queries.
+The instruction can found in \figref{fig:query_survey}. 
+Annotators see four candidates from LongVALE, Watch\&Listen, Ours w/o comments, and Ours w/ comments, and they select the best one, with three independent judgments aggregated by majority vote.
+Figure~\ref{fig:query survey result} shows that \textbf{Ours w/ comments} is preferred in 70\% of cases and \textbf{Ours w/o comments} in 25\%, while LongVALE accounts for 5\% and Watch\&Listen is never selected. 
+This result indicates that leveraging timestamped comments improves both the naturalness and realism of the generated queries.
+
+
+\input{figure/query_human_eval}
+
+
+\input{table/mllm-eval-result}
+
+\section{Evaluation of Models on Our Dataset}
+In the previous sections, we presented a pipeline for constructing VMR datasets. This section evaluates VMR models on the resulting dataset, where models retrieve specific moments in a video given a user search query, reflecting real-world applications such as Netflix and Adobe Premiere Pro.
+
+\subsection{Experimental Setting}
+\paragraph{Task and metrics.}
+VMR models retrieve a target moment given various input modalities, including visual frames~(\textbf{V}), audio signals~(\textbf{A}), and \textbf{ASR} transcripts~(\ie, subtitles).
+In our dataset construction, moment–query pairs are explicitly categorized into vision-related and audio-related subsets. Leveraging this distinction, we report model performance separately on each subset (\textbf{Visual} or \textbf{Audio} in the left columns of the table), and also provide the average performance over the full dataset (\textbf{Avg}).
+
+% For MLLM evaluation, we adapt two settings: MLLM only or MLLM with segment captions. In the `MLLM only', for MLLMs that directly predict timestamps, we uniformly sample 100 frames from the full video and prompt the model to output a single predicted timestamp $\hat{t}_i$. A prediction is considered correct if $\lvert \hat{t}_i - t_i \rvert \leq 10\mathrm{s}$, and performance is reported using Recall@1. 
+% `MLLM with segment captions' denotes that each video is divided into non-overlapping 10-second segments. MLLMs generates captions for each segment, and both queries and segment captions are embedded using the Qwen-3 embedding model~\cite{qwen3}. Segments are ranked by cosine similarity between them, and Recall@K is computed by checking whether the top-$K$ ranked segments include the one containing the ground-truth timestamp $t_i$.
+% For the Random baseline, we randomly permute segments per video, compute Recall@K from top-$K$, repeat over 10 seeds, and report the mean.
+
+We evaluate MLLMs in two settings. In \textit{MLLM only}, 100 uniformly sampled frames are given and the model predicts a single timestamp $\hat{t}_i$. A prediction is correct if $\lvert \hat{t}_i - t_i \rvert \leq 10\mathrm{s}$ (Recall@1). 
+In \textit{MLLM with segment captions}, the video is split into 10-second segments, captions are generated per segment, and segments are ranked by cosine similarity with the query using Qwen-3~\cite{qwen3} embeddings (Recall@K). 
+The Random baseline uniformly permutes segments and reports mean Recall@K over 10 seeds.
+
+\paragraph{Baselines.}
+For MLLMs, we adopt Gemini 2.5 Flash, Qwen2.5-VL-3B~\cite{qwen25}, InternVL3-2B~\cite{internvl3}, and Qwen2.5-Omni-3B~\cite{qwen2.5omni}, which directly predict a timestamp given a query and video input (\ie, `MLLM only') or instructed to generate visual and audio descriptions (\ie, MLLM with segment captions)
+We also evaluate embedding-based retrieval baselines. For visual retrieval, we use CLIP~\cite{clip}, LanguageBind~\cite{languagebind}, and InternVideo2~\cite{internvideo2}. For audio retrieval, we use CLAP~\cite{clap} and LanguageBind-Audio~\cite{languagebind}. Segments are ranked by cosine similarity in the embedding space.
+
+\subsection{Main Results}
+Table~\ref{tab:mllm-eval-result} reports results on vision-related queries and audio-related queries.
+\paragraph{MLLMs in timestamp generation setting.}
+Gemini 2.5 Flash is included as a proprietary reference model for single-timestamp prediction. With Vision-only input, it achieves Vision R@1 6.0 and Audio R@1 4.0. Adding raw audio gives limited change, with Vision +0.0 and Audio +2.0. Adding subtitle-based ASR text gives the largest gains, with Vision +20.0 and Audio +22.0 over Vision-only input. Open-source MLLMs show the same pattern. Without subtitles, Audio-side timestamp generation remains limited, and Qwen2.5-Omni also gains little from raw audio alone. These results indicate that linguistically explicit speech content is a more reliable cue than waveform audio for single-timestamp localization.
+
+\input{table/benchmark_comparison}
+
+\paragraph{MLLMs in segment caption setting.}
+In the caption setting without subtitles, Qwen2.5-Omni performs best with Visual R@10 of 37.6 and audio R@10 of 27.5, and vision-related queries show higher retrieval than audio-related queries.
+With segment aligned subtitles, audio-related queries improve substantially, with audio R@10 rising from 27.5 to 48.2 for Qwen2.5-Omni.
+The same trend holds for Qwen2.5VL and InternVL3 and across both settings Qwen2.5-Omni remains the strongest open-source MLLM.
+
+\paragraph{Embedding models.}
+On vision-related queries, visual embedding models are the strongest, with LanguageBind reaching Visual R@1 of 30.5 and Visual R@10 of 62.7 and CLIP reaching Visual R@1 of 14.9 and Visual R@10 of 54.3, which stays above MLLMs setting.
+A similar trend also appears on audio-related queries. Visual embedding models remain competitive with audio R@10 of 37.0 for LanguageBind and 34.4 for CLIP, while audio embedding models are lower with 24.2 for CLAP and 24.1 for LanguageBind-audio.
+This suggests that many audio-related queries align with speech linked cues or visually correlated context, so visual representations can still localize the target moment better than acoustic embeddings alone.
+
+
+\section{Related Work}
+\paragraph{Video Moment Retrieval.} VMR localizes the time span that matches a natural language query in an untrimmed video. 
+A common direction models localization as DETR style span detection and predicts a small set of candidate moments end to end and later variants strengthen query conditioning and improve boundary alignment \cite{QVHighlights,moon2023query,lee2024bam}. In parallel, multimodal large language models are being adapted for video temporal grounding by combining multimodal understanding with structured timestamp prediction and stepwise reasoning \cite{ren2024timechat, guo2025vtg,liu2025videomind}. As videos get longer, exhaustively scoring every segment becomes expensive, so many systems adopt coarse to fine pipelines that first retrieve query related regions and then refine the boundaries with a stronger local model \cite{hou2023cone, pan2025timesearch}.
+
+\paragraph{Video Moment Retrieval datasets.} Prior work evaluates VMR using datasets that align natural language queries with annotated temporal windows. Short and domain specific datasets cover activities and lifestyle videos and TV shows and egocentric recordings and they pair each query with a temporal window \cite{gao2017tall,QVHighlights,lei2020tvr,ego4d}.
+Long video datasets expand duration and domain diversity and they move closer to open world content, and some also annotate event boundaries with multimodal descriptions \cite{momentseeker,longvale2025}.
+Audio resources scale audio text supervision or dense audio visual event boundaries, but they do not define user query driven moment retrieval in long videos \cite{wavcaps,unav100}.
+We use timestamped YouTube comments and viewer reactions to select moments and we generate modality aware queries so we can separate vision-related and audio-related queries.
+
+\section{Conclusion}
+We propose TCVP, a practical pipeline for video moment retrieval dataset generation using timestamped YouTube comments.
+By introducing comment filtering and modality gating, our pipeline removes uninformative comments and ambiguous modality cues, and generates concise queries that remain faithful to user intent.
+We validate the effectiveness of TCVP through both qualitative analyses and quantitative human evaluations. Annotators prefer queries generated with comments in 70\% and favor comment-based moment selection in 95\% of videos.
+We further evaluate existing VMR models on the dataset generated by TCVP. The results show that current models remain limited when queries depend on spoken or auditory content.
+We hope TCVP supports future work that better reflects real user intent and that handles both visual and audio evidence for moment retrieval.
+
+\section*{Broader Impact}                                     
+TCVP introduces a scalable approach to VMR dataset construction by mining real user intent from timestamped YouTube comments, and we hope this perspective benefits both research and practical video search applications. As our pipeline relies on MLLMs for captioning and query generation, it may inherit model-specific biases or hallucinations. 
+However, grounding generation in actual user comments structurally limits this risk by anchoring outputs to real human intent rather than model interpretation. Our dataset is derived from publicly available content in compliance with YouTube's terms of service.
+% \section*{Limitations}
+% Our approach constructs a VMR dataset guided by user reactions, but it has several limitations that stem from automated processing.
+% First, modality assignment is restricted to a binary choice between visual and audio cues, and cannot capture moments where user intent jointly depends on both modalities simultaneously.
+% From a multimodal perspective, a natural extension would be to introduce a Mixed category for such moments—where a comment is classified as Mixed when neither modality dominates and both signals exceed a minimum quality threshold—and to prompt query generation with both visual and audio captions simultaneously.
+% We provide a preliminary feasibility analysis of this direction in Appendix~\ref{sec:ablation_appendix}, and leave a full integration with model evaluation to future work.
+% Second, comment filtering and modality gating depend on a fixed similarity threshold $\tau$. 
+% Future work will calibrate $\tau$ with human light validation and explore adaptive rules that reduce sensitivity to a single threshold.
+% Our approach constructs a VMR dataset guided by user reactions, but it has several limitations stemming from automated processing.
+% First, modality assignment is restricted to a binary choice between visual and audio cues. This design cannot capture cases where user intent jointly depends on both modalities. Extending the label space can be important direction.
+% Second, comment filtering and modality gating depend on a fixed similarity threshold $\tau$. 
+% Future work will calibrate $\tau$ with light human validation and it will explore adaptive rules that reduce sensitivity to a single threshold.
+
+
+\bibliography{custom}
+
+\appendix
+\clearpage
+\twocolumn
+
+\section{Pipeline Design Details}
+\label{sec:ablation_appendix}
+
+\subsection{Window Size Selection}
+We adopt a symmetric $[\!-\!9\mathrm{s},+9\mathrm{s}]$ window for modality-specific captioning.
+To validate this choice, Table~\ref{tab:window_coverage} measures moment coverage across different window sizes over 100 randomly sampled timestamps.
+The two asymmetric 12-second windows ($[\!-\!9\mathrm{s},+3\mathrm{s}]$ and $[\!-\!3\mathrm{s},+9\mathrm{s}]$) achieve identical coverage of 92\%, confirming that neither the pre- nor post-timestamp region is systematically more important.
+Extending to $[\!-\!9\mathrm{s},+9\mathrm{s}]$ reaches 97\% coverage; further expansion yields diminishing returns while introducing unnecessary computational cost.
+\input{table/window_coverage}
+
+\subsection{Comment Filtering Threshold}
+Table~\ref{tab:tau_ablation} ablates $\tau$ from 0.20 to 0.40.
+Lower values retain near-noise, context-free comments, while higher values over-filter semantically grounded reactions.
+Representative examples at $\tau\!=\!0.3$:
+\begin{itemize}[leftmargin=*, itemsep=.2pt, topsep=1pt]
+  \item \textit{Retained} ($s\!\geq\!0.3$): ``the way he tears the dollar bill while explaining is genius'' (0.43); ``insane goal at the last second'' (0.35)
+  \item \textit{Filtered} ($s\!<\!0.3$): ``this is so good'' (0.22); ``lol'' (0.11)
+\end{itemize}
+\input{table/tau_ablation}
+
+\subsection{Mixed Modality Extension}
+\label{sec:mixed_appendix}
+
+The current gating assigns each comment to either the visual or audio modality exclusively.
+However, some user comments are grounded in the simultaneous interaction of both modalities.
+Consider a comment such as \textit{``the moment the piano kicks in right as he scores the goal''}: neither the visual nor the audio signal alone captures this intent, and a unimodal query generated from either caption alone would fail to reflect what the viewer found noteworthy.
+
+To address this, we propose a \textbf{Mixed} category as an extension of the modality gating step.
+A comment is classified as Mixed when two conditions hold jointly:
+(1) neither modality dominates the other, enforced by a \textit{balance ratio} $R$, and
+(2) both modality scores exceed an \textit{absolute floor} $M$:
+\begin{equation}
+\frac{\min(s_i^v,\,s_i^a)}{\max(s_i^v,\,s_i^a)} \ge R, \quad \min(s_i^v, s_i^a) \ge M.
+\end{equation}
+The balance ratio ensures simultaneity by requiring neither modality to dominate.
+The absolute floor guards against degenerate cases where the ratio condition is satisfied but both scores carry little semantic signal—a perfectly balanced yet near-zero pair would pass the ratio test despite reflecting no meaningful grounding in either modality.
+For Mixed-labeled moments, query generation is performed by prompting the model with \textit{both} visual and audio captions simultaneously, directly reflecting the joint user intent.
+
+Table~\ref{tab:mixed_ablation} reports the sensitivity of the Mixed proportion to $R$ and $M$.
+Setting $M\!=\!\tau\!=\!0.3$ yields an unexpectedly high Mixed proportion (\eg, 78.6\% at $R\!=\!0.5$), confirming that the filtering threshold alone is insufficient to ensure semantic richness in both modalities.
+A stricter floor $M\!=\!0.4$ combined with $R\!=\!0.9$ suppresses borderline cases, yielding a more meaningful Mixed proportion of 12.5\%.
+We leave full integration of this extension, including model evaluation on Mixed queries, to future work.
+\input{table/mixed_ablation}
+
+\subsection{Category-level Modality Distribution}     
+  Table~\ref{tab:category_modality} reports the modality
+   distribution per video category after comment        
+  filtering and gating.
+  Podcast and Knowledge/Education channels are          
+  predominantly audio-centric, whereas Sports and
+  Entertainment tend toward visual grounding.
+  This pattern is consistent with the nature of each
+  genre: speech-heavy content produces comments grounded
+   in what is said, while action-driven content produces
+   comments grounded in what is seen. 
+\input{table/category_modality}
+
+\section{Generation Prompts}
+\label{sec:generation_prompts}
+
+We use three prompts that generate modality-aware captions and rewrite timestamped user comments into natural moment queries.
+% Each prompt fixes the output structure and length so that the model stays tied to the given segment, limits variation across runs, and produces outputs that are straightforward to parse and compare.
+
+\paragraph{Modality specific captioning.}
+Given a short segment, the model outputs two separate captions: a VISUAL line describing what is seen in the sampled frames, and an AUDIO line describing what is heard.
+% This separation is essential because the same comment can be grounded in either visual evidence or speech and sound cues, and preserving both signals explicitly enables downstream modality gating.
+\input{appendix/modality_specific_caption}
+
+\paragraph{Segment caption integration.}
+When the target moment spans multiple segments or downstream steps require a consolidated view, we merge consecutive segment captions into a single clip-level description.
+The prompt enforces JSON output with separate visual and audio caption fields composed of many short atomic sentences, preserving fine details and temporal order to improve matching and filtering accuracy.
+\input{appendix/segment_caption_integrator}
+
+\paragraph{Moment search query generation.}
+Given a timestamped user comment, the model first infers whether the intent is visual or audio, then extracts keywords directly from the comment to stay grounded.
+It selects a minimal set of focus keywords and writes one short, natural query that a viewer would plausibly type.
+The JSON schema records the modality decision, extracted keywords, and final query, making the process auditable and supporting error analysis.
+\input{appendix/moment_search_query_prompt}
+
+\section{Human Evaluation}
+\label{sec:human_appendix}
+We run a human study with undergraduate annotators to evaluate query realism and moment selection quality.
+Each item presents a YouTube video with the target moment highlighted; annotators watch the target and nearby context before making a single choice.
+Annotators receive written instructions defining the decision criteria; they may skip any item or stop at any time.
+
+\paragraph{Ethics.}
+The study uses public YouTube content; instructions note that some items may be uncomfortable.
+We recruit annotators through university channels and compensate them at 10{,}000 KRW per hour.
+All annotators provide informed consent, and we collect no sensitive personal information beyond what is needed for compensation.
+We use public YouTube videos and timestamped comments and do not redistribute raw videos.
+User identifiers are removed from any released data, and permitted use and restrictions are documented.
+
+
+\subsection{Realistic query selection}
+This task tests whether a generated query sounds like a natural query that a viewer would type after watching the full video.
+Annotators are shown a target moment and a list of candidate queries and they select the one they would most likely use to retrieve the same moment.
+We treat the vote as a preference signal for query naturalness and clarity.
+\input{appendix/query_survey}
+
+\paragraph{Timestamp selection.}
+This task evaluates whether the candidate moments align with the target moment. Annotators watch two candidate moments from the same video and they choose the one that better matches the target moment based on the core content rather than length or excitement. We treat the vote as a measure of moment selection quality.
+\input{appendix/time_compare_survey}
+
+\section{Evaluation Setting \& Prompts}
+We run all pipeline stages with inference only on a single machine that has one NVIDIA A100 80GB GPU. We also use API based models for some stages and the total API cost is under 30 USD.
+
+We use two prompts during evaluation. The first prompt is used for segment captioning with Qwen2.5-VL and InternVL3 and Qwen2.5-Omni. We provide a time bounded segment and a set of uniformly sampled frames and we ask the model to write a short caption grounded in the segment. For Qwen2.5-Omni, we additionally provide audio input and we explicitly instruct the model to use both visual and audio cues. The second prompt is used for timestamp prediction with Qwen2.5-VL in the generation based setting. We provide uniformly sampled frames from the full video and we ask the model to output a single timestamp that best matches the query under a strict output format. For Gemini 2.5 Flash, we run this setting on a balanced subset with 50 Visual samples and 50 Audio samples.
+
+\input{appendix/evaluation_prompt}
+\end{document}

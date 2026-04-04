@@ -1,0 +1,146 @@
+% % gray
+% \begin{table*}[t]
+%   \centering
+%   \small
+%   \setlength{\tabcolsep}{7pt}
+%   \renewcommand{\arraystretch}{1.12}
+
+%   \caption{Comparison of popular moment retrieval benchmarks and our proposed dataset.}
+%   \label{tab:benchmark_comparison}
+%   \vspace{-0.2cm}
+
+%   \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l c c c c c l}
+%     \toprule
+%     \textbf{Benchmark} &
+%     \cellcolor{yellow!20}\textbf{Real-world} &
+%     \cellcolor{yellow!20}\textbf{Audio Query} &
+%     \textbf{Dur. (s)} &
+%     \textbf{\#Videos} &
+%     \textbf{\#Queries} &
+%     \textbf{Domain} \\
+%     \midrule
+
+%     % ----- MOMENT RETRIEVAL -----
+%     \rowcolor{green!15}
+%     \multicolumn{7}{l}{\textbf{Moment Retrieval Benchmarks}} \\
+%     CharadesSTA~\cite{gao2017tall}  & \xmark & \xmark & 30.6  & 1334 & 3.7k  & Activity \\
+%     QVHighlights~\cite{qvhighlights}      & \xmark & \xmark & 150   & 476  & 1.5k  & Vlog / News \\
+%     TVR~\cite{lei2020tvr}                 & \xmark & \xmark & 76.2  & 1090 & 5.5k  & TV show \\
+%     Ego4D-NLQ~\cite{ego4d}                & \xmark & \xmark & 493.7 & 333  & 4k    & Egocentric \\
+%     LongVALE~\cite{longvale2025}          & \xmark & \cmark & 235   & 8411 & 105k & Open \\
+%     MomentSeeker~\cite{momentseeker}      & \xmark & \xmark & 1201.9 & 268 & 1.8k & Open \\
+%     \midrule
+
+%     % ----- AUDIO-ONLY -----
+%     \rowcolor{blue!10}
+%     \multicolumn{7}{l}{\textbf{Audio-based Moment Retrieval Benchmarks}} \\
+%     WavCaps~\cite{wavcaps}                & \xmark & \cmark & 67.6  & 400k & 400k & Open \\
+%     UnAV-100~\cite{unav100}               & \xmark & \cmark & 42.1  & 10k  & 30k  & Open \\
+%     \midrule
+
+%     % ----- LONG VIDEO QA -----
+%     \rowcolor{orange!12}
+%     \multicolumn{7}{l}{\textbf{GroundQA}} \\
+%     NExT-GQA~\cite{nextgqa}               & \xmark & \xmark & 39.5   & 1000 & 5.5k & Open \\
+%     CG-BENCH~\cite{cgbench}               & \xmark & \xmark & 1624.4 & 1219 & 14k  & Open \\
+%     \midrule
+
+%     % ----- OURS -----
+%     \textbf{Ours}                         & \cmark & \cmark & 1517.5 & 300 & 4.5k & YouTube \\
+%     \bottomrule
+%   \end{tabular*}
+
+%   \vspace{-0.3cm}
+% \end{table*}
+
+% \begin{table*}[t]
+%   \centering
+%   \caption{Comparison of existing moment retrieval dataset and our proposed dataset.}
+%   \setlength{\tabcolsep}{8pt}
+%   \resizebox{.85\linewidth}{!}{
+%     \begin{tabular}{l c c c c c c c}
+%       \hline
+%       \rowcolor[gray]{0.9}
+%       \textbf{Benchmark} &
+%       \textbf{Real-world} &
+%       \textbf{Visual Query} &
+%       \textbf{Audio Query} &
+%       \textbf{Dur. (s)} &
+%       \textbf{\#Videos} &
+%       \textbf{\#Queries} &
+%       \textbf{Domain} \\
+%       \hline
+
+%       % ----- MOMENT RETRIEVAL -----
+%       \rowcolor[gray]{0.9}
+%       \multicolumn{8}{l}{\textbf{Moment Retrieval}} \\
+%       CharadesSTA~\cite{gao2017tall}     & \xmark & \cmark & \xmark & 30.6   & 1334 & 3.7k  & Activity \\
+%       QVHighlights~\cite{QVHighlights}   & \xmark & \cmark & \xmark & 150    & 476  & 1.5k  & Vlog / News \\
+%       TVR~\cite{lei2020tvr}              & \xmark & \cmark & \xmark & 76.2   & 1090 & 5.5k  & TV show \\
+%       Ego4D-NLQ~\cite{ego4d}             & \xmark & \cmark & \xmark & 493.7  & 333  & 4k    & Egocentric \\
+%       MomentSeeker~\cite{momentseeker}   & \xmark & \cmark & \xmark & 1201.9 & 268  & 1.8k  & Open \\
+%       LongVALE~\cite{longvale2025}       & \xmark & \cmark & \cmark & 235    & 8411 & 105k  & Open \\
+%       \hdashline
+
+%       % (no "Audio-based Moment Retrieval" header)
+%       WavCaps~\cite{wavcaps}             & \xmark & \xmark & \cmark & 67.6   & 400k & 400k  & Open \\
+%       UnAV-100~\cite{unav100}            & \xmark & \xmark & \cmark & 42.1   & 10k  & 30k   & Open \\
+%       \hline
+
+%       % ----- LONG VIDEO QA -----
+%       % \rowcolor[gray]{0.95}
+%       % \multicolumn{8}{l}{\textbf{GroundQA}} \\
+%       % NExT-GQA~\cite{nextgqa}            & \xmark & \cmark & \xmark & 39.5   & 1000 & 5.5k  & Open \\
+%       % CG-BENCH~\cite{cgbench}            & \xmark & \cmark & \xmark & 1624.4 & 1219 & 14k   & Open \\
+%       % \hline
+
+%       % ----- OURS -----
+%       \textbf{Ours}                      & \cmark & \cmark & \cmark & 1517.5 & 300  & 4.5k  & YouTube \\
+%       \hline
+%     \end{tabular}
+%   }
+%   \label{tab:benchmark_comparison}
+% \end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Comparison of existing video moment retrieval datasets and our dataset. Real-world indicates that queries are tied to user behavior rather than controlled annotation protocols.}
+  \setlength{\tabcolsep}{8pt}
+  \resizebox{1.\linewidth}{!}{
+    \begin{tabular}{l c c c c c c c}
+      \hline
+      \rowcolor[gray]{0.9}
+      \textbf{Dataset} &
+      \textbf{Real-world} &
+      \textbf{Visual Query} &
+      \textbf{Audio Query} &
+      \textbf{Dur. (s)} &
+      \textbf{\#Videos} &
+      \textbf{\#Queries} &
+      \textbf{Domain} \\
+      \hline
+
+      \rowcolor[gray]{0.9}
+      \multicolumn{8}{l}{\textbf{Moment Retrieval}} \\
+      CharadesSTA~\cite{gao2017tall}     & \xmark & \cmark & \xmark & 30.6   & 1334 & 3.7k  & Activity \\
+      QVHighlights~\cite{QVHighlights}   & \xmark & \cmark & \xmark & 150    & 476  & 1.5k  & Vlog / News \\
+      TVR~\cite{lei2020tvr}              & \xmark & \cmark & \xmark & 76.2   & 1090 & 5.5k  & TV show \\
+      Ego4D-NLQ~\cite{ego4d}             & \xmark & \cmark & \xmark & 493.7  & 333  & 4k    & Egocentric \\
+      MomentSeeker~\cite{momentseeker}   & \xmark & \cmark & \xmark & 1201.9 & 268  & 1.8k  & Open \\
+      LongVALE~\cite{longvale2025}       & \xmark & \cmark & \cmark & 235    & 8411 & 105k  & Open \\
+      \hdashline
+
+      % \rowcolor[gray]{0.9}
+      % \multicolumn{8}{l}{\textbf{Audio and Speech Resources}} \\
+      % AudioCaps~\cite{kim2019audiocaps}  & \xmark & \xmark & \cmark & --     & --   & --    & Open \\
+      WavCaps~\cite{wavcaps}             & \xmark & \xmark & \cmark & 67.6   & 400k & 400k  & Open \\
+      UnAV-100~\cite{unav100}            & \xmark & \xmark & \cmark & 42.1   & 10k  & 30k   & Open \\
+      \hline
+
+      \textbf{Ours}                      & \cmark & \cmark & \cmark & 1517.5 & 300  & 4.5k  & YouTube \\
+      \hline
+    \end{tabular}
+  }
+  \label{tab:benchmark_comparison}
+  \vspace{-.5em}
+\end{table*}

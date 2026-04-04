@@ -1,0 +1,712 @@
+% \begin{table*}[t]
+%   \centering
+%   \small
+%   \renewcommand{\arraystretch}{1.15}
+%   \begin{tabular}{lccccc cccccc}
+%     \toprule
+%     \multirow{2}{*}{\textbf{Model}} &
+%     \multirow{2}{*}{\textbf{Size}} &
+%     \multicolumn{3}{c}{\textbf{Input modality}} &
+%     \multicolumn{2}{c}{\textbf{visual-related}} &
+%     \multicolumn{2}{c}{\textbf{audio-related}} &
+%     \multicolumn{2}{c}{\textbf{mixed-related}} \\
+%     \cmidrule(lr){3-5}
+%     \cmidrule(lr){6-7}
+%     \cmidrule(lr){8-9}
+%     \cmidrule(lr){10-11}
+%       &  & \textbf{V} & \textbf{A} & \textbf{ASR} 
+%       & \textbf{R@1} & \textbf{mAP}
+%       & \textbf{R@1} & \textbf{mAP}
+%       & \textbf{R@1} & \textbf{mAP} \\
+%     \midrule
+
+%     \multicolumn{11}{c}{\textbf{Closed-source models}} \\
+%     \midrule
+%     Gemini 2.5 Pro~\cite{gemini25pro} 
+%                     & -- & $\checkmark$ & $\checkmark$ & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     GPT\mbox{-}4o~\cite{gpt4o}
+%                     & -- & $\checkmark$ & $\checkmark$ & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     \midrule
+
+%     \multicolumn{11}{c}{\textbf{Open-source models}} \\
+%     \midrule
+%     Qwen2.5-Omni~\cite{qwen25omni} 
+%                     & 7B & $\checkmark$ & $\checkmark$ & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     Qwen2.5-VL~\cite{qwen25vl}
+%                     & 7B & $\checkmark$ & $\times$     & $\times$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     Qwen2.5-VL~\cite{qwen25vl}
+%                     & 7B & $\checkmark$ & $\times$     & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\                    
+%     InternVL3.5~\cite{internvl35}
+%                     & 8B & $\checkmark$ & $\times$     & $\times$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     InternVL3.5~\cite{internvl35}
+%                     & 8B & $\checkmark$ & $\times$     & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\             
+%     \midrule
+%     \multicolumn{11}{c}{\textbf{Video Retrieval Models}} \\
+%     \midrule
+%     Qwen2.5-Omni~\cite{qwen25omni} 
+%                     & 7B & $\checkmark$ & $\checkmark$ & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     Qwen2.5-VL~\cite{qwen25vl}
+%                     & 7B & $\checkmark$ & $\times$     & $\times$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     Qwen2.5-VL~\cite{qwen25vl}
+%                     & 7B & $\checkmark$ & $\times$     & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\                    
+%     InternVL3.5~\cite{internvl35}
+%                     & 8B & $\checkmark$ & $\times$     & $\times$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\
+%     InternVL3.5~\cite{internvl35}
+%                     & 8B & $\checkmark$ & $\times$     & $\checkmark$
+%                     & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash & \textemdash \\                       
+%     \bottomrule
+%   \end{tabular}
+%   \caption{Comparison across models, input modality configurations, and query types. 
+%   Closed-source and open-source models are shown separately for clarity.}
+%   \label{tab:mllm-eval-result}
+% \end{table*}
+
+
+% \begin{table*}[t]
+%   \centering
+%   \caption{Comparison across models, input modality configurations, and query types.}
+%   \setlength{\tabcolsep}{8pt}
+%   \resizebox{0.8\linewidth}{!}{
+%     \begin{tabular}{l c c c c c c c c c c}
+%       \hline
+%       \rowcolor[gray]{0.9}
+%       \multirow[t]{2}{*}{\textbf{Model}} &
+%       \multirow[t]{2}{*}{\textbf{Size}} &
+%       \multicolumn{3}{c}{\textbf{Input modality}} &
+%       \multicolumn{2}{c}{\textbf{visual}} &
+%       \multicolumn{2}{c}{\textbf{audio}} &
+%       \multicolumn{2}{c}{\textbf{mixed}} \\
+%       \rowcolor[gray]{0.9}
+%       & & \textbf{V} & \textbf{A} & \textbf{ASR}
+%       & \textbf{R@1} & \textbf{mAP}
+%       & \textbf{R@1} & \textbf{mAP}
+%       & \textbf{R@1} & \textbf{mAP} \\
+%       \hline
+
+%       % ---------------- CLOSED SOURCE ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{11}{l}{\textbf{Closed-source models}} \\
+%       Gemini 2.5 Pro~\cite{gemini25pro}
+%         & -- & \cmark & \cmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       GPT\mbox{-}4o~\cite{gpt4o}
+%         & -- & \cmark & \cmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       \hline
+
+%       % ---------------- OPEN SOURCE ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{11}{l}{\textbf{Open-source models}} \\
+%       Qwen2.5-Omni~\cite{qwen25omni}
+%         & 7B & \cmark & \cmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       Qwen2.5-VL~\cite{qwen25vl}
+%         & 7B & \cmark & \xmark & \xmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       Qwen2.5-VL~\cite{qwen25vl}
+%         & 7B & \cmark & \xmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       InternVL3.5~\cite{internvl35}
+%         & 8B & \cmark & \xmark & \xmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       InternVL3.5~\cite{internvl35}
+%         & 8B & \cmark & \xmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       \hline
+
+%       % ---------------- VIDEO RETRIEVAL MODELS ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{11}{l}{\textbf{Video Retrieval Models}} \\
+%       Qwen2.5-Omni~\cite{qwen25omni}
+%         & 7B & \cmark & \cmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       Qwen2.5-VL~\cite{qwen25vl}
+%         & 7B & \cmark & \xmark & \xmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       Qwen2.5-VL~\cite{qwen25vl}
+%         & 7B & \cmark & \xmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       InternVL3.5~\cite{internvl35}
+%         & 8B & \cmark & \xmark & \xmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       InternVL3.5~\cite{internvl35}
+%         & 8B & \cmark & \xmark & \cmark
+%         & --- & --- & --- & --- & --- & --- \\
+%       \hline
+%     \end{tabular}
+%   }
+%   \label{tab:mllm-eval-result}
+% \end{table*}
+
+% \begin{table*}[t]
+%   \centering
+%   \caption{Comparison of VMR performance across models and input modality configurations,
+%   evaluated using Recall@1, Recall@5, and Recall@10.}
+%   \setlength{\tabcolsep}{6pt}
+%   \resizebox{\linewidth}{!}{
+%     \begin{tabular}{l c c c c c c c c c c c c c}
+%       \hline
+%       \rowcolor[gray]{0.9}
+%       \multirow[t]{2}{*}{\textbf{Model}} &
+%       \multirow[t]{2}{*}{\textbf{Size}} &
+%       \multicolumn{3}{c}{\textbf{Input modality}} &
+%       \multicolumn{3}{c}{\textbf{Visual}} &
+%       \multicolumn{3}{c}{\textbf{Audio}} &
+%       \multicolumn{3}{c}{\textbf{Overall}} \\
+%       \rowcolor[gray]{0.9}
+%       & & \textbf{V} & \textbf{A} & \textbf{ASR}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10} \\
+%       \hline
+
+%       % ---------------- CLOSED SOURCE ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Closed-source models}} \\
+%       Gemini 2.5 Pro~\cite{gemini25pro}
+%         & -- & \cmark & \cmark & \cmark
+%         & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+%       GPT\mbox{-}4o~\cite{gpt4o}
+%         & -- & \cmark & \cmark & \cmark
+%         & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+%       \hline
+
+%       % ---------------- BASELINES ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Baselines}} \\
+%       Random
+%         & -- & -- & -- & --
+%         & 1.75 & 9.34 & 20.13
+%         & 1.33 & 8.42 & 16.40
+%         & 1.51 & 8.62 & 17.58 \\
+%       \hline
+
+%       % ---------------- OPEN SOURCE (MLLMs) ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Open-source MLLMs}} \\
+%       Qwen 2.5 VL-3B
+%         & 3B & \cmark & \xmark & \xmark
+%         & 6.07 & -- & --
+%         & 4.56 & -- & --
+%         & 5.26 & -- & -- \\
+%       Qwen 2.5 VL-3B-caption
+%         & 3B & \cmark & \xmark & \xmark
+%         & 7.47 & 22.62 & 33.36
+%         & 4.09 & 13.04 & 23.12
+%         & 5.04 & 16.07 & 26.20 \\
+%       Qwen 2.5 VL-3B-caption + Sub.
+%         & 3B & \cmark & \xmark & \cmark
+%         & 8.56 & 25.63 & 37.31
+%         & 20.51 & 42.69 & 52.63
+%         & 13.52 & 31.52 & 41.97 \\
+%       \hline
+
+%       Qwen 3 VL-2B
+%         & 2B & \cmark & \xmark & \xmark
+%         & 3.42 & -- & --
+%         & 5.28 & -- & --
+%         & 4.42 & -- & -- \\
+%       Qwen 3 VL-2B-caption
+%         & 2B & \cmark & \xmark & \xmark
+%         & 11.47 & 30.18 & 42.42
+%         & 4.17 & 14.18 & 24.50
+%         & 7.04 & 20.24 & 31.18 \\
+%       Qwen 3 VL-2B-caption + Sub.
+%         & 2B & \cmark & \xmark & \cmark
+%         & 8.68 & 24.80 & 36.69
+%         & 20.64 & 40.48 & 50.62
+%         & 13.34 & 30.06 & 40.62 \\
+%       \hline
+
+%       InternVL3-2B
+%         & 2B & \cmark & \xmark & \xmark
+%         & 3.68 & -- & --
+%         & 2.47 & -- & --
+%         & 2.89 & -- & -- \\
+%       InternVL3-2B-caption
+%         & 2B & \cmark & \xmark & \xmark
+%         & 8.59 & 23.61 & 35.09
+%         & 3.10 & 11.88 & 22.15
+%         & 5.18 & 16.37 & 26.69 \\
+%       InternVL3-2B-caption + Sub.
+%         & 2B & \cmark & \xmark & \cmark
+%         & 8.01 & 23.57 & 35.09
+%         & 20.23 & 40.32 & 50.13
+%         & 13.25 & 29.78 & 40.04 \\
+%       \hline
+
+%       % ---------------- VIDEO RETRIEVAL MODELS ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Video Retrieval Models}} \\
+%       CLAP
+%         & -- & \xmark & \cmark & \xmark
+%         & 4.08 & 15.73 & 27.29
+%         & 2.30 & 12.69 & 24.22
+%         & 3.12 & 14.10 & 25.65 \\
+%       LanguageBind-Audio
+%         & -- & \xmark & \cmark & \xmark
+%         & 3.28 & 15.29 & 27.74
+%         & 3.07 & 13.84 & 24.07
+%         & 3.16 & 14.51 & 25.77 \\
+%       CLIP
+%         & -- & \cmark & \xmark & \xmark
+%         & 24.83 & 44.88 & 57.04
+%         & 11.02 & 24.03 & 35.73
+%         & 17.46 & 33.76 & 45.67 \\
+%       LanguageBind
+%         & -- & \cmark & \xmark & \xmark
+%         & 30.54 & 49.97 & 62.72
+%         & 14.16 & 26.31 & 37.03
+%         & 21.78 & 37.32 & 48.98 \\
+%       InternVideo2
+%         & -- & \cmark & \xmark & \xmark
+%         & 16.54 & 43.00 & 57.90
+%         & 5.52 & 19.20 & 31.49
+%         & 10.57 & 30.09 & 43.57 \\
+%       \hline
+%     \end{tabular}
+%   }
+%   \label{tab:mllm-eval-result}
+% \end{table*}
+
+
+
+% \begin{table*}[t]
+%   \centering
+%   \caption{Comparison of VMR performance across models and input modality configurations,
+%   evaluated using Recall@1, Recall@5, and Recall@10.}
+%   \setlength{\tabcolsep}{6pt}
+%   \resizebox{\linewidth}{!}{
+%     \begin{tabular}{l c c c c c c c c c c c c c}
+%       \hline
+%       \rowcolor[gray]{0.9}
+%       \multirow[t]{2}{*}{\textbf{Model}} &
+%       \multirow[t]{2}{*}{\textbf{Size}} &
+%       \multicolumn{3}{c}{\textbf{Input modality}} &
+%       \multicolumn{3}{c}{\textbf{Visual}} &
+%       \multicolumn{3}{c}{\textbf{Audio}} &
+%       \multicolumn{3}{c}{\textbf{Overall}} \\
+%       \rowcolor[gray]{0.9}
+%       & & \textbf{V} & \textbf{A} & \textbf{ASR}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10} \\
+%       \hline
+
+%       % ---------------- CLOSED SOURCE ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Closed-source models}} \\
+%       Gemini 2.5 Pro~\cite{gemini25pro}
+%         & -- & \cmark & \cmark & \cmark
+%         & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+%       GPT\mbox{-}4o~\cite{gpt4o}
+%         & -- & \cmark & \cmark & \cmark
+%         & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+%       \hline
+
+%       % ---------------- BASELINES ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Baselines}} \\
+%       Random
+%         & -- & -- & -- & --
+%         & \num{1.75} & \num{9.34} & \num{20.13}
+%         & \num{1.33} & \num{8.42} & \num{16.40}
+%         & \num{1.51} & \num{8.62} & \num{17.58} \\
+%       \hline
+
+%       % ---------------- OPEN SOURCE (MLLMs) ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Open-source MLLMs}} \\
+%       Qwen 2.5 VL-3B
+%         & 3B & \cmark & \xmark & \xmark
+%         & \num{6.07} & -- & --
+%         & \num{4.56} & -- & --
+%         & \num{5.26} & -- & -- \\
+%       Qwen 2.5 VL-3B-caption
+%         & 3B & \cmark & \xmark & \xmark
+%         & \num{7.47} & \num{22.62} & \num{33.36}
+%         & \num{4.09} & \num{13.04} & \num{23.12}
+%         & \num{5.04} & \num{16.07} & \num{26.20} \\
+%       Qwen 2.5 VL-3B-caption + Sub.
+%         & 3B & \cmark & \xmark & \cmark
+%         & \num{8.56} & \num{25.63} & \num{37.31}
+%         & \num{20.51} & \num{42.69} & \num{52.63}
+%         & \num{13.52} & \num{31.52} & \num{41.97} \\
+%       \hline
+
+%       Qwen 3 VL-2B
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{3.42} & -- & --
+%         & \num{5.28} & -- & --
+%         & \num{4.42} & -- & -- \\
+%       Qwen 3 VL-2B-caption
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{11.47} & \num{30.18} & \num{42.42}
+%         & \num{4.17} & \num{14.18} & \num{24.50}
+%         & \num{7.04} & \num{20.24} & \num{31.18} \\
+%       Qwen 3 VL-2B-caption + Sub.
+%         & 2B & \cmark & \xmark & \cmark
+%         & \num{8.68} & \num{24.80} & \num{36.69}
+%         & \num{20.64} & \num{40.48} & \num{50.62}
+%         & \num{13.34} & \num{30.06} & \num{40.62} \\
+%       \hline
+
+%       InternVL3-2B
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{3.68} & -- & --
+%         & \num{2.47} & -- & --
+%         & \num{2.89} & -- & -- \\
+%       InternVL3-2B-caption
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{8.59} & \num{23.61} & \num{35.09}
+%         & \num{3.10} & \num{11.88} & \num{22.15}
+%         & \num{5.18} & \num{16.37} & \num{26.69} \\
+%       InternVL3-2B-caption + Sub.
+%         & 2B & \cmark & \xmark & \cmark
+%         & \num{8.01} & \num{23.57} & \num{35.09}
+%         & \num{20.23} & \num{40.32} & \num{50.13}
+%         & \num{13.25} & \num{29.78} & \num{40.04} \\
+%       \hline
+
+%       % ---------------- VIDEO RETRIEVAL MODELS ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{14}{l}{\textbf{Video Retrieval Models}} \\
+%       CLAP
+%         & -- & \xmark & \cmark & \xmark
+%         & \num{4.08} & \num{15.73} & \num{27.29}
+%         & \num{2.30} & \num{12.69} & \num{24.22}
+%         & \num{3.12} & \num{14.10} & \num{25.65} \\
+%       LanguageBind-Audio
+%         & -- & \xmark & \cmark & \xmark
+%         & \num{3.28} & \num{15.29} & \num{27.74}
+%         & \num{3.07} & \num{13.84} & \num{24.07}
+%         & \num{3.16} & \num{14.51} & \num{25.77} \\
+%       CLIP
+%         & -- & \cmark & \xmark & \xmark
+%         & \num{24.83} & \num{44.88} & \num{57.04}
+%         & \num{11.02} & \num{24.03} & \num{35.73}
+%         & \num{17.46} & \num{33.76} & \num{45.67} \\
+%       LanguageBind
+%         & -- & \cmark & \xmark & \xmark
+%         & \num{30.54} & \num{49.97} & \num{62.72}
+%         & \num{14.16} & \num{26.31} & \num{37.03}
+%         & \num{21.78} & \num{37.32} & \num{48.98} \\
+%       InternVideo2
+%         & -- & \cmark & \xmark & \xmark
+%         & \num{16.54} & \num{43.00} & \num{57.90}
+%         & \num{5.52} & \num{19.20} & \num{31.49}
+%         & \num{10.57} & \num{30.09} & \num{43.57} \\
+%       \hline
+%     \end{tabular}
+%   }
+%   \label{tab:mllm-eval-result}
+% \end{table*}
+% preamble (이미 있으면 유지)
+
+
+% \begin{table*}[t]
+%   \centering
+%   \caption{Comparison of VMR performance across models and input modality configurations,
+%   evaluated using Recall@1, Recall@5, and Recall@10. Avg denotes the mean of Visual and Audio R@1.}
+%   \setlength{\tabcolsep}{6pt}
+%   \resizebox{\linewidth}{!}{
+%     \begin{tabular}{l c c c c c c c c c c c}
+%       \hline
+%       \rowcolor[gray]{0.9}
+%       \multirow[t]{2}{*}{\textbf{Model}} &
+%       \multirow[t]{2}{*}{\textbf{Size}} &
+%       \multicolumn{3}{c}{\textbf{Input modality}} &
+%       \multicolumn{1}{c}{\textbf{Avg}} &
+%       \multicolumn{3}{c}{\textbf{Visual}} &
+%       \multicolumn{3}{c}{\textbf{Audio}} \\
+%       \rowcolor[gray]{0.9}
+%       & & \textbf{V} & \textbf{A} & \textbf{ASR}
+%       & \textbf{R@1}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10}
+%       & \textbf{R@1} & \textbf{R@5} & \textbf{R@10} \\
+%       \hline
+
+%       % ---------------- BASELINES (TOP) ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{12}{l}{\textbf{Baselines}} \\
+%       Random
+%         & -- & -- & -- & --
+%         & \num{1.54}
+%         & \num{1.75} & \num{9.34} & \num{20.13}
+%         & \num{1.33} & \num{8.42} & \num{16.40} \\
+%       \hline
+
+%       % ---------------- CLOSED SOURCE ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{12}{l}{\textbf{Closed-source models}} \\
+%       Gemini 2.5 Pro~\cite{gemini25pro}
+%         & -- & \cmark & \cmark & \cmark
+%         & --
+%         & -- & -- & --
+%         & -- & -- & -- \\
+%       GPT\mbox{-}4o~\cite{gpt4o}
+%         & -- & \cmark & \cmark & \cmark
+%         & --
+%         & -- & -- & --
+%         & -- & -- & -- \\
+%       \hline
+
+%       % ---------------- OPEN SOURCE (MLLMs) ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{12}{l}{\textbf{Open-source MLLMs}} \\
+%       Qwen 2.5 VL-3B
+%         & 3B & \cmark & \xmark & \xmark
+%         & \num{5.315}
+%         & \num{6.07} & -- & --
+%         & \num{4.56} & -- & -- \\
+%       Qwen 2.5 VL-3B-caption
+%         & 3B & \cmark & \xmark & \xmark
+%         & \num{5.78}
+%         & \num{7.47} & \num{22.62} & \num{33.36}
+%         & \num{4.09} & \num{13.04} & \num{23.12} \\
+%       Qwen 2.5 VL-3B-caption + Sub.
+%         & 3B & \cmark & \xmark & \cmark
+%         & \num{14.535}
+%         & \num{8.56} & \num{25.63} & \num{37.31}
+%         & \num{20.51} & \num{42.69} & \num{52.63} \\
+%       \hline
+
+%       Qwen 3 VL-2B
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{4.35}
+%         & \num{3.42} & -- & --
+%         & \num{5.28} & -- & -- \\
+%       Qwen 3 VL-2B-caption
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{7.82}
+%         & \num{11.47} & \num{30.18} & \num{42.42}
+%         & \num{4.17} & \num{14.18} & \num{24.50} \\
+%       Qwen 3 VL-2B-caption + Sub.
+%         & 2B & \cmark & \xmark & \cmark
+%         & \num{14.66}
+%         & \num{8.68} & \num{24.80} & \num{36.69}
+%         & \num{20.64} & \num{40.48} & \num{50.62} \\
+%       \hline
+
+%       InternVL3-2B
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{3.075}
+%         & \num{3.68} & -- & --
+%         & \num{2.47} & -- & -- \\
+%       InternVL3-2B-caption
+%         & 2B & \cmark & \xmark & \xmark
+%         & \num{5.845}
+%         & \num{8.59} & \num{23.61} & \num{35.09}
+%         & \num{3.10} & \num{11.88} & \num{22.15} \\
+%       InternVL3-2B-caption + Sub.
+%         & 2B & \cmark & \xmark & \cmark
+%         & \num{14.12}
+%         & \num{8.01} & \num{23.57} & \num{35.09}
+%         & \num{20.23} & \num{40.32} & \num{50.13} \\
+%       \hline
+
+%       % ---------------- VIDEO RETRIEVAL MODELS ----------------
+%       \rowcolor[gray]{0.95}
+%       \multicolumn{12}{l}{\textbf{Video Retrieval Models}} \\
+%       CLAP
+%         & -- & \xmark & \cmark & \xmark
+%         & \num{3.19}
+%         & \num{4.08} & \num{15.73} & \num{27.29}
+%         & \num{2.30} & \num{12.69} & \num{24.22} \\
+%       LanguageBind-Audio
+%         & -- & \xmark & \cmark & \xmark
+%         & \num{3.175}
+%         & \num{3.28} & \num{15.29} & \num{27.74}
+%         & \num{3.07} & \num{13.84} & \num{24.07} \\
+%       CLIP
+%         & -- & \cmark & \xmark & \xmark
+%         & \num{17.925}
+%         & \num{24.83} & \num{44.88} & \num{57.04}
+%         & \num{11.02} & \num{24.03} & \num{35.73} \\
+%       LanguageBind
+%         & -- & \cmark & \xmark & \xmark
+%         & \num{22.35}
+%         & \num{30.54} & \num{49.97} & \num{62.72}
+%         & \num{14.16} & \num{26.31} & \num{37.03} \\
+%       InternVideo2
+%         & -- & \cmark & \xmark & \xmark
+%         & \num{11.03}
+%         & \num{16.54} & \num{43.00} & \num{57.90}
+%         & \num{5.52} & \num{19.20} & \num{31.49} \\
+%       \hline
+%     \end{tabular}
+%   }
+%   \label{tab:mllm-eval-result}
+% \end{table*}
+\begin{table*}[t]
+  \centering
+  \caption{Comparison of VMR performance across models and input modality configurations,
+  evaluated using Recall@1, Recall@5, and Recall@10. Avg(R@10) reports Recall@10 on the \textit{ALL} split.}
+  \label{tab:mllm-eval-result}
+  \setlength{\tabcolsep}{6pt}
+
+  \begingroup
+  \setlength{\arrayrulewidth}{0.15pt}
+  \arrayrulecolor{black!20}
+
+  \resizebox{1.\linewidth}{!}{
+    \begin{tabular}{l c c c c|c|c c c|c c c}
+      \hline
+      \rowcolor[gray]{0.9}
+      \multirow[t]{2}{*}{\textbf{Model}} &
+      \multirow[t]{2}{*}{\textbf{Size}} &
+      \multicolumn{3}{c|}{\textbf{Input modality}} &
+      \multicolumn{1}{c|}{\textbf{Avg}} &
+      \multicolumn{3}{c|}{\textbf{Vision}} &
+      \multicolumn{3}{c}{\textbf{Audio}} \\
+      \rowcolor[gray]{0.9}
+      & & \textbf{V} & \textbf{A} & \textbf{ASR}
+      & \textbf{R@10}
+      & \textbf{R@1} & \textbf{R@5} & \textbf{R@10}
+      & \textbf{R@1} & \textbf{R@5} & \textbf{R@10} \\
+      \hline
+
+      Random
+        & -- & -- & -- & --
+        & \num{17.58}
+        & \num{1.75} & \num{9.34} & \num{20.13}
+        & \num{1.33} & \num{8.42} & \num{16.40} \\
+      \hline
+
+      \rowcolor[gray]{0.95}
+      \multicolumn{12}{l}{\textbf{Closed-source MLLM}} \\
+      Gemini 2.5 Flash~\cite{comanici2025gemini}
+        & -- & \cmark & \xmark & \xmark
+        & -- & 6.0 & -- & -- & 4.0 & -- & -- \\
+        + audio
+        & -- & \cmark & \cmark & \xmark
+        & -- & 6.0 & -- & -- & 6.0 & -- & -- \\
+        + Sub.
+        & -- & \cmark & \cmark & \cmark
+        & -- & 26.0 & -- & -- & 26.0 & -- & -- \\
+      \hline
+
+      \rowcolor[gray]{0.95}
+      \multicolumn{12}{l}{\textbf{Open-source MLLMs}} \\
+
+      Qwen2.5VL~\cite{qwen25}
+        & 3B & \cmark & \xmark & \xmark
+        & --
+        & \num{6.07} & -- & --
+        & \num{4.56} & -- & -- \\
+      InternVL3~\cite{internvl3}
+        & 2B & \cmark & \xmark & \xmark
+        & --
+        & \num{3.68} & -- & --
+        & \num{2.47} & -- & -- \\
+      Qwen2.5-Omni~\cite{qwen2.5omni}
+        & 3B & \cmark & \cmark & \xmark
+        & --
+        & \num{5.22} & -- & --
+        & \num{3.73} & -- & -- \\
+     \hline
+      \rowcolor[gray]{0.95}
+      \multicolumn{12}{l}{\textbf{Open-source MLLMs with Segment Captions}} \\
+
+
+      Qwen2.5VL
+        & 3B & \cmark & \xmark & \xmark
+        & \num{26.16}
+        & \num{5.83} & \num{18.74} & \num{32.01}
+        & \num{2.62} & \num{11.82} & \num{21.91} \\
+      + Sub.
+        & 3B & \cmark & \xmark & \cmark
+        & \num{39.84}
+        & \num{8.67} & \num{23.70} & \num{37.17}
+        & \num{19.96} & \num{37.33} & \num{47.29} \\
+      \hdashline
+
+      InternVL3
+        & 2B & \cmark & \xmark & \xmark
+        & \num{26.86}
+        & \num{7.35} & \num{20.47} & \num{33.01}
+        & \num{3.18} & \num{12.23} & \num{23.11} \\
+      + Sub.
+        & 2B & \cmark & \xmark & \cmark
+        & \num{39.93}
+        & \num{10.10} & \num{25.74} & \num{37.31}
+        & \num{19.93} & \num{37.60} & \num{47.60} \\
+        \hdashline
+
+      Qwen2.5-Omni
+        & 3B & \cmark & \cmark & \xmark
+        & \num{30.80}
+        & \num{9.21} & \num{25.16} & \num{37.64}
+        & \num{5.90} & \num{17.17} & \num{27.48} \\
+      + Sub.
+        & 3B & \cmark & \cmark & \cmark
+        & \num{43.75}
+        & \num{11.07} & \num{28.52} & \num{41.81}
+        & \num{19.22} & \num{38.18} & \num{48.23} \\
+      % Qwen3VL~\cite{qwen3}
+      %   & 2B & \cmark & \xmark & \xmark
+      %   & --
+      %   & \num{3.42} & -- & --
+      %   & \num{5.28} & -- & -- \\
+      % Qwen3VL-caption
+      %   & 2B & \cmark & \xmark & \xmark
+      %   & \num{28.84}
+      %   & \num{9.15} & \num{24.91} & \num{36.12}
+      %   & \num{3.68} & \num{13.29} & \num{23.83} \\
+      % + Sub.
+      %   & 2B & \cmark & \xmark & \cmark
+      %   & \num{41.62}
+      %   & \num{10.65} & \num{28.48} & \num{40.62}
+      %   & \num{20.96} & \num{37.97} & \num{48.29} \\
+      % \hdashline
+      \hline
+
+      \rowcolor[gray]{0.95}
+      \multicolumn{12}{l}{\textbf{Embedding Models}} \\
+      CLIP~\cite{clip}
+        & 151M & \cmark & \xmark & \xmark
+        & \num{43.89}
+        & \num{14.85} & \num{40.83} & \num{54.27}
+        & \num{6.40} & \num{22.06} & \num{34.35} \\
+      LanguageBind~\cite{languagebind}
+        & 428M & \cmark & \xmark & \xmark
+        & \num{48.98}
+        & \num{30.54} & \num{49.97} & \num{62.72}
+        & \num{14.16} & \num{26.31} & \num{37.03} \\
+      InternVideo2~\cite{internvideo2}
+        & 1B & \cmark & \xmark & \xmark
+        & \num{43.57}
+        & \num{16.54} & \num{43.00} & \num{57.90}
+        & \num{5.52} & \num{19.20} & \num{31.49} \\
+      \hdashline
+      CLAP~\cite{clap}
+        & 154M & \xmark & \cmark & \xmark
+        & \num{25.65}
+        & \num{4.08} & \num{15.73} & \num{27.29}
+        & \num{2.30} & \num{12.69} & \num{24.22} \\
+      LanguageBind-Audio~\cite{languagebind}
+        & 428M & \xmark & \cmark & \xmark
+        & \num{25.77}
+        & \num{3.28} & \num{15.29} & \num{27.74}
+        & \num{3.07} & \num{13.84} & \num{24.07} \\
+      \hline
+
+      
+    \end{tabular}
+  }
+
+  \arrayrulecolor{black}
+  \endgroup
+  \vspace{-.5em}
+\end{table*}

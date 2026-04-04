@@ -15,7 +15,11 @@
       "Bash(sshpass:*)",
       "Bash(gh auth:*)",
       "WebFetch(domain:arxiv.org)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:cua.ai)",
+      "WebFetch(domain:iclr.cc)"
     ]
   }
 }

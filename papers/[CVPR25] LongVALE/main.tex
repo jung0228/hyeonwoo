@@ -1,0 +1,86 @@
+% CVPR 2025 Paper Template; see https://github.com/cvpr-org/author-kit
+
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\PassOptionsToPackage{table}{xcolor}
+%%%%%%%%% PAPER TYPE  - PLEASE UPDATE FOR FINAL VERSION
+% \usepackage{cvpr}              % To produce the CAMERA-READY version
+% \usepackage[review]{cvpr}      % To produce the REVIEW version
+\usepackage[pagenumbers]{cvpr} % To force page numbers, e.g. for an arXiv version
+
+% Import additional packages in the preamble file, before hyperref
+% \input{preamble}
+
+% It is strongly recommended to use hyperref, especially for the review version.
+% hyperref with option pagebackref eases the reviewers' job.
+% Please disable hyperref *only* if you encounter grave issues, 
+% e.g. with the file validation for the camera-ready version.
+%
+% If you comment hyperref and then uncomment it, you should delete *.aux before re-running LaTeX.
+% (Or just hit 'q' on the first LaTeX run, let it finish, and you should be clear).
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=cvprblue]{hyperref}
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{array}
+\usepackage{booktabs} 
+\usepackage{float}
+\usepackage{graphicx}
+% \usepackage[table]{xcolor}
+% \usepackage[accsupp]{axessibility} % Improves PDF readability for those with disabilities.
+
+%%%%%%%%% PAPER ID  - PLEASE UPDATE
+\def\paperID{6100} % *** Enter the Paper ID here
+\def\confName{CVPR}
+\def\confYear{2025}
+
+%%%%%%%%% TITLE - PLEASE UPDATE
+\title{LongVALE: Vision-Audio-Language-Event Benchmark Towards \\ Time-Aware Omni-Modal Perception of Long Videos}
+
+%%%%%%%%% AUTHORS - PLEASE UPDATE
+\author{Tiantian Geng$^{1,2}$, Jinrui Zhang$^{1}$, Qingni Wang$^{3}$, Teng Wang$^{1,4}$, Jinming Duan$^{2,5*}$, Feng Zheng$^{1*}$\\
+$^1$Southern University of Science and Technology \ 
+$^2$University of Birmingham\\
+$^3$University of Electronic Science and Technology of China \\
+$^4$The University of Hong Kong \
+$^5$University of Manchester \\
+{\tt\small gengtiantian97@gmail.com\ zhangjr2018@mail.sustech.edu.cn }
+}
+
+\begin{document}
+\twocolumn[{%
+\renewcommand\twocolumn[1][]{#1}%
+\maketitle
+
+\begin{center}
+    \centering
+  \vspace{-6mm}
+    \captionsetup{type=figure}
+      \includegraphics[width=0.97\linewidth]{figures/new/fig1.jpg}
+  % \vspace{-3mm}
+    \captionof{figure}{We introduce LongVALE, the first-ever omni-modality long video benchmark,  
+    offering precise temporal boundaries and captions for omni-modal events integrating visual, audio, and speech information. The captions feature audio-visual correlations to enhance cross-modal learning. Besides, we extend three fine-grained video tasks to the omni-modality domain, enabling omni-perception of long videos.}
+  \label{fig:fig1}
+\end{center}%
+}]
+\let\thefootnote\relax\footnotetext{{$*$ Corresponding co-authors}}
+% \maketitle
+\input{sec/0_abstract}    
+\input{sec/1_intro}
+\input{sec/2_related_work}
+\input{sec/3_dataset}
+\input{sec/4_Baseline}
+\input{sec/5_experiment}
+
+
+{
+    \small
+    \bibliographystyle{ieeenat_fullname}
+    \bibliography{main}
+}
+
+% WARNING: do not forget to delete the supplementary pages from your submission 
+\input{sec/X_suppl}
+
+\end{document}

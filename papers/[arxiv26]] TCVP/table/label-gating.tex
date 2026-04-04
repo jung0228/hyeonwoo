@@ -1,0 +1,12 @@
+\begin{equation}
+\resizebox{0.85\linewidth}{!}{$
+\mathrm{label}(u)=
+\begin{cases}
+\text{unrelated},      & \max(s^v, s^a) < \tau, \\
+\text{vision-related}, & s^v \ge s^a, \\
+\text{audio-related},  & s^a > s^v.
+\end{cases}
+$}
+\label{eq:modality_assignment}
+\end{equation}
+\noindent where $s^v$ and $s^a$ denote the representative similarity scores defined as the maximum values over the corresponding per-caption similarities $s^v_j$ and $s^a_j$ within each modality.

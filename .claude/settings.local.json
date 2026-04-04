@@ -33,7 +33,13 @@
       "WebFetch(domain:webarena.dev)",
       "WebFetch(domain:ukgovernmentbeis.github.io)",
       "WebFetch(domain:github.com)",
-      "Bash(git -C /mnt/c/Users/jungh/OneDrive/Desktop/web/hyeonwoo add:*)"
+      "Bash(git -C /mnt/c/Users/jungh/OneDrive/Desktop/web/hyeonwoo add:*)",
+      "Read(//Users/jhw/Downloads/ExportBlock-ab6fc50a-9e48-493b-b391-be588ca928c8-Part-1/**)",
+      "Bash(cp \"/Users/jhw/Downloads/ExportBlock-ab6fc50a-9e48-493b-b391-be588ca928c8-Part-1/Web Agent 동작 방식/image.png\" /tmp/check_img1.png\ncp \"/Users/jhw/Downloads/ExportBlock-ab6fc50a-9e48-493b-b391-be588ca928c8-Part-1/Web Agent 동작 방식/image 1.png\" /tmp/check_img2.png\ncp \"/Users/jhw/Downloads/ExportBlock-ab6fc50a-9e48-493b-b391-be588ca928c8-Part-1/Web Agent 동작 방식/image 2.png\" /tmp/check_img3.png)",
+      "Bash(cp \"/Users/jhw/Downloads/ExportBlock-7a9967d6-7733-4325-8099-e80066cb65ae-Part-1/벤치마크/image.png\" /tmp/bm_img0.png\ncp \"/Users/jhw/Downloads/ExportBlock-7a9967d6-7733-4325-8099-e80066cb65ae-Part-1/벤치마크/스크린샷_2026-03-07_오후_1.49.19.png\" /tmp/bm_img1.png\ncp \"/Users/jhw/Downloads/ExportBlock-7a9967d6-7733-4325-8099-e80066cb65ae-Part-1/벤치마크/스크린샷_2026-03-07_오후_2.08.06.png\" /tmp/bm_img2.png\ncp \"/Users/jhw/Downloads/ExportBlock-7a9967d6-7733-4325-8099-e80066cb65ae-Part-1/벤치마크/스크린샷_2026-03-07_오후_2.10.04.png\" /tmp/bm_img3.png\ncp \"/Users/jhw/Downloads/ExportBlock-7a9967d6-7733-4325-8099-e80066cb65ae-Part-1/벤치마크/스크린샷_2026-03-07_오후_2.10.54.png\" /tmp/bm_img4.png)",
+      "Bash(ls /tmp/rs_img*.png /tmp/rs_stats.png /tmp/rs_bu1.png /tmp/rs_bu2.png 2>/dev/null)",
+      "Bash(grep -n \"highlight.js\\\\|hljs.highlight\" /Users/jhw/Desktop/web/hyeonwoo/blog/posts/web-agent-deep-dive.html | head -5\ngrep -c \"<img \" /Users/jhw/Desktop/web/hyeonwoo/blog/posts/web-agent-deep-dive.html)",
+      "Bash(ls /Users/jhw/Desktop/web/hyeonwoo/blog/posts/md/\nls /Users/jhw/Desktop/web/hyeonwoo/blog/posts/*.html | xargs grep -l -i \"tcvp\\\\|EMNLP\\\\|ACL 이후\" 2>/dev/null)"
     ]
   }
 }

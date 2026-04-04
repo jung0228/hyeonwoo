@@ -1,0 +1,64 @@
+\begin{tcolorbox}[
+  colback=blue!3!white,
+  colframe=blue!70!black,
+  width=\linewidth,
+  arc=1mm,
+  boxrule=0.45pt,
+  boxsep=0.8mm,
+  left=1.6mm,
+  right=1.6mm,
+  top=1.2mm,
+  bottom=1.2mm,
+  title=\textbf{Moment Search Query Generation},
+  colbacktitle=blue!70!black,
+  coltitle=white,
+  fonttitle=\scriptsize\bfseries\sffamily,
+  halign title=center
+]
+\setlength{\parindent}{0pt}
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  breakatwhitespace=true,
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,
+  showstringspaces=false,
+  aboveskip=0pt,
+  belowskip=0pt
+]
+Generate one short and realistic query that a viewer would type to revisit the exact moment behind the comment.
+
+First infer whether the intent is visual or audio.
+Extract comment_keywords as words or short phrases taken from the comment.
+Select focus_keywords as the smallest subset that carries the retrieval intent.
+
+Write one query that centers on focus_keywords and add one or two small cues that help localize the moment.
+Use a conversational search style and write one sentence in 12 to 25 words.
+
+For visual queries emphasize visible entities, actions, and scene details.
+For audio queries include a short quote or a natural paraphrase and add sound cues when helpful.
+
+Avoid timestamps and durations and avoid narration that describes watching the video.
+Return valid JSON only and follow this schema.
+
+{
+  "modality": "visual" or "audio",
+  "comment_keywords": ["phrases taken from the comment"],
+  "focus_keywords": ["subset used to build the query"],
+  "intent": "one sentence describing what the user wants to revisit",
+  "query": "one natural query in 12 to 25 words",
+  "rationale": "why the focus keywords and cues match the comment intent"
+}
+
+Example
+Comment: "Love this quote, Jillian isn't sick she's a dancer!"
+{
+  "modality": "audio",
+  "comment_keywords": ["Love this quote", "Jillian isn't sick", "dancer"],
+  "focus_keywords": ["Jillian isn't sick", "dancer"],
+  "intent": "Find the moment when the memorable Jillian line is spoken",
+  "query": "the moment someone says Jillian isn't sick she's a dancer and the audience reacts",
+  "rationale": "The key phrase comes from the comment and the reaction cue helps localization"
+}
+\end{lstlisting}
+\end{tcolorbox}

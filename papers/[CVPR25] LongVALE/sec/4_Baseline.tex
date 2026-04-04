@@ -1,0 +1,59 @@
+\section{LongVALE-LLM}
+Inspired by the advancements in video large language models (video LLMs) on diverse video tasks~\cite{li2023videochat,zhang2023video,huang2024vtimellm}, we present LongVALE-LLM, a video LLM designed to handle omni-modal event understanding in long videos.  
+
+
+\subsection{Overall Architecture}
+Figure~\ref{fig:baseline} illustrates the overall architecture of LongVALE-LLM. Given a long video, the multi-modal encoders first extract modality-specific token features, which are then mapped into the LLM's embedding space via the multi-modal adapters. The embeddings from different modalities are concatenated along the sequence dimension and combined with the task instruction to form the prefix input to the LLM. The LLM is trained with an auto-regressive objective to generate responses that align with both the instruction and the omni-modality content.
+
+\begin{figure}[t]
+  \centering
+  \setlength{\abovecaptionskip}{1.0mm}
+   \includegraphics[width=1.0\linewidth]{figures/new/fig4.jpg}
+   \caption{LongVALE-LLM architecture with boundary perception and instruction tuning stages using our LongVALE dataset.}
+   \label{fig:baseline}
+     \vspace{-6mm}
+\end{figure}
+
+\subsection{Training Recipe}
+Our LongVALE, as the first-ever omni-modality long video benchmark with fine-grained annotations, serves as a highly valuable data source for training a Video-LLM capable of both cross-modal reasoning and fine-grained temporal understanding. Extending the boundary-aware training strategy from visual-only Video-LLMs~\cite{huang2024vtimellm}, we introduce omni-modal boundary perception and instruction tuning to allow omni-modal event understanding. Note that in both training stages, we train the audio and speech adapters, and the LLM (using LoRA~\cite{hu2021lora}), while keeping the visual adapter frozen, which is pre-trained with LCS-558k dataset~\cite{liu2024improved}.  
+
+\noindent\textbf{Omni-modal boundary perception tuning.} The training stage focuses on enabling the LLM to comprehend omni-modal events within a video and align them with their corresponding temporal boundaries.  
+For training data, we transform the omni-modal event annotations of each video into template-based dialogue data suitable for training LLM. The dialogues include both single-turn and multi-turn QA dialogues similar in VTimeLLM~\cite{huang2024vtimellm}. Single-turn QA tasks focus on omni-modal dense video captioning, while multi-turn QA tasks handle omni-modal video grounding and segment captioning. 
+We only generate one set of dialogues for each video, yielding 7,240 QA dialogues. Additionally, we also add visual-only data~\cite{huang2024vtimellm} in this tuning stage.
+
+
+\begin{table*}
+  \centering
+  \resizebox{0.9\linewidth}{!}{ 
+  \begin{tabular}{l|cc|cccc|ccc|cccc}
+    \toprule
+    \multirow{2}{*}{Model} & \multirow{2}{*}{A\&V}& \multirow{2}{*}{TU} & \multicolumn{4}{c}{Omni-TVG} & \multicolumn{3}{c}{Omni-DVC} & \multicolumn{4}{c}{Omni-SC}  \\
+    \cmidrule(lr){4-14} 
+     & && R@0.3 & R@0.5 & R@0.7 & mIoU & S & C & M & B & R & C & M \\
+     \midrule
+    VideoChat (7B)~\cite{li2023videochat} & \ding{55} & \ding{55} & 2.2 & 0.9 & 0.4 & 3.0 & 0.7 & 0.2 & 0.9 & 0.5 & 9.6 & 0.0 & 8.2  \\
+    % \midrule
+    VideoChatGPT (7B)~\cite{maaz2023video} & \ding{55} & \ding{55} & 4.9 & 2.0 & 0.9& 5.0 & 0.7& 0.1& 0.9&0.4& 14.0& 0.9 & 5.9 \\
+    VideoLLaMA (7B)~\cite{zhang2023video}& \checkmark & \ding{55}  & 2.5 & 1.1 & 0.3 & 1.9 & 0.6& \underline{0.6}& 0.9& 0.9& 11.5& 0.1& 8.9 \\
+    PandaGPT (7B)~\cite{su2023pandagpt} & \checkmark & \ding{55} &2.5& 1.0& 0.3 & 2.2 & 0.5 & 0.0 & 0.6 & 0.6& 14.9 & 0.3 & 8.9 \\
+    NExT-GPT (7B)~\cite{wu2023next} & \checkmark & \ding{55} & 4.3 & 1.9 & 0.7 & 4.0 &0.2 & 0.1& 0.3 & 0.4 & 10.2& 0.0 & 8.1 \\
+    % \midrule
+    TimeChat (7B)~\cite{ren2024timechat} & \ding{55} & \checkmark & 5.8 & 2.6 & 1.1 & 5.2 & 1.6 & 0.1 & 1.4 & \underline{1.2} & \underline{16.1} & \underline{1.6} & \underline{10.0} \\
+    VTimeLLM (7B)~\cite{huang2024vtimellm} & \ding{55} & \checkmark & \underline{7.5} & \underline{3.4} & \underline{1.3} & \underline{6.4} & \underline{2.4} & 0.2& \underline{2.0} &1.0&14.5&1.6&5.5  \\
+    \midrule
+    \rowcolor{gray!20} LongVALE-LLM (7B) (ours) & \checkmark & \checkmark & \textbf{15.7}&\textbf{8.6}&\textbf{3.9}&\textbf{11.0}&\textbf{2.8}&\textbf{7.9}&\textbf{4.7}&\textbf{5.6}&\textbf{22.4}&\textbf{20.3}&\textbf{10.9}\\
+    \bottomrule
+  \end{tabular}}
+  \vspace{-1.5mm}
+  \caption{Comparison with existing Video LLMs for omni-modal temporal video grounding (Omni-TVG), dense video captioning (Omni-DVC), and segment captioning (Omni-SC) tasks on our LongVALE test set. A\&V: support both video and audio input. TU: support fine-grained temporal understanding. S: SODA\_c. C: CIDEr. M: METEOR. B: BLUE-4. R: ROUGE-L.}
+  \label{tab:SOTA}
+  \vspace{-5mm}
+\end{table*}
+
+\noindent\textbf{Omni-modal instruction tuning.}
+Although our model demonstrates the ability to perceive omni-modal event boundaries after boundary perception tuning, its outputs tend to overfit to templated answers. 
+To improve the model's ability to follow human instructions for more comprehensive omni-modal event reasoning, we create high-quality instruction-tuning data based on our LongVALE.
+We convert all video annotations into high-quality QA dialogues using Gemini-1.5-Pro~\cite{Gemini}. For each video, we prompt the LLM to analyze omni-modal event boundaries and captions, generating free-form dialogues that emphasize temporal perception and reasoning, which may encompass a variety of tasks. {\color{black}The prompt can be found in Appendix.}
+As a result, we generate an omni-modal instruction dataset containing 25.4K high-quality QA dialogues with an average of 3.6 distinct dialogues per video.
+Besides, we also incorporate extra visual-only instruction data~\cite{huang2024vtimellm} to further enhance the model's descriptive capabilities.
+

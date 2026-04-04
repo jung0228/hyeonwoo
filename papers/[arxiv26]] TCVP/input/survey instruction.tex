@@ -1,0 +1,62 @@
+\tcbset{
+  annotbox/.style={
+    enhanced,
+    colback=black!2,
+    colframe=black!35,
+    boxrule=0.45pt,
+    arc=2mm,
+    left=3mm,
+    right=3mm,
+    top=2mm,
+    bottom=2mm,
+    boxsep=1mm,
+    colbacktitle=black!8,
+    coltitle=black,
+    fonttitle=\bfseries\sffamily,
+    attach title to upper,
+    boxed title style={boxrule=0pt},
+    center title,
+    borderline west={1.1mm}{0pt}{black!45}
+  }
+}
+
+\begin{tcolorbox}[
+  annotbox,
+  title=\textbf{Annotator Instructions: Realistic Query Selection}
+]
+\small
+\setlength{\parindent}{0pt}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*, itemsep=0.35ex, topsep=0.35ex]
+  \item You will be given a YouTube video, a specific moment from that video, and a list of possible text queries.
+  \item Imagine the following situation:
+  \begin{enumerate}[label=\alph*., leftmargin=2.2em, itemsep=0.25ex, topsep=0.25ex]
+    \item You previously watched the entire YouTube video.
+    \item Later, you want to find that specific moment again using a text query.
+    \item You have an AI system that can locate the exact timestamp if you provide a text description of the moment.
+  \end{enumerate}
+  \item From the list below, choose the query you would most likely give to the AI system.
+  \item You should select a natural and realistic search query.
+  \item `Natural' means it sounds like something a real person would actually type.
+  \item `Realistic' means it is clear and not overly long.
+\end{enumerate}
+\end{tcolorbox}
+
+\input{input/query survey}
+
+
+\begin{tcolorbox}[
+  annotbox,
+  title=\textbf{Annotator Instructions: Timestamp Selection}
+]
+\small
+\setlength{\parindent}{0pt}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*, itemsep=0.35ex, topsep=0.35ex]
+  \item You will see two candidate moments from the same YouTube video shown side by side.
+  \item Watch both moments and choose the one that better captures the core content of the video.
+  \item Select the option that is more representative and more informative, rather than the option that is simply longer or more eventful.
+\end{enumerate}
+\end{tcolorbox}
+
+\input{input/time compare appendix}

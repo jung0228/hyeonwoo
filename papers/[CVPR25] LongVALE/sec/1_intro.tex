@@ -1,0 +1,77 @@
+\section{Introduction}
+\label{sec:intro}
+\begin{table*}
+  \centering
+  \resizebox{\linewidth}{!}{ 
+  \begin{tabular}{l|cccc|ccc|cc|c}
+    \toprule
+    Dataset & Annotation & \#Videos & Avg. video len & \#Avg. event & Vision & Audio & Subtitle & Captions & Timestamps & A-V Correlations  \\
+    \midrule
+    
+    InternVid~\cite{wang2023internvid} & G & 234M & 11.7s & 1 & \checkmark & \ding{55}& \ding{55}& V & - & \ding{55}   \\
+    Panda-70M~\cite{chen2024panda} & G & 70.8M & 8.5s & 1 & \checkmark & \ding{55}& \ding{55}& V & - & \ding{55} \\
+    AudioCaps~\cite{kim2019audiocaps} & M & 51.3K & 10s & 1 & \ding{55} & \checkmark & \ding{55} & A & - & \ding{55} \\
+    WavCaps~\cite{mei2024wavcaps} & G & 403K & 67.6s & 1 & \ding{55} & \checkmark & \ding{55} & A & - & \ding{55}\\
+    ACAV~\cite{lee2021acav100m} & G & 100M & 10s & 1 & \checkmark & \checkmark & \ding{55} & - & - & \ding{55} \\
+    VALOR~\cite{liu2024valor} & M & 1.18M & 10s & 1 & \checkmark & \checkmark & \ding{55} & VA & - & \ding{55}\\
+    VAST~\cite{chen2023vast} & G & 27M & 5$\sim$30s & 1 & \checkmark & \checkmark & \checkmark & VAS & - & \ding{55} \\
+    \midrule
+    AVEL~\cite{tian2018audio} & M & 4,143 & 10s & 1 & \checkmark & \checkmark & \ding{55} & - & VA & \ding{55}\\
+    UnAV-100~\cite{geng2023dense} & M & 10,790 & 42.1s & 2.8 & \checkmark & \checkmark & \ding{55} & - & VA & \ding{55} \\
+    ActivityNet Caps~\cite{krishna2017dense}& M & 20K & 180s & 3.7 &  \checkmark & \ding{55} & \ding{55} & V & V & \ding{55}\\
+    Charades-STA~\cite{gao2017tall} & M & 10K & 30s & 1.6 &  \checkmark & \ding{55} & \ding{55} & V & V & \ding{55}\\
+    \midrule
+    \textbf{LongVALE (Ours)} & G+M & 8,411 & 235s & 12.6 & \checkmark & \checkmark & \checkmark & VAS & VAS  & \checkmark\\
+    \bottomrule
+  \end{tabular}}
+  \vspace{-2mm}
+  \caption{Comparison of LongVALE with previous related benchmarks. G: generated. M: manual. V: visual. A: audio. S: speech. }
+  \label{tab:dataset_compar}
+  \vspace{-5mm}
+\end{table*}
+
+As the volume of videos on social media platforms grows exponentially, video understanding~\cite{krishna2017dense,gao2017tall,wang2023internvid,zhang2023video} has emerged as a vital research area in artificial intelligence.
+When watching videos, such as daily vlogs or tutorials lasting several minutes, viewers need to integrate visual and auditory information and associate multiple events to fully comprehend the content. 
+An ideal intelligent video agent should imitate it, capable of both cross-modal reasoning and fine-grained temporal understanding. 
+However, current research is limited to coarse-grained tasks (\eg, video retrieval/captioning~\cite{wang2023internvid,liu2024valor}) or visual-only fine-grained tasks (\eg, temporal grounding/dense captioning~\cite{krishna2017dense, gao2017tall}), remaining far from enough to achieve both the capabilities.
+
+A significant barrier to this advancement is the absence of a high-quality video dataset with omni-modality (vision, audio, and speech) and fine-grained temporal annotations. 
+As seen in Tab.~\ref{tab:dataset_compar}, current benchmarks either contain only global captions for short video/audio clips~\cite{wang2023internvid, chen2024panda, kim2019audiocaps,mei2024wavcaps,liu2024valor,chen2023vast}, offer visual-only multi-event annotations~\cite{krishna2017dense,gao2017tall}, or possess multi-modal events but lack detailed captions~\cite{tian2018audio,geng2023dense}.
+Moreover, creating such a dataset
+poses significant challenges, as identifying temporal boundaries and producing detailed event captions by integrating information from various modalities are difficult and time-consuming, even for human annotators.  
+
+In this work, we propose an efficient and scalable annotation pipeline, capable of generating temporal boundaries and detailed captions for omni-modal events (\ie, integrating vision, audio, and speech) within arbitrary multi-modal long videos.
+Our pipeline includes three distinct aspects: 
+1) \textit{High-quality video filtering for rich audio-visual semantics and temporal dynamics.}
+The filtered videos showcase rich dynamic visual scenes paired with diverse audio types, \eg, instruments playing, people laughing, and tools whirring as in Fig.~\ref{fig:fig1}, contrasting with the dense narration in prior datasets~\cite{chen2024panda, chen2023vast}. 
+2) \textit{Omni-modal event boundary detection for semantic coherence in both visual and audio scenes.} Unlike previous works~\cite{krishna2017dense,gao2017tall} that only identify visual event boundaries, we determine omni-modal event boundaries utilizing both visual and audio cues. This prevents audio scenes from being cut off, avoiding the loss of critical information.
+3) \textit{Omni-modal event captioning emphasizing audio-visual correlation reasoning.} Instead of simple concatenation~\cite{chen2023vast,liu2024valor}, we fully integrate modality-specific information (vision, audio, speech) and explicitly reason about their correlations to enhance cross-modal understanding.
+For example, in Fig.~\ref{fig:fig1}, the visible man using the tool with loud whirring reflects audio-visual \textit{synchronicity}, and the woman's speech crucially \textit{complements} the visual scene. 
+
+Based on the pipeline, we construct LongVALE, the first-ever benchmark for omni-modality fine-grained video understanding. It comprises 8.4K long videos containing 105K omni-modal events annotated with high-quality temporal boundaries and correlation-aware captions. 
+Notably, it features a longer average video length (235 seconds) and more events (12.6 per video) compared to existing benchmarks, along with its unique omni-modal event boundaries and captions with audio-visual correlations (seen in Tab.~\ref{tab:dataset_compar}).
+
+
+Building upon LongVALE, we present LongVALE-LLM, a multi-modal video LLM, capable of both cross-modal reasoning and fine-grained temporal understanding. Further, we extend three fine-grained video tasks (\ie, temporal video grounding, dense video captioning, and segment captioning) from a vision-oriented to a novel omni-modal setting.
+During training, our dataset can serve as a highly valuable data source for both event boundary perception tuning~\cite{huang2024vtimellm} and instruction tuning.
+Our experiments show that the model trained on our LongVALE dataset significantly outperforms existing video LLMs across all three tasks.
+Moreover, we find that our model can surprisingly achieve superior performance on general audio-visual question answering (AVQA) tasks~\cite{alamri2019audio,li2022learning} in a zero-shot manner, even with significantly less data compared to other LLM-based methods trained on million-scale data. 
+It highlights the effectiveness and great promise of our dataset in diving forward comprehensive multi-modal video understanding.
+\begin{figure*}[t]
+  \centering
+  \setlength{\abovecaptionskip}{1.0mm}
+   \includegraphics[width=1.0\linewidth]{figures/new/fig2.jpg}
+   \caption{The pipeline for high-quality omni-modality fine-grained data generation. 
+   It starts by detecting visual and audio event boundaries based on their distinct properties. 
+   Next, we generate detailed captions for each video and audio event enhanced by keyframe and speech captions. 
+   We then determine omni-modal event boundaries by maintaining the semantic integrity of single-modal events. Finally, omni-modal event captions are generated by audio-visual correlation reasoning, followed by manual refinement to ensure data's high quality.}
+   \label{fig:dataset_pipeline}
+     \vspace{-4mm}
+\end{figure*}
+Our contributions can be summarized as follows: 
+\begin{itemize}
+    \item We propose a novel scalable pipeline enabling the automatic generation of high-quality omni-modality fine-grained annotations for multi-modal long videos, significantly reducing manual annotation costs. 
+    \item We introduce LongVALE, the first-ever benchmark providing omni-modal event temporal boundaries and cross-modal correlation-aware captions for 105K omni-modal events within 8.4K high-quality multi-modal long videos.
+    \item We demonstrate that our LongVALE-trained model excels in both cross-modal reasoning and fine-grained temporal understanding, significantly outperforming existing video LLMs across all three omni-modal tasks and even achieving superior zero-shot results on general AVQA.
+    
+\end{itemize}
