@@ -80,6 +80,30 @@ const EXTRA_CSS = `
       font-size: .78rem; color: var(--muted); margin-top: .5rem;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
+
+    /* ─── HIGHLIGHT (형광팬) ─── */
+    .post-content mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+    .summary-highlight {
+      background: #fef9c3;
+      border-left: 3px solid #eab308;
+      padding: .6rem 1rem;
+      margin: .6rem 0 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ─── BLOCKQUOTE (영어 원문 — 작은 폰트) ─── */
+    .post-content blockquote {
+      font-size: .82rem;
+      color: var(--muted);
+      border-left: 3px solid var(--rule-lt);
+      margin: .8rem 0 1.2rem;
+      padding: .3rem 1rem;
+    }
 `;
 
 // ── Markdown preprocessing ────────────────────────────────────────────────────

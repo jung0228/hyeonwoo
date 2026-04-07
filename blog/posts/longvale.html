@@ -281,6 +281,30 @@
       font-size: .78rem; color: var(--muted); margin-top: .5rem;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
+
+    /* ─── HIGHLIGHT (형광팬) ─── */
+    .post-content mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+    .summary-highlight {
+      background: #fef9c3;
+      border-left: 3px solid #eab308;
+      padding: .6rem 1rem;
+      margin: .6rem 0 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ─── BLOCKQUOTE (영어 원문 — 작은 폰트) ─── */
+    .post-content blockquote {
+      font-size: .82rem;
+      color: var(--muted);
+      border-left: 3px solid var(--rule-lt);
+      margin: .8rem 0 1.2rem;
+      padding: .3rem 1rem;
+    }
   </style>
 </head>
 <body>
@@ -338,75 +362,83 @@
 하지만 실제 세계의 비디오는 시각·오디오·음성이 뒤섞인 채 수 분에 걸쳐 흘러간다.
 이 논문은 그 갭을 메우기 위해 <strong>자동 파이프라인 → 벤치마크 → 모델</strong>로 이어지는 완결된 연구를 제시한다.</p>
 <h2>Abstract</h2>
-<h3>흐름</h3>
-<p>기존 한계 지적 → 데이터 부재 문제 → 파이프라인 제안 → 벤치마크 소개 → 모델 제안 → 실험 결과 예고</p>
-<h3>블록 1: 기존 한계 지적</h3>
-<p><strong>[요약]</strong> 비디오 이해 연구가 발전했지만, 여전히 거친 해상도(coarse-grained)나 시각 전용 태스크에 갇혀 있다. 실제 비디오는 시각·오디오·음성이 복합된 일련의 사건들로 이루어져 있다.</p>
+<p><strong>흐름</strong> 기존 한계 지적 → 데이터 부재 문제 → 파이프라인 제안 → 벤치마크 소개 → 모델 제안 → 실험 결과 예고</p>
+
+
+
+<h3>기존 한계 지적</h3>
+<p><mark>비디오 이해 연구가 발전했지만, 여전히 거친 해상도(coarse-grained)나 시각 전용 태스크에 갇혀 있다. 실제 비디오는 시각·오디오·음성이 복합된 일련의 사건들로 이루어져 있다.</mark></p>
 <blockquote>
 <p><em>&quot;Despite impressive advancements in video understanding, most efforts remain limited to coarse-grained or visual-only video tasks. However, real-world videos encompass omni-modal information (vision, audio, and speech) with a series of events forming a cohesive storyline.&quot;</em></p>
 </blockquote>
-<h3>블록 2: 데이터 부재 문제</h3>
-<p><strong>[요약]</strong> 옴니모달 + 세밀한 이벤트 어노테이션이 달린 데이터가 없고, 수동 레이블링 비용이 너무 높다.</p>
+<h3>데이터 부재 문제</h3>
+<p><mark>옴니모달 + 세밀한 이벤트 어노테이션이 달린 데이터가 없고, 수동 레이블링 비용이 너무 높다.</mark></p>
 <blockquote>
 <p><em>&quot;The lack of multi-modal video data with fine-grained event annotations and the high cost of manual labeling are major obstacles to comprehensive omni-modality video perception.&quot;</em></p>
 </blockquote>
-<h3>블록 3: 파이프라인 제안</h3>
-<p><strong>[요약]</strong> 이를 해결하기 위해 고품질 필터링 → 이벤트 경계 검출 → 교차 모달 캡셔닝으로 이어지는 자동화 파이프라인을 제안한다.</p>
+<h3>파이프라인 제안</h3>
+<p><mark>이를 해결하기 위해 고품질 필터링 → 이벤트 경계 검출 → 교차 모달 캡셔닝으로 이어지는 자동화 파이프라인을 제안한다.</mark></p>
 <blockquote>
 <p><em>&quot;To address this gap, we propose an automatic pipeline consisting of high-quality multi-modal video filtering, semantically coherent omni-modal event boundary detection, and cross-modal correlation-aware event captioning.&quot;</em></p>
 </blockquote>
-<h3>블록 4: 벤치마크 소개</h3>
-<p><strong>[요약]</strong> 그 결과물이 LongVALE다 — 8.4K 롱 비디오 안에 105K 옴니모달 이벤트, 정밀한 시간 경계와 관계 인식 캡션.</p>
+<h3>벤치마크 소개</h3>
+<p><mark>그 결과물이 LongVALE다 — 8.4K 롱 비디오 안에 105K 옴니모달 이벤트, 정밀한 시간 경계와 관계 인식 캡션.</mark></p>
 <blockquote>
 <p><em>&quot;In this way, we present LongVALE, the first-ever Vision-Audio-Language Event understanding benchmark comprising 105K omni-modal events with precise temporal boundaries and detailed relation-aware captions within 8.4K high-quality long videos.&quot;</em></p>
 </blockquote>
-<h3>블록 5: 모델 + 결과 예고</h3>
-<p><strong>[요약]</strong> LongVALE로 학습한 LongVALE-LLM은 옴니모달 세밀 시간 이해를 최초로 달성했으며, AVQA 제로샷에서도 압도적 성능을 보였다.</p>
+<h3>모델 + 결과 예고</h3>
+<p><mark>LongVALE로 학습한 LongVALE-LLM은 옴니모달 세밀 시간 이해를 최초로 달성했으며, AVQA 제로샷에서도 압도적 성능을 보였다.</mark></p>
 <blockquote>
 <p><em>&quot;Further, we build a baseline that leverages LongVALE to enable video large language models (LLMs) for omni-modality fine-grained temporal video understanding for the first time.&quot;</em></p>
 </blockquote>
 <h2>Introduction</h2>
-<h3>흐름</h3>
-<p>비디오 이해의 중요성 → 이상적 에이전트의 조건 → 기존 연구의 두 가지 한계 → 데이터 공백의 구체적 분석 → 파이프라인 세 축 설명 → LongVALE 수치 제시 → LongVALE-LLM 제시 → 기여 요약</p>
-<h3>블록 1: 비디오 이해의 중요성 + 이상적 에이전트</h3>
-<p><strong>[요약]</strong> 소셜 미디어의 비디오 폭증 속에서, 이상적인 지능 에이전트는 교차 모달 추론과 세밀한 시간 이해를 동시에 갖춰야 한다.</p>
+<p><strong>흐름</strong> 비디오 이해의 중요성 → 이상적 에이전트의 조건 → 기존 연구의 두 가지 한계 → 데이터 공백의 구체적 분석 → 파이프라인 세 축 설명 → LongVALE 수치 제시 → LongVALE-LLM 제시 → 기여 요약</p>
+
+
+
+<h3>비디오 이해의 중요성 + 이상적 에이전트</h3>
+<p><mark>소셜 미디어의 비디오 폭증 속에서, 이상적인 지능 에이전트는 교차 모달 추론과 세밀한 시간 이해를 동시에 갖춰야 한다.</mark></p>
 <blockquote>
 <p><em>&quot;An ideal intelligent video agent should imitate it, capable of both cross-modal reasoning and fine-grained temporal understanding.&quot;</em></p>
 </blockquote>
-<h3>블록 2: 기존 연구의 두 가지 한계</h3>
-<p><strong>[요약]</strong> 현재 연구는 (1) 짧은 클립의 거친 태스크(검색/캡셔닝), (2) 시각 전용 세밀 태스크(temporal grounding) 중 하나에 치우쳐, 두 능력을 동시에 갖추지 못하고 있다.</p>
+<h3>기존 연구의 두 가지 한계</h3>
+<p><mark>현재 연구는 (1) 짧은 클립의 거친 태스크(검색/캡셔닝), (2) 시각 전용 세밀 태스크(temporal grounding) 중 하나에 치우쳐, 두 능력을 동시에 갖추지 못하고 있다.</mark></p>
 <blockquote>
 <p><em>&quot;However, current research is limited to coarse-grained tasks (e.g., video retrieval/captioning) or visual-only fine-grained tasks (e.g., temporal grounding/dense captioning), remaining far from enough to achieve both the capabilities.&quot;</em></p>
 </blockquote>
 <p>📊 <strong>Table 1 (Introduction 내 표)</strong> — 기존 벤치마크 비교표. LongVALE가 유일하게 Vision·Audio·Speech 모두를 커버하면서 이벤트 단위 타임스탬프와 A-V 상관관계까지 제공함을 보여준다. 다른 데이터셋은 각각 하나씩만 가진다.</p>
-<h3>블록 3: 데이터 공백 + 파이프라인 세 축</h3>
-<p><strong>[요약]</strong> 공백을 메우기 위해 세 가지 축으로 파이프라인을 설계했다: ① 고품질 필터링, ② 옴니모달 이벤트 경계 검출, ③ 오디오-비주얼 상관 추론 캡셔닝.</p>
+<h3>데이터 공백 + 파이프라인 세 축</h3>
+<p><mark>공백을 메우기 위해 세 가지 축으로 파이프라인을 설계했다: ① 고품질 필터링, ② 옴니모달 이벤트 경계 검출, ③ 오디오-비주얼 상관 추론 캡셔닝.</mark></p>
 <blockquote>
 <p><em>&quot;Our pipeline includes three distinct aspects: 1) High-quality video filtering for rich audio-visual semantics and temporal dynamics. 2) Omni-modal event boundary detection for semantic coherence in both visual and audio scenes. 3) Omni-modal event captioning emphasizing audio-visual correlation reasoning.&quot;</em></p>
 </blockquote>
-<h3>블록 4: 기여 요약</h3>
-<p><strong>[요약]</strong> ① 자동 파이프라인, ② LongVALE 벤치마크, ③ LongVALE-LLM의 세 가지 기여.</p>
+<h3>기여 요약</h3>
+<p><mark>① 자동 파이프라인, ② LongVALE 벤치마크, ③ LongVALE-LLM의 세 가지 기여.</mark></p>
 <blockquote>
 <p><em>&quot;We introduce LongVALE, the first-ever benchmark providing omni-modal event temporal boundaries and cross-modal correlation-aware captions for 105K omni-modal events within 8.4K high-quality multi-modal long videos.&quot;</em></p>
 </blockquote>
 <h2>Related Work</h2>
-<h3>흐름</h3>
-<p>멀티모달 비디오 벤치마크 리뷰 → 세밀한 비디오 이해 리뷰 → LongVALE의 위치 정리</p>
-<h3>블록 1: 멀티모달 벤치마크의 한계</h3>
-<p><strong>[요약]</strong> InternVid, VAST 등 대규모 데이터셋은 짧은 클립에 거친 캡션만 제공하고, 모달리티를 단순 연결(concatenation)할 뿐 교차 모달 추론이 없다. 세밀한 어노테이션이 있는 ActivityNet/Charades-STA는 시각 전용.</p>
+<p><strong>흐름</strong> 멀티모달 비디오 벤치마크 리뷰 → 세밀한 비디오 이해 리뷰 → LongVALE의 위치 정리</p>
+
+
+
+<h3>멀티모달 벤치마크의 한계</h3>
+<p><mark>InternVid, VAST 등 대규모 데이터셋은 짧은 클립에 거친 캡션만 제공하고, 모달리티를 단순 연결(concatenation)할 뿐 교차 모달 추론이 없다. 세밀한 어노테이션이 있는 ActivityNet/Charades-STA는 시각 전용.</mark></p>
 <blockquote>
 <p><em>&quot;These benchmarks offer only coarse-grained captions for short clips, which are unsuitable for fine-grained long video understanding... fine-grained video benchmarks like ActivityNet Caps and Charades-STA focus only on visual modality.&quot;</em></p>
 </blockquote>
-<h3>블록 2: 세밀한 비디오 이해 연구</h3>
-<p><strong>[요약]</strong> Temporal grounding, dense captioning 등 세밀 태스크 연구들이 존재하지만 모두 시각 전용. 최근 Video LLM들도 마찬가지다.</p>
+<h3>세밀한 비디오 이해 연구</h3>
+<p><mark>Temporal grounding, dense captioning 등 세밀 태스크 연구들이 존재하지만 모두 시각 전용. 최근 Video LLM들도 마찬가지다.</mark></p>
 <blockquote>
 <p><em>&quot;Recent video large language models (video LLMs) have shown promise in visual-only fine-grained video understanding. In contrast, we aim to pioneer omni-modality fine-grained video understanding for a more holistic video comprehension.&quot;</em></p>
 </blockquote>
 <h2>Section 3: The LongVALE Benchmark</h2>
-<h3>흐름</h3>
-<p>데이터 수집·필터링 → 옴니모달 이벤트 경계 검출(시각 / 오디오 / 합성) → 옴니모달 이벤트 캡셔닝(시각 / 오디오+음성 / 관계 인식) → 데이터 분할 + 수동 검수 → 통계 분석</p>
-<h3>블록 1: 데이터 수집 및 필터링</h3>
-<p><strong>[요약]</strong> ACAV-100M에서 YouTube 원본 영상을 수집하고, 4단계 필터링(해상도·음성 비율·정적 장면·오디오-비주얼 일치도)으로 100K → 8.4K로 압축. 엄격한 품질 기준.</p>
+<p><strong>흐름</strong> 데이터 수집·필터링 → 옴니모달 이벤트 경계 검출(시각 / 오디오 / 합성) → 옴니모달 이벤트 캡셔닝(시각 / 오디오+음성 / 관계 인식) → 데이터 분할 + 수동 검수 → 통계 분석</p>
+
+
+
+<h3>데이터 수집 및 필터링</h3>
+<p><mark>ACAV-100M에서 YouTube 원본 영상을 수집하고, 4단계 필터링(해상도·음성 비율·정적 장면·오디오-비주얼 일치도)으로 100K → 8.4K로 압축. 엄격한 품질 기준.</mark></p>
 <blockquote>
 <p><em>&quot;We source videos from ACAV-100M... Then, we design a filtering strategy to obtain high-quality videos containing rich visual and audio semantics, as well as temporal dynamic information.&quot;</em></p>
 </blockquote>
@@ -417,91 +449,97 @@
 <li>PySceneDetect로 정적 슬라이드쇼 제거</li>
 <li>C-MCR 모델로 오디오-비주얼 유사도 측정 → 관련 없는 배경음악/더빙 제거</li>
 </ol>
-<h3>블록 2: 시각 이벤트 경계 검출</h3>
-<p><strong>[요약]</strong> 기존 Panda 2단계 방식(기본 장면 분할 → 유사 장면 병합)을 롱 비디오에 맞게 개선. 정적 장면·전환 클립 후처리로 제거.</p>
+<h3>시각 이벤트 경계 검출</h3>
+<p><mark>기존 Panda 2단계 방식(기본 장면 분할 → 유사 장면 병합)을 롱 비디오에 맞게 개선. 정적 장면·전환 클립 후처리로 제거.</mark></p>
 <blockquote>
 <p><em>&quot;Using only visual cues, we apply a two-stage detection method which includes splitting basic visual scenes and then merging semantically similar ones.&quot;</em></p>
 </blockquote>
-<h3>블록 3: 오디오 이벤트 경계 검출 ← <strong>핵심 기여</strong></h3>
-<p><strong>[요약]</strong> 사전 정의된 카테고리 없이 일반 오디오 이벤트 경계를 검출하는 최초의 방법. MFCC로 스펙트럼 변화 감지 → CLAP으로 의미 유사도 계산 → 인접 클립 병합.</p>
+<h3>오디오 이벤트 경계 검출 ← <strong>핵심 기여</strong></h3>
+<p><mark>사전 정의된 카테고리 없이 일반 오디오 이벤트 경계를 검출하는 최초의 방법. MFCC로 스펙트럼 변화 감지 → CLAP으로 의미 유사도 계산 → 인접 클립 병합.</mark></p>
 <blockquote>
 <p><em>&quot;Although audio is crucial for temporal video understanding, no method exists for detecting generic audio event boundaries without pre-defined categories. To fill this gap, we design a generic method that segments long audio sequences into semantically coherent clips leveraging distinct audio properties.&quot;</em></p>
 </blockquote>
-<h3>블록 4: 옴니모달 이벤트 경계 합성</h3>
-<p><strong>[요약]</strong> 시각 경계를 기준으로 하되, 그 안의 오디오 이벤트를 잘라내지 않고 끝까지 포함시켜 오디오 의미 무결성 보장.</p>
+<h3>옴니모달 이벤트 경계 합성</h3>
+<p><mark>시각 경계를 기준으로 하되, 그 안의 오디오 이벤트를 잘라내지 않고 끝까지 포함시켜 오디오 의미 무결성 보장.</mark></p>
 <blockquote>
 <p><em>&quot;To define omni-modal event boundaries, we primarily rely on visual boundaries while preserving the integrity of audio events. Specifically, for each visual event, we set its start time as the beginning of the omni-modal event and include all overlapping audio events without truncation.&quot;</em></p>
 </blockquote>
 <p>📊 <strong>Figure 2 (fig:dataset_pipeline)</strong> — 전체 파이프라인 시각화. 시각/오디오 경계를 각각 검출한 뒤 합성하고, 각 모달리티별 캡션을 생성 후 Gemini로 교차 모달 추론 캡션을 최종 생성하는 흐름을 보여준다.</p>
-<h3>블록 5: 모달리티별 캡셔닝</h3>
-<p><strong>[요약]</strong> 시각(LLaVA-NeXT-Video + GPT-4o 키프레임), 오디오(Qwen-Audio), 음성(Whisper-Large)으로 각각 캡션 생성. 단순 연결이 아니라 다음 블록에서 Gemini로 통합.</p>
+<h3>모달리티별 캡셔닝</h3>
+<p><mark>시각(LLaVA-NeXT-Video + GPT-4o 키프레임), 오디오(Qwen-Audio), 음성(Whisper-Large)으로 각각 캡션 생성. 단순 연결이 아니라 다음 블록에서 Gemini로 통합.</mark></p>
 <blockquote>
 <p><em>&quot;Specifically, we employ LLaVA-NeXT-Video to caption each video event... Qwen-Audio, a general large audio-language model, to obtain detailed audio descriptions... Whisper-Large, a strong automatic speech recognition (ASR) model.&quot;</em></p>
 </blockquote>
-<h3>블록 6: 관계 인식 옴니모달 캡셔닝</h3>
-<p><strong>[요약]</strong> Gemini-1.5-Pro가 세 모달리티 캡션을 통합하면서 오디오-비주얼 상관관계(동기성, 보완, 인과성 등)를 명시적으로 추론. 이전 이벤트 캡션을 컨텍스트로 제공해 일관성 확보.</p>
+<h3>관계 인식 옴니모달 캡셔닝</h3>
+<p><mark>Gemini-1.5-Pro가 세 모달리티 캡션을 통합하면서 오디오-비주얼 상관관계(동기성, 보완, 인과성 등)를 명시적으로 추론. 이전 이벤트 캡션을 컨텍스트로 제공해 일관성 확보.</mark></p>
 <blockquote>
 <p><em>&quot;Instead of simply concatenating modality-specific captions, we instruct Gemini-1.5-Pro to establish meaningful connections between them, such as analyzing whether audio events are visible, identifying sound sources, and reasoning about causality.&quot;</em></p>
 </blockquote>
-<h3>블록 7: 통계 분석</h3>
-<p><strong>[요약]</strong> 8,411개 비디오, 105,730개 이벤트, 평균 영상 길이 3.9분, 평균 이벤트 12.6개/영상, 오디오-비주얼 상관 7가지 유형 분류.</p>
+<h3>통계 분석</h3>
+<p><mark>8,411개 비디오, 105,730개 이벤트, 평균 영상 길이 3.9분, 평균 이벤트 12.6개/영상, 오디오-비주얼 상관 7가지 유형 분류.</mark></p>
 <blockquote>
 <p><em>&quot;It includes 8,411 long videos spanning over 549 hours, with an average video duration of 3.9 minutes. The dataset contains 105,730 omni-modal events, each annotated with accurate temporal boundaries and omni-modality relation-aware captions.&quot;</em></p>
 </blockquote>
 <p>📊 <strong>Figure 3 (fig:dataset_overall)</strong> — 4개 서브 그래프로 구성된 통계 시각화. (a) 영상 길이 분포, (b) 이벤트 수 분포, (c) 이벤트 지속시간 분포, (d) 오디오-비주얼 상관 유형 분포 + 각 유형의 예시 이벤트. 보완(complementary), 동기성(synchronicity), 강화(enhancement)가 가장 흔한 상관 유형임을 보여준다.</p>
 <h2>Section 4: LongVALE-LLM</h2>
-<h3>흐름</h3>
-<p>전체 아키텍처 설명 → 학습 레시피 (경계 인식 튜닝 → 명령어 튜닝)</p>
-<h3>블록 1: 전체 아키텍처</h3>
-<p><strong>[요약]</strong> 멀티모달 인코더(CLIP/BEATs/Whisper)로 각 모달리티 특징 추출 → 어댑터로 LLM 임베딩 공간 매핑 → 시퀀스 차원으로 연결 → Vicuna-7B가 자기회귀적으로 응답 생성.</p>
+<p><strong>흐름</strong> 전체 아키텍처 설명 → 학습 레시피 (경계 인식 튜닝 → 명령어 튜닝)</p>
+
+
+
+<h3>전체 아키텍처</h3>
+<p><mark>멀티모달 인코더(CLIP/BEATs/Whisper)로 각 모달리티 특징 추출 → 어댑터로 LLM 임베딩 공간 매핑 → 시퀀스 차원으로 연결 → Vicuna-7B가 자기회귀적으로 응답 생성.</mark></p>
 <blockquote>
 <p><em>&quot;Given a long video, the multi-modal encoders first extract modality-specific token features, which are then mapped into the LLM&#39;s embedding space via the multi-modal adapters. The embeddings from different modalities are concatenated along the sequence dimension and combined with the task instruction to form the prefix input to the LLM.&quot;</em></p>
 </blockquote>
 <p>📊 <strong>Figure 4 (fig:baseline)</strong> — LongVALE-LLM 아키텍처 다이어그램. 시각(CLIP), 오디오(BEATs), 음성(Whisper) 세 인코더가 각 어댑터를 거쳐 LLM에 합쳐지는 구조. 두 단계 학습(경계 인식 튜닝 → 명령어 튜닝)도 함께 도식화.</p>
-<h3>블록 2: 2단계 학습</h3>
-<p><strong>[요약]</strong></p>
-<ul>
-<li><strong>1단계 (경계 인식 튜닝):</strong> 옴니모달 이벤트와 시간 경계를 대화 형식으로 변환 (7,240개). 템플릿 기반 단일/다중 턴 QA.</li>
-<li><strong>2단계 (명령어 튜닝):</strong> Gemini로 자유 형식 대화 생성 (25,400개). 명령어 따르기 + 추론 능력 향상.</li>
-</ul>
+<h3>2단계 학습</h3>
+<div class="summary-highlight">
+- **1단계 (경계 인식 튜닝):** 옴니모달 이벤트와 시간 경계를 대화 형식으로 변환 (7,240개). 템플릿 기반 단일/다중 턴 QA.
+- **2단계 (명령어 튜닝):** Gemini로 자유 형식 대화 생성 (25,400개). 명령어 따르기 + 추론 능력 향상.
+</div>
+
 <blockquote>
 <p><em>&quot;Although our model demonstrates the ability to perceive omni-modal event boundaries after boundary perception tuning, its outputs tend to overfit to templated answers. To improve the model&#39;s ability to follow human instructions... we create high-quality instruction-tuning data based on our LongVALE.&quot;</em></p>
 </blockquote>
 <h2>Section 5: Experiments</h2>
-<h3>흐름</h3>
-<p>실험 설정 → 메인 결과 (3가지 옴니모달 태스크) → 제로샷 AVQA → 절제 연구 (학습 데이터 / AVC 효과 / 모달리티) → 정성적 결과</p>
-<h3>블록 1: 실험 설정</h3>
-<p><strong>[요약]</strong> 시각(CLIP ViT-L/14, 100프레임), 오디오(BEATs), 음성(Whisper-Large-v2), LLM(Vicuna-7B). 세 가지 평가 태스크: Omni-TVG(R@IoU, mIoU), Omni-DVC(SODA_c, CIDEr, METEOR), Omni-SC(BLEU-4, ROUGE-L, METEOR, CIDEr).</p>
-<h3>블록 2: 메인 결과 — 압도적 성능 차이</h3>
-<p><strong>[요약]</strong> LongVALE-LLM이 기존 모든 Video LLM을 세 태스크에서 큰 차이로 앞선다. 오디오-비주얼 입력을 지원하는 VideoLLaMA/NExT-GPT도 프레임 수 제한(8프레임)으로 세밀 태스크에서 실패. 시간 이해 특화 VTimeLLM/TimeChat은 오디오 정보를 못 쓴다.</p>
+<p><strong>흐름</strong> 실험 설정 → 메인 결과 (3가지 옴니모달 태스크) → 제로샷 AVQA → 절제 연구 (학습 데이터 / AVC 효과 / 모달리티) → 정성적 결과</p>
+
+
+
+<h3>실험 설정</h3>
+<p><mark>시각(CLIP ViT-L/14, 100프레임), 오디오(BEATs), 음성(Whisper-Large-v2), LLM(Vicuna-7B). 세 가지 평가 태스크: Omni-TVG(R@IoU, mIoU), Omni-DVC(SODA_c, CIDEr, METEOR), Omni-SC(BLEU-4, ROUGE-L, METEOR, CIDEr).</mark></p>
+<h3>메인 결과 — 압도적 성능 차이</h3>
+<p><mark>LongVALE-LLM이 기존 모든 Video LLM을 세 태스크에서 큰 차이로 앞선다. 오디오-비주얼 입력을 지원하는 VideoLLaMA/NExT-GPT도 프레임 수 제한(8프레임)으로 세밀 태스크에서 실패. 시간 이해 특화 VTimeLLM/TimeChat은 오디오 정보를 못 쓴다.</mark></p>
 <blockquote>
 <p><em>&quot;Our LongVALE-LLM (7B) supports video, audio and speech input with fine-grained temporal understanding ability, and outperforms other video LLMs by a significant margin across all three tasks.&quot;</em></p>
 </blockquote>
-<h3>블록 3: 제로샷 AVQA — 데이터 효율성</h3>
-<p><strong>[요약]</strong> OneLLM(460K 오디오 데이터), AVicuna(350K)보다 적은 32.7K 샘플만 써도 AVSD에서 SOTA 달성. LongVALE의 교차 모달 추론 캡션이 일반화 능력을 끌어올림.</p>
+<h3>제로샷 AVQA — 데이터 효율성</h3>
+<p><mark>OneLLM(460K 오디오 데이터), AVicuna(350K)보다 적은 32.7K 샘플만 써도 AVSD에서 SOTA 달성. LongVALE의 교차 모달 추론 캡션이 일반화 능력을 끌어올림.</mark></p>
 <blockquote>
 <p><em>&quot;Despite using significantly less data, our model surprisingly achieves state-of-the-art performance on AVSD... using only total 32.7K audio-visual samples from our LongVALE dataset, accounting for less than 10% of the data they use.&quot;</em></p>
 </blockquote>
-<h3>블록 4: 절제 연구</h3>
-<p><strong>[요약]</strong> 세 가지 절제로 각 설계 결정 검증.</p>
+<h3>절제 연구</h3>
+<p><mark>세 가지 절제로 각 설계 결정 검증.</mark></p>
 <ol>
 <li><strong>학습 단계별 데이터 영향:</strong> 두 단계 모두에 LongVALE 데이터 추가 시 모든 태스크 큰 향상. 명령어 튜닝은 특히 세그먼트 캡셔닝 대폭 개선.</li>
 <li><strong>AVC(오디오-비주얼 상관) 효과:</strong> 단순 연결 대비 AVC 추론 포함 캡션으로 학습 시 캡셔닝 태스크에서 현저한 향상.</li>
 <li><strong>모달리티 추가 효과:</strong> V → V+A → V+S → V+A+S 순서로 모든 태스크 성능이 일관되게 향상.</li>
 </ol>
-<h3>블록 5: 정성적 결과</h3>
-<p><strong>[요약]</strong> VTimeLLM은 시각만 보고 &quot;손을 드는 행동&quot;으로 오인. LongVALE-LLM은 오디오(남성 노래, 군중 환호)를 통합해 정확히 묘사.</p>
+<h3>정성적 결과</h3>
+<p><mark>VTimeLLM은 시각만 보고 &quot;손을 드는 행동&quot;으로 오인. LongVALE-LLM은 오디오(남성 노래, 군중 환호)를 통합해 정확히 묘사.</mark></p>
 <p>📊 <strong>Figure 5 (fig:visualization)</strong> — 정성적 비교 예시. 왼쪽: LongVALE 테스트 셋 이벤트에서 VTimeLLM(시각 전용) vs LongVALE-LLM의 응답 비교. 오른쪽: Music-AVQA 제로샷 AVQA 예시. 주황색 텍스트로 오디오-비주얼 교차 모달 추론의 핵심 부분을 강조.</p>
 <h2>Conclusion</h2>
-<h3>흐름</h3>
-<p>기여 재요약 → 모델 능력 강조 → 향후 방향</p>
-<h3>블록 1: 기여 + 의의</h3>
-<p><strong>[요약]</strong> LongVALE는 교차 모달 추론과 세밀한 시간 이해라는 두 가지 능력을 동시에 갖춘 첫 번째 시도. 지능형 비디오 어시스턴트로 가는 중요한 발걸음.</p>
+<p><strong>흐름</strong> 기여 재요약 → 모델 능력 강조 → 향후 방향</p>
+
+
+
+<h3>기여 + 의의</h3>
+<p><mark>LongVALE는 교차 모달 추론과 세밀한 시간 이해라는 두 가지 능력을 동시에 갖춘 첫 번째 시도. 지능형 비디오 어시스턴트로 가는 중요한 발걸음.</mark></p>
 <blockquote>
 <p><em>&quot;Our model exhibits distinct capabilities of both cross-modal reasoning and fine-grained temporal understanding that are absent in existing video LLMs, making a crucial step toward an intelligent video assistant.&quot;</em></p>
 </blockquote>
-<h3>블록 2: 향후 방향</h3>
-<p><strong>[요약]</strong> 더 많은 고품질 데이터로 LongVALE 확장 + 비디오 의미 밀도와 교차 모달 상호작용 개선을 위한 아키텍처 고도화.</p>
+<h3>향후 방향</h3>
+<p><mark>더 많은 고품질 데이터로 LongVALE 확장 + 비디오 의미 밀도와 교차 모달 상호작용 개선을 위한 아키텍처 고도화.</mark></p>
 <blockquote>
 <p><em>&quot;In the future, we will expand our LongVALE with more high-quality data and advance the model&#39;s architecture to improve video semantic density and cross-modal interaction.&quot;</em></p>
 </blockquote>
