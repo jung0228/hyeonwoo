@@ -96,13 +96,11 @@ const EXTRA_CSS = `
       border-radius: 0 4px 4px 0;
     }
 
-    /* ─── BLOCKQUOTE (영어 원문 — 작은 폰트) ─── */
-    .post-content blockquote {
-      font-size: .82rem;
-      color: var(--muted);
-      border-left: 3px solid var(--rule-lt);
-      margin: .8rem 0 1.2rem;
-      padding: .3rem 1rem;
+    /* ─── TABLE CAPTION ─── */
+    .table-caption {
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
 `;
 
