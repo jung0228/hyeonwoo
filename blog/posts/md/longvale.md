@@ -16,7 +16,7 @@ katex: false
 이 논문은 그 갭을 메우기 위해 **자동 파이프라인 → 벤치마크 → 모델**로 이어지는 완결된 연구를 제시한다.
 
 <figure>
-<img src="../img/longvale/fig1.jpg" alt="Figure 1">
+<img src="img/longvale/fig1.jpg" alt="Figure 1">
 <figcaption><strong>Figure 1</strong> — LongVALE 데이터 예시. 악기 연주·웃음·공구 소음 등 다양한 오디오가 있는 동적인 시각 장면들. 오디오-비주얼 상관(동기성, 보완)의 실제 예를 보여주며, 내레이션 위주의 기존 데이터셋과 대비된다.</figcaption>
 </figure>
 
@@ -138,7 +138,7 @@ katex: false
 > *"To define omni-modal event boundaries, we primarily rely on visual boundaries while preserving the integrity of audio events. Specifically, for each visual event, we set its start time as the beginning of the omni-modal event and include all overlapping audio events without truncation."*
 
 <figure>
-<img src="../img/longvale/fig2.jpg" alt="Figure 2">
+<img src="img/longvale/fig2.jpg" alt="Figure 2">
 <figcaption><strong>Figure 2</strong> — 전체 파이프라인. 시각/오디오 경계를 각각 검출 후 합성하고, 모달리티별 캡션을 생성한 뒤 Gemini로 교차 모달 추론 캡션을 최종 생성한다.</figcaption>
 </figure>
 
@@ -158,7 +158,7 @@ katex: false
 > *"It includes 8,411 long videos spanning over 549 hours, with an average video duration of 3.9 minutes. The dataset contains 105,730 omni-modal events, each annotated with accurate temporal boundaries and omni-modality relation-aware captions."*
 
 <figure>
-<img src="../img/longvale/fig3.jpg" alt="Figure 3">
+<img src="img/longvale/fig3.jpg" alt="Figure 3">
 <figcaption><strong>Figure 3</strong> — LongVALE 통계. (a) 영상 길이 분포, (b) 이벤트 수 분포, (c) 이벤트 지속시간 분포, (d) 오디오-비주얼 상관 유형 분포. 보완(complementary)·동기성(synchronicity)·강화(enhancement)가 가장 흔한 유형.</figcaption>
 </figure>
 
@@ -172,7 +172,7 @@ katex: false
 > *"Given a long video, the multi-modal encoders first extract modality-specific token features, which are then mapped into the LLM's embedding space via the multi-modal adapters. The embeddings from different modalities are concatenated along the sequence dimension and combined with the task instruction to form the prefix input to the LLM."*
 
 <figure>
-<img src="../img/longvale/fig4.jpg" alt="Figure 4">
+<img src="img/longvale/fig4.jpg" alt="Figure 4">
 <figcaption><strong>Figure 4</strong> — LongVALE-LLM 아키텍처. 시각(CLIP), 오디오(BEATs), 음성(Whisper) 세 인코더가 각 어댑터를 거쳐 LLM에 합쳐진다. 두 단계 학습(경계 인식 튜닝 → 명령어 튜닝)도 함께 도식화.</figcaption>
 </figure>
 
@@ -213,7 +213,7 @@ katex: false
 <mark>VTimeLLM은 시각만 보고 "손을 드는 행동"으로 오인. LongVALE-LLM은 오디오(남성 노래, 군중 환호)를 통합해 정확히 묘사.</mark>
 
 <figure>
-<img src="../img/longvale/fig5.jpg" alt="Figure 5">
+<img src="img/longvale/fig5.jpg" alt="Figure 5">
 <figcaption><strong>Figure 5</strong> — 정성적 비교. VTimeLLM(시각 전용) vs LongVALE-LLM. 주황색 텍스트가 오디오-비주얼 교차 모달 추론의 핵심 부분. 오른쪽은 Music-AVQA 제로샷 예시.</figcaption>
 </figure>
 
