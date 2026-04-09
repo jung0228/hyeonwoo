@@ -100,6 +100,16 @@ GPT-4o-mini를 정책 모델로 사용해 WebArena 환경에서 궤적을 수집
 
 이렇게 만든 `tilde_o`는 짧고 정보 밀도가 높다. 이것이 월드 모델의 학습 목표다.
 
+<div class="callout">
+<strong>헝가리안 알고리즘이 왜 필요한가?</strong>
+
+accessibility tree는 그냥 요소 목록이라, <code>o_t</code>의 어떤 요소가 <code>o_{t+1}</code>의 어떤 요소로 바뀐 건지 대응 관계를 모른다. 이걸 찾기 위해 <strong>"비슷한 텍스트 = 같은 요소"</strong>라는 가정을 쓴다. 웹 컴포넌트는 시간이 지나도 텍스트가 크게 안 변하기 때문에 합리적인 휴리스틱이다.
+
+구체적으로, Python의 <code>difflib.SequenceMatcher</code>로 두 요소 텍스트의 유사도(0~1)를 구하고, <code>비용 = 1 - 유사도</code>로 변환한다. 예를 들어 <code>button "Add to Cart"</code>와 <code>button "Added ✓"</code>는 유사도 0.74 → 비용 0.26, <code>button "Add to Cart"</code>와 <code>price "$249"</code>는 유사도 0.06 → 비용 0.94.
+
+헝가리안 알고리즘은 이 cost matrix에서 <strong>각 행·열에서 딱 하나씩 골라 전체 비용 합이 최소인 1:1 매칭</strong>을 O(n³)으로 보장한다. 매칭된 쌍 중 텍스트가 바뀐 것은 UPDATED, 매칭 못 된 <code>o_t</code> 요소는 DELETED, 매칭 못 된 <code>o_{t+1}</code> 요소는 ADDED.
+</div>
+
 <figure>
 <img src="img/wma-web-agent/fig2_abstraction.jpg" alt="Transition-focused Observation Abstraction">
 <figcaption><strong>Figure 5</strong> — Transition-focused Observation Abstraction 개요. 왼쪽: 전체 accessibility tree, 오른쪽: 변화만 담은 자연어 서술.</figcaption>
@@ -111,6 +121,8 @@ GPT-4o-mini를 정책 모델로 사용해 WebArena 환경에서 궤적을 수집
 
 <div class="callout">
 <strong>학습 목표:</strong> 사용자 지시 I, 현재 관찰 o_t, 행동 a_t가 주어졌을 때 → 추상화된 다음 관찰 tilde_o_{t+1}을 생성.
+
+여기서 tilde_o_{t+1}은 전체 accessibility tree가 아니라 <strong>자연어 서술</strong>이다. 예: <em>"장바구니 버튼이 'Add to Cart'에서 'Added ✓'로 변경됐고, 상품 가격이 $299에서 $249로 내려갔습니다."</em> 가치 함수 V도 이 자연어를 입력으로 받아 보상을 추정한다. 전체 tree(4K 토큰) 대신 변화 요약만 다루기 때문에 월드 모델 학습도, 추론 시 입력도 모두 짧아진다.
 </div>
 
 ### 추론 시 정책 최적화
