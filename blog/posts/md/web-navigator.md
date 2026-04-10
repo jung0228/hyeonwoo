@@ -163,6 +163,12 @@ Topological Blindness의 심각도가 도메인마다 다르다.
 <figcaption><strong>Figure 3</strong> — 도메인별 탐색 깊이에 따른 노드 누적 수(막대)와 Discovery Velocity(꺾은선). Reddit·CMS는 깊이 2에서 velocity 최고점 후 감소, GitLab은 깊이 5에서 재상승, Map은 노드 29개로 완전 탐색.</figcaption>
 </figure>
 
+<div class="callout">
+<strong>Q. Map에서 깊이 5의 velocity가 0이면 어떻게 해석해야 하나?</strong>
+
+"수렴"이 아니라 <strong>완전 탐색 종료</strong>다. Discovery Velocity는 단위 시간당 새로 발견된 노드 수인데, 깊이 5에서 0이 됐다는 건 그 시점에 발견할 노드가 하나도 남지 않았다는 뜻이다. Map은 노드가 29개뿐인 작은 구조라 깊이 4 이하에서 이미 전부 탐색이 끝났고, 깊이 5는 더 이상 새로운 것이 없는 상태다. 점점 줄어들다 0에 가까워지는 "수렴"이 아니라, 탐색할 공간 자체가 소진된 것이다.
+</div>
+
 결론: 이론적으로 무한해 보이는 웹사이트도, **기능적 골격은 컴팩트**하다. 태스크 관련 페이지들은 얕은 깊이에 집중되어 있고, 탐색 깊이 2~3 정도면 대부분의 태스크를 커버할 수 있다.
 
 <div class="ornament">· · ·</div>
