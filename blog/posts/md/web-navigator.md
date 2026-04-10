@@ -159,23 +159,8 @@ Topological Blindness의 심각도가 도메인마다 다르다.
 논문은 웹사이트의 기능적 구조(Topological Skeleton)가 실제로 얼마나 compact한지 탐색 깊이에 따른 **Discovery Velocity**로 분석한다.
 
 <figure>
-<img src="img/web-navigator/fig_node_reddit.jpg" alt="Node exploration Reddit">
-<figcaption><strong>Figure 3a</strong> — Reddit: 깊이 2에서 discovery velocity가 최고점을 찍고 급격히 감소. 주요 포럼들이 얕은 곳에 집중.</figcaption>
-</figure>
-
-<figure>
-<img src="img/web-navigator/fig_node_cms.jpg" alt="Node exploration CMS">
-<figcaption><strong>Figure 3b</strong> — CMS: Reddit과 비슷하게 깊이 2에서 peak. 핵심 기능 페이지들이 조기에 발견됨.</figcaption>
-</figure>
-
-<figure>
-<img src="img/web-navigator/fig_node_gitlab.jpg" alt="Node exploration GitLab">
-<figcaption><strong>Figure 3c</strong> — GitLab: 깊이 4까지 감소하다가 5에서 다시 상승. 대시보드·설정은 얕고, 저장소 세부 설정은 깊은 곳에 있음.</figcaption>
-</figure>
-
-<figure>
-<img src="img/web-navigator/fig_node_map.jpg" alt="Node exploration Map">
-<figcaption><strong>Figure 3d</strong> — Map: 노드 29개로 완전 탐색. 깊이 5에서 velocity가 0에 수렴.</figcaption>
+<img src="img/web-navigator/fig_node_exploration.jpg" alt="Node exploration by domain">
+<figcaption><strong>Figure 3</strong> — 도메인별 탐색 깊이에 따른 노드 누적 수(막대)와 Discovery Velocity(꺾은선). Reddit·CMS는 깊이 2에서 velocity 최고점 후 감소, GitLab은 깊이 5에서 재상승, Map은 노드 29개로 완전 탐색.</figcaption>
 </figure>
 
 결론: 이론적으로 무한해 보이는 웹사이트도, **기능적 골격은 컴팩트**하다. 태스크 관련 페이지들은 얕은 깊이에 집중되어 있고, 탐색 깊이 2~3 정도면 대부분의 태스크를 커버할 수 있다.
