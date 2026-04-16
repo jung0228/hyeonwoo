@@ -1,3 +1,14 @@
+---
+title: "TCVP Visual Query 방향 리서치 노트"
+dek: "MomentSeeker IMR, Ego4D VQ2D, SAM2 기반 추적 연구를 바탕으로 TCVP의 visual query 확장 방향을 정리한 메모."
+desc: "TCVP에서 visual query 기반 IMR로 확장하기 위한 관련 논문, 파이프라인, 기여 포인트를 정리한 리서치 노트."
+tags: [Video, Retrieval]
+date: Mar 2026
+readtime: 8 min read
+slug: tcvp-visual-query-research
+katex: false
+---
+
 # TCVP Visual Query 방향 리서치 노트
 
 > 업데이트: 2026-03-26
