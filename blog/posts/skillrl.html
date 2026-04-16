@@ -410,10 +410,29 @@
 
 <h3>cold-start SFT는 생각보다 핵심이다</h3>
 <p><mark>스킬이 좋아도, 모델이 스킬을 읽고 행동으로 연결하는 법을 모르면 아무 일도 일어나지 않는다.</mark></p>
+<div class="callout">
+  <strong>RL 배경지식 3줄:</strong> `SFT`는 정답 예시를 보고 그대로 따라 배우는 단계다. `RL`은 환경에서 행동해 보고, 결과가 좋았는지 나빴는지를 보상으로 받으며 점점 정책을 고치는 단계다. 그래서 SkillRL에서는 먼저 `SFT`로 "스킬 사용법"을 익히고, 그다음 `RL`로 실제 환경에서 그 사용법을 더 정교하게 다듬는다.
+</div>
+
 <p>이 논문은 그래서 RL 이전에 cold-start supervised fine-tuning을 둔다. teacher model이 &quot;어떤 task에서 어떤 skill을 retrieve하고 어떻게 reasoning에 반영해야 하는지&quot;를 보여주는 demonstration을 만들고, base model은 그걸 먼저 학습한다.</p>
+<p>여기서 <code>cold-start</code>는 말 그대로 &quot;아직 RL로 충분히 단련되지 않은 초기 상태&quot;를 뜻한다. 즉 agent는 좋은 skill bank를 옆에 두고 있어도, 처음에는 그걸 언제 읽어야 하는지, 어떤 skill이 현재 문제와 맞는지, 읽은 skill을 다음 action 선택에 어떻게 연결해야 하는지 잘 모른다. 마치 초보 운전자 옆자리에 운전 매뉴얼을 둔다고 바로 운전을 잘하게 되지 않는 것과 비슷하다.</p>
+<p><code>supervised fine-tuning</code>도 이름만 보면 거창하지만, 여기서는 비교적 직관적이다. 정답이 있는 예시를 주고 그 예시를 따라 배우게 하는 단계다. SkillRL에서는 teacher가 만든 demonstration이 그 정답 예시 역할을 한다. 예를 들어:</p>
+<ul>
+<li>현재 task는 무엇인지</li>
+<li>skill bank에서 어떤 general skill과 task-specific skill을 꺼냈는지</li>
+<li>그 skill을 근거로 어떤 reasoning을 했는지</li>
+<li>그래서 어떤 action을 택했는지</li>
+</ul>
+<p>를 한 세트로 보여주고, base model이 이 패턴을 모방하게 만든다.</p>
+<p>이 단계를 먼저 두는 이유는 RL의 reward가 너무 성기고 비싸기 때문이다. RL은 보통 &quot;이 행동이 좋았는지 나빴는지&quot;를 환경 보상으로 거칠게 알려준다. 그런데 skill 사용법을 아직 전혀 모르는 모델에게 곧바로 RL만 걸면, 모델은 &quot;skill을 읽고 활용하는 정책&quot;을 배우기도 전에 탐색 비용을 너무 많이 치르게 된다. 다시 말해, RL은 방향을 미세 조정하는 데 강하지만, 완전히 생소한 행동 습관을 맨바닥에서 가르치는 데는 비효율적일 수 있다.</p>
+<p>그래서 흐름은 이렇게 보는 게 가장 이해가 쉽다.</p>
+<ol>
+<li><code>cold-start SFT</code>: &quot;스킬을 이렇게 읽고, 이렇게 행동에 연결해&quot;라는 사용법을 먼저 데모로 가르친다.</li>
+<li><code>RL</code>: 그 기초 사용법 위에서, 실제 환경 보상을 보며 어떤 skill이 더 유효한지 정책을 더 날카롭게 다듬는다.</li>
+</ol>
 <p>이 설정은 매우 현실적이다. skill bank를 잘 설계해도, 모델이 그것을 외부 잡음처럼 무시해버리면 효과가 없다. 논문은 이 문제를 &quot;먼저 스킬 사용법을 가르친 뒤, 그다음 RL로 정책을 밀어올리는 문제&quot;로 본다.</p>
 <p><em>&quot;Simply providing skills to an unchanged model yields limited benefit.&quot;</em></p>
-<p>이 한 줄이 cold-start SFT의 필요성을 설명한다. SkillRL은 memory를 붙이는 프레임워크이면서 동시에, memory를 사용하는 policy를 학습시키는 프레임워크다.</p>
+<p>즉 cold-start SFT는 RL의 대체물이 아니라 RL의 발판이다. 이 한 줄이 cold-start SFT의 필요성을 설명한다. SkillRL은 memory를 붙이는 프레임워크이면서 동시에, memory를 사용하는 policy를 학습시키는 프레임워크다.</p>
 <h2>무엇이 실제로 새롭나</h2>
 <p><strong>흐름:</strong> 메모리 압축이 아닌 추상화 → 정적 bank가 아닌 co-evolution → RL의 역할 재해석</p>
 
