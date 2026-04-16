@@ -409,7 +409,7 @@
 </figure>
 
 <div class="callout">
-  <strong>등장인물 정리:</strong> `base model`은 실제로 환경에서 행동하고 RL로 업데이트되는 학생 모델이다. `teacher model`은 이 학생의 trajectory를 읽어 skill을 뽑고, SFT용 모범 reasoning trajectory를 만들어주는 바깥 코치 모델이다. 글에서 가끔 보이는 `expert`는 별도 학습 주체라기보다, 보통 이 teacher가 만들어준 고품질 시범 답안이나 그 역할을 가리킨다고 보면 된다.
+  <strong>등장인물 정리:</strong> `base model`은 실제로 환경에서 행동하고 RL로 업데이트되는 학생 모델이며, 이 논문에서는 `Qwen2.5-7B-Instruct`를 쓴다. `teacher model`은 이 학생의 trajectory를 읽어 skill을 뽑고, SFT용 모범 reasoning trajectory를 만들어주는 바깥 코치 모델이며, 논문에서는 `OpenAI o3`를 사용한다. 글에서 가끔 보이는 `expert`는 별도 학습 주체라기보다, 보통 이 teacher가 만들어준 고품질 시범 답안이나 그 역할을 가리킨다고 보면 된다.
 </div>
 
 <h3>그러면 skill은 실제로 뭘 넣어서 뭘 뽑는가</h3>
