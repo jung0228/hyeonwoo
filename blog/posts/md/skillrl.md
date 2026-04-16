@@ -135,6 +135,10 @@ WebShop 쪽도 같은 구조다.
   <strong>RL 배경지식 3줄:</strong> `SFT`는 정답 예시를 보고 그대로 따라 배우는 단계다. `RL`은 환경에서 행동해 보고, 결과가 좋았는지 나빴는지를 보상으로 받으며 점점 정책을 고치는 단계다. 그래서 SkillRL에서는 먼저 `SFT`로 "스킬 사용법"을 익히고, 그다음 `RL`로 실제 환경에서 그 사용법을 더 정교하게 다듬는다.
 </div>
 
+<div class="callout">
+  <strong>학습 순서 4단계:</strong> 1) `base model`인 `Qwen2.5-7B-Instruct`가 먼저 환경에서 trajectory를 모은다. 2) `teacher model`인 `OpenAI o3`가 이 trajectory를 skill로 distill하고, skill을 사용하는 모범 trajectory도 만든다. 3) base model은 이 데이터로 먼저 `cold-start SFT`를 받아 `skill을 읽고 쓰는 법`을 배운다. 4) 그다음 RL은 이 SFT 모델을 초기값으로 이어서 업데이트한다. 즉 evolved model은 새로 처음부터 학습한 모델이 아니라, `SFT된 모델을 RL로 더 다듬은 버전`이다.
+</div>
+
 이 논문은 그래서 RL 이전에 cold-start supervised fine-tuning을 둔다. teacher model이 "어떤 task에서 어떤 skill을 retrieve하고 어떻게 reasoning에 반영해야 하는지"를 보여주는 demonstration을 만들고, base model은 그걸 먼저 학습한다.
 
 여기서 `cold-start`는 말 그대로 "아직 RL로 충분히 단련되지 않은 초기 상태"를 뜻한다. 즉 agent는 좋은 skill bank를 옆에 두고 있어도, 처음에는 그걸 언제 읽어야 하는지, 어떤 skill이 현재 문제와 맞는지, 읽은 skill을 다음 action 선택에 어떻게 연결해야 하는지 잘 모른다. 마치 초보 운전자 옆자리에 운전 매뉴얼을 둔다고 바로 운전을 잘하게 되지 않는 것과 비슷하다.
