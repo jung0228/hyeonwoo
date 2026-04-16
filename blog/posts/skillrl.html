@@ -408,6 +408,64 @@
 <figcaption><strong>Figure 2</strong> — SkillRL 전체 파이프라인. Base model이 환경에서 trajectory를 수집하고, teacher가 이를 성공/실패 lesson으로 distill해 SkillBank를 만든다. 이후 cold-start SFT로 "스킬을 읽고 사용하는 법" 자체를 먼저 학습한 뒤, RL 단계에서는 validation failure를 다시 분석해 새로운 skill을 추가하거나 기존 skill을 보완한다.</figcaption>
 </figure>
 
+<div class="callout">
+  <strong>등장인물 정리:</strong> `base model`은 실제로 환경에서 행동하고 RL로 업데이트되는 학생 모델이다. `teacher model`은 이 학생의 trajectory를 읽어 skill을 뽑고, SFT용 모범 reasoning trajectory를 만들어주는 바깥 코치 모델이다. 글에서 가끔 보이는 `expert`는 별도 학습 주체라기보다, 보통 이 teacher가 만들어준 고품질 시범 답안이나 그 역할을 가리킨다고 보면 된다.
+</div>
+
+<h3>그러면 skill은 실제로 뭘 넣어서 뭘 뽑는가</h3>
+<p><mark>SkillRL의 skill은 신비한 내부 벡터가 아니라, teacher model이 trajectory를 읽고 뽑아낸 구조화된 텍스트 규칙이다.</mark></p>
+<p>논문에서 skill 항목은 대체로 아래 네 칸으로 정리된다.</p>
+<ul>
+<li><code>skill_id</code></li>
+<li><code>title</code></li>
+<li><code>principle</code></li>
+<li><code>when_to_apply</code></li>
+</ul>
+<p>즉 raw trajectory를 그대로 저장하는 게 아니라, &quot;이 긴 로그에서 재사용 가능한 규칙만 뽑아 짧은 JSON 비슷한 항목으로 바꾼다&quot;가 정확한 설명에 가깝다.</p>
+<p>예를 들어 성공 trajectory가 이런 식으로 들어온다고 해보자.</p>
+<pre><code class="language-text">Task: Buy a blue iPhone 13 256GB under $900
+
+Trajectory:
+1. search[&quot;iPhone 13 blue 256GB&quot;]
+2. click[result 3]
+3. inspect color/storage options
+4. choose blue
+5. choose 256GB
+6. verify price
+7. buy now
+Reward: 1
+</code></pre>
+<p>teacher model은 이 긴 행동 로그를 읽고, &quot;무엇이 성공의 핵심이었는가&quot;를 짧은 규칙으로 압축한다.</p>
+<pre><code class="language-json">{
+  &quot;skill_id&quot;: &quot;web_014&quot;,
+  &quot;title&quot;: &quot;Verify Critical Constraints&quot;,
+  &quot;principle&quot;: &quot;Before purchase, explicitly check color, storage, and price instead of trusting the result title alone.&quot;,
+  &quot;when_to_apply&quot;: &quot;Use in shopping tasks with multiple product variants or hidden option changes.&quot;
+}
+</code></pre>
+<p>실패 trajectory도 방식은 비슷하지만, 출력은 &quot;실패 장면&quot;이 아니라 &quot;실패에서 나온 예방 규칙&quot;이다.</p>
+<pre><code class="language-text">Task: Heat the mug and place it on the table
+
+Trajectory:
+1. go to kitchen
+2. open cabinet
+3. find mug
+4. go to microwave
+5. heat nothing
+6. wander between rooms
+Reward: 0
+Failure: mug was never picked up before heating
+</code></pre>
+<p>이 경우 teacher는 보통 이런 식의 failure-aware skill을 만든다.</p>
+<pre><code class="language-json">{
+  &quot;skill_id&quot;: &quot;alf_021&quot;,
+  &quot;title&quot;: &quot;Secure Object Before Processing&quot;,
+  &quot;principle&quot;: &quot;When a task requires heating, cooling, or cleaning an object, first make sure the target object has been picked up.&quot;,
+  &quot;when_to_apply&quot;: &quot;Use in ALFWorld transformation tasks such as heat, cool, and clean.&quot;
+}
+</code></pre>
+<p>즉 이 논문의 입출력은 아주 거칠게 쓰면 아래 한 줄이다.</p>
+<p><code>trajectory + task description -&gt; teacher analysis -&gt; compact skill text</code></p>
 <h3>cold-start SFT는 생각보다 핵심이다</h3>
 <p><mark>스킬이 좋아도, 모델이 스킬을 읽고 행동으로 연결하는 법을 모르면 아무 일도 일어나지 않는다.</mark></p>
 <div class="callout">
@@ -430,6 +488,7 @@
 <li><code>cold-start SFT</code>: &quot;스킬을 이렇게 읽고, 이렇게 행동에 연결해&quot;라는 사용법을 먼저 데모로 가르친다.</li>
 <li><code>RL</code>: 그 기초 사용법 위에서, 실제 환경 보상을 보며 어떤 skill이 더 유효한지 정책을 더 날카롭게 다듬는다.</li>
 </ol>
+<p>이때 SFT 데이터의 입출력도 사실 꽤 단순하다. 입력은 <code>task description + retrieved skills</code>이고, 출력은 teacher가 만든 <code>성공 reasoning/action trajectory</code>다. 논문 표기로는 거의 <code>(d_i, S_i, \tau_i^*)</code> 형태다. 즉 base model은 &quot;task와 skill이 주어졌을 때, skill을 reasoning에 반영해 성공 trajectory를 내는 법&quot;을 먼저 모방 학습하는 셈이다.</p>
 <p>이 설정은 매우 현실적이다. skill bank를 잘 설계해도, 모델이 그것을 외부 잡음처럼 무시해버리면 효과가 없다. 논문은 이 문제를 &quot;먼저 스킬 사용법을 가르친 뒤, 그다음 RL로 정책을 밀어올리는 문제&quot;로 본다.</p>
 <p><em>&quot;Simply providing skills to an unchanged model yields limited benefit.&quot;</em></p>
 <p>즉 cold-start SFT는 RL의 대체물이 아니라 RL의 발판이다. 이 한 줄이 cold-start SFT의 필요성을 설명한다. SkillRL은 memory를 붙이는 프레임워크이면서 동시에, memory를 사용하는 policy를 학습시키는 프레임워크다.</p>
