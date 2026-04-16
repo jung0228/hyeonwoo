@@ -388,10 +388,19 @@
 <p><mark>ReasoningBank의 메모리 단위는 trajectory가 아니라 structured reasoning item이다. 저수준 실행 세부사항을 제거하고 전이 가능한 전략만 남긴다.</mark></p>
 <p>각 메모리 아이템은 세 필드로 구성된다.</p>
 <ul>
-<li><strong>Title</strong>: 핵심 전략을 압축한 식별자 (예: &quot;User-Specific Information Navigation&quot;)</li>
+<li><strong>Title</strong>: 핵심 전략을 압축한 식별자</li>
 <li><strong>Description</strong>: 한 문장 요약</li>
 <li><strong>Content</strong>: 추출된 reasoning steps, decision rationale, operational insight</li>
 </ul>
+<p>아래는 &quot;남성화 카테고리에서 리뷰 5개 이상 최저가 제품 구매&quot; 태스크를 성공한 뒤 ReasoningBank가 실제로 추출하는 메모리 아이템 예시다.</p>
+<div class="callout">
+
+<p><strong>Title</strong>: Category Navigation via Hover Menu</p>
+<p><strong>Description</strong>: 특정 하위 카테고리 탐색 시 스크롤 대신 hover 드롭다운 메뉴를 활용해라.</p>
+<p><strong>Content</strong>: Men&#39;s Shoes처럼 특정 하위 카테고리로 이동할 때는 상단 네비게이션에서 Shoes hover → Men hover 순서로 진입할 것. 전체 상품 리스트를 스크롤하는 것보다 탐색 단계를 크게 줄일 수 있다. 카테고리 필터 적용 후 가격·리뷰 정렬을 추가로 적용할 것.</p>
+</div>
+
+<p>이 메모리 아이템 하나가 있고 없고의 차이가 <strong>29 step vs 10 step</strong>이다. No Memory 에이전트는 Men 필터를 찾지 못해 전체 리스트를 스크롤하다 헤맸고, ReasoningBank 에이전트는 저장된 &quot;hover 드롭다운&quot; 전략을 바로 꺼내 써서 19 step을 절약했다.</p>
 <p><em>&quot;Memory items in ReasoningBank are designed ... to abstract away low-level execution details while preserving transferrable reasoning patterns and strategies.&quot;</em></p>
 <p>이 구조가 중요한 이유는 중간지점을 노리기 때문이다. 너무 짧으면 행동을 실제로 못 바꾸고, 너무 길면 raw trajectory와 다를 바 없다. title+description+content는 <strong>사람이 읽어도 이해 가능하면서, LLM system instruction 안에 넣어도 부담이 없는</strong> 형태다.</p>
 <h3>Closed Loop: Retrieval → Extraction → Consolidation</h3>
@@ -408,7 +417,9 @@
 <p><mark>Vanilla TTS는 trajectory를 독립적으로 bank에 넣어 contrastive signal을 낭비한다. MaTTS는 같은 태스크의 여러 탐색에서 나오는 대조 신호를 메모리 합성에 직접 활용한다.</mark></p>
 <p><em>&quot;This vanilla form is suboptimal because it does not leverage inherent contrastive signal that arises from redundant exploration on the same problem.&quot;</em></p>
 <p><strong>Parallel Scaling</strong>: 같은 쿼리에서 여러 trajectory를 동시에 생성한다. <strong>Self-contrast</strong> — 경로 간 비교 — 를 통해 일관되게 성공에 붙는 패턴은 신뢰도 높은 memory item으로 승격하고, 우연한 해법은 걸러낸다.</p>
+<p>예를 들어 &quot;Men&#39;s Shoes 최저가 구매&quot; 태스크에 trajectory를 5개 생성했다고 하자. 3개는 hover 드롭다운으로 바로 카테고리 진입(성공), 2개는 전체 리스트 스크롤(실패). 이 대조에서 &quot;hover 드롭다운이 핵심 전략&quot;이라는 신호가 강하게 추출된다. trajectory 1개만 봤을 때보다 훨씬 믿을 만한 memory item이 된다.</p>
 <p><strong>Sequential Scaling</strong>: 단일 trajectory를 반복적으로 재검토한다. <strong>Self-refinement</strong> 원칙에 따라 에이전트는 완료 후 무엇이 부족했는지 점검하고 다음 단계에서 개선한다. 이때 최종 답뿐 아니라 <strong>중간 correction note 자체</strong>가 memory signal이 된다.</p>
+<p>예를 들어 1차 시도에서 &quot;Recent Orders를 봤더니 날짜가 없었다 → My Orders로 이동해야 했다&quot;는 correction이 발생했다면, 이 수정 메모도 그대로 memory item의 content로 흡수된다. 최종 성공 답변뿐 아니라 &quot;어디서 왜 방향을 바꿨는가&quot;까지 저장된다.</p>
 <figure>
 <img src="img/reasoningbank/matts.jpg" alt="Figure 3">
 <figcaption><strong>Figure 3</strong> — (a) Vanilla TTS는 trajectory를 독립적으로 처리해 contrastive signal을 버린다. (b) Parallel MaTTS는 여러 trajectory를 self-contrast해 신뢰도 높은 메모리를 추출한다. (c) Sequential MaTTS는 단일 trajectory를 self-refine하며 intermediate reasoning signal까지 회수한다.</figcaption>
@@ -462,6 +473,12 @@
 </table>
 
 <p>성공률이 <strong>+7.2</strong> 오르는 동시에 평균 단계도 <strong>1.4회 줄어든다</strong>. 더 많이 시도해서 맞히는 게 아니라, 더 좋은 reasoning path를 따라가기 때문이다. Gemini-2.5-flash, Claude-3.7-sonnet에서도 같은 패턴이 반복된다.</p>
+<p>step 감소가 어떻게 일어나는지는 실제 case를 보면 명확하다.</p>
+<figure>
+<img src="img/reasoningbank/case_2.jpg" alt="Case Study">
+<figcaption><strong>Case Study</strong> — "Men's shoe 카테고리 리뷰 5개 이상 최저가 구매" 태스크. No Memory 에이전트는 Men 필터를 못 찾아 전체 리스트를 스크롤하다 29 step을 소모하고 틀린 상품을 골랐다. ReasoningBank 에이전트는 저장된 "hover 드롭다운으로 Men 카테고리 진입" 전략을 바로 꺼내 써서 10 step에 정답을 완료했다.</figcaption>
+</figure>
+
 <h3>일반화 설정에서 기존 방법은 무너진다</h3>
 <p><mark>다른 도메인으로 메모리를 전이해야 하는 설정에서 ReasoningBank의 이점이 오히려 더 크게 나타나고, 기존 방법은 오히려 망가진다.</mark></p>
 <p>WebArena의 <strong>Multi 서브셋</strong> — 여러 웹사이트 간 전이가 필요한 설정 — 에서 AWM은 기준선보다 성능이 떨어진다. ReasoningBank는 같은 설정에서 baseline 대비 평균 <strong>+4.6 SR</strong> 향상을 이뤄낸다. <strong>Mind2Web</strong>의 cross-domain 설정(가장 높은 일반화 요구)에서도 일관된 향상을 보인다. raw trajectory나 절차보다 <strong>추상화된 reasoning strategy</strong>가 새 도메인에 더 잘 붙는다는 증거다.</p>
