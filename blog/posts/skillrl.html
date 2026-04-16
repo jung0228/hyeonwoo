@@ -414,58 +414,48 @@
 
 <h3>그러면 skill은 실제로 뭘 넣어서 뭘 뽑는가</h3>
 <p><mark>SkillRL의 skill은 신비한 내부 벡터가 아니라, teacher model이 trajectory를 읽고 뽑아낸 구조화된 텍스트 규칙이다.</mark></p>
-<p>논문에서 skill 항목은 대체로 아래 네 칸으로 정리된다.</p>
+<p>논문 본문은 이 과정을 수식으로만 적지만, 어펜딕스는 실제로 distilled skill이 어떤 형태인지 표로 보여준다. 형식은 대체로 네 칸이다.</p>
 <ul>
-<li><code>skill_id</code></li>
-<li><code>title</code></li>
-<li><code>principle</code></li>
-<li><code>when_to_apply</code></li>
+<li><code>ID</code></li>
+<li><code>Skill Title</code></li>
+<li><code>Principle (Actionable Pattern)</code></li>
+<li><code>When to Apply</code></li>
 </ul>
-<p>즉 raw trajectory를 그대로 저장하는 게 아니라, &quot;이 긴 로그에서 재사용 가능한 규칙만 뽑아 짧은 JSON 비슷한 항목으로 바꾼다&quot;가 정확한 설명에 가깝다.</p>
-<p>예를 들어 성공 trajectory가 이런 식으로 들어온다고 해보자.</p>
-<pre><code class="language-text">Task: Buy a blue iPhone 13 256GB under $900
-
-Trajectory:
-1. search[&quot;iPhone 13 blue 256GB&quot;]
-2. click[result 3]
-3. inspect color/storage options
-4. choose blue
-5. choose 256GB
-6. verify price
-7. buy now
-Reward: 1
-</code></pre>
-<p>teacher model은 이 긴 행동 로그를 읽고, &quot;무엇이 성공의 핵심이었는가&quot;를 짧은 규칙으로 압축한다.</p>
-<pre><code class="language-json">{
-  &quot;skill_id&quot;: &quot;web_014&quot;,
-  &quot;title&quot;: &quot;Verify Critical Constraints&quot;,
-  &quot;principle&quot;: &quot;Before purchase, explicitly check color, storage, and price instead of trusting the result title alone.&quot;,
-  &quot;when_to_apply&quot;: &quot;Use in shopping tasks with multiple product variants or hidden option changes.&quot;
-}
-</code></pre>
-<p>실패 trajectory도 방식은 비슷하지만, 출력은 &quot;실패 장면&quot;이 아니라 &quot;실패에서 나온 예방 규칙&quot;이다.</p>
-<pre><code class="language-text">Task: Heat the mug and place it on the table
-
-Trajectory:
-1. go to kitchen
-2. open cabinet
-3. find mug
-4. go to microwave
-5. heat nothing
-6. wander between rooms
-Reward: 0
-Failure: mug was never picked up before heating
-</code></pre>
-<p>이 경우 teacher는 보통 이런 식의 failure-aware skill을 만든다.</p>
-<pre><code class="language-json">{
-  &quot;skill_id&quot;: &quot;alf_021&quot;,
-  &quot;title&quot;: &quot;Secure Object Before Processing&quot;,
-  &quot;principle&quot;: &quot;When a task requires heating, cooling, or cleaning an object, first make sure the target object has been picked up.&quot;,
-  &quot;when_to_apply&quot;: &quot;Use in ALFWorld transformation tasks such as heat, cool, and clean.&quot;
-}
-</code></pre>
-<p>즉 이 논문의 입출력은 아주 거칠게 쓰면 아래 한 줄이다.</p>
-<p><code>trajectory + task description -&gt; teacher analysis -&gt; compact skill text</code></p>
+<p>즉 raw trajectory를 그대로 저장하는 게 아니라, &quot;긴 행동 로그에서 재사용 가능한 규칙만 뽑아 짧은 skill 항목으로 바꾼다&quot;가 정확한 설명에 가깝다.</p>
+<p>어펜딕스의 ALFWorld 표에는 이런 skill이 실제로 등장한다.</p>
+<ul>
+<li><code>Systematic Exploration</code>
+Search every plausible surface or container exactly once before revisiting; prioritize unseen locations.</li>
+<li><code>Immediate Acquisition</code>
+As soon as a required object becomes visible and reachable, take it immediately.</li>
+<li><code>Use State-Changing Tools Early</code>
+Acquire the object, then immediately use the nearest suitable appliance before placement.</li>
+<li><code>Loop Escape Trigger</code>
+If the last 3--5 actions do not change the state, switch to an untried search branch or action type.</li>
+</ul>
+<p>WebShop 쪽도 같은 구조다.</p>
+<ul>
+<li><code>Prioritize Core Keywords</code>
+Include product type, 1-2 functional attributes, and hard constraints; omit secondary descriptors.</li>
+<li><code>Verify Early, Abort Fast</code>
+Immediately check category, attributes, and price on the product page; leave if any constraint is violated.</li>
+<li><code>Set Mandatory Variants</code>
+Always select required options before evaluating price or purchasing.</li>
+<li><code>Check Variant Pricing</code>
+Select the exact variant combination to verify the specific price is within budget.</li>
+</ul>
+<p>즉 이 논문의 입출력은 실제 appendix 기준으로 보면 아래처럼 요약할 수 있다.</p>
+<p><code>trajectory + task description -&gt; teacher analysis -&gt; (ID, title, principle, when to apply) 형태의 skill 항목</code></p>
+<p>실패도 raw trajectory로 저장하지 않고, failure taxonomy와 mitigation 형태로 압축한다. 어펜딕스에는 예를 들어 이런 항목들이 실려 있다.</p>
+<ul>
+<li><code>Missing Constraints in Query</code>
+Omits size or price caps, leading to overwhelming or irrelevant result sets.</li>
+<li><code>Price Shift Oversight</code>
+Fails to notice price changes after selecting a specific size or color variant.</li>
+<li><code>Premature Purchase</code>
+Clicks <code>Buy Now</code> without setting mandatory variants.</li>
+</ul>
+<p>즉 실패에서 teacher가 뽑아내는 것도 결국 &quot;이 실패는 왜 생겼고, 다음엔 무엇을 점검해야 하는가&quot;라는 짧은 규칙이다.</p>
 <h3>cold-start SFT는 생각보다 핵심이다</h3>
 <p><mark>스킬이 좋아도, 모델이 스킬을 읽고 행동으로 연결하는 법을 모르면 아무 일도 일어나지 않는다.</mark></p>
 <div class="callout">
