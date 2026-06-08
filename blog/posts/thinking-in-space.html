@@ -122,21 +122,21 @@
     <section class="slide">
       <div class="s-head">
         <h2>오늘 다룰 흐름</h2>
-        <p class="desc">문제 정의 → 벤치마크(VSI-Bench) → 평가 결과 → 모델이 공간을 사고하는 방식을 언어적·시각적으로 해부 → 시사점.</p>
+        <p class="desc">문제 정의 → 벤치마크(VSI-Bench) → 평가 결과 → <b>dual-coding theory</b>로 모델 사고를 언어적·시각적 두 갈래로 해부 → 시사점.</p>
       </div>
       <div class="body solo">
         <ol class="agenda">
           <li><div><span class="t">동기: 영상으로 공간을 사고하기</span><span class="d">See · Remember · Recall</span></div></li>
           <li><div><span class="t">Visual-Spatial Intelligence 분류</span><span class="d">perception · language · temporal · spatial reasoning</span></div></li>
-          <li><div><span class="t">VSI-Bench: 8 task / 3 type</span><span class="d">5,000+ QA · 288 indoor videos</span></div></li>
-          <li><div><span class="t">벤치마크 구성 파이프라인</span><span class="d">ScanNet · ScanNet++ · ARKitScenes</span></div></li>
+          <li><div><span class="t">VSI-Bench: 8 task / 3 type</span><span class="d">5,000+ QA · 288 indoor videos · MRA 지표</span></div></li>
           <li><div><span class="t">평가: 인간 vs MLLM</span><span class="d">79.2 vs ~48.8 — 공간추론이 병목</span></div></li>
-          <li><div><span class="t">언어적 사고: error 분석 & CoT 실패</span><span class="d">71% spatial error · prompting 역효과</span></div></li>
-          <li><div><span class="t">시각적 사고: cognitive map</span><span class="d">local은 강, global은 약</span></div></li>
+          <li><div><span class="t">분석틀: dual-coding theory</span><span class="d">언어 probe(self-explanation) + 시각 probe(cognitive map)</span></div></li>
+          <li><div><span class="t">언어적 사고: 사례·error·CoT</span><span class="d">71% spatial error · prompting 역효과</span></div></li>
+          <li><div><span class="t">시각적 사고: cognitive map</span><span class="d">local은 강, global은 약 · +10%p</span></div></li>
           <li><div><span class="t">시사점 & References</span><span class="d">cognitive map으로 거리추론 개선</span></div></li>
         </ol>
       </div>
-      <div class="s-foot"><span></span><span><b>02</b> / 13</span></div>
+      <div class="s-foot"><span></span><span><b>02</b> / 15</span></div>
     </section>
 
     <!-- 3 · MOTIVATION (teaser) -->
@@ -151,7 +151,7 @@
           <figcaption><b>Fig 1.</b> apartment·lab·factory 영상을 본 뒤(See), 공간의 물체 배치를 cognitive map으로 기억(Remember)하고, 거리·개수·크기 질문에 회상(Recall)한다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Yang et al., Thinking in Space (CVPR 2025), Fig 1</span><span><b>03</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Yang et al., Thinking in Space (CVPR 2025), Fig 1</span><span><b>03</b> / 15</span></div>
     </section>
 
     <!-- 4 · TAXONOMY -->
@@ -174,7 +174,7 @@
           <figcaption><b>Fig 2.</b> visual-spatial intelligence의 capability taxonomy. spatial reasoning = relational reasoning + egocentric-allocentric transformation.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Fig 2</span><span><b>04</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 2</span><span><b>04</b> / 15</span></div>
     </section>
 
     <!-- 5 · TASKS -->
@@ -189,7 +189,7 @@
           <figcaption><b>Fig 3.</b> 8개 task 예시. 가운데는 한 영상의 camera trajectory와 물체 배치. 수치 답(object size 등)과 객관식 답(relative direction 등)이 섞여 있다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Fig 3</span><span><b>05</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 3</span><span><b>05</b> / 15</span></div>
     </section>
 
     <!-- 6 · CONSTRUCTION -->
@@ -204,22 +204,22 @@
           <figcaption><b>Fig 4.</b> 데이터 통합 → QA 생성(template + 사람) → 품질 검증. 기존 3D 데이터셋의 정확한 object-level annotation을 재활용해 영상만으로 답 가능한 질문을 만든다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Fig 4</span><span><b>06</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 4</span><span><b>06</b> / 15</span></div>
     </section>
 
     <!-- 7 · RESULTS (2-col: numbers + radar) -->
     <section class="slide">
       <div class="s-head">
         <h2>평가 결과: 경쟁력 있으나 인간 이하</h2>
-        <p class="desc">15개 video MLLM을 zero-shot 평가. NA task는 새 지표 <b>MRA</b>(Mean Relative Accuracy)로 채점. 인간과의 격차는 크지만, 모델에서 <b>새로운 시각-공간 지능이 emerge</b>한다.</p>
+        <p class="desc">15개 video MLLM을 zero-shot·greedy decoding으로 평가. 답이 객관식(MCA)이면 Accuracy, 수치(NA)면 새 지표 <b>MRA</b>(Mean Relative Accuracy)로 채점. 인간과의 격차는 크지만, 모델에서 <b>새로운 시각-공간 지능이 emerge</b>한다.</p>
       </div>
       <div class="body stack">
         <div class="col">
           <div class="eqs">
-            <div class="step"><span class="lab">human</span><span class="ex"><b>79.2</b> avg — config·spatiotemporal task는 94~100%</span></div>
-            <div class="step"><span class="lab">best mllm</span><span class="ex">Gemini-1.5 Pro <b>~48.8</b> — 인간과 <span class="kw3">약 33%p 격차</span></span></div>
-            <div class="step"><span class="lab">open</span><span class="ex">LLaVA-Video-72B 40.9 (top open) — 그러나 12개 중 7개는 chance 이하</span></div>
-            <div class="step"><span class="lab">강점</span><span class="ex">측정(거리·크기) task는 인간과의 격차가 오히려 좁음</span></div>
+            <div class="step"><span class="lab">metric (NA)</span><span class="ex">$\mathcal{MRA}=\frac{1}{10}\sum_{\theta\in\mathcal{C}}\mathbb{1}\!\left(\frac{|\hat{y}-y|}{y}\lt 1-\theta\right),\ \mathcal{C}=\{0.5,\dots,0.95\}$ — 상대오차 기반 부분점수</span></div>
+            <div class="step"><span class="lab">human</span><span class="ex"><b>79.2</b> avg — config·spatiotemporal task는 94~100%로 직관적</span></div>
+            <div class="step"><span class="lab">best mllm</span><span class="ex">Gemini-1.5 Pro <b>~48.8</b> — 인간과 <span class="kw3">약 33%p 격차</span> (open top: LLaVA-Video-72B 40.9, 단 12개 중 7개는 chance 이하)</span></div>
+            <div class="step"><span class="lab">반전</span><span class="ex">측정 task는 <b>인간 정확도 자체가 47~60%로 낮아</b> 격차가 좁음 — 모델의 상대적 강점</span></div>
           </div>
         </div>
         <figure class="fig">
@@ -227,13 +227,57 @@
           <figcaption><b>Fig 5.</b> 8개 task별 인간(회색) vs 상위 모델. 인간이 전 task에서 우위지만, 측정 task에서는 격차가 작다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Tab 1 · Fig 5</span><span><b>07</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Tab 1 · Fig 5</span><span><b>07</b> / 15</span></div>
     </section>
 
-    <!-- 8 · ERROR ANALYSIS -->
+    <!-- 8 · DUAL-CODING (analysis hinge) -->
     <section class="slide">
       <div class="s-head">
-        <h2>언어적 사고 ① 무엇이 틀리는가</h2>
+        <h2>모델의 공간 사고를 어떻게 들여다보나</h2>
+        <p class="desc"><b>dual-coding theory</b>(Clark, 1991)는 인간 인지를 언어·시각 두 채널로 본다 — 분리돼 있으나 상보적. 이를 차용해 최고 모델(Gemini-1.5 Pro)을 <b>언어적·시각적 두 방식으로 probe</b>한다. 두 probe는 같은 결론으로 수렴한다: <span class="kw3">spatial reasoning이 병목</span>, 그러나 <span class="kw2">local world model은 emerge</span>한다.</p>
+      </div>
+      <div class="body solo">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3vw;flex:1;min-height:0;">
+          <div style="border:1px solid var(--rule-lt);border-top:4px solid var(--accent);border-radius:6px;background:#fff;padding:2.2rem 2rem;display:flex;flex-direction:column;gap:1.1rem;justify-content:center;">
+            <div style="font-family:var(--sans);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700;">① Linguistic probe — §5</div>
+            <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(1.4rem,2vw,2rem);">Self-Explanation</div>
+            <p style="color:#333;font-size:clamp(1rem,1.25vw,1.22rem);line-height:1.5;">모델이 답을 낸 근거를 <b>언어로 해명</b>하게 한다. 오답 163개를 사람이 직접 읽고 error를 <b>4가지 type</b>으로 분류 → 어떤 능력에서 무너지는지 규명한다.</p>
+          </div>
+          <div style="border:1px solid var(--rule-lt);border-top:4px solid var(--accent);border-radius:6px;background:#fff;padding:2.2rem 2rem;display:flex;flex-direction:column;gap:1.1rem;justify-content:center;">
+            <div style="font-family:var(--sans);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700;">② Visual probe — §6</div>
+            <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(1.4rem,2vw,2rem);">Cognitive Map</div>
+            <p style="color:#333;font-size:clamp(1rem,1.25vw,1.22rem);line-height:1.5;">영상을 본 뒤 <b>10×10 grid</b>에 물체 중심을 찍게 한다. 모델 내부의 implicit 공간 표현을 시각화 → local·global 구조와 거리 정확도를 측정한다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="s-foot"><span></span><span><b>08</b> / 15</span></div>
+    </section>
+
+    <!-- 9 · CASE STUDY (linguistic probe) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>언어적 사고 ① 모델은 이렇게 사고한다</h2>
+        <p class="desc">self-explanation을 읽으면 모델의 강점과 결함이 동시에 드러난다. <b>성공</b> 사례엔 정확한 timestamp 묘사·단계적 추론·global 좌표계 구성(=implicit world model)이 보이고, <b>실패</b> 사례엔 egocentric view에 갇힌 transformation 오류가 나타난다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">성공 (좌)</span><span class="ex">relative direction 정답 — <span class="kw2">"orient yourself → locate the dishwasher → visualize the quadrants"</span> 단계적 추론 + 강한 video understanding</span></div>
+            <div class="step"><span class="lab">실패 (우)</span><span class="ex">route plan 오답 — 카메라가 우측 pan하자 <b>egocentric view에 갇혀 "turn right"</b>로 답 (allocentric 기준 정답은 <span class="kw3">turn left</span>) → ego-allo transformation 실패</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/case_study.png" alt="Self-explanation success and failure case">
+          <figcaption><b>Fig 6.</b> 자기설명(self-explanation) 성공/실패 예시. 초록 태그(video understanding·world model)는 살아 있는 능력, 빨강 태그(ego-allo transformation·relational reasoning)는 결함을 가리킨다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 6</span><span><b>09</b> / 15</span></div>
+    </section>
+
+    <!-- 10 · ERROR ANALYSIS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>언어적 사고 ② 무엇이 틀리는가</h2>
         <p class="desc">최고 모델(Gemini-1.5 Pro)의 오답을 사람이 4가지 error type으로 분류. <b>visual·linguistic·temporal 능력은 강한데</b>, 발목을 잡는 건 spatial reasoning이다.</p>
       </div>
       <div class="body stack">
@@ -245,16 +289,16 @@
         </div>
         <figure class="fig">
           <img src="img/thinking-in-space/error_breakdown.png" alt="Error breakdown by type">
-          <figcaption><b>Fig 6.</b> task별·전체 error 분포. 노랑(relational)+초록(ego-allo) = spatial reasoning이 대다수. 파랑(linguistic)·빨강(visual)은 적다.</figcaption>
+          <figcaption><b>Fig 7.</b> task별·전체 error 분포. 노랑(relational)+초록(ego-allo) = spatial reasoning이 대다수. 파랑(linguistic)·빨강(visual)은 적다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Fig 6</span><span><b>08</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 7</span><span><b>10</b> / 15</span></div>
     </section>
 
     <!-- 9 · COT FAILS -->
     <section class="slide">
       <div class="s-head">
-        <h2>언어적 사고 ② CoT가 오히려 해롭다</h2>
+        <h2>언어적 사고 ③ CoT가 오히려 해롭다</h2>
         <p class="desc">언어 추론을 끌어올리는 대표 기법 3종(Zero-Shot <b>CoT</b>, <b>Self-Consistency</b>, <b>Tree-of-Thoughts</b>)을 적용 — 일반 video 벤치(VideoMME)에선 +1.6%인데, VSI-Bench에선 평균 <b>성능이 떨어진다</b>.</p>
       </div>
       <div class="body stack">
@@ -266,10 +310,10 @@
         </div>
         <figure class="fig">
           <img src="img/thinking-in-space/zero_shot.png" alt="CoT methods relative improvement (mostly negative)">
-          <figcaption><b>Fig 7.</b> 세 prompting 기법의 baseline 대비 상대 변화. 대부분 음수 — VSI-Bench는 언어 능력만 키워서는 풀리지 않는다.</figcaption>
+          <figcaption><b>Fig 8.</b> 세 prompting 기법의 baseline 대비 상대 변화. 대부분 음수 — VSI-Bench는 언어 능력만 키워서는 풀리지 않는다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Fig 7</span><span><b>09</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 8</span><span><b>11</b> / 15</span></div>
     </section>
 
     <!-- 10 · COGNITIVE MAPS -->
@@ -281,10 +325,10 @@
       <div class="body stack">
         <figure class="fig">
           <img src="img/thinking-in-space/cog_map.png" alt="Cognitive maps GT vs prediction">
-          <figcaption><b>Fig 8.</b> Ground Truth vs MLLM 예측 cognitive map. 인접한 물체의 상대 배치는 곧잘 맞히지만, 멀리 떨어진 물체끼리의 전역 배치는 어긋난다.</figcaption>
+          <figcaption><b>Fig 9.</b> Ground Truth vs MLLM 예측 cognitive map. 인접한 물체의 상대 배치는 곧잘 맞히지만, 멀리 떨어진 물체끼리의 전역 배치는 어긋난다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Fig 8</span><span><b>10</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 9</span><span><b>12</b> / 15</span></div>
     </section>
 
     <!-- 11 · LOCAL WORLD MODEL -->
@@ -304,10 +348,10 @@
         </div>
         <figure class="fig">
           <img src="img/thinking-in-space/local_world_model.png" alt="Locality: accuracy decays with object distance">
-          <figcaption><b>Fig 9.</b> base object 기준 거리 구간별 map-distance 정확도. 0.64(close) → 0.00(far)로 감쇠 — 국소적 공간 인식은 emerge하나 전역 표현은 약하다.</figcaption>
+          <figcaption><b>Fig 10.</b> base object 기준 거리 구간별 map-distance 정확도. 0.64(close) → 0.00(far)로 감쇠 — 국소적 공간 인식은 emerge하나 전역 표현은 약하다.</figcaption>
         </figure>
       </div>
-      <div class="s-foot"><span>출처: Thinking in Space, Fig 9 · Tab 3</span><span><b>11</b> / 13</span></div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 10 · Tab 3</span><span><b>13</b> / 15</span></div>
     </section>
 
     <!-- 12 · FINDINGS -->
@@ -324,7 +368,7 @@
           <li><b>④ cognitive map이 해법의 실마리.</b> 명시적으로 mental map을 생성·사용하면 거리 추론이 +10%p 향상된다.</li>
         </ul>
       </div>
-      <div class="s-foot"><span></span><span><b>12</b> / 13</span></div>
+      <div class="s-foot"><span></span><span><b>14</b> / 15</span></div>
     </section>
 
     <!-- 13 · REFERENCES -->
@@ -342,7 +386,7 @@
           <li><span>모든 figure 출처 — <span class="src">Thinking in Space (CVPR 2025), Fig 1–9. 본 자료는 학습 정리용.</span></span></li>
         </ol>
       </div>
-      <div class="s-foot"><span></span><span><b>13</b> / 13</span></div>
+      <div class="s-foot"><span></span><span><b>15</b> / 15</span></div>
     </section>
 
   </main>
