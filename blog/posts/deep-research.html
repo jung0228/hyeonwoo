@@ -45,16 +45,17 @@
     .kw2 { background:#d4f7d4; padding:0 .2em; border-radius:2px; }
     .kw3 { background:#ffd6d6; padding:0 .2em; border-radius:2px; }
     .fig { background:transparent; border:none; padding:0; display:flex; flex-direction:column; min-height:0; overflow:visible; }
-    .fig svg { width:100%; flex:0 1 auto; min-height:0; max-height:44vh; display:block; background:#fff; border:1px solid var(--rule-lt); border-radius:6px; padding:1.2rem; box-shadow:0 1px 0 rgba(0,0,0,.04); }
-    .fig figcaption { font-family:var(--sans); font-size:.78rem; color:var(--muted); margin-top:.8rem; line-height:1.4; }
+    .fig svg { width:100%; flex:0 1 auto; min-height:0; max-height:44vh; display:block; background:linear-gradient(180deg,#fff 0%,#fcfbf8 100%); border:1px solid var(--rule-lt); border-radius:10px; padding:1.4rem; box-shadow:0 6px 22px rgba(16,48,110,.07); }
+    .fig figcaption { font-family:var(--sans); font-size:.78rem; color:var(--muted); margin-top:.9rem; line-height:1.45; }
     .fig figcaption b { color:var(--text); }
-    table { width:100%; height:100%; border-collapse:collapse; font-family:var(--sans); }
-    th,td { text-align:left; padding:0 1.1rem; vertical-align:middle; border-bottom:1px solid var(--rule-lt); font-size:clamp(.92rem,1.15vw,1.18rem); }
-    thead th { font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--text); padding-bottom:1.1vh; }
+    table { width:100%; height:100%; border-collapse:separate; border-spacing:0; font-family:var(--sans); }
+    th,td { text-align:left; padding:.35rem 1.2rem; vertical-align:middle; border-bottom:1px solid var(--rule-lt); font-size:clamp(.92rem,1.15vw,1.18rem); }
+    thead th { font-size:.74rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--text); padding-bottom:1.1vh; }
     tbody td { height:1px; }
-    td.hl { font-weight:700; color:var(--accent); }
+    tbody tr:not(.era):nth-child(even) td { background:rgba(26,86,196,.04); }
+    td.hl { font-weight:700; color:var(--accent); box-shadow:inset 3px 0 0 var(--accent); }
     td.no { color:var(--muted); }
-    .era td { background:var(--accent-lt); font-weight:700; color:#10306e; font-family:var(--sans); font-size:.86rem; letter-spacing:.04em; }
+    .era td { background:var(--accent-lt); font-weight:700; color:#10306e; font-family:var(--sans); font-size:.84rem; letter-spacing:.05em; text-transform:uppercase; box-shadow:none; padding:.5rem 1.2rem; }
     .title-slide { justify-content:center; }
     .title-slide .masthead-mini { font-family:var(--sans); font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:.5rem 0; display:inline-block; margin-bottom:2.5vh; }
     .title-slide h1 { font-family:'Playfair Display',serif; font-weight:800; letter-spacing:-.02em; line-height:1.02; font-size:clamp(2.4rem,5.6vw,4.8rem); }
@@ -189,31 +190,34 @@
             <defs>
               <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1a56c4"/></marker>
               <marker id="arl" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0392b"/></marker>
+              <filter id="soft" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#10306e" flood-opacity="0.16"/></filter>
+              <linearGradient id="gstage" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf1fc"/><stop offset="1" stop-color="#d4e1f6"/></linearGradient>
+              <linearGradient id="gweb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a66d6"/><stop offset="1" stop-color="#1648a8"/></linearGradient>
             </defs>
             <!-- input -->
-            <rect x="20" y="150" width="120" height="70" rx="8" fill="#ececec" stroke="#bdbdbd"/>
+            <rect x="20" y="150" width="120" height="70" rx="10" fill="#f0efe9" stroke="#cfcfc8"/>
             <text x="80" y="190" text-anchor="middle" class="dg-s" font-size="20">질문</text>
             <!-- stages -->
-            <rect x="190" y="135" width="180" height="100" rx="10" fill="#dbe5f7" stroke="#1a56c4"/>
+            <rect x="190" y="135" width="180" height="100" rx="14" fill="url(#gstage)" stroke="#1a56c4" filter="url(#soft)"/>
             <text x="280" y="178" text-anchor="middle" class="dg-t" font-size="21">① Planning</text>
             <text x="280" y="205" text-anchor="middle" class="dg-s" font-size="15">과제 분해</text>
 
-            <rect x="420" y="135" width="180" height="100" rx="10" fill="#dbe5f7" stroke="#1a56c4"/>
+            <rect x="420" y="135" width="180" height="100" rx="14" fill="url(#gstage)" stroke="#1a56c4" filter="url(#soft)"/>
             <text x="510" y="172" text-anchor="middle" class="dg-t" font-size="20">② Question</text>
             <text x="510" y="195" text-anchor="middle" class="dg-t" font-size="20">developing</text>
             <text x="510" y="220" text-anchor="middle" class="dg-s" font-size="14">쿼리 생성</text>
 
-            <rect x="650" y="135" width="180" height="100" rx="10" fill="#1a56c4" stroke="#10306e"/>
+            <rect x="650" y="135" width="180" height="100" rx="14" fill="url(#gweb)" stroke="#10306e" filter="url(#soft)"/>
             <text x="740" y="172" text-anchor="middle" font-size="20" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">③ Web</text>
             <text x="740" y="195" text-anchor="middle" font-size="20" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">exploration</text>
-            <text x="740" y="220" text-anchor="middle" font-size="14" fill="#dbe5f7" font-family="-apple-system,sans-serif">검색·열람·추출</text>
+            <text x="740" y="220" text-anchor="middle" font-size="14" fill="#cfe0fb" font-family="-apple-system,sans-serif">검색·열람·추출</text>
 
-            <rect x="880" y="135" width="180" height="100" rx="10" fill="#dbe5f7" stroke="#1a56c4"/>
+            <rect x="880" y="135" width="180" height="100" rx="14" fill="url(#gstage)" stroke="#1a56c4" filter="url(#soft)"/>
             <text x="970" y="172" text-anchor="middle" class="dg-t" font-size="20">④ Report</text>
             <text x="970" y="195" text-anchor="middle" class="dg-t" font-size="20">generation</text>
             <text x="970" y="220" text-anchor="middle" class="dg-s" font-size="14">종합·인용</text>
             <!-- output -->
-            <rect x="1100" y="150" width="62" height="70" rx="8" fill="#ececec" stroke="#bdbdbd"/>
+            <rect x="1100" y="150" width="62" height="70" rx="10" fill="#f0efe9" stroke="#cfcfc8"/>
             <text x="1131" y="183" text-anchor="middle" class="dg-s" font-size="14">리포트</text>
             <text x="1131" y="200" text-anchor="middle" class="dg-s" font-size="14">/정답</text>
             <!-- arrows -->
@@ -258,27 +262,34 @@
       <div class="body stack">
         <figure class="fig">
           <svg viewBox="0 0 1180 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="능력 3축 프레임">
+            <defs>
+              <filter id="soft2" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#10306e" flood-opacity="0.14"/></filter>
+              <linearGradient id="gcol" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef3fd"/><stop offset="1" stop-color="#dbe5f7"/></linearGradient>
+            </defs>
             <!-- columns -->
-            <rect x="40" y="20" width="340" height="210" rx="10" fill="#dbe5f7" stroke="#1a56c4"/>
-            <text x="210" y="70" text-anchor="middle" class="dg-lab" font-size="17">찾기 · SEARCH</text>
-            <text x="210" y="118" text-anchor="middle" class="dg-s" font-size="17">필요한 정보를 여러 홉/</text>
-            <text x="210" y="143" text-anchor="middle" class="dg-s" font-size="17">페이지를 거쳐</text>
-            <text x="210" y="168" text-anchor="middle" class="dg-s" font-size="17">찾아내는가</text>
+            <rect x="40" y="20" width="340" height="210" rx="14" fill="url(#gcol)" stroke="#1a56c4" filter="url(#soft2)"/>
+            <text x="210" y="68" text-anchor="middle" class="dg-lab" font-size="18">찾기 · SEARCH</text>
+            <line x1="135" y1="84" x2="285" y2="84" stroke="#1a56c4" stroke-width="2"/>
+            <text x="210" y="124" text-anchor="middle" class="dg-s" font-size="17">필요한 정보를 여러 홉/</text>
+            <text x="210" y="149" text-anchor="middle" class="dg-s" font-size="17">페이지를 거쳐</text>
+            <text x="210" y="174" text-anchor="middle" class="dg-s" font-size="17">찾아내는가</text>
 
-            <rect x="420" y="20" width="340" height="210" rx="10" fill="#dbe5f7" stroke="#1a56c4"/>
-            <text x="590" y="70" text-anchor="middle" class="dg-lab" font-size="17">풀기 · REASON</text>
-            <text x="590" y="118" text-anchor="middle" class="dg-s" font-size="17">찾은 정보로</text>
-            <text x="590" y="143" text-anchor="middle" class="dg-s" font-size="17">다단계 추론·계산을</text>
-            <text x="590" y="168" text-anchor="middle" class="dg-s" font-size="17">해내는가</text>
+            <rect x="420" y="20" width="340" height="210" rx="14" fill="url(#gcol)" stroke="#1a56c4" filter="url(#soft2)"/>
+            <text x="590" y="68" text-anchor="middle" class="dg-lab" font-size="18">풀기 · REASON</text>
+            <line x1="515" y1="84" x2="665" y2="84" stroke="#1a56c4" stroke-width="2"/>
+            <text x="590" y="124" text-anchor="middle" class="dg-s" font-size="17">찾은 정보로</text>
+            <text x="590" y="149" text-anchor="middle" class="dg-s" font-size="17">다단계 추론·계산을</text>
+            <text x="590" y="174" text-anchor="middle" class="dg-s" font-size="17">해내는가</text>
 
-            <rect x="800" y="20" width="340" height="210" rx="10" fill="#dbe5f7" stroke="#1a56c4"/>
-            <text x="970" y="70" text-anchor="middle" class="dg-lab" font-size="17">쓰기 · WRITE</text>
-            <text x="970" y="118" text-anchor="middle" class="dg-s" font-size="17">모은 근거를</text>
-            <text x="970" y="143" text-anchor="middle" class="dg-s" font-size="17">일관된 장문 리포트로</text>
-            <text x="970" y="168" text-anchor="middle" class="dg-s" font-size="17">합성하는가</text>
+            <rect x="800" y="20" width="340" height="210" rx="14" fill="url(#gcol)" stroke="#1a56c4" filter="url(#soft2)"/>
+            <text x="970" y="68" text-anchor="middle" class="dg-lab" font-size="18">쓰기 · WRITE</text>
+            <line x1="895" y1="84" x2="1045" y2="84" stroke="#1a56c4" stroke-width="2"/>
+            <text x="970" y="124" text-anchor="middle" class="dg-s" font-size="17">모은 근거를</text>
+            <text x="970" y="149" text-anchor="middle" class="dg-s" font-size="17">일관된 장문 리포트로</text>
+            <text x="970" y="174" text-anchor="middle" class="dg-s" font-size="17">합성하는가</text>
             <!-- factuality bar -->
-            <rect x="40" y="255" width="1100" height="50" rx="8" fill="#10306e"/>
-            <text x="590" y="286" text-anchor="middle" font-size="17" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">가로축 · 사실성 (FACTUALITY) — 주장이 맞고, 출처에 제대로 근거(인용)하는가</text>
+            <rect x="40" y="255" width="1100" height="52" rx="10" fill="#10306e" filter="url(#soft2)"/>
+            <text x="590" y="287" text-anchor="middle" font-size="17" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">가로축 · 사실성 (FACTUALITY) — 주장이 맞고, 출처에 제대로 근거(인용)하는가</text>
           </svg>
           <figcaption><b>그림 2.</b> 능력 3축 + 사실성 가로축. 답을 <b>짧게</b> 만든 벤치(BrowseComp·HLE)는 "쓰기"를 배제해 찾기/풀기를 깨끗이 재고, <b>장문</b> 리포트 벤치는 쓰기/종합을 잰다.</figcaption>
         </figure>
