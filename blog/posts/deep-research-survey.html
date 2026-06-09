@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Research Survey — Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f9f8f4; --text:#0f0f0f; --muted:#6b6b6b; --accent:#1a56c4;
+      --rule:#999; --rule-lt:#d8d8d2; --bg2:#efede6; --accent-lt:#dbe5f7;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',Georgia,serif; line-height:1.55; overflow:hidden; }
+    .deck { height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; }
+    .deck::-webkit-scrollbar { display:none; }
+    .slide { height:100vh; scroll-snap-align:start; scroll-snap-stop:always; display:flex; flex-direction:column; overflow:hidden;
+      padding:6.4vh 4.5vw 4.4vh; position:relative; max-width:1680px; margin:0 auto; }
+    .s-head { border-bottom:2px solid var(--text); padding-bottom:1.1vh; margin-bottom:2.2vh; }
+    .slide h2 { font-family:'Playfair Display',Georgia,serif; font-weight:800; letter-spacing:-.02em; line-height:1.04; font-size:clamp(2rem,3.5vw,3.2rem); }
+    .slide h2 .sec { font-family:var(--sans); font-size:.42em; font-weight:700; color:var(--accent); letter-spacing:.04em; vertical-align:middle; background:var(--accent-lt); padding:.18em .5em; border-radius:5px; margin-right:.5em; }
+    .desc { font-size:clamp(1rem,1.3vw,1.28rem); color:#333; max-width:none; margin-top:1vh; }
+    .body { flex:1; min-height:0; display:grid; grid-template-columns:1.05fr 1fr; gap:3vw; align-items:stretch; }
+    .body.solo { display:flex; flex-direction:column; }
+    .body.solo > * { flex:1; min-height:0; }
+    .body.stack { display:flex; flex-direction:column; gap:1.6vh; }
+    .body.stack .col { flex:1 1 auto; min-height:0; justify-content:center; }
+    .body.stack .eqs { height:100%; display:flex; flex-direction:column; justify-content:space-evenly; gap:1.2vh; align-content:start; }
+    .body.stack .eqs .step { align-items:center; }
+    .body.stack .fig { flex:0 1 auto; min-height:0; max-height:50vh; }
+    .col { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:1.4vh; }
+    ul.pts { list-style:none; height:100%; display:flex; flex-direction:column; justify-content:space-evenly; }
+    ul.pts li { font-size:clamp(1.02rem,1.45vw,1.42rem); padding:0 0 0 1.8rem; position:relative; display:flex; align-items:center; flex:1; border-bottom:1px solid var(--rule-lt); }
+    ul.pts li:last-child { border-bottom:none; }
+    ul.pts li::before { content:"→"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+    ul.pts li b { font-weight:600; }
+    .eqs { display:flex; flex-direction:column; justify-content:center; height:100%; gap:1.6vh; }
+    .eqs .step { display:flex; gap:1rem; align-items:baseline; }
+    .eqs .lab { font-family:var(--sans); font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); min-width:11ch; padding-top:.2em; }
+    .eqs .ex { font-size:clamp(1rem,1.25vw,1.2rem); }
+    .kw  { background:#fef3c7; padding:0 .2em; border-radius:2px; }
+    .kw2 { background:#d4f7d4; padding:0 .2em; border-radius:2px; }
+    .kw3 { background:#ffd6d6; padding:0 .2em; border-radius:2px; }
+    .fig { background:transparent; border:none; padding:0; display:flex; flex-direction:column; min-height:0; overflow:visible; }
+    .fig img { width:100%; flex:0 1 auto; min-height:0; height:auto; max-height:46vh; object-fit:contain; display:block; background:#fff; border:1px solid var(--rule-lt); border-radius:10px; padding:1.2rem; box-shadow:0 6px 22px rgba(16,48,110,.07); }
+    .fig figcaption { font-family:var(--sans); font-size:.78rem; color:var(--muted); margin-top:.9rem; line-height:1.45; }
+    .fig figcaption b { color:var(--text); }
+    table { width:100%; height:100%; border-collapse:separate; border-spacing:0; font-family:var(--sans); }
+    th,td { text-align:left; padding:.3rem 1.2rem; vertical-align:middle; border-bottom:1px solid var(--rule-lt); font-size:clamp(.9rem,1.12vw,1.16rem); }
+    thead th { font-size:.74rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--text); padding-bottom:1.1vh; }
+    tbody td { height:1px; }
+    tbody tr:not(.era):nth-child(even) td { background:rgba(26,86,196,.04); }
+    td.hl { font-weight:700; color:var(--accent); white-space:nowrap; }
+    td.no { color:var(--muted); }
+    td.ck { text-align:center; font-weight:700; color:var(--accent); }
+    td.ckno { text-align:center; color:#cfcfca; }
+    .era td { background:var(--accent-lt); font-weight:700; color:#10306e; font-family:var(--sans); font-size:.82rem; letter-spacing:.05em; text-transform:uppercase; padding:.5rem 1.2rem; }
+    .title-slide { justify-content:center; }
+    .title-slide .masthead-mini { font-family:var(--sans); font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:.5rem 0; display:inline-block; margin-bottom:2.5vh; }
+    .title-slide h1 { font-family:'Playfair Display',serif; font-weight:800; letter-spacing:-.02em; line-height:1.02; font-size:clamp(2.4rem,5.6vw,4.8rem); }
+    .title-slide .sub { font-family:'Playfair Display',serif; font-weight:700; color:#2a2a2a; font-size:clamp(1.2rem,2.1vw,1.9rem); margin-top:1vh; }
+    .title-slide .lead { font-family:'Playfair Display',serif; font-style:italic; color:var(--muted); font-size:clamp(1.05rem,1.6vw,1.45rem); max-width:none; margin-top:2.2vh; }
+    .title-slide .by { font-family:var(--sans); font-size:.95rem; color:var(--muted); margin-top:3.5vh; }
+    ol.agenda { list-style:none; counter-reset:ag; display:grid; grid-template-columns:1fr; grid-auto-rows:minmax(0,1fr); gap:0; height:100%; }
+    ol.agenda li { counter-increment:ag; display:flex; gap:1.3rem; align-items:center; border-bottom:1px solid var(--rule-lt); }
+    ol.agenda li::before { content:counter(ag,decimal-leading-zero); font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(1.4rem,2.2vw,2rem); color:var(--accent); min-width:2.4ch; }
+    ol.agenda .t { font-size:clamp(1.02rem,1.4vw,1.4rem); font-weight:600; }
+    ol.agenda .d { font-family:var(--sans); font-size:clamp(.8rem,1vw,1rem); color:var(--muted); display:block; margin-top:.2rem; font-weight:400; }
+    ol.refs { list-style:none; counter-reset:rf; display:flex; flex-direction:column; height:100%; }
+    ol.refs li { counter-increment:rf; position:relative; padding-left:2.8rem; flex:1; display:flex; align-items:center; border-bottom:1px solid var(--rule-lt); font-family:var(--sans); font-size:clamp(.9rem,1.15vw,1.15rem); }
+    ol.refs li:last-child { border-bottom:none; }
+    ol.refs li::before { content:"["counter(rf)"]"; position:absolute; left:0; color:var(--accent); font-weight:700; font-family:'Playfair Display',serif; font-size:1.1em; }
+    ol.refs a { color:var(--accent); text-decoration:none; }
+    ol.refs a:hover { text-decoration:underline; }
+    ol.refs .src { color:var(--muted); }
+    .s-foot { position:absolute; left:4.5vw; right:4.5vw; bottom:1.6vh; display:flex; justify-content:space-between; font-family:var(--sans); font-size:.76rem; color:var(--muted); letter-spacing:.04em; }
+    .s-foot b { color:var(--text); }
+    .progress { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--accent); z-index:200; transition:width .15s; }
+    .dots { position:fixed; right:1.4rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.7rem; z-index:200; }
+    .dots button { width:9px; height:9px; border-radius:50%; border:1.5px solid var(--rule); background:transparent; cursor:pointer; padding:0; transition:.2s; }
+    .dots button.active { background:var(--accent); border-color:var(--accent); transform:scale(1.3); }
+    .back-link { position:fixed; left:1rem; top:.7rem; z-index:200; font-family:var(--sans); font-size:.78rem; color:var(--muted); text-decoration:none; }
+    .back-link:hover { color:var(--accent); }
+    @media (max-width:780px){
+      .slide{ overflow-y:auto; }
+      .body{ grid-template-columns:1fr; gap:1.4rem; }
+      .body.solo > * { flex:none; }
+      .dots{ display:none; }
+      ul.pts li{ flex:none; padding:.7rem 0 .7rem 1.8rem; }
+      ol.agenda{ grid-auto-rows:auto; }
+      ol.agenda li{ padding:1rem 0; }
+      ol.refs li{ flex:none; padding:.8rem 0 .8rem 2.8rem; }
+      table{ height:auto; }
+      .fig img{ max-height:38vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <a href="../index.html" class="back-link">← Index</a>
+  <nav class="dots" id="dots"></nav>
+
+  <main class="deck" id="deck">
+
+    <!-- 1 · TITLE -->
+    <section class="slide title-slide">
+      <span class="masthead-mini">Hyeonwoo Jung · Paper Deck · Survey 2025</span>
+      <h1>Deep Research</h1>
+      <p class="sub">A Survey of Autonomous Research Agents</p>
+      <p class="lead">LLM agent가 스스로 planning·retrieval·synthesis를 수행해 웹 근거 기반의 충실한 리포트를 만든다 — 이 분야를 <b>4단계 파이프라인</b>으로 체계화하고, 각 단계의 방법·최적화·벤치마크를 정리한 서베이.</p>
+      <p class="by">Wenlin Zhang, Xiaopeng Li, Pengyue Jia, Xiangyu Zhao et al. · arXiv:2508.12752 (2025) · 12 min read</p>
+    </section>
+
+    <!-- 2 · AGENDA -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>오늘 다룰 흐름</h2>
+        <p class="desc">서베이의 척추인 <b>4단계 파이프라인</b>을 따라간다 — 각 단계의 도전과제와 방법 taxonomy → 최적화 → 벤치마크 → 미래 방향.</p>
+      </div>
+      <div class="body solo">
+        <ol class="agenda">
+          <li><div><span class="t">문제의식 & 정의</span><span class="d">LLM 지식 경계의 한계 → deep research paradigm</span></div></li>
+          <li><div><span class="t">전체 구조 (4단계 파이프라인)</span><span class="d">planning → question developing → web exploration → report generation</span></div></li>
+          <li><div><span class="t">§2 Planning</span><span class="d">structured world knowledge vs learnable process</span></div></li>
+          <li><div><span class="t">§3 Question Developing</span><span class="d">reward-optimized vs supervision-driven</span></div></li>
+          <li><div><span class="t">§4 Web Exploration</span><span class="d">web retrieval agent vs API-based</span></div></li>
+          <li><div><span class="t">§5 Report Generation</span><span class="d">structure control vs factual integrity</span></div></li>
+          <li><div><span class="t">최적화 · 벤치마크 · 미래 방향</span><span class="d">RL/SFT · search vs research bench · 5대 과제</span></div></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>02</b> / 12</span></div>
+    </section>
+
+    <!-- 3 · MOTIVATION & DEFINITION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>문제의식 & 정의</h2>
+        <p class="desc">LLM은 강력하지만 <b>내부 지식 경계(knowledge boundary)</b>에 갇힌다 — 학습 시점 이후·롱테일·실시간 정보를 모른다. 이를 넘기 위한 패러다임이 <b>deep research</b>다.</p>
+      </div>
+      <div class="body solo">
+        <div class="eqs">
+          <div class="step"><span class="lab">정의</span><span class="ex">agent가 능동적으로 <b>planning · retrieval · synthesis</b>에 관여해, <span class="kw">웹 근거에 기반한 포괄적·충실한(faithful) 분석 리포트</span>를 생성하는 패러다임</span></div>
+          <div class="step"><span class="lab">RAG와의 차이</span><span class="ex">"한 번 검색 → 답"이 아니라, <b>추론과 검색이 얽혀 동적으로 반복</b>되며 멀티스텝으로 깊게 파고든다</span></div>
+          <div class="step"><span class="lab">서베이의 기여</span><span class="ex">난립하던 방법들을 <b>4단계 파이프라인</b>으로 체계화하고, 단계별 challenge·방법·최적화·벤치마크를 정리</span></div>
+          <div class="step"><span class="lab">4 stages</span><span class="ex">① Planning → ② Question Developing → ③ Web Exploration → ④ Report Generation</span></div>
+        </div>
+      </div>
+      <div class="s-foot"><span>출처: Zhang et al., Deep Research Survey (arXiv:2508.12752)</span><span><b>03</b> / 12</span></div>
+    </section>
+
+    <!-- 4 · OVERVIEW (Fig 1) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>전체 구조 — 4단계 파이프라인</h2>
+        <p class="desc">사용자의 <b>research question</b> → Plan → Query → (Web Explorer ↔ Finding의 <b>iterative search</b>) → Report. 각 단계 아래의 "Agentic Abilities"가 서베이의 §2–§5 분류로 이어진다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">핵심</span><span class="ex">②·③이 <span class="kw">iterative search 루프</span> — Query→탐색→Finding을 돌며 지식 공백을 메운다 (그림의 되돌아가는 화살표)</span></div>
+            <div class="step"><span class="lab">매핑</span><span class="ex">§2 Planning(structured/learnable) · §3 Question(reward/supervision) · §4 Web(API/browser) · §5 Report(structure/factual)</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/deep-research-survey/fig1_overview.png" alt="Deep research architecture overview">
+          <figcaption><b>Fig 1.</b> Deep Research 아키텍처 개요. 상단은 파이프라인(Plan→Query→Web Explorer→Finding→Report), 하단은 각 단계의 Agentic Abilities = 서베이의 §2–§5 분류.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, Fig 1</span><span><b>04</b> / 12</span></div>
+    </section>
+
+    <!-- 5 · PLANNING -->
+    <section class="slide">
+      <div class="s-head">
+        <h2><span class="sec">§2</span>Planning</h2>
+        <p class="desc">research question을 실행 전에 <b>중간 subgoal·행동의 구조화된 계획</b>으로 변환. <span class="kw3">도전과제: 현재 LLM의 plan은 취약(brittle)하고 모호한 질문에 약하며, 멀티스텝 plan의 내부 일관성 확보가 어렵다.</span></p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:32%">세부 전략</th><th>대표 방법</th></tr></thead>
+          <tbody>
+            <tr class="era"><td colspan="2">A. Structured World Knowledge — 구조적 세계지식을 활용</td></tr>
+            <tr><td class="hl">Simulation</td><td>실행 전 결과를 모의해 보고 계획 — WebDreamer</td></tr>
+            <tr><td class="hl">Modularity</td><td>계획을 모듈로 분해 — WebPilot, WKM, Plan-and-Act</td></tr>
+            <tr><td class="hl">Adaptation</td><td>피드백으로 계획 적응 — Thought of Search, MPO</td></tr>
+            <tr class="era"><td colspan="2">B. Learnable Process — 계획 자체를 학습</td></tr>
+            <tr><td class="hl">Space exploration</td><td>계획 공간을 탐색 — AgentSquare, Agent-E</td></tr>
+            <tr><td class="hl">Self-training</td><td>스스로 데이터를 만들어 학습 — InSTA</td></tr>
+            <tr><td class="hl">Preference modeling</td><td>선호 학습으로 계획 개선 — MindSearch, SimpleDeepSearcher, WEPO</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, Table 1</span><span><b>05</b> / 12</span></div>
+    </section>
+
+    <!-- 6 · QUESTION DEVELOPING -->
+    <section class="slide">
+      <div class="s-head">
+        <h2><span class="sec">§3</span>Question Developing</h2>
+        <p class="desc">subgoal을 <b>맥락에 맞는 검색 쿼리</b>로 변환(누적된 근거에 따라). <span class="kw3">도전과제: subgoal이 모호하면 쿼리 품질↓, 이전 history와의 coherence 부족, open-ended 문제에서 specificity↔coverage 트레이드오프.</span></p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:34%">세부 전략</th><th>대표 방법</th></tr></thead>
+          <tbody>
+            <tr class="era"><td colspan="2">A. Reward-Optimized — 보상으로 쿼리 정책을 RL 최적화</td></tr>
+            <tr><td class="hl">Format & accuracy reward</td><td>형식+정답 기반 보상 — Search-R1, R1-Searcher, DeepResearcher, ZeroSearch, MaskSearch, DeepRetrieval</td></tr>
+            <tr><td class="hl">Multi-dimensional reward</td><td>정보이득·효율·지식경계 등 다차원 — InForage, OTC-PO, IKEA, AutoRefine, R-Search</td></tr>
+            <tr class="era"><td colspan="2">B. Supervision-Driven — 지도/구조로 쿼리 품질 확보</td></tr>
+            <tr><td class="hl">Multi-agent system</td><td>역할 분업으로 쿼리 생성·검증 — ManuSearch, Search-o1</td></tr>
+            <tr><td class="hl">Supervision optimization</td><td>지도 신호 최적화 — ReasonRAG (DPO + MCTS trajectory)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, Table 2</span><span><b>06</b> / 12</span></div>
+    </section>
+
+    <!-- 7 · WEB EXPLORATION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2><span class="sec">§4</span>Web Exploration</h2>
+        <p class="desc">온라인 소스에서 <b>관련 정보를 검색·탐색</b> (agent navigation 또는 API). <span class="kw3">도전과제: 노이즈·중복·상충 콘텐츠를 거르며 정확 정보 확보, 상위 단계와의 단절, browser agent의 무거움 vs API의 신뢰성 격차.</span></p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:32%">세부 전략</th><th>대표 방법</th></tr></thead>
+          <tbody>
+            <tr class="era"><td colspan="2">A. Web Retrieval Agents — 직접 웹을 탐색하는 agent</td></tr>
+            <tr><td class="hl">Browser-based</td><td>브라우저로 자율 탐색 — WebGPT, Agent-E</td></tr>
+            <tr><td class="hl">Multimodal</td><td>화면을 보고 탐색 — WebVoyager, MM-ReAct, WebArena</td></tr>
+            <tr class="era"><td colspan="2">B. API-Based Retrieval — 검색 API 호출</td></tr>
+            <tr><td class="hl">Industrial search</td><td>범용 검색엔진 — Bing, Google, X</td></tr>
+            <tr><td class="hl">Domain-specific</td><td>도메인 특화 — CNKI, BraveSearch, Bocha</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, Table 3</span><span><b>07</b> / 12</span></div>
+    </section>
+
+    <!-- 8 · REPORT GENERATION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2><span class="sec">§5</span>Report Generation</h2>
+        <p class="desc">검색한 정보를 <b>일관되고 근거 있는 리포트</b>로 종합. <span class="kw3">도전과제: 멀티문서·멀티홉 일관성, 장문에서의 구조 drift, 상충 소스 종합 시 factual fidelity, 단계 간 joint optimization 부재.</span></p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:32%">세부 전략</th><th>대표 방법</th></tr></thead>
+          <tbody>
+            <tr class="era"><td colspan="2">A. Structure Control — 긴 리포트의 구조를 통제</td></tr>
+            <tr><td class="hl">Planning-based</td><td>개요를 짜고 작성 — AI Scientist v2, LongWriter, LongDPO</td></tr>
+            <tr><td class="hl">Constraint-guided</td><td>제약 조건으로 유도 — WebThinker, Suri</td></tr>
+            <tr><td class="hl">Structure-aware eval</td><td>구조 인지 평가 — Long2RAG, ExPerT</td></tr>
+            <tr class="era"><td colspan="2">B. Factual Integrity — 사실 무결성 확보</td></tr>
+            <tr><td class="hl">Faithful modeling</td><td>출처 충실 생성 — RAGSynth, BRIDGE</td></tr>
+            <tr><td class="hl">Conflict reasoning</td><td>상충 정보 추론 — FaithfulRAG, DRAGged</td></tr>
+            <tr><td class="hl">Factuality eval</td><td>사실성 평가 — Face4RAG, FaithJudge, RAG-QA Arena</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, Table 4</span><span><b>08</b> / 12</span></div>
+    </section>
+
+    <!-- 9 · OPTIMIZATION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>최적화 기법</h2>
+        <p class="desc">파이프라인을 <b>어떻게 훈련하고 조립하나</b> — 학습 패러다임(좌)과 workflow 아키텍처(우).</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:24%">범주</th><th>방식 · 대표</th></tr></thead>
+          <tbody>
+            <tr class="era"><td colspan="2">학습 패러다임</td></tr>
+            <tr><td class="hl">Reinforcement Learning</td><td>GRPO/PPO로 정책 최적화. 보상 설계: format+F1, staged, 정보이득+효율 penalty, 지식경계 인지 — Search-R1, DeepResearcher, InForage</td></tr>
+            <tr><td class="hl">Supervised Fine-Tuning</td><td>제약·스타일 instruction tuning(Suri), DPO+MCTS trajectory 랭킹(ReasonRAG)</td></tr>
+            <tr><td class="hl">Contrastive / Curriculum</td><td>성공/실패 trajectory 대조(Avatar), 쉬운→어려운 단계 학습(AI Scientist-v2, SimpleDeepSearcher)</td></tr>
+            <tr class="era"><td colspan="2">Workflow 아키텍처</td></tr>
+            <tr><td class="hl">Single-agent</td><td>한 모델이 전체를 end-to-end RL — DeepResearcher, WebThinker, Search-R1</td></tr>
+            <tr><td class="hl">Multi-agent</td><td>plan·query·retrieve·write 분업 → 모듈 최적화·병렬 — AI Scientist, OpenResearcher</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, §6</span><span><b>09</b> / 12</span></div>
+    </section>
+
+    <!-- 10 · BENCHMARKS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>벤치마크 — 어디까지 평가하나</h2>
+        <p class="desc">평가 범위가 <b>4단계 중 어디를 덮느냐</b>로 갈린다. search-oriented는 P·QD·WE(찾기까지), research-oriented는 <b>RG(리포트 생성)까지</b> 전 파이프라인을 본다.</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:26%">벤치마크</th><th style="width:10%">P</th><th style="width:10%">QD</th><th style="width:10%">WE</th><th style="width:10%">RG</th><th>평가 지표</th></tr></thead>
+          <tbody>
+            <tr class="era"><td colspan="6">Search-oriented — 찾기/추론까지 (단답)</td></tr>
+            <tr><td class="hl">GAIA</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td class="ckno">○</td><td>Exact Match</td></tr>
+            <tr><td class="hl">BrowseComp</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td class="ckno">○</td><td>Accuracy · Calibration</td></tr>
+            <tr><td class="hl">Humanity's Last Exam</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td class="ckno">○</td><td>Accuracy · Calibration</td></tr>
+            <tr><td class="hl">Mind2Web 2 · WebArena · GPQA</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td class="ckno">○</td><td>Success Rate · Accuracy</td></tr>
+            <tr class="era"><td colspan="6">Research-oriented — 리포트 생성까지 (전 파이프라인)</td></tr>
+            <tr><td class="hl">DeepResearch Bench</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td>RACE (4차원) · Agreement</td></tr>
+            <tr><td class="hl">DeepResearchGym</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td>Precision·Recall·Insight</td></tr>
+            <tr><td class="hl">MedBrowseComp</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td class="ck">●</td><td>Accuracy (의료)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, Table 5 (P=Planning, QD=Question Dev, WE=Web Exploration, RG=Report Gen)</span><span><b>10</b> / 12</span></div>
+    </section>
+
+    <!-- 11 · FUTURE DIRECTIONS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>열린 과제 & 미래 방향</h2>
+        <p class="desc">서베이가 꼽는 다섯 가지 — 지금 deep research가 못 하는 것들. (네 연구 거리 후보)</p>
+      </div>
+      <div class="body solo">
+        <ul class="pts">
+          <li><b>① Multi-tool integration</b> — 지금은 검색엔진에만 의존. 실제 리서치엔 API·DB·코드 저장소·구조화 데이터 질의가 필요.</li>
+          <li><b>② Factuality</b> — 멀티소스 종합 시 사실 오류 위험. <span class="kw">명시적 grounding·출처 attribution</span> 메커니즘이 필요.</li>
+          <li><b>③ Multimodal reasoning</b> — 파이프라인이 거의 텍스트 전용. <span class="kw3">이미지·PDF·시각화·스캔 문서로 확장</span>(과학·의료·공학에 필수).</li>
+          <li><b>④ Workflow design & optimization</b> — task 간 일반화되는 workflow 학습 부재, 높은 학습비용·sparse reward.</li>
+          <li><b>⑤ Personalization</b> — 지속적 user modeling 부재. privacy-aware·continual learning 필요.</li>
+        </ul>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey, §7</span><span><b>11</b> / 12</span></div>
+    </section>
+
+    <!-- 12 · REFERENCES -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>참고 문헌</h2>
+        <p class="desc">원문과 핵심 인용. 본 자료는 서베이를 정리한 학습용 덱.</p>
+      </div>
+      <div class="body solo">
+        <ol class="refs">
+          <li><span>Zhang, Li, Jia, Zhao et al. <b>Deep Research: A Survey of Autonomous Research Agents.</b> <span class="src">2025.</span> <a href="https://arxiv.org/abs/2508.12752">arXiv:2508.12752</a> — 본 덱의 기반, Fig 1·Table 1–5 출처</span></li>
+          <li><span>§3 Question Developing 계열 — <b>Search-R1</b> <a href="https://arxiv.org/abs/2503.09516">2503.09516</a> · <b>R1-Searcher</b> <a href="https://arxiv.org/abs/2503.05592">2503.05592</a> · <b>Search-o1</b> <a href="https://arxiv.org/abs/2501.05366">2501.05366</a></span></li>
+          <li><span>§4·§5 계열 — <b>WebGPT</b> <a href="https://arxiv.org/abs/2112.09332">2112.09332</a> · <b>WebVoyager</b> · <b>WebThinker</b> <a href="https://arxiv.org/abs/2504.21776">2504.21776</a></span></li>
+          <li><span>벤치 — <b>GAIA</b> <a href="https://arxiv.org/abs/2311.12983">2311.12983</a> · <b>BrowseComp</b> <a href="https://arxiv.org/abs/2504.12516">2504.12516</a> · <b>HLE</b> <a href="https://arxiv.org/abs/2501.14249">2501.14249</a> · <b>DeepResearch Bench</b> <a href="https://arxiv.org/abs/2506.11763">2506.11763</a></span></li>
+          <li><span>연결 자료 — 같은 분야 입문 덱 <a href="deep-research.html">deep-research.html</a> · 소스 노트 research_note/DEEP_RESEARCH_PRIMER.md</span></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>12</b> / 12</span></div>
+    </section>
+
+  </main>
+
+  <script>
+    const deck=document.getElementById('deck');
+    const slides=[...deck.querySelectorAll('.slide')];
+    const dotsWrap=document.getElementById('dots');
+    const progress=document.getElementById('progress');
+    slides.forEach((s,i)=>{ const b=document.createElement('button'); b.addEventListener('click',()=>slides[i].scrollIntoView()); dotsWrap.appendChild(b); });
+    const dots=[...dotsWrap.children];
+    let current=0;
+    function setActive(i){ current=i; dots.forEach((d,k)=>d.classList.toggle('active',k===i)); progress.style.width=(i/(slides.length-1)*100)+'%'; }
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) setActive(slides.indexOf(e.target)); }),{threshold:0.6});
+    slides.forEach(s=>io.observe(s));
+    window.addEventListener('keydown',e=>{
+      if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); slides[Math.min(current+1,slides.length-1)].scrollIntoView(); }
+      else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); slides[Math.max(current-1,0)].scrollIntoView(); }
+    });
+    setActive(0);
+  </script>
+</body>
+</html>
