@@ -31,10 +31,11 @@
     .body.solo { display:flex; flex-direction:column; }
     .body.solo > * { flex:1; min-height:0; }
     .body.stack { display:flex; flex-direction:column; gap:1.6vh; }
-    .body.stack .col { flex:0 0 auto; justify-content:flex-start; }
-    .body.stack .eqs { height:auto; display:flex; flex-direction:column; gap:1.2vh; align-content:start; }
+    .body.stack .col { flex:1 1 auto; min-height:0; justify-content:center; }
+    .body.stack .eqs { height:100%; display:flex; flex-direction:column; justify-content:space-evenly; gap:1.2vh; align-content:start; }
     .body.stack .eqs .step { align-items:center; }
-    .body.stack .fig { flex:1; min-height:0; }
+    .body.stack .fig { flex:0 1 auto; min-height:0; max-height:50vh; }
+    .body.stack .fig img { flex:0 1 auto; height:auto; max-height:40vh; }
     .col { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:1.4vh; }
     ul.pts { list-style:none; height:100%; display:flex; flex-direction:column; justify-content:space-evenly; }
     ul.pts li { font-size:clamp(1.02rem,1.45vw,1.42rem); padding:0 0 0 1.8rem; position:relative; display:flex; align-items:center; flex:1; border-bottom:1px solid var(--rule-lt); }
@@ -146,6 +147,14 @@
         <p class="desc">인간은 방을 한 번 둘러보면 물체의 위치·크기를 머릿속에 재구성한다. 백만 단위 video로 학습한 MLLM도 같은 일을 할 수 있을까? — 모델에게 영상을 <b>보게(See)</b> 하고, 공간을 <b>기억(Remember)</b>·<b>회상(Recall)</b>하게 한다.</p>
       </div>
       <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">일상 직관</span><span class="ex">가구를 살 때 우리는 거실을 머릿속에 떠올려 cabinet이 들어갈지 가늠한다 — 한 번의 관찰만으로 공간을 <b>mental하게 재구성</b>한다</span></div>
+            <div class="step"><span class="lab">질문</span><span class="ex">million-scale video로 학습한 MLLM도 video 입력만으로 <b>"공간 안에서 사고(think in space)"</b>할 수 있는가</span></div>
+            <div class="step"><span class="lab">접근</span><span class="ex">영상을 <b>See</b> → 공간 배치를 <b>Remember</b> → 거리·개수·크기 질문에 <b>Recall</b>, 세 단계로 능력을 측정</span></div>
+            <div class="step"><span class="lab">관건</span><span class="ex">정확한 implicit <span class="kw">cognitive map</span>을 세울 수 있는가 — 이 논문의 출발 질문</span></div>
+          </div>
+        </div>
         <figure class="fig">
           <img src="img/thinking-in-space/teaser.png" alt="See, Remember, Recall teaser">
           <figcaption><b>Fig 1.</b> apartment·lab·factory 영상을 본 뒤(See), 공간의 물체 배치를 cognitive map으로 기억(Remember)하고, 거리·개수·크기 질문에 회상(Recall)한다.</figcaption>
@@ -184,6 +193,14 @@
         <p class="desc"><b>configurational</b>(object count·relative distance·relative direction·route plan), <b>measurement estimation</b>(object size·room size·absolute distance), <b>spatiotemporal</b>(appearance order). 답 형식에 따라 MCA 또는 NA(수치).</p>
       </div>
       <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">configurational</span><span class="ex">object count · relative distance · relative direction · route plan — 공간의 <b>구성</b>을 이해 (인간에게 직관적, 94~100%)</span></div>
+            <div class="step"><span class="lab">measurement</span><span class="ex">object size · room size · absolute distance — 정량 <b>추정</b>, embodied agent의 상호작용·navigation에 필수</span></div>
+            <div class="step"><span class="lab">spatiotemporal</span><span class="ex">appearance order — 영상에서 본 공간의 <b>등장 순서</b>를 기억 (visual working memory)</span></div>
+            <div class="step"><span class="lab">답 형식</span><span class="ex">객관식이면 <b>MCA</b>→Accuracy, 수치면 <b>NA</b>→MRA로 채점</span></div>
+          </div>
+        </div>
         <figure class="fig">
           <img src="img/thinking-in-space/task_demo.png" alt="VSI-Bench tasks demonstration">
           <figcaption><b>Fig 3.</b> 8개 task 예시. 가운데는 한 영상의 camera trajectory와 물체 배치. 수치 답(object size 등)과 객관식 답(relative direction 등)이 섞여 있다.</figcaption>
@@ -199,6 +216,14 @@
         <p class="desc">3D 실내 reconstruction 데이터셋(ScanNet·ScanNet++·ARKitScenes)을 <b>통일된 meta 포맷</b>으로 변환 → object 3D annotation으로 QA 자동 생성(+route plan은 사람) → 모든 단계에 <b>human-in-the-loop 검수</b>로 모호/오류 제거.</p>
       </div>
       <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">① unify</span><span class="ex">ScanNet·ScanNet++·ARKitScenes를 <b>dataset-agnostic한 unified meta-info</b>(object category·3D bbox·해상도·fps)로 표준화</span></div>
+            <div class="step"><span class="lab">② generate</span><span class="ex">meta-info + task별 question template로 QA를 <b>자동 생성</b> (route plan만 사람이 직접 annotation)</span></div>
+            <div class="step"><span class="lab">③ verify</span><span class="ex"><b>human-in-the-loop</b> 검수 — 모호/오류 문항을 발견하면 오류 소스를 역추적해 동일 원인의 문항을 일괄 수정 (bidirectional·iterative)</span></div>
+            <div class="step"><span class="lab">효과</span><span class="ex">기존 3D dataset의 정확한 object-level annotation을 재활용 → <span class="kw">영상만으로 답 가능한</span> 고품질 QA를 scale로 확보</span></div>
+          </div>
+        </div>
         <figure class="fig">
           <img src="img/thinking-in-space/benchmark_construction.png" alt="Benchmark curation pipeline">
           <figcaption><b>Fig 4.</b> 데이터 통합 → QA 생성(template + 사람) → 품질 검증. 기존 3D 데이터셋의 정확한 object-level annotation을 재활용해 영상만으로 답 가능한 질문을 만든다.</figcaption>
@@ -264,6 +289,7 @@
           <div class="eqs">
             <div class="step"><span class="lab">성공 (좌)</span><span class="ex">relative direction 정답 — <span class="kw2">"orient yourself → locate the dishwasher → visualize the quadrants"</span> 단계적 추론 + 강한 video understanding</span></div>
             <div class="step"><span class="lab">실패 (우)</span><span class="ex">route plan 오답 — 카메라가 우측 pan하자 <b>egocentric view에 갇혀 "turn right"</b>로 답 (allocentric 기준 정답은 <span class="kw3">turn left</span>) → ego-allo transformation 실패</span></div>
+            <div class="step"><span class="lab">공통점</span><span class="ex">두 사례 모두 timestamp 묘사·video 이해는 정확 — 무너지는 지점은 언제나 <b>spatial transformation</b>이다 (probing 방법: 오답 163개를 사람이 직접 검토)</span></div>
           </div>
         </div>
         <figure class="fig">
@@ -283,8 +309,9 @@
       <div class="body stack">
         <div class="col">
           <div class="eqs">
-            <div class="step"><span class="lab">finding</span><span class="ex"><span class="kw3">전체 error의 약 71%가 spatial reasoning</span>(relational + ego↔allo)에서 발생</span></div>
-            <div class="step"><span class="lab">시사점</span><span class="ex">spatial reasoning이 <b>VSI-Bench 성능의 1차 병목</b></span></div>
+            <div class="step"><span class="lab">4 error type</span><span class="ex">① visual perception(물체 미인식) ② linguistic(논리·수리) ③ relational reasoning ④ ego-allo transformation</span></div>
+            <div class="step"><span class="lab">finding</span><span class="ex"><span class="kw3">③+④ spatial reasoning이 전체 error의 약 71%</span> — ①②(시각·언어)는 소수</span></div>
+            <div class="step"><span class="lab">시사점</span><span class="ex">visual·linguistic·temporal 능력은 충분 → spatial reasoning이 <b>VSI-Bench 성능의 1차 병목</b></span></div>
           </div>
         </div>
         <figure class="fig">
@@ -304,8 +331,9 @@
       <div class="body stack">
         <div class="col">
           <div class="eqs">
-            <div class="step"><span class="lab">결과</span><span class="ex">CoT·ToT 약 −4%, self-consistency −1.1% (baseline 대비)</span></div>
-            <div class="step"><span class="lab">최악</span><span class="ex">room/object size는 <span class="kw3">−8~21%</span> — "더 생각하라"가 해로울 수 있음</span></div>
+            <div class="step"><span class="lab">기법</span><span class="ex">Zero-Shot <b>CoT</b>("Let's think step by step") · <b>Self-Consistency</b>(temp 1.0, 5회 다수결) · <b>ToT</b>(plan 생성→후보 답 선택)</span></div>
+            <div class="step"><span class="lab">결과</span><span class="ex">CoT·ToT 약 <span class="kw3">−4%</span>, self-consistency −1.1% (baseline 대비). room/object size는 <span class="kw3">−8~21%</span></span></div>
+            <div class="step"><span class="lab">대조</span><span class="ex">같은 CoT가 일반 video 벤치 <b>VideoMME에선 +1.6%</b>(77.2→79.8) → 언어 능력만으론 VSI-Bench가 안 풀린다</span></div>
           </div>
         </div>
         <figure class="fig">
@@ -323,6 +351,14 @@
         <p class="desc">모델에게 영상 속 물체 중심을 <b>10×10 grid</b>에 찍어 cognitive map(내부 공간 표현)을 그리게 한다 — 모델이 공간을 어떻게 "기억"하는지 시각화.</p>
       </div>
       <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">방법</span><span class="ex">Gemini-1.5 Pro에게 영상을 보고 <b>10×10 grid</b>에 각 물체 중심 좌표를 찍게 함 (grid size는 ablation으로 검증)</span></div>
+            <div class="step"><span class="lab">측정</span><span class="ex">map 내 모든 물체 <b>쌍의 grid Euclidean distance</b>를 GT cognitive map과 비교 — ±1 grid 이내면 correct</span></div>
+            <div class="step"><span class="lab">관찰</span><span class="ex">인접 물체 배치는 잘 맞히나 <span class="kw3">거리가 멀어질수록 급감</span> → 다음 슬라이드의 locality 분석으로 이어짐</span></div>
+            <div class="step"><span class="lab">의미</span><span class="ex">discrete video frame에서 <b>global 공간 표현</b>을 통합하는 것은 본질적으로 어렵다</span></div>
+          </div>
+        </div>
         <figure class="fig">
           <img src="img/thinking-in-space/cog_map.png" alt="Cognitive maps GT vs prediction">
           <figcaption><b>Fig 9.</b> Ground Truth vs MLLM 예측 cognitive map. 인접한 물체의 상대 배치는 곧잘 맞히지만, 멀리 떨어진 물체끼리의 전역 배치는 어긋난다.</figcaption>
