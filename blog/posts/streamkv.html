@@ -48,6 +48,8 @@
     .step { padding:.8rem 1.1rem; background:#fff; border-left:3px solid var(--accent); border-radius:0 4px 4px 0; }
     .lab { font-family:var(--sans); font-size:var(--fs-min); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:.25rem; display:block; }
     .ex { font-size:var(--fs-body); line-height:1.4; color:#222; }
+    .ex .katex-display { margin:.35em 0; }
+    .ex .katex { font-size:1.02em; }
     .kw  { background:#fef3c7; padding:0 .2em; border-radius:2px; }
     .kw2 { background:#d4f7d4; padding:0 .2em; border-radius:2px; }
     .kw3 { background:#ffd6d6; padding:0 .2em; border-radius:2px; }
@@ -283,19 +285,19 @@
           <div class="eqs">
             <div class="step">
               <span class="lab">경계 탐지 &mdash; Cosine Similarity</span>
-              <span class="ex">$$s_t = \frac{f_{t-1} \cdot f_t}{\|f_{t-1}\|\,\|f_t\|}$$인접 프레임 임베딩 사이 similarity. $s_t \le \theta$ (threshold 0.99)이면 새 세그먼트 시작.</span>
+              <span class="ex">인접 프레임 임베딩의 similarity $s_t = \frac{f_{t-1} \cdot f_t}{\|f_{t-1}\|\,\|f_t\|}$ 를 매 프레임 계산. $s_t \le \theta$ (0.99)이면 씬 전환 &#8594; 새 세그먼트 시작.</span>
             </div>
             <div class="step">
               <span class="lab">길이 제약</span>
-              <span class="ex"><b>Exclusion window</b> ($m=4$): boundary 주변에서 추가 boundary 금지 &#8594; 너무 짧은 세그먼트 방지.<br><b>최대 길이</b> $M=64$: 초과 시 segment merging (다음 슬라이드). 결과적으로 $T_i \in [m, M]$.</span>
+              <span class="ex"><b>Exclusion window</b> $m=4$: boundary 직후 재분할 금지. <b>최대 길이</b> $M=64$: 초과 시 merging. 결과적으로 $T_i \in [m, M]$.</span>
             </div>
             <div class="step">
               <span class="lab">Summary Vector</span>
-              <span class="ex">$$f_s^i = \frac{1}{T_i}\sum_{t=1}^{T_i} f_t^i$$공간 위치별 프레임 평균 &#8594; 세그먼트 대표. <span class="kw2">압축 제외, KV Bank에 항상 보존.</span></span>
+              <span class="ex">$f_s^i = \frac{1}{T_i}\sum_{t=1}^{T_i} f_t^i$ &mdash; 공간 위치별 프레임 평균, 세그먼트의 대표. <span class="kw2">압축 제외, KV Bank에 항상 보존.</span></span>
             </div>
             <div class="step">
               <span class="lab">Representative Key (검색 인덱스)</span>
-              <span class="ex">$$\mathbf{r}_m^i = \frac{1}{P^2}\sum_{p=1}^{P^2} \mathbf{k}_{m,p}^i \in \mathbb{R}^{D'}$$각 frame-level KV 블록의 patch-wise key 평균. Compression/Retrieval 모두 이 벡터로 계산.</span>
+              <span class="ex">$\mathbf{r}_m^i = \frac{1}{P^2}\sum_{p} \mathbf{k}_{m,p}^i \in \mathbb{R}^{D'}$ &mdash; 각 KV 블록의 patch-wise key 평균. Compression/Retrieval 모두 이 벡터로 계산.</span>
             </div>
           </div>
         </div>
@@ -322,7 +324,7 @@
             </div>
             <div class="step">
               <span class="lab">Step 2 &mdash; 평균 병합</span>
-              <span class="ex">$$f_j' = \frac{f_j + f_{j+1}}{2}$$두 프레임을 하나의 merged feature로 교체. 세그먼트 길이 $T_i \to T_i - 1$.</span>
+              <span class="ex">$f_j' = \frac{1}{2}(f_j + f_{j+1})$ &mdash; 두 프레임을 하나의 merged feature로 교체. 세그먼트 길이 $T_i \to T_i - 1$.</span>
             </div>
             <div class="step">
               <span class="lab">Step 3 &mdash; Similarity 재계산</span>
@@ -490,15 +492,15 @@
           <div class="eqs">
             <div class="step">
               <span class="lab">왜 Question-based 압축이 안 되는가</span>
-              <span class="ex">SnapKV, FastV 등은 user question query 벡터를 criterion으로 사용. 스트리밍에선 세그먼트 인코딩 <b>즉시</b> 압축해야 하며, 질문은 나중에 도달한다. Multi-turn dialogue도 지원해야 하므로 특정 질문에 최적화 불가.</span>
+              <span class="ex">SnapKV, FastV 등은 user question을 criterion으로 사용. 스트리밍에선 인코딩 <b>즉시</b> 압축해야 하는데 질문은 나중에 도달 &mdash; multi-turn까지 고려하면 특정 질문에 최적화 불가.</span>
             </div>
             <div class="step">
               <span class="lab">해결: Guidance Prompt Criterion</span>
-              <span class="ex">고정된 guidance prompt를 criterion으로 사용. Criterion 벡터:$$\mathbf{g}^l = \frac{1}{N_g}\sum_{k=1}^{N_g}\mathbf{g}_k^l$$레이어 $l$에서 guidance prompt의 query 벡터 평균.</span>
+              <span class="ex">고정된 guidance prompt의 query 벡터 평균 $\mathbf{g}^l = \frac{1}{N_g}\sum_{k}\mathbf{g}_k^l$ 을 레이어 $l$의 criterion으로 사용.</span>
             </div>
             <div class="step">
               <span class="lab">압축 budget</span>
-              <span class="ex">압축률 $\theta$, 세그먼트 길이 $T_i$, 레이어 수 $L$:$$N = \lceil(1-\theta)T_i\rceil \times L$$Summary KV 블록 $\mathbf{b}_s^{i,l}$은 <span class="kw2">압축 제외, 항상 보존.</span></span>
+              <span class="ex">압축률 $\theta$에 대해 $N = \lceil(1-\theta)T_i\rceil \times L$. Summary KV 블록 $\mathbf{b}_s^{i,l}$은 <span class="kw2">압축 제외, 항상 보존.</span></span>
             </div>
           </div>
         </div>
@@ -526,19 +528,19 @@
           <div class="eqs">
             <div class="step">
               <span class="lab">Question Criterion Vector</span>
-              <span class="ex">$$\mathbf{q}^l = \frac{1}{N_q}\sum_{k=1}^{N_q}\mathbf{q}_k^l \in \mathbb{R}^{D'}$$레이어 $l$에서 질문 토큰의 query 벡터 평균. Retrieval budget: $N = N_r \times L$ ($N_r = 8$).</span>
+              <span class="ex">질문 토큰의 query 벡터 평균 $\mathbf{q}^l = \frac{1}{N_q}\sum_{k}\mathbf{q}_k^l$. Retrieval budget $N = N_r \times L$ ($N_r = 8$ frames).</span>
             </div>
             <div class="step">
               <span class="lab">Retrieval</span>
-              <span class="ex">$$\{\mathcal{I}_l\}_{l=1}^L = \mathrm{SelectKV}(\{\mathcal{R}_l, \mathbf{q}^l\}_{l=1}^L, N)$$Compression과 <b>완전히 동일한 SelectKV</b> &mdash; criterion만 guidance prompt &#8594; 질문 벡터로 교체.</span>
+              <span class="ex">$\{\mathcal{I}_l\} = \mathrm{SelectKV}(\{\mathcal{R}_l, \mathbf{q}^l\}, N)$ &mdash; Compression과 <b>완전히 동일한 함수</b>, criterion만 질문 벡터로 교체.</span>
             </div>
             <div class="step">
               <span class="lab">Positional Encoding (RoPE)</span>
-              <span class="ex"><b>인코딩 시:</b> Local window 내에서만 RoPE 적용 (LM-Infinite 방식) &mdash; distant token attention 억제 완화.<br><b>QA 시:</b> Retrieved token을 <b>절대 위치 아닌 상대 위치</b>로 연속 취급.</span>
+              <span class="ex"><b>인코딩:</b> local window 내에서만 RoPE (LM-Infinite). <b>QA:</b> retrieved token을 절대 위치가 아닌 <b>상대 위치</b>로 연속 취급.</span>
             </div>
             <div class="step">
               <span class="lab">핵심 관찰</span>
-              <span class="ex">Retrieved frames 수 증가 &#8594; StreamKV 정확도 <span class="kw3">하락</span>. Retrieval precision이 높아 추가 프레임은 noise. ReKV는 반대 &mdash; 더 많이 검색해야 관련 프레임을 찾음.</span>
+              <span class="ex">Retrieved frames 늘리면 StreamKV는 정확도 <span class="kw3">하락</span> &mdash; precision이 높아 추가 프레임은 noise. ReKV는 반대.</span>
             </div>
           </div>
         </div>
