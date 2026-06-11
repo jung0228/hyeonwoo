@@ -1,519 +1,672 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StreamKV – Hyeonwoo Jung</title>
+  <title>StreamKV — Hyeonwoo Jung</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
-      onload="renderMathInElement(document.body, {
-        delimiters: [
-          {left:'$$',right:'$$',display:true},
-          {left:'$',right:'$',display:false}
-        ]
-      });"></script>
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
   <style>
     :root {
-      --bg:#f9f8f4; --text:#0f0f0f; --muted:#6b6b6b;
-      --accent:#1a56c4; --rule:#999; --rule-lt:#d8d8d2; --bg2:#efede6;
+      --bg:#f9f8f4; --text:#0f0f0f; --muted:#6b6b6b; --accent:#1a56c4;
+      --rule:#999; --rule-lt:#d8d8d2; --bg2:#efede6;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --fs-title: clamp(48px, 6.2vh, 58px);
+      --fs-head:  clamp(32px, 3.7vh, 42px);
+      --fs-body:  clamp(24px, 2.7vh, 30px);
+      --fs-min:   24px;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',Georgia,serif; line-height:1.7; }
-
-    nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(249,248,244,.96); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule-lt); display:flex; justify-content:space-between; align-items:center; padding:0 3rem; height:50px; font-family:-apple-system,BlinkMacSystemFont,sans-serif; }
-    .nav-logo { font-weight:700; font-size:.88rem; color:var(--text); text-decoration:none; letter-spacing:.03em; }
-    .nav-links { display:flex; gap:2rem; list-style:none; }
-    .nav-links a { font-size:.8rem; color:var(--muted); text-decoration:none; transition:color .15s; }
-    .nav-links a:hover, .nav-links .active { color:var(--accent); font-weight:600; }
-
-    .masthead { max-width:1080px; margin:0 auto; padding:72px 3rem 0; }
-    .masthead-bar { height:3px; background:var(--text); }
-    .masthead-inner { border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:1.1rem 0 1rem; margin-top:5px; text-align:center; }
-    .masthead-title { font-family:'Playfair Display',Georgia,serif; font-size:clamp(2.6rem,5vw,4rem); font-weight:800; letter-spacing:-.02em; line-height:1; color:var(--text); }
-    .masthead-sub { margin-top:.45rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
-
-    .filter-bar { position:sticky; top:50px; z-index:99; background:var(--bg); }
-    .filter-bar-inner-wrap { max-width:1080px; margin:0 auto; padding:0 3rem; }
-    .filter-inner { display:flex; border-bottom:3px double var(--text); }
-    .tag-btn { background:none; border:none; flex:1; text-align:center; padding:.6rem .5rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); cursor:pointer; border-right:1px solid var(--rule-lt); transition:color .15s; }
-    .tag-btn:last-child { border-right:none; }
-    .tag-btn:hover, .tag-btn.active { color:var(--accent); }
-
-    .article-wrap { max-width:1080px; margin:0 auto; padding:2rem 3rem 7rem; }
-    h1.post-title { font-family:'Playfair Display',Georgia,serif; font-size:1.55rem; font-weight:700; line-height:1.3; color:var(--text); margin-bottom:.95rem; }
-    .post-dek { font-family:'Playfair Display',Georgia,serif; font-size:1.15rem; font-style:italic; color:var(--muted); line-height:1.7; margin-bottom:1.3rem; }
-    .post-meta { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.7rem; color:var(--muted); display:flex; gap:.55rem; align-items:center; margin-bottom:2rem; }
-    .post-meta .dot { color:var(--rule-lt); }
-    .post-meta .cat { color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
-
-    .post-content h2 { font-family:'Playfair Display',Georgia,serif; font-size:1.45rem; font-weight:700; color:var(--text); margin:3rem 0 .9rem; padding-top:1.5rem; border-top:1px solid var(--rule-lt); }
-    .post-content h2.no-rule { border-top:none; padding-top:0; }
-    .post-content h3 { font-family:'Playfair Display',Georgia,serif; font-size:1.1rem; font-weight:700; font-style:italic; color:var(--text); margin:2rem 0 .55rem; }
-    .post-content p { font-size:1.02rem; line-height:1.88; color:var(--text); margin-bottom:1.35rem; }
-    .post-content ul, .post-content ol { padding-left:1.6rem; margin-bottom:1.35rem; }
-    .post-content li { font-size:1.02rem; line-height:1.8; color:var(--text); margin-bottom:.4rem; }
-    .post-content strong { color:var(--text); font-weight:600; }
-    .post-content a { color:var(--accent); text-decoration:underline; text-underline-offset:2px; }
-
-    .math-block { background:var(--bg2); border:1px solid var(--rule-lt); border-radius:6px; padding:1.2rem 1.8rem; margin:1.5rem 0; overflow-x:auto; text-align:center; }
-    .math-block .math-label { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--accent); margin-bottom:.6rem; text-align:left; }
-    .math-block p { font-size:.85rem; color:var(--muted); margin-top:.5rem; margin-bottom:0; text-align:center; }
-
-    .def-box { border:1px solid var(--rule-lt); border-left:3px solid var(--text); padding:1.1rem 1.4rem; margin:1.8rem 0; background:var(--bg); }
-    .def-box .def-title { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:.55rem; }
-    .def-box p { margin-bottom:.5rem; font-size:.98rem; }
-    .def-box p:last-child { margin-bottom:0; }
-
-    .pullquote { border-bottom:1px solid var(--rule-lt); margin:2.6rem 0; padding:1.4rem 0 1.3rem; font-family:'Playfair Display',Georgia,serif; font-size:1.2rem; font-style:italic; color:var(--text); line-height:1.65; }
-    .pullquote strong { font-style:normal; font-weight:700; }
-
-    .callout { background:var(--bg2); border-left:3px solid var(--accent); padding:1.1rem 1.4rem; margin:1.8rem 0; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.9rem; color:var(--muted); line-height:1.7; }
-    .callout strong { color:var(--text); }
-
-    code { background:var(--bg2); border:1px solid var(--rule-lt); border-radius:3px; padding:.1rem .4rem; font-size:.85em; font-family:'SF Mono','Fira Code',monospace; }
-
-    .ornament { text-align:center; color:var(--rule); font-size:1.1rem; letter-spacing:.6em; margin:2.8rem 0; }
-
-    .result-table { width:100%; border-collapse:collapse; margin:1.5rem 0 2rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.82rem; }
-    .result-table th { background:var(--bg2); border:1px solid var(--rule-lt); padding:.55rem .8rem; text-align:center; font-weight:700; color:var(--text); letter-spacing:.04em; }
-    .result-table td { border:1px solid var(--rule-lt); padding:.5rem .8rem; text-align:center; color:var(--muted); }
-    .result-table td:first-child { text-align:left; font-weight:600; color:var(--text); }
-    .result-table .highlight { color:var(--accent); font-weight:700; }
-
-    .fig-breakdown { padding:.5rem 0 0; display:flex; flex-direction:column; gap:.45rem; margin-bottom:1.8rem; }
-    .fig-breakdown-item { display:flex; gap:.9rem; align-items:flex-start; padding:.75rem 1rem; border-radius:6px; cursor:pointer; transition:background .15s; border:1px solid transparent; }
-    .fig-breakdown-item:hover { background:var(--bg2); }
-    .fig-breakdown-item.open { background:var(--bg2); border-color:var(--rule-lt); }
-    .fig-bd-num { width:22px; height:22px; border-radius:50%; background:var(--rule-lt); color:var(--muted); font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.68rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s,color .15s; margin-top:.1rem; }
-    .fig-breakdown-item.open .fig-bd-num { background:var(--accent); color:#fff; }
-    .fig-bd-body { flex:1; }
-    .fig-bd-title { font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.82rem; font-weight:700; color:var(--text); display:flex; justify-content:space-between; align-items:center; }
-    .fig-bd-arrow { font-size:.65rem; color:var(--muted); transition:transform .2s; }
-    .fig-breakdown-item.open .fig-bd-arrow { transform:rotate(180deg); }
-    .fig-bd-desc { display:none; margin-top:.4rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.82rem; color:var(--muted); line-height:1.65; }
-    .fig-breakdown-item.open .fig-bd-desc { display:block; }
-
-    .paper-badge { display:inline-flex; align-items:center; gap:.5rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; background:var(--bg2); border:1px solid var(--rule-lt); border-radius:4px; padding:.3rem .7rem; color:var(--muted); margin-bottom:1.6rem; }
-    .paper-badge .venue { color:var(--accent); }
-
-    footer { border-top:3px double var(--text); text-align:center; padding:2rem; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:.7rem; color:var(--muted); letter-spacing:.06em; }
-
-    @media (max-width:768px) { .masthead-title{font-size:2.4rem;} .tag-btn{font-size:.62rem;padding:.55rem .3rem;letter-spacing:.06em;} .article-wrap{padding-left:2rem;padding-right:2rem;} }
-    @media (max-width:600px) { nav{padding:0 1.4rem;} nav .nav-links{display:none;} .masthead{padding-left:1.4rem;padding-right:1.4rem;} .filter-bar-inner-wrap{padding-left:1.4rem;padding-right:1.4rem;} .article-wrap{padding-left:1.4rem;padding-right:1.4rem;} .masthead-title{font-size:1.9rem;} .tag-btn{font-size:.58rem;letter-spacing:.04em;padding:.5rem .2rem;} h1.post-title{font-size:1.35rem;} .post-dek{font-size:1rem;} .post-content h2{font-size:1.2rem;} }
+    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',Georgia,serif; line-height:1.55; overflow:hidden; }
+    .deck { height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; }
+    .deck::-webkit-scrollbar { display:none; }
+    .slide { height:100vh; scroll-snap-align:start; scroll-snap-stop:always; display:flex; flex-direction:column; overflow:hidden; padding:6.4vh 4.5vw 4.4vh; position:relative; max-width:1680px; margin:0 auto; }
+    .s-head { border-bottom:2px solid var(--text); padding-bottom:1.1vh; margin-bottom:2.2vh; }
+    .slide h2 { font-family:'Playfair Display',Georgia,serif; font-weight:800; letter-spacing:-.02em; line-height:1.04; font-size:var(--fs-title); }
+    .desc { font-size:var(--fs-body); line-height:1.4; color:#333; max-width:none; margin-top:1vh; }
+    .body { flex:1; min-height:0; display:grid; grid-template-columns:1.05fr 1fr; gap:3vw; align-items:stretch; }
+    .body.solo { display:flex; flex-direction:column; }
+    .body.solo > * { flex:1; min-height:0; }
+    .body.stack { display:flex; flex-direction:column; gap:1.6vh; }
+    .body.stack .col { flex:0 0 auto; }
+    .body.stack .eqs { height:auto; display:grid; grid-template-columns:1fr 1fr; gap:1.2vh 4vw; align-content:start; }
+    .body.stack .fig { flex:1; min-height:0; }
+    .col { min-width:0; display:flex; flex-direction:column; justify-content:center; }
+    ul.pts { list-style:none; height:100%; display:flex; flex-direction:column; justify-content:space-evenly; }
+    ul.pts li { font-size:var(--fs-body); line-height:1.35; padding:0 0 0 1.8rem; position:relative; display:flex; align-items:center; flex:1; border-bottom:1px solid var(--rule-lt); }
+    ul.pts li:last-child { border-bottom:none; }
+    ul.pts li::before { content:"→"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+    ul.pts li b { font-weight:600; }
+    .col p { font-size:var(--fs-body); line-height:1.4; color:#222; }
+    .eqs { display:flex; flex-direction:column; gap:1vh; height:100%; justify-content:space-evenly; }
+    .step { padding:.8rem 1.1rem; background:#fff; border-left:3px solid var(--accent); border-radius:0 4px 4px 0; }
+    .lab { font-family:var(--sans); font-size:var(--fs-min); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:.25rem; display:block; }
+    .ex { font-size:var(--fs-body); line-height:1.4; color:#222; }
+    .kw  { background:#fef3c7; padding:0 .2em; border-radius:2px; }
+    .kw2 { background:#d4f7d4; padding:0 .2em; border-radius:2px; }
+    .kw3 { background:#ffd6d6; padding:0 .2em; border-radius:2px; }
+    .fig { background:#fff; border:1px solid var(--rule-lt); border-radius:6px; padding:1.2rem; display:flex; flex-direction:column; min-height:0; overflow:hidden; box-shadow:0 1px 0 rgba(0,0,0,.04); }
+    .fig img, .fig svg { width:100%; flex:1; min-height:0; max-height:100%; object-fit:contain; display:block; }
+    .fig figcaption { font-family:var(--sans); font-size:var(--fs-min); color:var(--muted); margin-top:.6rem; line-height:1.3; }
+    .fig figcaption b { color:var(--text); }
+    table { width:100%; height:100%; border-collapse:collapse; font-family:var(--sans); }
+    th,td { text-align:left; padding:.22rem 1.1rem; vertical-align:middle; border-bottom:1px solid var(--rule-lt); font-size:var(--fs-body); line-height:1.28; }
+    thead th { font-size:var(--fs-min); letter-spacing:.04em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--text); padding-bottom:1.1vh; }
+    tbody td { height:1px; }
+    td.hl { font-weight:700; color:var(--accent); }
+    td.hl2 { font-weight:700; color:#1a7a3a; }
+    .title-slide { justify-content:center; }
+    .title-slide .masthead-mini { font-family:var(--sans); font-size:var(--fs-min); letter-spacing:.18em; text-transform:uppercase; color:var(--muted); border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:.45rem 0; display:inline-block; margin-bottom:2.5vh; }
+    .title-slide h1 { font-family:'Playfair Display',serif; font-weight:800; letter-spacing:-.02em; line-height:1; font-size:clamp(58px,9vw,108px); }
+    .title-slide .lead { font-family:'Playfair Display',serif; font-style:italic; color:var(--muted); font-size:var(--fs-head); line-height:1.35; max-width:none; margin-top:2.2vh; }
+    .title-slide .by { font-family:var(--sans); font-size:var(--fs-min); color:var(--muted); margin-top:3.2vh; }
+    ol.agenda { list-style:none; counter-reset:ag; display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:1fr; gap:0 5vw; height:100%; }
+    ol.agenda li { counter-increment:ag; display:flex; gap:1.3rem; align-items:center; border-bottom:1px solid var(--rule-lt); }
+    ol.agenda li::before { content:counter(ag,decimal-leading-zero); font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(1.6rem,2.6vw,2.4rem); color:var(--accent); min-width:2.4ch; }
+    ol.agenda .t { font-size:var(--fs-body); font-weight:600; line-height:1.25; }
+    ol.agenda .d { font-family:var(--sans); font-size:var(--fs-min); color:var(--muted); display:block; margin-top:.15rem; font-weight:400; }
+    ol.refs { list-style:none; counter-reset:rf; display:flex; flex-direction:column; height:100%; }
+    ol.refs li { counter-increment:rf; position:relative; padding-left:2.8rem; flex:1; display:flex; align-items:center; border-bottom:1px solid var(--rule-lt); font-family:var(--sans); font-size:var(--fs-body); line-height:1.3; }
+    ol.refs li:last-child { border-bottom:none; }
+    ol.refs li::before { content:"["counter(rf)"]"; position:absolute; left:0; color:var(--accent); font-weight:700; font-family:'Playfair Display',serif; font-size:1.1em; }
+    ol.refs a { color:var(--accent); text-decoration:none; }
+    ol.refs a:hover { text-decoration:underline; }
+    ol.refs .src { color:var(--muted); }
+    .s-foot { position:absolute; left:4.5vw; right:4.5vw; bottom:1.4vh; display:flex; gap:1.5rem; justify-content:space-between; align-items:baseline; font-family:var(--sans); font-size:var(--fs-min); color:var(--muted); letter-spacing:.02em; }
+    .s-foot b { color:var(--text); }
+    .s-foot span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .s-foot span:last-child { white-space:nowrap; }
+    .progress { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--accent); z-index:200; transition:width .15s; }
+    .dots { position:fixed; right:1.4rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.7rem; z-index:200; }
+    .dots button { width:9px; height:9px; border-radius:50%; border:1.5px solid var(--rule); background:transparent; cursor:pointer; padding:0; transition:.2s; }
+    .dots button.active { background:var(--accent); border-color:var(--accent); transform:scale(1.3); }
+    .back-link { position:fixed; left:1rem; top:.6rem; z-index:200; font-family:var(--sans); font-size:var(--fs-min); color:var(--muted); text-decoration:none; }
+    .back-link:hover { color:var(--accent); }
+    @media (max-width:780px){
+      .slide{ overflow-y:auto; }
+      .body{ grid-template-columns:1fr; gap:1.4rem; }
+      .body.solo > * { flex:none; }
+      .dots{ display:none; }
+      ul.pts li{ flex:none; padding:.7rem 0 .7rem 1.8rem; }
+      ol.agenda{ grid-template-columns:1fr; grid-auto-rows:auto; }
+      ol.agenda li{ padding:1rem 0; }
+      ol.refs li{ flex:none; padding:.8rem 0 .8rem 2.8rem; }
+      table{ height:auto; }
+      .fig img{ max-height:38vh; }
+    }
   </style>
 </head>
 <body>
+  <div class="progress" id="progress"></div>
+  <a href="../index.html" class="back-link">&#8592; Index</a>
+  <nav class="dots" id="dots"></nav>
+  <main class="deck" id="deck">
 
-<nav>
-  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
-  <ul class="nav-links">
-    <li><a href="../../index.html">Home</a></li>
-    <li><a href="../index.html" class="active">Blog</a></li>
-  </ul>
-</nav>
+    <!-- 1 TITLE -->
+    <section class="slide title-slide">
+      <span class="masthead-mini">Hyeonwoo Jung &middot; Deep Dive &middot; AAAI 2026</span>
+      <h1>StreamKV</h1>
+      <p class="lead">스트리밍 비디오에서 KV 캐시를 어떻게<br>압축하고 정밀하게 검색할 것인가.</p>
+      <p class="by">13 min read &middot; Video &middot; LLM &middot; Chen et al., 2025</p>
+    </section>
 
-<div class="masthead">
-  <div class="masthead-bar"></div>
-  <div class="masthead-inner">
-    <h1 class="masthead-title">Research Blog</h1>
-    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
-  </div>
-</div>
+    <!-- 2 AGENDA -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>오늘 다룰 흐름</h2>
+        <p class="desc">Streaming VQA의 근본적 어려움부터, StreamKV의 세 가지 핵심 모듈까지.</p>
+      </div>
+      <div class="body solo">
+        <ol class="agenda">
+          <li><div><span class="t">Streaming VQA</span><span class="d">오프라인 Video-LLM이 실시간에 맞지 않는 이유</span></div></li>
+          <li><div><span class="t">ReKV의 한계</span><span class="d">선행 연구가 남긴 세 가지 미해결 문제</span></div></li>
+          <li><div><span class="t">전체 워크플로우</span><span class="d">StreamKV 파이프라인 한눈에 보기</span></div></li>
+          <li><div><span class="t">Semantic Segmentation</span><span class="d">Cosine similarity 기반 동적 분할 + Summary Vector</span></div></li>
+          <li><div><span class="t">Layer-Adaptive KV Selection</span><span class="d">Compression과 Retrieval을 통합한 핵심 알고리즘</span></div></li>
+          <li><div><span class="t">Compression &middot; Retrieval &middot; 결과</span><span class="d">Guidance Prompt, QA 생성, StreamingBench 실험</span></div></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>02</b> / 13</span></div>
+    </section>
 
-<div class="filter-bar">
-  <div class="filter-bar-inner-wrap">
-  <div class="filter-inner">
-    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
-    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
-    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
-    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
-    <button class="tag-btn active" onclick="location.href='../index.html?tag=Video'">Video</button>
-    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
-  </div>
-  </div>
-</div>
+    <!-- 3 STREAMING VQA -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>Streaming VQA가 어려운 이유</h2>
+        <p class="desc">오프라인 Video-LLM은 전체 비디오를 한 번에 처리한다. 실시간 스트리밍 환경에서는 이 패러다임이 근본적으로 맞지 않는다.</p>
+      </div>
+      <div class="body">
+        <div class="col">
+          <ul class="pts">
+            <li><b>끝없는 스트림:</b> 비디오가 언제 끝날지 모른다. 전체 입력이 확정돼야 처리할 수 있는 오프라인 모델은 사용 불가.</li>
+            <li><b>On-the-fly 질문:</b> 사용자 질문은 임의 timestamp에 도달한다. "지금까지 본 것"만으로 즉시 답해야 한다.</li>
+            <li><b>메모리 선형 증가:</b> 모든 프레임의 KV 캐시를 보존하면 비디오 길이 $T$에 비례해 GPU 메모리 증가 &mdash; 수천 프레임에서 OOM.</li>
+            <li><b>실제 응용:</b> 자율주행, Embodied AI, AR 기기 &mdash; 모두 실시간 응답이 전제.</li>
+          </ul>
+        </div>
+        <figure class="fig">
+          <svg viewBox="0 0 540 460" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--sans)">
+            <defs>
+              <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#999"/></marker>
+              <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/></marker>
+            </defs>
+            <!-- OFFLINE row -->
+            <text x="270" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#0f0f0f">Offline</text>
+            <rect x="10" y="42" width="520" height="110" rx="8" fill="#efede6" stroke="#d8d8d2"/>
+            <rect x="26" y="64" width="38" height="38" rx="4" fill="#c5d5f0"/><text x="45" y="88" text-anchor="middle" font-size="15" fill="#1a56c4">F1</text>
+            <rect x="70" y="64" width="38" height="38" rx="4" fill="#c5d5f0"/><text x="89" y="88" text-anchor="middle" font-size="15" fill="#1a56c4">F2</text>
+            <rect x="114" y="64" width="38" height="38" rx="4" fill="#c5d5f0"/><text x="133" y="88" text-anchor="middle" font-size="15" fill="#1a56c4">F3</text>
+            <text x="175" y="88" text-anchor="middle" font-size="20" fill="#999">&#8230;</text>
+            <rect x="194" y="64" width="38" height="38" rx="4" fill="#c5d5f0"/><text x="213" y="88" text-anchor="middle" font-size="15" fill="#1a56c4">FN</text>
+            <line x1="240" y1="83" x2="278" y2="83" stroke="#999" stroke-width="2" marker-end="url(#a1)"/>
+            <rect x="280" y="58" width="72" height="48" rx="6" fill="#1a56c4"/>
+            <text x="316" y="80" text-anchor="middle" font-size="16" fill="#fff" font-weight="700">VLM</text>
+            <text x="316" y="98" text-anchor="middle" font-size="13" fill="#c5d5f0">offline</text>
+            <line x1="352" y1="83" x2="390" y2="83" stroke="#999" stroke-width="2" marker-end="url(#a1)"/>
+            <rect x="392" y="62" width="118" height="42" rx="4" fill="#d4f7d4" stroke="#aed6ae"/>
+            <text x="451" y="89" text-anchor="middle" font-size="16" fill="#1a7a3a" font-weight="700">Answer</text>
+            <text x="270" y="136" text-anchor="middle" font-size="16" fill="#6b6b6b">모든 프레임 로드 후 일괄 처리 &mdash; 스트리밍 불가</text>
+            <!-- ONLINE row -->
+            <text x="270" y="178" text-anchor="middle" font-size="20" font-weight="700" fill="#0f0f0f">Online (Streaming)</text>
+            <rect x="10" y="190" width="520" height="250" rx="8" fill="#efede6" stroke="#d8d8d2"/>
+            <rect x="26" y="212" width="34" height="34" rx="4" fill="#c5d5f0"/><text x="43" y="234" text-anchor="middle" font-size="14" fill="#1a56c4">F1</text>
+            <rect x="66" y="212" width="34" height="34" rx="4" fill="#c5d5f0"/><text x="83" y="234" text-anchor="middle" font-size="14" fill="#1a56c4">F2</text>
+            <rect x="106" y="212" width="34" height="34" rx="4" fill="#c5d5f0"/><text x="123" y="234" text-anchor="middle" font-size="14" fill="#1a56c4">F3</text>
+            <text x="162" y="234" text-anchor="middle" font-size="18" fill="#999">&#8230;</text>
+            <rect x="178" y="212" width="34" height="34" rx="4" fill="#ffd6d6" stroke="#e8a0a0"/><text x="195" y="234" text-anchor="middle" font-size="14" fill="#c0392b">Ft</text>
+            <text x="232" y="234" text-anchor="middle" font-size="18" fill="#bbb">&#8230;</text>
+            <rect x="248" y="212" width="34" height="34" rx="4" fill="#e0e0e0"/><text x="265" y="234" text-anchor="middle" font-size="14" fill="#999">?</text>
+            <line x1="26" y1="256" x2="284" y2="256" stroke="#1a56c4" stroke-width="2.5" stroke-dasharray="6,3"/>
+            <text x="155" y="278" text-anchor="middle" font-size="15" fill="#1a56c4">스트리밍 중&#8230;</text>
+            <line x1="195" y1="246" x2="195" y2="298" stroke="#c0392b" stroke-width="2" marker-end="url(#a2)"/>
+            <rect x="130" y="300" width="130" height="34" rx="4" fill="#ffd6d6" stroke="#e8a0a0"/>
+            <text x="195" y="323" text-anchor="middle" font-size="15" fill="#c0392b" font-weight="700">Q arrives at t</text>
+            <rect x="320" y="208" width="70" height="46" rx="6" fill="#1a56c4"/>
+            <text x="355" y="228" text-anchor="middle" font-size="15" fill="#fff" font-weight="700">VLM</text>
+            <text x="355" y="246" text-anchor="middle" font-size="13" fill="#c5d5f0">online</text>
+            <line x1="284" y1="229" x2="320" y2="229" stroke="#999" stroke-width="2" marker-end="url(#a1)"/>
+            <line x1="195" y1="317" x2="316" y2="240" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+            <rect x="400" y="212" width="112" height="38" rx="4" fill="#d4f7d4" stroke="#aed6ae"/>
+            <text x="456" y="237" text-anchor="middle" font-size="15" fill="#1a7a3a" font-weight="700">Answer</text>
+            <line x1="390" y1="231" x2="400" y2="231" stroke="#999" stroke-width="2" marker-end="url(#a1)"/>
+            <text x="270" y="420" text-anchor="middle" font-size="15" fill="#6b6b6b">프레임마다 KV 저장 &#8594; 질문 도착 즉시 검색하여 답변</text>
+          </svg>
+          <figcaption><b>Fig 1.</b> 오프라인(위)은 전체 비디오 후 일괄 처리. 온라인(아래)은 스트리밍 중 임의 시점 질문에 즉시 답해야 한다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span></span><span><b>03</b> / 13</span></div>
+    </section>
 
-<div class="article-wrap">
+    <!-- 4 REKV LIMITATIONS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>선행 연구 ReKV의 세 가지 한계</h2>
+        <p class="desc">ReKV는 KV 캐시 retrieval을 도입한 첫 시도다. 그러나 분할 방식&middot;메모리&middot;retrieval 정밀도에서 미해결 문제를 남긴다.</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead>
+            <tr><th>문제</th><th>ReKV</th><th>StreamKV (이 논문)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>비디오 분할</b></td>
+              <td><span class="kw3">Uniform partitioning</span> &mdash; 씬 전환 중간에 경계가 생겨 semantic 구조 파괴</td>
+              <td class="hl2">Cosine similarity 기반 동적 분할 &mdash; semantic boundary를 실제로 탐지</td>
+            </tr>
+            <tr>
+              <td><b>KV 저장</b></td>
+              <td><span class="kw3">전체 KV 보존</span> &mdash; 메모리 $O(T)$, 수천 프레임에서 OOM</td>
+              <td class="hl2">Guidance prompt로 즉시 압축 &#8594; 고정 메모리, 90% 압축도 정확도 유지</td>
+            </tr>
+            <tr>
+              <td><b>Retrieval budget</b></td>
+              <td><span class="kw3">레이어별 균등 할당</span> &mdash; 정보 분포 무시, 중요한 레이어에 과소 배분</td>
+              <td class="hl2">Layer-adaptive allocation &mdash; similarity 분포 기반 binary search</td>
+            </tr>
+            <tr>
+              <td><b>학습 필요 여부</b></td>
+              <td>추가 모듈 학습 필요</td>
+              <td class="hl2"><span class="kw2">Training-free</span> &mdash; 기존 Video-LLM에 plug-and-play</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span></span><span><b>04</b> / 13</span></div>
+    </section>
 
-  <h1 class="post-title">StreamKV: KV Cache를 의미 단위로 압축하고, 예산을 레이어별로 나눈다</h1>
-
-  <p class="post-dek">
-    ReKV가 "버리지 않고 오프로드"를 택했다면, StreamKV는 한발 더 나아가 압축까지 한다.
-    세그먼트 단위 의미 압축, 질문 없이 동작하는 Guidance Prompt, 레이어 적응형 예산 배분 —
-    세 가지를 하나의 모듈로 통합한다.
-  </p>
-
-  <div class="post-meta">
-    <span class="cat">Video</span>
-    <span class="dot">·</span>
-    <span class="cat">LLM</span>
-    <span class="dot">·</span>
-    <span>Feb 27, 2026</span>
-    <span class="dot">·</span>
-    <span>16 min read</span>
-  </div>
-
-  <div class="paper-badge">
-    <span class="venue">AAAI 2026</span>
-    <span>·</span>
-    <span>StreamKV</span>
-  </div>
-
-  <div class="post-content">
-
-    <h2 class="no-rule">ReKV에서 무엇을 더 해결하는가</h2>
-    <p>
-      ReKV(ICLR 2025)는 KV Cache 오프로드 + 검색으로 Streaming Video QA를 가능하게 했다.
-      하지만 세 가지 한계가 남았다:
-    </p>
-
-    <div class="fig-breakdown">
-      <div class="fig-breakdown-item" onclick="toggleBd(this)">
-        <div class="fig-bd-num">1</div>
-        <div class="fig-bd-body">
-          <div class="fig-bd-title">균일 세그먼트 분할 — 의미적 경계 무시 <span class="fig-bd-arrow">▼</span></div>
-          <div class="fig-bd-desc">
-            ReKV는 영상을 고정 크기로 자른다. 장면 전환이 세그먼트 중간에 생기면
-            두 장면이 한 세그먼트 안에 섞여 검색 정밀도가 떨어진다.
-            StreamKV는 시각적 유사도 기반으로 장면 경계를 감지해 동적으로 세그먼트를 나눈다.
+    <!-- 5 WORKFLOW -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>StreamKV 전체 워크플로우</h2>
+        <p class="desc">Segment &#8594; Encode &#8594; Compress &#8594; Bank &#8594; Retrieve &#8594; Answer. 각 단계는 동일한 <b>Unified Layer-Adaptive Selection Module</b>로 처리된다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step">
+              <span class="lab">&#9312; Semantic Segmentation</span>
+              <span class="ex">인접 프레임 cosine similarity로 boundary 탐지 &#8594; 동적 분할. 각 세그먼트마다 <b>summary vector</b> $f_s^i$ 계산.</span>
+            </div>
+            <div class="step">
+              <span class="lab">&#9313; Sliding-Window Encoding + KV Compression</span>
+              <span class="ex">세그먼트 단위로 순차 인코딩. <b>Guidance prompt</b>를 criterion으로 frame-level KV 블록을 즉시 압축 &#8594; KV Bank 저장.</span>
+            </div>
+            <div class="step">
+              <span class="lab">&#9314; KV Retrieval + QA</span>
+              <span class="ex">질문 수신 시 <b>question vector</b>를 criterion으로 KV Bank에서 관련 블록 검색 &#8594; answer 생성. Compression과 <span class="kw2">동일한 SelectKV 함수</span> 재사용.</span>
+            </div>
           </div>
         </div>
+        <figure class="fig">
+          <img src="img/streamkv/workflow.png" alt="StreamKV workflow diagram">
+          <figcaption><b>Fig 2.</b> 왼쪽: Layer-Adaptive Selection 4단계. 오른쪽: 전체 파이프라인 (세그먼트 인코딩 &#8594; KV Bank &#8594; Retrieval &#8594; VLM 답변).</figcaption>
+        </figure>
       </div>
-      <div class="fig-breakdown-item" onclick="toggleBd(this)">
-        <div class="fig-bd-num">2</div>
-        <div class="fig-bd-body">
-          <div class="fig-bd-title">모든 KV 보존 — 메모리 선형 증가 <span class="fig-bd-arrow">▼</span></div>
-          <div class="fig-bd-desc">
-            ReKV는 버리지 않고 모두 저장한다. 1시간짜리 영상이면 7B 모델 기준 18.8 GB/h.
-            StreamKV는 각 세그먼트를 인코딩한 직후 중요도가 낮은 KV를 즉시 압축해서 저장량을 줄인다.
-            10%만 남겨도 성능이 유지된다.
+      <div class="s-foot"><span>출처: Chen et al., StreamKV (AAAI 2026)</span><span><b>05</b> / 13</span></div>
+    </section>
+
+    <!-- 6 SEMANTIC SEGMENTATION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>Semantic Segment Partitioning</h2>
+        <p class="desc">비디오를 균등하게 자르는 대신, <b>시각적으로 유사한 프레임끼리</b> 하나의 세그먼트로 묶는다. 씬 전환 지점을 실제로 탐지한다.</p>
+      </div>
+      <div class="body">
+        <div class="col">
+          <div class="eqs">
+            <div class="step">
+              <span class="lab">경계 탐지 &mdash; Cosine Similarity</span>
+              <span class="ex">$$s_t = \frac{f_{t-1} \cdot f_t}{\|f_{t-1}\|\,\|f_t\|}$$인접 프레임 임베딩 사이 similarity. $s_t \le \theta$ (threshold 0.99)이면 새 세그먼트 시작.</span>
+            </div>
+            <div class="step">
+              <span class="lab">길이 제약</span>
+              <span class="ex"><b>Exclusion window</b> ($m=4$): boundary 주변에서 추가 boundary 금지 &#8594; 너무 짧은 세그먼트 방지.<br><b>최대 길이</b> $M=64$: 초과 시 segment merging (다음 슬라이드). 결과적으로 $T_i \in [m, M]$.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Summary Vector</span>
+              <span class="ex">$$f_s^i = \frac{1}{T_i}\sum_{t=1}^{T_i} f_t^i$$공간 위치별 프레임 평균 &#8594; 세그먼트 대표. <span class="kw2">압축 제외, KV Bank에 항상 보존.</span></span>
+            </div>
+            <div class="step">
+              <span class="lab">Representative Key (검색 인덱스)</span>
+              <span class="ex">$$\mathbf{r}_m^i = \frac{1}{P^2}\sum_{p=1}^{P^2} \mathbf{k}_{m,p}^i \in \mathbb{R}^{D'}$$각 frame-level KV 블록의 patch-wise key 평균. Compression/Retrieval 모두 이 벡터로 계산.</span>
+            </div>
           </div>
         </div>
+        <figure class="fig">
+          <img src="img/streamkv/segmentation.png" alt="Semantic partitioning diagram">
+          <figcaption><b>Fig 3.</b> $s_4 \le \theta$이면 $[f_1, f_2, f_3]$을 하나의 세그먼트로 닫고, summary vector $f_s$를 평균으로 계산한다.</figcaption>
+        </figure>
       </div>
-      <div class="fig-breakdown-item" onclick="toggleBd(this)">
-        <div class="fig-bd-num">3</div>
-        <div class="fig-bd-body">
-          <div class="fig-bd-title">균일 레이어 예산 — 레이어별 정보 분포 무시 <span class="fig-bd-arrow">▼</span></div>
-          <div class="fig-bd-desc">
-            Transformer의 레이어마다 정보 집중도가 다르다. 앞 레이어는 로컬 패턴에,
-            뒤 레이어는 글로벌 의미에 집중하는 경향이 있다.
-            균일하게 예산을 나누면 중요한 레이어에서 손실이 생긴다.
-            StreamKV는 각 레이어의 유사도 분포를 보고 예산을 적응적으로 배분한다.
+      <div class="s-foot"><span>출처: Chen et al., StreamKV (AAAI 2026)</span><span><b>06</b> / 13</span></div>
+    </section>
+
+    <!-- 7 SEGMENT MERGING -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>Segment Merging &amp; Sliding-Window Encoding</h2>
+        <p class="desc">세그먼트가 $M=64$ 프레임을 초과하면 <b>가장 유사한 인접 쌍</b>을 병합해 길이를 줄인다. 비디오의 temporal redundancy를 활용한다.</p>
+      </div>
+      <div class="body">
+        <div class="col">
+          <div class="eqs">
+            <div class="step">
+              <span class="lab">Step 1 &mdash; Top-1 Similarity 선택</span>
+              <span class="ex">세그먼트 내 모든 인접 프레임 쌍의 similarity 중 <b>최댓값</b>인 쌍 $(f_j, f_{j+1})$을 병합 후보로 선택.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Step 2 &mdash; 평균 병합</span>
+              <span class="ex">$$f_j' = \frac{f_j + f_{j+1}}{2}$$두 프레임을 하나의 merged feature로 교체. 세그먼트 길이 $T_i \to T_i - 1$.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Step 3 &mdash; Similarity 재계산</span>
+              <span class="ex">병합된 $f_j'$와 이웃 프레임 사이 similarity를 재계산. $T_i \le M$이 될 때까지 반복.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Sliding-Window Encoding</span>
+              <span class="ex">$\mathbf{X}^i = [\mathbf{S}^i \| f_s^i]$를 local window $\mathbf{L}$ (15K tokens)과 함께 attention 계산. Context 길이를 고정 &mdash; 영상 길이와 무관.</span>
+            </div>
           </div>
         </div>
+        <figure class="fig">
+          <img src="img/streamkv/merge.png" alt="Segment merging diagram">
+          <figcaption><b>Fig 4.</b> Similarity 0.98인 $(f_2, f_3)$ 쌍을 $f_2'$로 병합 &#8594; 이웃 프레임과 similarity 재계산.</figcaption>
+        </figure>
       </div>
-    </div>
+      <div class="s-foot"><span>출처: Chen et al., StreamKV (AAAI 2026)</span><span><b>07</b> / 13</span></div>
+    </section>
 
-    <div class="ornament">· · ·</div>
-
-    <h2>StreamKV의 세 가지 핵심 기법</h2>
-
-    <!-- ── 파이프라인 SVG ── -->
-    <div style="margin:1.5rem 0 2rem;">
-      <svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg"
-           style="width:100%;max-width:680px;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
-        <defs>
-          <marker id="s-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
-          </marker>
-        </defs>
-
-        <!-- Step 1: Semantic Segmentation -->
-        <rect x="4" y="20" width="148" height="130" rx="8" fill="#fdf4ff" stroke="#d8b4fe" stroke-width="1.5"/>
-        <text x="78" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#7e22ce">① 의미 분할</text>
-        <text x="78" y="64" text-anchor="middle" font-size="9.5" fill="#9333ea">시각 유사도 기반</text>
-        <text x="78" y="80" text-anchor="middle" font-size="9.5" fill="#7e22ce">장면 경계 감지</text>
-        <text x="78" y="96" text-anchor="middle" font-size="9.5" fill="#7e22ce">세그먼트별</text>
-        <text x="78" y="112" text-anchor="middle" font-size="9.5" fill="#7e22ce">요약 벡터 생성</text>
-        <text x="78" y="130" text-anchor="middle" font-size="9" fill="#a855f7">(summary vector)</text>
-
-        <line x1="152" y1="85" x2="182" y2="85" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#s-arr)"/>
-
-        <!-- Step 2: KV Compression -->
-        <rect x="184" y="20" width="148" height="130" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
-        <text x="258" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#c2410c">② KV 압축</text>
-        <text x="258" y="64" text-anchor="middle" font-size="9.5" fill="#ea580c">Guidance Prompt로</text>
-        <text x="258" y="80" text-anchor="middle" font-size="9.5" fill="#c2410c">핵심 KV 선택</text>
-        <text x="258" y="96" text-anchor="middle" font-size="9.5" fill="#c2410c">요약 KV는 보존</text>
-        <text x="258" y="112" text-anchor="middle" font-size="9.5" fill="#c2410c">인코딩 직후 압축</text>
-        <text x="258" y="130" text-anchor="middle" font-size="9" fill="#f97316">(질문 없이 동작)</text>
-
-        <line x1="332" y1="85" x2="362" y2="85" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#s-arr)"/>
-
-        <!-- Step 3: Layer-Adaptive Selection -->
-        <rect x="364" y="20" width="148" height="130" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
-        <text x="438" y="43" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">③ 레이어 적응형</text>
-        <text x="438" y="59" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">KV 선택</text>
-        <text x="438" y="77" text-anchor="middle" font-size="9.5" fill="#16a34a">각 레이어 유사도</text>
-        <text x="438" y="93" text-anchor="middle" font-size="9.5" fill="#166534">분포로 예산 배분</text>
-        <text x="438" y="109" text-anchor="middle" font-size="9.5" fill="#166534">압축 + 검색에</text>
-        <text x="438" y="125" text-anchor="middle" font-size="9.5" fill="#166534">동시 적용</text>
-
-        <line x1="512" y1="85" x2="542" y2="85" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#s-arr)"/>
-
-        <!-- Output: KV Bank + QA -->
-        <rect x="544" y="20" width="132" height="130" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
-        <text x="610" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">KV Bank</text>
-        <text x="610" y="64" text-anchor="middle" font-size="9.5" fill="#3b82f6">압축된 KV 저장</text>
-        <text x="610" y="82" text-anchor="middle" font-size="9" fill="#1d4ed8">+ 요약 KV 보존</text>
-        <line x1="544" y1="100" x2="676" y2="100" stroke="#d8d8d2" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="610" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af">질문 입력 시</text>
-        <text x="610" y="134" text-anchor="middle" font-size="9.5" fill="#3b82f6">동일 모듈로 검색</text>
-
-        <!-- 통합 label -->
-        <text x="340" y="180" text-anchor="middle" font-size="10" fill="#9ca3af">②③ Unified Layer-Adaptive KV Selection Module</text>
-      </svg>
-      <p style="text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.78rem;color:var(--muted);margin-top:.5rem;">
-        StreamKV 파이프라인. 압축과 검색이 동일한 레이어 적응형 모듈로 처리된다.
-      </p>
-    </div>
-
-    <h3>① 의미 기반 동적 세그먼트 분할</h3>
-    <p>
-      인접 프레임 간 코사인 유사도를 계산해 유사도가 급격히 떨어지는 지점을 장면 경계로 판단한다.
-      최소·최대 세그먼트 길이를 설정해 너무 짧거나 긴 세그먼트를 방지한다.
-      각 세그먼트에는 <strong>요약 벡터(summary vector)</strong>를 하나 생성해
-      세그먼트 전체 내용을 대표하게 한다. 이 요약 KV는 압축에서 제외되어 항상 보존된다.
-    </p>
-
-    <div class="callout">
-      <strong>왜 요약 벡터가 중요한가?</strong> 압축을 거치면 세그먼트 내 일부 KV가 사라진다.
-      세그먼트 수준의 전체 맥락은 요약 KV 하나에 응축되어 있어야
-      나중에 해당 세그먼트를 검색할 때 정확도가 유지된다.
-      실험에서 요약 벡터 유무가 성능에 큰 차이를 만드는 것으로 확인됐다.
-    </div>
-
-    <h3>② Guidance Prompt 기반 KV 압축</h3>
-    <p>
-      스트리밍 설정의 핵심 제약: <strong>세그먼트를 인코딩할 때 아직 질문을 모른다.</strong>
-      따라서 "이 세그먼트에서 나중에 어떤 질문이 올 것인가"를 예측해야 한다.
-    </p>
-    <p>
-      StreamKV의 해법은 고정된 <strong>Guidance Prompt</strong>를 쓰는 것이다:
-      "이 세그먼트에서 어떤 개체가 등장하는가, 어떤 사건이 일어나는가,
-      인과 관계는 무엇인가, 장면 전환이 있었는가" 같은 의미론적 요약을 유도하는
-      프롬프트를 모든 세그먼트에 동일하게 적용한다.
-    </p>
-    <p>
-      이 프롬프트의 Query 벡터와 각 프레임 KV의 Key 벡터 유사도를 계산해
-      중요도가 높은 KV만 남긴다. 질문에 의존하지 않으니 멀티턴 대화에도 범용적으로 작동한다.
-    </p>
-
-    <h3>③ Unified Layer-Adaptive KV Selection Module</h3>
-    <p>
-      압축과 검색을 하나의 모듈로 통합한다. 두 작업 모두 "선택 기준에 따라
-      KV 집합에서 가장 관련 있는 것을 고른다"는 동일한 구조를 갖기 때문이다.
-    </p>
-
-    <div class="def-box">
-      <div class="def-title">레이어 적응형 예산 배분</div>
-      <p>
-        총 예산 $N$을 $L$개 레이어에 어떻게 나눌 것인가?
-        각 레이어 $l$에서 후보 KV들의 유사도 분포 $\{\text{Sim}_l(i)\}$를 구한다.
-        전역 임계값 $p$를 이진 탐색으로 찾아 $\text{Sim}_l(i) \geq p$인 KV 개수 $K_l$이
-        $\sum_{l=1}^L K_l = N$을 만족하도록 한다.
-      </p>
-      <p>
-        $$\{K_l\}_{l=1}^L \;\text{s.t.}\; \sum_l K_l = N, \quad K_l = \bigl|\{i : \text{Sim}_l(i) \geq p\}\bigr|$$
-      </p>
-      <p>
-        유사도가 집중된 레이어는 예산을 많이 받고, 분산된 레이어는 적게 받는다.
-        균일 배분보다 동일 예산 대비 더 많은 정보를 보존한다.
-      </p>
-    </div>
-
-    <div class="ornament">· · ·</div>
-
-    <h2>실험 결과</h2>
-
-    <h3>StreamingBench: 압축률 60%에서도 SOTA</h3>
-    <p>
-      StreamingBench는 Real-Time Visual Understanding, Omni-Source Understanding,
-      Contextual Understanding 3개 카테고리 18개 서브태스크로 구성된다.
-      기반 모델은 LLaVA-OneVision-Qwen2-7B, 비교 대상은 ReKV.
-    </p>
-
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>모델</th>
-          <th>압축률</th>
-          <th>Real-Time</th>
-          <th>Omni-Source</th>
-          <th>Contextual</th>
-          <th>Overall</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>LLaVA-OV (base)</td>
-          <td>—</td>
-          <td>52.1</td>
-          <td>55.6</td>
-          <td>56.2</td>
-          <td>54.6</td>
-        </tr>
-        <tr>
-          <td>ReKV</td>
-          <td>0% (전부 보존)</td>
-          <td>55.3</td>
-          <td>58.9</td>
-          <td>58.4</td>
-          <td>57.5</td>
-        </tr>
-        <tr>
-          <td>StreamKV</td>
-          <td>60%</td>
-          <td class="highlight">57.8</td>
-          <td class="highlight">61.2</td>
-          <td class="highlight">61.5</td>
-          <td class="highlight">60.2</td>
-        </tr>
-        <tr>
-          <td>StreamKV</td>
-          <td>90% (10%만 보존)</td>
-          <td>55.9</td>
-          <td>59.4</td>
-          <td>59.7</td>
-          <td>58.3</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>
-      주목할 만한 결과: Clips Summarization 서브태스크에서 StreamKV(60% 압축)가
-      <strong>87.7%</strong>를 기록했다. ReKV(78.6%), LLaVA-OV base(76.0%)를 크게 앞서고
-      GPT-4V 같은 독점 모델도 넘는다. 의미 단위 세그먼트와 요약 벡터가 이 태스크에
-      특히 잘 맞기 때문이다.
-    </p>
-
-    <h3>Ablation: 무엇이 가장 중요한가</h3>
-
-    <div class="fig-breakdown">
-      <div class="fig-breakdown-item" onclick="toggleBd(this)">
-        <div class="fig-bd-num">A</div>
-        <div class="fig-bd-body">
-          <div class="fig-bd-title">의미 분할 vs 균일 분할 <span class="fig-bd-arrow">▼</span></div>
-          <div class="fig-bd-desc">
-            모든 압축률에서 의미 기반 세그먼트가 균일 분할보다 일관되게 높다.
-            장면 경계를 존중하면 각 세그먼트의 의미적 응집도가 높아져
-            guidance prompt 기반 압축의 효과가 극대화된다.
+    <!-- 8 LAYER-ADAPTIVE KV SELECTION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>Unified Layer-Adaptive KV Selection</h2>
+        <p class="desc">Compression과 Retrieval을 <b>동일한 함수 SelectKV</b>로 통합. 레이어마다 similarity 분포가 다르므로, budget을 균등 배분하지 않고 <b>분포 형태에 따라 적응적으로</b> 배분한다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step">
+              <span class="lab">Step 1 &mdash; Cosine Similarity</span>
+              <span class="ex">레이어 $l$에서 criterion 벡터 $\mathbf{c}^l$과 candidate key $\mathbf{r}_j^l$ 사이 $\mathrm{Sim}_l(j)$ 계산. Compression 시: $\mathbf{c}^l$ = guidance prompt 벡터. Retrieval 시: $\mathbf{c}^l$ = 질문 벡터.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Step 2 &mdash; Softmax + 정렬</span>
+              <span class="ex">$$\widetilde{\mathrm{Sim}}_l(j) = \frac{\exp(\mathrm{Sim}_l(j))}{\sum_k \exp(\mathrm{Sim}_l(k))}$$내림차순 정렬 &#8594; priority sequence.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Step 3 &mdash; Binary Search for $p$</span>
+              <span class="ex">$$K_l^p = \min\!\left\{k \;\middle|\; \sum_{j=1}^k \widetilde{\mathrm{Sim}}_l(s_l(j)) \ge p\right\}$$총합 $\sum_l K_l^p = N$이 되는 global threshold $p$를 이진 탐색으로 결정.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Step 4 &mdash; Top-$K_l$ 선택</span>
+              <span class="ex">$$\{\mathcal{I}_l\}_{l=1}^L = \mathrm{SelectKV}(\{\mathcal{R}_l,\, \mathbf{c}^l\}_{l=1}^L,\, N)$$같은 함수를 Compression ($\mathbf{c}^l = \mathbf{g}^l$)과 Retrieval ($\mathbf{c}^l = \mathbf{q}^l$)에 모두 사용.</span>
+            </div>
           </div>
         </div>
+        <figure class="fig">
+          <svg viewBox="0 0 1180 280" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--sans)">
+            <!-- LEFT: Uniform -->
+            <rect x="2" y="2" width="536" height="276" rx="8" fill="#f5f4f0" stroke="#d8d8d2"/>
+            <text x="270" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#0f0f0f">Uniform  K = 3 per layer</text>
+            <!-- L1: bars heights 77,13,9,4,3,3 out of 110; top3 blue -->
+            <g transform="translate(26,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L1 (peaky)</text>
+              <rect x="4"  y="103" width="12" height="77" fill="#1a56c4"/>
+              <rect x="20" y="167" width="12" height="13" fill="#1a56c4"/>
+              <rect x="36" y="171" width="12" height="9"  fill="#1a56c4"/>
+              <rect x="52" y="176" width="12" height="4"  fill="#ddd"/>
+              <rect x="68" y="177" width="12" height="3"  fill="#ddd"/>
+              <rect x="84" y="177" width="12" height="3"  fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#1a56c4" font-weight="700">K=3</text>
+            </g>
+            <!-- L2: heights 40,29,21,11,6,5; top3 blue -->
+            <g transform="translate(156,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L2</text>
+              <rect x="4"  y="140" width="12" height="40" fill="#1a56c4"/>
+              <rect x="20" y="151" width="12" height="29" fill="#1a56c4"/>
+              <rect x="36" y="159" width="12" height="21" fill="#1a56c4"/>
+              <rect x="52" y="169" width="12" height="11" fill="#ddd"/>
+              <rect x="68" y="174" width="12" height="6"  fill="#ddd"/>
+              <rect x="84" y="175" width="12" height="5"  fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#1a56c4" font-weight="700">K=3</text>
+            </g>
+            <!-- L3: heights 22,21,20,18,17,13; top3 blue -->
+            <g transform="translate(286,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L3 (flat)</text>
+              <rect x="4"  y="158" width="12" height="22" fill="#1a56c4"/>
+              <rect x="20" y="159" width="12" height="21" fill="#1a56c4"/>
+              <rect x="36" y="160" width="12" height="20" fill="#1a56c4"/>
+              <rect x="52" y="162" width="12" height="18" fill="#ddd"/>
+              <rect x="68" y="163" width="12" height="17" fill="#ddd"/>
+              <rect x="84" y="167" width="12" height="13" fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#1a56c4" font-weight="700">K=3</text>
+            </g>
+            <!-- L4: heights 46,31,19,7,5,2; top3 blue -->
+            <g transform="translate(416,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L4</text>
+              <rect x="4"  y="134" width="12" height="46" fill="#1a56c4"/>
+              <rect x="20" y="149" width="12" height="31" fill="#1a56c4"/>
+              <rect x="36" y="161" width="12" height="19" fill="#1a56c4"/>
+              <rect x="52" y="173" width="12" height="7"  fill="#ddd"/>
+              <rect x="68" y="175" width="12" height="5"  fill="#ddd"/>
+              <rect x="84" y="178" width="12" height="2"  fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#1a56c4" font-weight="700">K=3</text>
+            </g>
+            <text x="270" y="256" text-anchor="middle" font-size="15" fill="#888">N=12, 레이어 분포 무시</text>
+
+            <!-- MIDDLE arrow -->
+            <text x="590" y="135" text-anchor="middle" font-size="26" fill="#1a56c4">&#8594;</text>
+            <text x="590" y="158" text-anchor="middle" font-size="13" fill="#6b6b6b">N=12 동일</text>
+
+            <!-- RIGHT: Adaptive -->
+            <rect x="642" y="2" width="536" height="276" rx="8" fill="#eaf2ff" stroke="#c5d5f0"/>
+            <text x="910" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#0f0f0f">Adaptive  K varies (binary search)</text>
+            <!-- L1 adaptive: K=2 -->
+            <g transform="translate(666,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L1 (peaky)</text>
+              <rect x="4"  y="103" width="12" height="77" fill="#1a56c4"/>
+              <rect x="20" y="167" width="12" height="13" fill="#1a56c4"/>
+              <rect x="36" y="171" width="12" height="9"  fill="#ddd"/>
+              <rect x="52" y="176" width="12" height="4"  fill="#ddd"/>
+              <rect x="68" y="177" width="12" height="3"  fill="#ddd"/>
+              <rect x="84" y="177" width="12" height="3"  fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#c0392b" font-weight="700">K=2 &#8595;</text>
+            </g>
+            <!-- L2 adaptive: K=3 (same) -->
+            <g transform="translate(796,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L2</text>
+              <rect x="4"  y="140" width="12" height="40" fill="#1a56c4"/>
+              <rect x="20" y="151" width="12" height="29" fill="#1a56c4"/>
+              <rect x="36" y="159" width="12" height="21" fill="#1a56c4"/>
+              <rect x="52" y="169" width="12" height="11" fill="#ddd"/>
+              <rect x="68" y="174" width="12" height="6"  fill="#ddd"/>
+              <rect x="84" y="175" width="12" height="5"  fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#1a56c4" font-weight="700">K=3</text>
+            </g>
+            <!-- L3 adaptive: K=4 (flat, gets extra) -->
+            <g transform="translate(926,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L3 (flat)</text>
+              <rect x="4"  y="158" width="12" height="22" fill="#1a56c4"/>
+              <rect x="20" y="159" width="12" height="21" fill="#1a56c4"/>
+              <rect x="36" y="160" width="12" height="20" fill="#1a56c4"/>
+              <rect x="52" y="162" width="12" height="18" fill="#1a7a3a"/>
+              <rect x="68" y="163" width="12" height="17" fill="#ddd"/>
+              <rect x="84" y="167" width="12" height="13" fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#1a7a3a" font-weight="700">K=4 &#8593;</text>
+            </g>
+            <!-- L4 adaptive: K=3 (same) -->
+            <g transform="translate(1056,40)">
+              <text x="46" y="188" text-anchor="middle" font-size="15" fill="#6b6b6b">L4</text>
+              <rect x="4"  y="134" width="12" height="46" fill="#1a56c4"/>
+              <rect x="20" y="149" width="12" height="31" fill="#1a56c4"/>
+              <rect x="36" y="161" width="12" height="19" fill="#1a56c4"/>
+              <rect x="52" y="173" width="12" height="7"  fill="#ddd"/>
+              <rect x="68" y="175" width="12" height="5"  fill="#ddd"/>
+              <rect x="84" y="178" width="12" height="2"  fill="#ddd"/>
+              <text x="46" y="208" text-anchor="middle" font-size="14" fill="#1a56c4" font-weight="700">K=3</text>
+            </g>
+            <text x="910" y="256" text-anchor="middle" font-size="15" fill="#1a56c4" font-weight="600">L1 peaky&#8594;K&#8595; 절약, L3 flat&#8594;K&#8593; 활용. 총합 N=12 동일.</text>
+          </svg>
+          <figcaption><b>Fig 5.</b> L1처럼 분포가 집중된 레이어는 적게 뽑아도 충분. L3처럼 분산된 레이어는 더 많이 뽑아야 같은 정보량. Adaptive가 동일한 budget으로 더 많은 정보를 보존한다.</figcaption>
+        </figure>
       </div>
-      <div class="fig-breakdown-item" onclick="toggleBd(this)">
-        <div class="fig-bd-num">B</div>
-        <div class="fig-bd-body">
-          <div class="fig-bd-title">요약 벡터 유무 <span class="fig-bd-arrow">▼</span></div>
-          <div class="fig-bd-desc">
-            요약 벡터 없이 압축하면 세그먼트 수준 정보가 소실된다.
-            특히 압축률이 높을수록 (90%) 요약 벡터의 효과가 크게 나타난다.
-            요약 KV가 세그먼트 전체 내용의 앵커 역할을 하기 때문이다.
+      <div class="s-foot"><span></span><span><b>08</b> / 13</span></div>
+    </section>
+
+    <!-- 9 GUIDANCE PROMPT -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>KV Compression via Guidance Prompt</h2>
+        <p class="desc">스트리밍 환경에서 압축 시점에 사용자 질문은 알 수 없다. <b>query-agnostic</b>이면서도 semantically-rich한 압축이 필요하다.</p>
+      </div>
+      <div class="body">
+        <div class="col">
+          <div class="eqs">
+            <div class="step">
+              <span class="lab">왜 Question-based 압축이 안 되는가</span>
+              <span class="ex">SnapKV, FastV 등은 user question query 벡터를 criterion으로 사용. 스트리밍에선 세그먼트 인코딩 <b>즉시</b> 압축해야 하며, 질문은 나중에 도달한다. Multi-turn dialogue도 지원해야 하므로 특정 질문에 최적화 불가.</span>
+            </div>
+            <div class="step">
+              <span class="lab">해결: Guidance Prompt Criterion</span>
+              <span class="ex">고정된 guidance prompt를 criterion으로 사용. Criterion 벡터:$$\mathbf{g}^l = \frac{1}{N_g}\sum_{k=1}^{N_g}\mathbf{g}_k^l$$레이어 $l$에서 guidance prompt의 query 벡터 평균.</span>
+            </div>
+            <div class="step">
+              <span class="lab">압축 budget</span>
+              <span class="ex">압축률 $\theta$, 세그먼트 길이 $T_i$, 레이어 수 $L$:$$N = \lceil(1-\theta)T_i\rceil \times L$$Summary KV 블록 $\mathbf{b}_s^{i,l}$은 <span class="kw2">압축 제외, 항상 보존.</span></span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="fig-breakdown-item" onclick="toggleBd(this)">
-        <div class="fig-bd-num">C</div>
-        <div class="fig-bd-body">
-          <div class="fig-bd-title">레이어 적응형 예산 배분 <span class="fig-bd-arrow">▼</span></div>
-          <div class="fig-bd-desc">
-            압축과 검색 모두에 적응형 배분을 적용했을 때 성능이 가장 높다.
-            둘 중 하나에만 적용해도 균일 배분보다는 낫다.
-            레이어마다 정보 집중도가 다르기 때문에 획일적인 예산 배분은 낭비를 만든다.
-          </div>
+        <div class="col">
+          <ul class="pts">
+            <li><b>Salient entities:</b> 사람, 사물, 장소, 핵심 시각 개념</li>
+            <li><b>Key events &amp; actions:</b> 무엇이, 언제, 어디서 일어났는가</li>
+            <li><b>Temporal &amp; causal:</b> 사건 전개 순서, 인과 관계 체인</li>
+            <li><b>Contextual cues:</b> 씬 전환, 대화, 내러티브 변화</li>
+            <li><b>Numerical &amp; factual:</b> 카운팅, 요약, fact-based QA를 위한 수치</li>
+          </ul>
         </div>
       </div>
-    </div>
+      <div class="s-foot"><span></span><span><b>09</b> / 13</span></div>
+    </section>
 
-    <div class="ornament">· · ·</div>
+    <!-- 10 RETRIEVAL & QA -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>KV Retrieval &amp; Question Answering</h2>
+        <p class="desc">질문이 도착하면 동일한 SelectKV로 KV Bank에서 관련 블록을 검색한다. <span class="kw2">StreamKV는 8 frames만으로 정점에 달한다</span> &mdash; ReKV와 정반대 패턴.</p>
+      </div>
+      <div class="body">
+        <div class="col">
+          <div class="eqs">
+            <div class="step">
+              <span class="lab">Question Criterion Vector</span>
+              <span class="ex">$$\mathbf{q}^l = \frac{1}{N_q}\sum_{k=1}^{N_q}\mathbf{q}_k^l \in \mathbb{R}^{D'}$$레이어 $l$에서 질문 토큰의 query 벡터 평균. Retrieval budget: $N = N_r \times L$ ($N_r = 8$).</span>
+            </div>
+            <div class="step">
+              <span class="lab">Retrieval</span>
+              <span class="ex">$$\{\mathcal{I}_l\}_{l=1}^L = \mathrm{SelectKV}(\{\mathcal{R}_l, \mathbf{q}^l\}_{l=1}^L, N)$$Compression과 <b>완전히 동일한 SelectKV</b> &mdash; criterion만 guidance prompt &#8594; 질문 벡터로 교체.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Positional Encoding (RoPE)</span>
+              <span class="ex"><b>인코딩 시:</b> Local window 내에서만 RoPE 적용 (LM-Infinite 방식) &mdash; distant token attention 억제 완화.<br><b>QA 시:</b> Retrieved token을 <b>절대 위치 아닌 상대 위치</b>로 연속 취급.</span>
+            </div>
+            <div class="step">
+              <span class="lab">핵심 관찰</span>
+              <span class="ex">Retrieved frames 수 증가 &#8594; StreamKV 정확도 <span class="kw3">하락</span>. Retrieval precision이 높아 추가 프레임은 noise. ReKV는 반대 &mdash; 더 많이 검색해야 관련 프레임을 찾음.</span>
+            </div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/streamkv/retrieved_frames.png" alt="Accuracy vs retrieved frames comparison">
+          <figcaption><b>Fig 6.</b> StreamKV는 4&#8211;8 frames에서 최고점. ReKV는 frames 증가할수록 성능 상승 &mdash; retrieval precision의 차이가 역방향 곡선을 만든다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Chen et al., StreamKV (AAAI 2026)</span><span><b>10</b> / 13</span></div>
+    </section>
 
-    <h2>ReKV와 StreamKV 비교</h2>
+    <!-- 11 RESULTS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>실험: StreamingBench 결과</h2>
+        <p class="desc">18개 subtask, 3개 카테고리 (Real-Time &middot; Omni-Source &middot; Contextual). 동일 base model LLaVA-OV-7B 기준 비교.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step">
+              <span class="lab">Overall Accuracy</span>
+              <span class="ex">ReKV 53.5 &#8594; <span class="kw2">StreamKV (&#8595;60%) 58.9</span> (+5.4p). 90% 압축에서도 56.7 &mdash; <b>오프라인 베이스라인 56.4 상회.</b></span>
+            </div>
+            <div class="step">
+              <span class="lab">Clips Summarization (CS) subtask</span>
+              <span class="ex">87.7% (60% 압축) &mdash; ReKV 대비 +9.1p, 베이스라인 대비 +11.7p. <span class="kw2">GPT-4o(83.9%), Gemini 1.5 Pro(83.5%) 모두 초과.</span> Summary vector의 세그먼트 정보 보존 덕분.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Memory &amp; Latency (10,000 frames 기준)</span>
+              <span class="ex">GPU 메모리: LLaVA OOM &#8594; ReKV ~30 GB &#8594; <span class="kw2">StreamKV ~21 GB</span>. Time to First Token: ReKV 0.8 s &#8594; StreamKV <span class="kw2">0.55 s</span>.</span>
+            </div>
+            <div class="step">
+              <span class="lab">Omni-Source Understanding</span>
+              <span class="ex">4개 subtask 전부 proprietary MLLM 2개 초과. Layer-adaptive retrieval이 fine-grained visual detail을 정밀 검색한 결과.</span>
+            </div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/streamkv/first.png" alt="StreamingBench: radar + memory + latency graphs">
+          <figcaption><b>Fig 7.</b> (좌) 18개 subtask radar chart. (우 상) GPU 메모리 vs frames. (우 하) Time to First Token &mdash; LLaVA OOM, ReKV 증가, StreamKV 안정.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Chen et al., StreamKV (AAAI 2026)</span><span><b>11</b> / 13</span></div>
+    </section>
 
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>항목</th>
-          <th>ReKV (ICLR 2025)</th>
-          <th>StreamKV (AAAI 2026)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>세그먼트 분할</td>
-          <td>균일 고정 크기</td>
-          <td>의미 기반 동적 분할</td>
-        </tr>
-        <tr>
-          <td>KV 압축</td>
-          <td>없음 (전부 보존)</td>
-          <td>Guidance Prompt 기반 즉시 압축</td>
-        </tr>
-        <tr>
-          <td>검색 기준</td>
-          <td>External(CLIP) / Internal(Key)</td>
-          <td>동일 + 레이어 적응형 예산</td>
-        </tr>
-        <tr>
-          <td>압축·검색 관계</td>
-          <td>별도 모듈</td>
-          <td>단일 통합 모듈</td>
-        </tr>
-        <tr>
-          <td>메모리 효율</td>
-          <td>낮음 (선형 증가)</td>
-          <td>높음 (10%까지 압축 가능)</td>
-        </tr>
-        <tr>
-          <td>질문 없는 압축</td>
-          <td>해당 없음</td>
-          <td>Guidance Prompt로 가능</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- 12 ABLATION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>Ablation Studies</h2>
+        <p class="desc">세 가지 핵심 설계를 각각 제거/교체하여 기여도를 검증. StreamingBench overall score 기준 (&#8595; = 압축률, &#10003; = 최종 StreamKV 설정).</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead>
+            <tr><th>컴포넌트</th><th>설정</th><th style="text-align:right">&#8595;60%</th><th style="text-align:right">&#8595;80%</th><th style="text-align:right">&#8595;90%</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan="2"><b>Partitioning</b></td>
+              <td>Uniform (고정 길이)</td>
+              <td style="text-align:right">56.33</td><td style="text-align:right">53.02</td><td style="text-align:right">51.41</td>
+            </tr>
+            <tr>
+              <td class="hl2">Semantic &#10003;</td>
+              <td style="text-align:right" class="hl2">58.89</td><td style="text-align:right" class="hl2">57.43</td><td style="text-align:right" class="hl2">56.72</td>
+            </tr>
+            <tr>
+              <td rowspan="2"><b>Summary Vector</b></td>
+              <td>w/o summary</td>
+              <td style="text-align:right">56.21</td><td style="text-align:right">54.65</td><td style="text-align:right">53.85</td>
+            </tr>
+            <tr>
+              <td class="hl2">w/ summary &#10003;</td>
+              <td style="text-align:right" class="hl2">58.89</td><td style="text-align:right" class="hl2">57.43</td><td style="text-align:right" class="hl2">56.72</td>
+            </tr>
+            <tr>
+              <td rowspan="2"><b>KV Selection</b></td>
+              <td>Uniform + Uniform</td>
+              <td style="text-align:right">57.83</td><td style="text-align:right">56.74</td><td style="text-align:right">55.91</td>
+            </tr>
+            <tr>
+              <td class="hl2">Adaptive + Adaptive &#10003;</td>
+              <td style="text-align:right" class="hl2">58.89</td><td style="text-align:right" class="hl2">57.43</td><td style="text-align:right" class="hl2">56.72</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span></span><span><b>12</b> / 13</span></div>
+    </section>
 
-    <div class="pullquote">
-      StreamKV는 ReKV의 직접적인 후속 연구다.
-      "오프로드만으로는 메모리를 못 줄인다"는 한계를 의미 압축으로 극복하고,
-      <strong>KV 10%만 남겨도 전체 보존보다 성능이 높다</strong>는 것을 보였다.
-    </div>
+    <!-- 13 REFERENCES -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>참고 문헌</h2>
+        <p class="desc">더 깊이 보고 싶다면.</p>
+      </div>
+      <div class="body solo">
+        <ol class="refs">
+          <li><span>Chen et al. <b>StreamKV: Streaming Video Question-Answering with Segment-based KV Cache Retrieval and Compression.</b> <span class="src">AAAI 2026.</span> <a href="https://github.com/sou1p0wer/StreamKV" target="_blank">github.com/sou1p0wer/StreamKV</a></span></li>
+          <li><span>Di et al. <b>ReKV: Training-Free Key-Value Cache Compression for Streaming Video QA.</b> <span class="src">2025.</span></span></li>
+          <li><span>Lin et al. <b>StreamingBench: Assessing the Gap for MLLMs to Achieve Streaming Video Understanding.</b> <span class="src">2024.</span> <a href="https://arxiv.org/abs/2411.03628" target="_blank">arXiv:2411.03628</a></span></li>
+          <li><span>Li et al. <b>LLaVA-OneVision: Easy Visual Task Transfer.</b> <span class="src">2024.</span> &mdash; StreamKV의 base model (LLaVA-OV-7B).</span></li>
+          <li><span>Han et al. <b>LM-Infinite: Simple On-the-Fly Length Generalization for Large Language Models.</b> <span class="src">ACL 2024.</span> &mdash; Local-window RoPE 방식.</span></li>
+          <li><span>이미지 출처 &mdash; <span class="src">논문 figures: Chen et al. (AAAI 2026). All Rights Reserved.</span></span></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>13</b> / 13</span></div>
+    </section>
 
-    <h2>의의</h2>
-    <p>
-      StreamKV가 보여준 핵심 통찰은 두 가지다.
-    </p>
-    <p>
-      첫째, <strong>압축 타이밍</strong>이 중요하다. 기존 KV 압축 연구는 디코딩 단계에서
-      질문을 보고 나서 압축했다. StreamKV는 인코딩 직후, 질문을 보기 전에 압축한다.
-      이게 가능한 이유는 질문 대신 고정 Guidance Prompt를 쓰기 때문이다.
-    </p>
-    <p>
-      둘째, <strong>압축과 검색은 같은 문제</strong>다. "어떤 KV를 남길 것인가"(압축)와
-      "어떤 KV를 가져올 것인가"(검색)는 모두 관련도 기반 선택이다.
-      하나의 모듈로 통합하면 레이어 예산을 일관되게 관리할 수 있다.
-    </p>
+  </main>
 
-    <p style="margin-top:3rem;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.75rem;color:#b0b0b0;">
-      Paper: <em>StreamKV: Streaming Video Question-Answering with Segment-based KV Cache Retrieval and Compression</em>, AAAI 2026
-    </p>
-
-  </div>
-
-</div>
-
-<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
-
-<script>
-  function toggleBd(el) {
-    const isOpen = el.classList.contains('open');
-    el.parentElement.querySelectorAll('.fig-breakdown-item').forEach(i => i.classList.remove('open'));
-    if (!isOpen) el.classList.add('open');
-  }
-</script>
+  <script>
+    const deck=document.getElementById('deck');
+    const slides=[...deck.querySelectorAll('.slide')];
+    const dotsWrap=document.getElementById('dots');
+    const progress=document.getElementById('progress');
+    slides.forEach((s,i)=>{ const b=document.createElement('button'); b.addEventListener('click',()=>slides[i].scrollIntoView()); dotsWrap.appendChild(b); });
+    const dots=[...dotsWrap.children];
+    let current=0;
+    function setActive(i){ current=i; dots.forEach((d,k)=>d.classList.toggle('active',k===i)); progress.style.width=(i/(slides.length-1)*100)+'%'; }
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) setActive(slides.indexOf(e.target)); }),{threshold:0.6});
+    slides.forEach(s=>io.observe(s));
+    window.addEventListener('keydown',e=>{
+      if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); slides[Math.min(current+1,slides.length-1)].scrollIntoView(); }
+      else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); slides[Math.max(current-1,0)].scrollIntoView(); }
+    });
+    setActive(0);
+  </script>
 </body>
 </html>
