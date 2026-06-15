@@ -224,9 +224,8 @@ ${fm.katex ? katexHtml() : ''}${fm.highlight ? highlightHtml() : ''}  <style>${c
 <body>
 
 <nav>
-  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <span class="nav-logo">Research Blog</span>
   <ul class="nav-links">
-    <li><a href="../../index.html">Home</a></li>
     <li><a href="../index.html" class="active">Blog</a></li>
   </ul>
 </nav>

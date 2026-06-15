@@ -281,14 +281,35 @@
       font-size: .78rem; color: var(--muted); margin-top: .5rem;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
+
+    /* ─── HIGHLIGHT (형광팬) ─── */
+    .post-content mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+    .summary-highlight {
+      background: #fef9c3;
+      border-left: 3px solid #eab308;
+      padding: .6rem 1rem;
+      margin: .6rem 0 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ─── TABLE CAPTION ─── */
+    .table-caption {
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
   </style>
 </head>
 <body>
 
 <nav>
-  <a class="nav-logo" href="../../index.html">Hyeonwoo Jung</a>
+  <span class="nav-logo">Research Blog</span>
   <ul class="nav-links">
-    <li><a href="../../index.html">Home</a></li>
     <li><a href="../index.html" class="active">Blog</a></li>
   </ul>
 </nav>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KV Cache — Deck Sample</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+  <style>
+    :root {
+      --bg:#f9f8f4; --text:#0f0f0f; --muted:#6b6b6b; --accent:#1a56c4;
+      --rule:#999; --rule-lt:#d8d8d2; --bg2:#efede6; --accent-lt:#dbe5f7;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',Georgia,serif; line-height:1.55; overflow:hidden; }
+
+    /* ── DECK MECHANICS ── */
+    .deck { height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; }
+    .deck::-webkit-scrollbar { display:none; }
+    .slide {
+      height:100vh; scroll-snap-align:start; scroll-snap-stop:always;
+      display:flex; flex-direction:column; overflow:hidden;
+      padding:6.4vh 4.5vw 4.4vh; position:relative;
+      max-width:1680px; margin:0 auto;
+    }
+
+    /* ── SLIDE HEADER ── */
+    .s-head { border-bottom:2px solid var(--text); padding-bottom:1.1vh; margin-bottom:2.2vh; }
+    .slide h2 {
+      font-family:'Playfair Display',Georgia,serif; font-weight:800; letter-spacing:-.02em;
+      line-height:1.04; font-size:clamp(2rem,3.5vw,3.2rem);
+    }
+    .desc { font-size:clamp(1rem,1.3vw,1.28rem); color:#333; max-width:none; margin-top:1vh; }
+
+    /* ── BODY ── */
+    .body { flex:1; min-height:0; display:grid; grid-template-columns:1.05fr 1fr; gap:3vw; align-items:stretch; }
+    .body.solo { display:flex; flex-direction:column; }
+    .body.solo > * { flex:1; min-height:0; }
+    /* stacked: summary text on top, full-width diagram filling the rest below */
+    .body.stack { display:flex; flex-direction:column; gap:1.6vh; }
+    .body.stack .col { flex:0 0 auto; justify-content:flex-start; }
+    .body.stack .eqs { height:auto; display:grid; grid-template-columns:1fr 1fr; gap:1.4vh 4vw; align-content:start; }
+    .body.stack .eqs .step { align-items:center; }
+    .body.stack .fig { flex:1; min-height:0; }
+    .col { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:1.4vh; }
+
+    ul.pts { list-style:none; height:100%; display:flex; flex-direction:column; justify-content:space-evenly; }
+    ul.pts li {
+      font-size:clamp(1.02rem,1.45vw,1.42rem); padding:0 0 0 1.8rem; position:relative;
+      display:flex; align-items:center; flex:1; border-bottom:1px solid var(--rule-lt);
+    }
+    ul.pts li:last-child { border-bottom:none; }
+    ul.pts li::before { content:"→"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+    ul.pts li b { font-weight:600; }
+
+    /* equation list (engineering, step-by-step) */
+    .eqs { display:flex; flex-direction:column; justify-content:center; height:100%; gap:1.6vh; }
+    .eqs .step { display:flex; gap:1rem; align-items:baseline; }
+    .eqs .lab { font-family:var(--sans); font-size:.74rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+                color:var(--accent); min-width:7.5ch; padding-top:.2em; }
+    .eqs .ex { font-size:clamp(1rem,1.25vw,1.2rem); }
+    .eqs .note { font-family:var(--sans); font-size:.86rem; color:var(--muted); }
+
+    .kw  { background:#fef3c7; padding:0 .2em; border-radius:2px; }
+    .kw2 { background:#d4f7d4; padding:0 .2em; border-radius:2px; }
+    .kw3 { background:#ffd6d6; padding:0 .2em; border-radius:2px; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9em; background:var(--bg2); padding:.05em .35em; border-radius:3px; }
+
+    /* ── FIGURE (never overflows) ── */
+    .fig { background:#fff; border:1px solid var(--rule-lt); border-radius:6px; padding:1.4rem;
+           display:flex; flex-direction:column; min-height:0; overflow:hidden; box-shadow:0 1px 0 rgba(0,0,0,.04); }
+    .fig img, .fig svg { width:100%; flex:1; min-height:0; max-height:100%; object-fit:contain; display:block; }
+    .fig figcaption { font-family:var(--sans); font-size:.78rem; color:var(--muted); margin-top:.8rem; line-height:1.4; }
+    .fig figcaption b { color:var(--text); }
+
+    /* diagram text + shared cell language (same object evolves across slides) */
+    .dg-t  { font-family:var(--sans); font-size:15px; fill:var(--text); }
+    .dg-tb { font-family:var(--sans); font-size:16px; font-weight:700; fill:var(--text); }
+    .dg-m  { font-family:var(--sans); font-size:12.5px; fill:var(--muted); }
+    .dg-a  { font-family:var(--sans); font-size:13px; fill:var(--accent); font-weight:700; }
+    .dg-r  { font-family:var(--sans); font-size:13px; fill:#c0392b; font-weight:700; }
+    .fill-neutral { fill:#eef1f6; stroke:#9bb0d4; stroke-width:1.1; }
+    .fill-now     { fill:#dbe5f7; stroke:#1a56c4; stroke-width:1.6; }
+    .fill-cache   { fill:#ececec; stroke:#c9c9c4; stroke-width:1; }
+    .fill-waste   { fill:#fbe0e0; stroke:#c0392b; stroke-width:1.3; }
+    .dg-box       { fill:#fff; stroke:#0f0f0f; stroke-width:1; }
+    .dg-boxnow    { fill:#dbe5f7; stroke:#1a56c4; stroke-width:1.6; }
+
+    /* ── TABLE ── */
+    table { width:100%; height:100%; border-collapse:collapse; font-family:var(--sans); }
+    th,td { text-align:left; padding:0 1.1rem; vertical-align:middle; border-bottom:1px solid var(--rule-lt);
+            font-size:clamp(.98rem,1.3vw,1.3rem); }
+    thead th { font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+               border-bottom:2px solid var(--text); padding-bottom:1.1vh; }
+    tbody td { height:1px; }
+    td.hl { font-weight:700; color:var(--accent); }
+    td.no { color:var(--muted); }
+
+    /* ── MEMORY page (formula + concrete calc) ── */
+    .mem { display:grid; grid-template-columns:1.15fr 1fr; gap:3vw; height:100%; align-items:center; }
+    .mem .formula { display:flex; flex-direction:column; justify-content:center; gap:2.4vh; }
+    .mem .big-eq { font-size:clamp(1.05rem,1.4vw,1.4rem); }
+    .calc { background:#fff; border:1px solid var(--rule-lt); border-top:4px solid var(--accent); border-radius:6px; padding:2rem 2.2rem; }
+    .calc h3 { font-family:var(--sans); font-size:.76rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:1.2rem; }
+    .calc .row { display:flex; justify-content:space-between; font-family:var(--sans); font-size:1rem; padding:.45rem 0; border-bottom:1px dotted var(--rule-lt); }
+    .calc .row span:last-child { font-weight:600; }
+    .calc .result { font-family:'Playfair Display',serif; font-weight:800; color:var(--accent); font-size:clamp(2rem,3.4vw,3rem); margin-top:1.4rem; line-height:1; }
+    .calc .result small { font-family:var(--sans); font-size:.9rem; color:var(--muted); font-weight:400; display:block; margin-top:.5rem; }
+
+    /* ── TITLE ── */
+    .title-slide { justify-content:center; }
+    .title-slide .masthead-mini {
+      font-family:var(--sans); font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted);
+      border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:.5rem 0; display:inline-block; margin-bottom:2.5vh;
+    }
+    .title-slide h1 { font-family:'Playfair Display',serif; font-weight:800; letter-spacing:-.02em; line-height:1;
+                      font-size:clamp(3.4rem,9vw,7.5rem); }
+    .title-slide .lead { font-family:'Playfair Display',serif; font-style:italic; color:var(--muted);
+                         font-size:clamp(1.3rem,2.4vw,2rem); max-width:46ch; margin-top:2.2vh; }
+    .title-slide .by { font-family:var(--sans); font-size:.95rem; color:var(--muted); margin-top:3.5vh; }
+
+    /* ── AGENDA ── */
+    ol.agenda { list-style:none; counter-reset:ag; display:grid; grid-template-columns:1fr 1fr;
+                grid-auto-rows:1fr; gap:0 5vw; height:100%; }
+    ol.agenda li { counter-increment:ag; display:flex; gap:1.3rem; align-items:center; border-bottom:1px solid var(--rule-lt); }
+    ol.agenda li::before { content:counter(ag,decimal-leading-zero); font-family:'Playfair Display',serif; font-weight:800;
+                           font-size:clamp(1.5rem,2.4vw,2.2rem); color:var(--accent); min-width:2.4ch; }
+    ol.agenda .t { font-size:clamp(1.05rem,1.5vw,1.5rem); font-weight:600; }
+    ol.agenda .d { font-family:var(--sans); font-size:clamp(.82rem,1vw,1rem); color:var(--muted); display:block; margin-top:.2rem; font-weight:400; }
+
+    /* ── REFERENCES ── */
+    ol.refs { list-style:none; counter-reset:rf; display:flex; flex-direction:column; height:100%; }
+    ol.refs li { counter-increment:rf; position:relative; padding-left:2.8rem; flex:1; display:flex; align-items:center;
+                 border-bottom:1px solid var(--rule-lt); font-family:var(--sans); font-size:clamp(.98rem,1.25vw,1.25rem); }
+    ol.refs li:last-child { border-bottom:none; }
+    ol.refs li::before { content:"["counter(rf)"]"; position:absolute; left:0; color:var(--accent); font-weight:700; font-family:'Playfair Display',serif; font-size:1.1em; }
+    ol.refs a { color:var(--accent); text-decoration:none; }
+    ol.refs a:hover { text-decoration:underline; }
+    ol.refs .src { color:var(--muted); }
+
+    /* ── FOOTER (no rule) ── */
+    .s-foot { position:absolute; left:4.5vw; right:4.5vw; bottom:1.6vh; display:flex; justify-content:space-between;
+              font-family:var(--sans); font-size:.76rem; color:var(--muted); letter-spacing:.04em; }
+    .s-foot b { color:var(--text); }
+
+    /* ── CHROME ── */
+    .progress { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--accent); z-index:200; transition:width .15s; }
+    .dots { position:fixed; right:1.4rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.7rem; z-index:200; }
+    .dots button { width:9px; height:9px; border-radius:50%; border:1.5px solid var(--rule); background:transparent; cursor:pointer; padding:0; transition:.2s; }
+    .dots button.active { background:var(--accent); border-color:var(--accent); transform:scale(1.3); }
+    .back-link { position:fixed; left:1rem; top:.7rem; z-index:200; font-family:var(--sans); font-size:.78rem; color:var(--muted); text-decoration:none; }
+    .back-link:hover { color:var(--accent); }
+
+    @media (max-width:780px){
+      .slide{ overflow-y:auto; }
+      .body,.mem{ grid-template-columns:1fr; gap:1.4rem; }
+      .body.solo > * { flex:none; }
+      .dots{ display:none; }
+      ul.pts li{ flex:none; padding:.7rem 0 .7rem 1.8rem; }
+      ol.agenda{ grid-template-columns:1fr; grid-auto-rows:auto; }
+      ol.agenda li{ padding:1rem 0; }
+      ol.refs li{ flex:none; padding:.8rem 0 .8rem 2.8rem; }
+      table{ height:auto; }
+      .fig img,.fig svg{ max-height:40vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <a href="../index.html" class="back-link">← Index</a>
+  <nav class="dots" id="dots"></nav>
+
+  <main class="deck" id="deck">
+
+    <!-- 1 · TITLE -->
+    <section class="slide title-slide">
+      <span class="masthead-mini">Hyeonwoo Jung · Deep Dive</span>
+      <h1>KV Cache</h1>
+      <p class="lead">autoregressive decoding에서 Key·Value 재계산을 제거하는 표준 inference 최적화 — input·output·연산량을 수식으로 정리한다.</p>
+      <p class="by">9 min read · LLM / Inference</p>
+    </section>
+
+    <!-- 2 · AGENDA -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>오늘 다룰 흐름</h2>
+        <p class="desc">self-attention의 input·output을 먼저 정의하고, autoregressive decoding이 무엇을 낭비하는지 본 뒤, KV cache의 동작·수식·연산량·메모리를 차례로 정량화한다.</p>
+      </div>
+      <div class="body solo">
+        <ol class="agenda">
+          <li><div><span class="t">Self-Attention의 input과 output</span><span class="d">$Q,K,V$ projection과 attention 정의</span></div></li>
+          <li><div><span class="t">문제: decoding의 K·V 재계산</span><span class="d">invariant을 매 step 다시 계산</span></div></li>
+          <li><div><span class="t">KV cache의 동작 원리 + 도식</span><span class="d">새 token만 projection → cache에 append</span></div></li>
+          <li><div><span class="t">적용 조건: 어디서 성립하는가</span><span class="d">causal decoding vs bidirectional encoder</span></div></li>
+          <li><div><span class="t">step당 연산량 비교</span><span class="d">$O(t^2d)$ 대 $O(td)$</span></div></li>
+          <li><div><span class="t">cache 메모리 정량화</span><span class="d">$2Lnd$ — 구체 수치 계산</span></div></li>
+          <li><div><span class="t">후속 기법 & References</span><span class="d">MQA · GQA · PagedAttention</span></div></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>02</b> / 09</span></div>
+    </section>
+
+    <!-- 3 · BACKGROUND: attention I/O -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>Self-Attention: input과 output의 정의</h2>
+        <p class="desc">attention은 token 시퀀스를 받아 같은 길이의 문맥 반영 표현을 돌려준다. 핵심은 <b>$K,V$가 input $X$만의 함수</b>라는 점 — 뒤에서 캐싱이 성립하는 근거다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">input</span><span class="ex">시퀀스 $X \in \mathbb{R}^{n \times d}$ &nbsp;(token $n$개, model dimension $d$)</span></div>
+            <div class="step"><span class="lab">projection</span><span class="ex">$Q = XW_Q,\quad K = XW_K,\quad V = XW_V$ &nbsp;($W_\bullet \in \mathbb{R}^{d\times d}$)</span></div>
+            <div class="step"><span class="lab">output</span><span class="ex">$\mathrm{Attn}(X) = \mathrm{softmax}\!\left(\dfrac{QK^\top}{\sqrt{d}}\right)V \in \mathbb{R}^{n\times d}$</span></div>
+            <div class="step"><span class="lab">invariant</span><span class="ex"><span class="kw">$K,V$는 $X$에만 의존</span> — $Q$와 무관하게 token별로 한 번 결정된다.</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <svg viewBox="0 0 1180 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="K,V computed from X in one pass">
+            <defs><marker id="ahb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1a56c4"/></marker></defs>
+            <!-- token column X -->
+            <text x="100" y="60" text-anchor="middle" class="dg-tb">X · tokens (n×d)</text>
+            <rect class="fill-neutral" x="40" y="78"  width="120" height="30" rx="3"/>
+            <rect class="fill-neutral" x="40" y="114" width="120" height="30" rx="3"/>
+            <rect class="fill-neutral" x="40" y="150" width="120" height="30" rx="3"/>
+            <rect class="fill-neutral" x="40" y="186" width="120" height="30" rx="3"/>
+            <text x="100" y="98"  text-anchor="middle" class="dg-t">x₁</text>
+            <text x="100" y="134" text-anchor="middle" class="dg-t">x₂</text>
+            <text x="100" y="170" text-anchor="middle" class="dg-t">x₃</text>
+            <text x="100" y="206" text-anchor="middle" class="dg-t">x₄</text>
+            <!-- projections -->
+            <line x1="162" y1="128" x2="326" y2="128" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahb)"/>
+            <text x="245" y="118" text-anchor="middle" class="dg-a">×W_K</text>
+            <line x1="162" y1="170" x2="326" y2="300" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahb)"/>
+            <text x="232" y="258" text-anchor="middle" class="dg-a">×W_V</text>
+            <!-- K stack -->
+            <text x="440" y="60" text-anchor="middle" class="dg-tb">K cache (n×d)</text>
+            <rect class="fill-neutral" x="330" y="78"  width="220" height="30" rx="3"/>
+            <rect class="fill-neutral" x="330" y="114" width="220" height="30" rx="3"/>
+            <rect class="fill-neutral" x="330" y="150" width="220" height="30" rx="3"/>
+            <rect class="fill-neutral" x="330" y="186" width="220" height="30" rx="3"/>
+            <!-- V stack -->
+            <text x="440" y="234" text-anchor="middle" class="dg-tb">V cache (n×d)</text>
+            <rect class="fill-neutral" x="330" y="250" width="220" height="30" rx="3"/>
+            <rect class="fill-neutral" x="330" y="286" width="220" height="30" rx="3"/>
+            <rect class="fill-neutral" x="330" y="322" width="220" height="30" rx="3"/>
+            <rect class="fill-neutral" x="330" y="358" width="220" height="30" rx="3"/>
+            <!-- formula box -->
+            <rect class="dg-box" x="640" y="130" width="490" height="150" rx="6"/>
+            <text x="885" y="172" text-anchor="middle" class="dg-t">Attn(X) =</text>
+            <text x="885" y="208" text-anchor="middle" class="dg-tb">softmax(QKᵀ / √d) · V</text>
+            <text x="885" y="244" text-anchor="middle" class="dg-m">= output (n×d),   Q = XW_Q</text>
+            <line x1="550" y1="150" x2="638" y2="180" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahb)"/>
+            <line x1="550" y1="300" x2="638" y2="230" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahb)"/>
+            <!-- note -->
+            <text x="440" y="406" text-anchor="middle" class="dg-m">K, V는 X에서 한 번에 계산 — 모든 행이 동시에 결정된다.</text>
+          </svg>
+          <figcaption><b>Fig 1.</b> base diagram — token 시퀀스 $X$가 $K,V$ stack으로 projection되고 attention의 입력이 된다. (이후 슬라이드가 이 그림을 변형한다)</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span></span><span><b>03</b> / 09</span></div>
+    </section>
+
+    <!-- 4 · PROBLEM -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>문제: decoding은 invariant을 매번 다시 계산한다</h2>
+        <p class="desc">autoregressive 생성은 token을 하나씩 만든다. step $t$의 input은 $x_1,\dots,x_t$, output은 $x_{t+1}$의 분포다. cache가 없으면 매 step $K_{1:t},V_{1:t}$ 전체를 다시 만든다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">재계산</span><span class="ex">매 step $K_{1:t}=X_{1:t}W_K,\; V_{1:t}=X_{1:t}W_V$ 전부 다시 계산</span></div>
+            <div class="step"><span class="lab">낭비</span><span class="ex"><span class="kw3">$k_i,v_i\ (i \lt t)$ 는 step이 바뀌어도 불변</span> — 재계산은 순수 낭비</span></div>
+            <div class="step"><span class="lab">step 비용</span><span class="ex">projection $O(t\,d^2)$ + attention $O(t^2 d)$</span></div>
+            <div class="step"><span class="lab">전체</span><span class="ex">$\sum_{t=1}^{n} \Rightarrow O(n^2 d^2) + \boxed{O(n^3 d)}$ &nbsp;— 길이의 <b>3제곱</b></span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <svg viewBox="0 0 1180 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="recompute K,V every step (waste)">
+            <defs><marker id="ahp" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0392b"/></marker></defs>
+            <!-- token column X -->
+            <text x="100" y="60" text-anchor="middle" class="dg-tb">X · tokens (n×d)</text>
+            <rect class="fill-neutral" x="40" y="78"  width="120" height="30" rx="3"/>
+            <rect class="fill-neutral" x="40" y="114" width="120" height="30" rx="3"/>
+            <rect class="fill-neutral" x="40" y="150" width="120" height="30" rx="3"/>
+            <rect class="fill-neutral" x="40" y="186" width="120" height="30" rx="3"/>
+            <text x="100" y="98"  text-anchor="middle" class="dg-t">x₁</text>
+            <text x="100" y="134" text-anchor="middle" class="dg-t">x₂</text>
+            <text x="100" y="170" text-anchor="middle" class="dg-t">x₃</text>
+            <text x="100" y="206" text-anchor="middle" class="dg-t">xₜ</text>
+            <!-- projections (red) -->
+            <line x1="162" y1="128" x2="326" y2="128" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ahp)"/>
+            <text x="245" y="118" text-anchor="middle" class="dg-r">×W_K</text>
+            <line x1="162" y1="170" x2="326" y2="300" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ahp)"/>
+            <text x="232" y="258" text-anchor="middle" class="dg-r">×W_V</text>
+            <!-- K stack: ghost repeats + red rows -->
+            <text x="440" y="60" text-anchor="middle" class="dg-tb">K — 매 step 전체 재계산</text>
+            <rect x="350" y="64" width="220" height="138" rx="3" fill="none" stroke="#c0392b" opacity="0.22"/>
+            <rect x="340" y="71" width="220" height="138" rx="3" fill="none" stroke="#c0392b" opacity="0.35"/>
+            <rect class="fill-waste" x="330" y="78"  width="220" height="30" rx="3"/>
+            <rect class="fill-waste" x="330" y="114" width="220" height="30" rx="3"/>
+            <rect class="fill-waste" x="330" y="150" width="220" height="30" rx="3"/>
+            <rect class="fill-waste" x="330" y="186" width="220" height="30" rx="3"/>
+            <!-- V stack -->
+            <text x="440" y="234" text-anchor="middle" class="dg-tb">V — 매 step 전체 재계산</text>
+            <rect x="350" y="236" width="220" height="138" rx="3" fill="none" stroke="#c0392b" opacity="0.22"/>
+            <rect x="340" y="243" width="220" height="138" rx="3" fill="none" stroke="#c0392b" opacity="0.35"/>
+            <rect class="fill-waste" x="330" y="250" width="220" height="30" rx="3"/>
+            <rect class="fill-waste" x="330" y="286" width="220" height="30" rx="3"/>
+            <rect class="fill-waste" x="330" y="322" width="220" height="30" rx="3"/>
+            <rect class="fill-waste" x="330" y="358" width="220" height="30" rx="3"/>
+            <!-- cost box -->
+            <rect class="dg-box" x="660" y="130" width="470" height="150" rx="6"/>
+            <text x="895" y="172" text-anchor="middle" class="dg-t">decode step t 마다</text>
+            <text x="895" y="208" text-anchor="middle" class="dg-r">재계산 O(t²·d)</text>
+            <text x="895" y="244" text-anchor="middle" class="dg-r">전체 생성 O(n³·d)</text>
+            <line x1="570" y1="150" x2="658" y2="180" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ahp)"/>
+            <line x1="570" y1="300" x2="658" y2="230" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ahp)"/>
+            <!-- note -->
+            <text x="440" y="406" text-anchor="middle" class="dg-r">빨강 = 매 step 다시 계산 — 그러나 이전 행 $k_i,v_i$는 불변(낭비).</text>
+          </svg>
+          <figcaption><b>Fig 2.</b> 같은 K, V stack을 <b>매 step 전부 다시 계산</b>한다(빨강·겹친 윤곽 = step마다 반복). 이전 행도 동일하게 재생성되는 순수 낭비.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span></span><span><b>04</b> / 09</span></div>
+    </section>
+
+    <!-- 5 · KV CACHE MECHANISM + DIAGRAM -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>KV cache: 새 token만 계산하고 이어 붙인다</h2>
+        <p class="desc">invariant $K,V$를 버리지 않고 cache에 보관한다. step $t$의 input은 cache $K_{\text{cache}},V_{\text{cache}}\in\mathbb{R}^{(t-1)\times d}$ 와 새 token $x_t$, output은 $o_t\in\mathbb{R}^{1\times d}$ 하나다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">① projection</span><span class="ex">$q_t=x_tW_Q,\; k_t=x_tW_K,\; v_t=x_tW_V \in \mathbb{R}^{1\times d}$</span></div>
+            <div class="step"><span class="lab">② append</span><span class="ex">$K_{\text{cache}}\!\leftarrow\![K_{\text{cache}};k_t],\;\; V_{\text{cache}}\!\leftarrow\![V_{\text{cache}};v_t]$ &nbsp;($t\times d$)</span></div>
+            <div class="step"><span class="lab">③ attention</span><span class="ex">$o_t=\mathrm{softmax}\!\left(\dfrac{q_t K_{\text{cache}}^\top}{\sqrt{d}}\right)V_{\text{cache}}$</span></div>
+            <div class="step"><span class="lab">핵심</span><span class="ex"><span class="kw2">이전 token의 $k_i,v_i$는 0번 재계산</span> — cache에서 그대로 읽는다.</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <svg viewBox="0 0 1180 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="KV cache: reuse past rows, append new row">
+            <defs><marker id="ahc" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1a56c4"/></marker></defs>
+            <!-- token column: past gray + new blue -->
+            <text x="100" y="60" text-anchor="middle" class="dg-tb">X · tokens</text>
+            <rect class="fill-cache" x="40" y="78"  width="120" height="30" rx="3"/>
+            <rect class="fill-cache" x="40" y="114" width="120" height="30" rx="3"/>
+            <rect class="fill-cache" x="40" y="150" width="120" height="30" rx="3"/>
+            <rect class="fill-now"   x="40" y="186" width="120" height="30" rx="3"/>
+            <text x="100" y="98"  text-anchor="middle" class="dg-m">x₁</text>
+            <text x="100" y="134" text-anchor="middle" class="dg-m">x₂</text>
+            <text x="100" y="170" text-anchor="middle" class="dg-m">x₃</text>
+            <text x="100" y="206" text-anchor="middle" class="dg-tb">xₜ</text>
+            <!-- only new token projects (blue) -->
+            <line x1="162" y1="200" x2="326" y2="201" stroke="#1a56c4" stroke-width="1.6" marker-end="url(#ahc)"/>
+            <text x="245" y="194" text-anchor="middle" class="dg-a">×W_K</text>
+            <line x1="162" y1="205" x2="326" y2="373" stroke="#1a56c4" stroke-width="1.6" marker-end="url(#ahc)"/>
+            <text x="232" y="300" text-anchor="middle" class="dg-a">×W_V</text>
+            <!-- K stack: past gray + new blue append -->
+            <text x="440" y="60" text-anchor="middle" class="dg-tb">K cache (t×d)</text>
+            <rect class="fill-cache" x="330" y="78"  width="220" height="30" rx="3"/>
+            <rect class="fill-cache" x="330" y="114" width="220" height="30" rx="3"/>
+            <rect class="fill-cache" x="330" y="150" width="220" height="30" rx="3"/>
+            <rect class="fill-now"   x="330" y="186" width="220" height="30" rx="3"/>
+            <text x="440" y="206" text-anchor="middle" class="dg-a">kₜ ← append</text>
+            <!-- V stack -->
+            <text x="440" y="234" text-anchor="middle" class="dg-tb">V cache (t×d)</text>
+            <rect class="fill-cache" x="330" y="250" width="220" height="30" rx="3"/>
+            <rect class="fill-cache" x="330" y="286" width="220" height="30" rx="3"/>
+            <rect class="fill-cache" x="330" y="322" width="220" height="30" rx="3"/>
+            <rect class="fill-now"   x="330" y="358" width="220" height="30" rx="3"/>
+            <text x="440" y="378" text-anchor="middle" class="dg-a">vₜ ← append</text>
+            <!-- single query -->
+            <rect class="fill-now" x="630" y="93" width="210" height="30" rx="3"/>
+            <text x="735" y="113" text-anchor="middle" class="dg-tb">qₜ = xₜW_Q</text>
+            <!-- attention chain -->
+            <rect class="dg-box" x="900" y="80" width="240" height="56" rx="5"/>
+            <text x="1020" y="104" text-anchor="middle" class="dg-t">scores = qₜKᵀ/√d</text>
+            <text x="1020" y="124" text-anchor="middle" class="dg-m">(1×t)</text>
+            <rect class="dg-box" x="900" y="172" width="240" height="46" rx="5"/>
+            <text x="1020" y="200" text-anchor="middle" class="dg-t">α = softmax  (1×t)</text>
+            <rect class="dg-boxnow" x="900" y="312" width="240" height="58" rx="5"/>
+            <text x="1020" y="336" text-anchor="middle" class="dg-tb">oₜ = α · V_cache</text>
+            <text x="1020" y="356" text-anchor="middle" class="dg-m">output (1×d)</text>
+            <!-- arrows -->
+            <line x1="840" y1="108" x2="898" y2="108" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahc)"/>
+            <line x1="550" y1="128" x2="898" y2="114" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahc)"/>
+            <line x1="1020" y1="136" x2="1020" y2="170" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahc)"/>
+            <line x1="1020" y1="218" x2="1020" y2="310" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahc)"/>
+            <line x1="550" y1="330" x2="898" y2="340" stroke="#1a56c4" stroke-width="1.5" marker-end="url(#ahc)"/>
+            <!-- legend -->
+            <rect class="fill-cache" x="40" y="394" width="22" height="15" rx="2"/>
+            <text x="72" y="406" class="dg-m">cache 재사용 (재계산 0)</text>
+            <rect class="fill-now" x="330" y="394" width="22" height="15" rx="2"/>
+            <text x="362" y="406" class="dg-m">이번 step에 새로 계산</text>
+          </svg>
+          <figcaption><b>Fig 3.</b> 같은 stack — 과거 행은 <b>회색(cache 재사용, 계산 0)</b>, 새 행 $k_t,v_t$만 <b>파랑</b>으로 append. full Q가 단일 $q_t$로 줄어든다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span></span><span><b>05</b> / 09</span></div>
+    </section>
+
+    <!-- 6 · APPLICABILITY (insight) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>적용 조건: 어디서 성립하는가</h2>
+        <p class="desc">KV cache는 만능이 아니다. 성립의 진짜 조건은 "$K,V$가 input에만 의존"이 아니라 <span class="kw2">causal masking</span> — causal mask가 있어야 과거 token의 <b>전 layer 표현</b>이 미래 token에 영향받지 않아 $k_i,v_i$ 불변이 보장된다. bidirectional(encoder)에는 이 조건이 없다.</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th>Attention 종류</th><th>KV cache</th><th>핵심 이유</th></tr></thead>
+          <tbody>
+            <tr><td>Decoder self-attention · <b>decode</b></td><td class="hl">✓ 적용</td><td>causal mask → token $i$ 표현은 $\le i$ 에만 의존; 새 token을 append해도 과거 $k,v$ 불변</td></tr>
+            <tr><td>Decoder · <b>prefill</b> (prompt)</td><td>cache 적재</td><td>prompt 전체를 1회 parallel 계산해 cache를 <b>채우는</b> 단계 (reuse 아님)</td></tr>
+            <tr><td>Encoder self-attention · <b>bidirectional</b></td><td class="no">✗ 불가</td><td>모든 token이 서로 attend·1회 parallel 처리; token 추가 시 전 표현이 바뀌고 생성 step도 없음</td></tr>
+            <tr><td>Cross-attention (encoder→decoder)</td><td class="hl">✓ 강력</td><td>$K,V$가 고정된 encoder output에서 옴 → 생성 내내 1회만 계산</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span></span><span><b>06</b> / 09</span></div>
+    </section>
+
+    <!-- 7 · COMPLEXITY -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>step당 연산량: 무엇이 사라지는가</h2>
+        <p class="desc">cache는 이전 token의 projection을 제거한다. step $t$ 기준으로 비교하면 — 새 token의 projection만 남고($O(d^2)$), attention은 cache 길이에 선형($O(td)$)이 된다.</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th>step $t$ 비용</th><th>cache 없음</th><th>KV cache</th></tr></thead>
+          <tbody>
+            <tr><td>이전 token $K,V$ 재계산</td><td class="no">$t-1$ 개 ($O(td^2)$)</td><td class="hl">0 개</td></tr>
+            <tr><td>새 token projection $q_t,k_t,v_t$</td><td>$O(d^2)$</td><td class="hl">$O(d^2)$</td></tr>
+            <tr><td>attention $\mathrm{softmax}(qK^\top)V$</td><td>$O(t^2 d)$</td><td class="hl">$O(t\,d)$</td></tr>
+            <tr><td>전체 생성 ($t=1\dots n$)</td><td class="no">$O(n^3 d)$</td><td class="hl">$O(n^2 d)$</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span></span><span><b>07</b> / 09</span></div>
+    </section>
+
+    <!-- 8 · MEMORY (concrete) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>대가: cache 메모리는 길이에 선형으로 늘어난다</h2>
+        <p class="desc">연산은 줄지만 cache는 VRAM을 점유한다. 보관 원소 수는 token·layer·dimension·precision로 정확히 계산된다.</p>
+      </div>
+      <div class="body solo">
+        <div class="mem">
+          <div class="formula">
+            <div class="big-eq">cache 크기 $= \underbrace{2}_{K,V}\cdot L \cdot n \cdot d_{\text{model}} \cdot b_{\text{bytes}} \cdot B_{\text{batch}}$</div>
+            <div class="big-eq" style="color:#444">$L$ layer 수 · $n$ token 수 · $d_{\text{model}}$ dimension · $b$ precision(byte) · $B$ batch</div>
+            <div class="big-eq"><span class="kw3">시퀀스 길이 $n$, batch $B$ 에 정비례</span> → 긴 컨텍스트의 새 병목.</div>
+            <div class="big-eq">대응: <b>MQA</b>(K/V 헤드 1개), <b>GQA</b>(그룹 공유), <b>PagedAttention</b>(페이지 단위 관리).</div>
+          </div>
+          <div class="calc">
+            <h3>구체 예시 — 7B급 model</h3>
+            <div class="row"><span>layer $L$</span><span>32</span></div>
+            <div class="row"><span>dimension $d_{\text{model}}$</span><span>4096</span></div>
+            <div class="row"><span>token $n$</span><span>8192</span></div>
+            <div class="row"><span>precision</span><span>fp16 = 2 B</span></div>
+            <div class="row"><span>batch $B$</span><span>1</span></div>
+            <div class="result">≈ 4.3 GB
+              <small>$2\cdot32\cdot8192\cdot4096\cdot2\,\text{B} = 4{,}294{,}967{,}296$ B</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="s-foot"><span></span><span><b>08</b> / 09</span></div>
+    </section>
+
+    <!-- 9 · REFERENCES -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>참고 문헌</h2>
+        <p class="desc">더 깊이 보고 싶다면.</p>
+      </div>
+      <div class="body solo">
+        <ol class="refs">
+          <li><span>Vaswani et al. <b>Attention Is All You Need.</b> <span class="src">NeurIPS 2017.</span> <a href="https://arxiv.org/abs/1706.03762">arxiv.org/abs/1706.03762</a></span></li>
+          <li><span>Shazeer. <b>Fast Transformer Decoding: One Write-Head is All You Need (MQA).</b> <span class="src">2019.</span> <a href="https://arxiv.org/abs/1911.02150">arxiv.org/abs/1911.02150</a></span></li>
+          <li><span>Ainslie et al. <b>GQA: Training Generalized Multi-Query Transformer Models.</b> <span class="src">EMNLP 2023.</span> <a href="https://arxiv.org/abs/2305.13245">arxiv.org/abs/2305.13245</a></span></li>
+          <li><span>Kwon et al. <b>Efficient Memory Management for LLM Serving with PagedAttention (vLLM).</b> <span class="src">SOSP 2023.</span> <a href="https://arxiv.org/abs/2309.06180">arxiv.org/abs/2309.06180</a></span></li>
+          <li><span>Fig 1–3 도식 — <span class="src">직접 작성 (하나의 base diagram을 slide마다 변형).</span></span></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>09</b> / 09</span></div>
+    </section>
+
+  </main>
+
+  <script>
+    const deck=document.getElementById('deck');
+    const slides=[...deck.querySelectorAll('.slide')];
+    const dotsWrap=document.getElementById('dots');
+    const progress=document.getElementById('progress');
+    slides.forEach((s,i)=>{ const b=document.createElement('button'); b.addEventListener('click',()=>slides[i].scrollIntoView()); dotsWrap.appendChild(b); });
+    const dots=[...dotsWrap.children];
+    let current=0;
+    function setActive(i){ current=i; dots.forEach((d,k)=>d.classList.toggle('active',k===i)); progress.style.width=(i/(slides.length-1)*100)+'%'; }
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) setActive(slides.indexOf(e.target)); }),{threshold:0.6});
+    slides.forEach(s=>io.observe(s));
+    window.addEventListener('keydown',e=>{
+      if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); slides[Math.min(current+1,slides.length-1)].scrollIntoView(); }
+      else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); slides[Math.max(current-1,0)].scrollIntoView(); }
+    });
+    setActive(0);
+  </script>
+</body>
+</html>
