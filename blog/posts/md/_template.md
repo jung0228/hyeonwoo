@@ -7,6 +7,7 @@ date: Mar 2026
 readtime: 8 min read
 slug: my-new-post
 katex: false
+sans: true
 ---
 
 ## 서론

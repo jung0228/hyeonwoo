@@ -104,6 +104,52 @@ const EXTRA_CSS = `
     }
 `;
 
+// ── Sans-serif font override (frontmatter: sans: true) ───────────────────────
+// Applied per-post only when `sans: true`. Leaves existing posts (no flag) on
+// the Playfair/Source-Serif newspaper aesthetic. Calibri → Carlito (Linux
+// metric-compatible) → Arial fallbacks. Kills all italics.
+const FONT_OVERRIDE = `
+    /* ─── SANS OVERRIDE (no fancy serif, no italics) ─── */
+    .post-title, .post-dek, .post-content,
+    .post-content h1, .post-content h2, .post-content h3, .post-content h4,
+    .post-content h5, .post-content h6,
+    .post-content p, .post-content li, .post-content blockquote,
+    .post-content .pullquote, .post-content .callout, .post-content .footnote,
+    .post-content table, .post-content th, .post-content td,
+    .post-content figcaption, .table-caption {
+      font-family: 'Calibri','Carlito','Arial','Helvetica Neue',sans-serif !important;
+    }
+    .post-content code, .post-content pre, .post-content pre code {
+      font-family: 'SF Mono','Fira Code',monospace !important;
+    }
+    .post-title, .post-dek,
+    .post-content h1, .post-content h2, .post-content h3,
+    .post-content h4, .post-content h5, .post-content h6,
+    .post-content em, .post-content i, .post-content cite,
+    .post-content blockquote, .post-content .pullquote,
+    .post-content figcaption, .post-content [style*="italic"] {
+      font-style: normal !important;
+    }
+    /* paper quotes — italic 대신 색/배경으로 도드라지게 */
+    .post-content blockquote {
+      border-left: 3px solid var(--accent);
+      background: #eff4fc;
+      margin: 1.7rem 0; padding: .95rem 1.25rem;
+      color: #1d3a6e; line-height: 1.7;
+      border-radius: 0 5px 5px 0;
+    }
+    .post-content blockquote p { margin: 0; }
+    .post-content blockquote em { color: inherit; }
+    .post-content .q {
+      background: #eef3fc; color: #17386f;
+      padding: .05em .3em; border-radius: 3px;
+      font-weight: 500;
+    }
+    .post-content .pullquote {
+      font-weight: 500; color: #17386f;
+    }
+`;
+
 // ── Markdown preprocessing ────────────────────────────────────────────────────
 // marked does not treat <svg> as a block element, so SVGs get wrapped in <p>.
 // Wrapping in <div> forces block-level treatment.
@@ -173,7 +219,7 @@ function generateHtml(fm, body, css) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-${fm.katex ? katexHtml() : ''}${fm.highlight ? highlightHtml() : ''}  <style>${css}${EXTRA_CSS}  </style>
+${fm.katex ? katexHtml() : ''}${fm.highlight ? highlightHtml() : ''}  <style>${css}${EXTRA_CSS}${fm.sans ? FONT_OVERRIDE : ''}  </style>
 </head>
 <body>
 
