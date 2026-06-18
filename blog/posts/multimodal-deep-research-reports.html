@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>딥리서치 보고서에 이미지를 넣는다 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .55rem .9rem;
+      border-bottom: 2px solid var(--text);
+      color: var(--text); letter-spacing: .04em;
+    }
+    .post-content td {
+      padding: .5rem .9rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text); vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+
+    /* ─── CODE BLOCKS ─── */
+    /* ─── CODE BLOCKS ─── */
+    pre {
+      background: #282c34;
+      border-radius: 6px; padding: 1.2rem 1.5rem;
+      margin: 1.6rem 0; overflow-x: auto;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .82rem; line-height: 1.65;
+      color: #abb2bf;
+    }
+    pre code, pre code.hljs {
+      background: none !important; border: none; padding: 0 !important;
+      font-size: inherit; color: inherit;
+    }
+
+    /* ─── IMAGES ─── */
+    .post-content img {
+      max-width: 100%; height: auto;
+      display: block; margin: 2rem auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule-lt);
+    }
+    .post-content figure { margin: 2rem 0; text-align: center; }
+    .post-content figure.fig-sm { max-width: 52%; margin: 2rem auto; }
+    .post-content figure.fig-sm img { max-width: 100%; }
+    .post-content figcaption {
+      font-size: .78rem; color: var(--muted); margin-top: .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ─── HIGHLIGHT (형광팬) ─── */
+    .post-content mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+    .summary-highlight {
+      background: #fef9c3;
+      border-left: 3px solid #eab308;
+      padding: .6rem 1rem;
+      margin: .6rem 0 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ─── TABLE CAPTION ─── */
+    .table-caption {
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ─── SANS OVERRIDE (no fancy serif, no italics) ─── */
+    .post-title, .post-dek, .post-content,
+    .post-content h1, .post-content h2, .post-content h3, .post-content h4,
+    .post-content h5, .post-content h6,
+    .post-content p, .post-content li, .post-content blockquote,
+    .post-content .pullquote, .post-content .callout, .post-content .footnote,
+    .post-content table, .post-content th, .post-content td,
+    .post-content figcaption, .table-caption {
+      font-family: 'Calibri','Carlito','Arial','Helvetica Neue',sans-serif !important;
+    }
+    .post-content code, .post-content pre, .post-content pre code {
+      font-family: 'SF Mono','Fira Code',monospace !important;
+    }
+    .post-title, .post-dek,
+    .post-content h1, .post-content h2, .post-content h3,
+    .post-content h4, .post-content h5, .post-content h6,
+    .post-content em, .post-content i, .post-content cite,
+    .post-content blockquote, .post-content .pullquote,
+    .post-content figcaption, .post-content [style*="italic"] {
+      font-style: normal !important;
+    }
+    /* paper quotes — italic 대신 색/배경으로 도드라지게 */
+    .post-content blockquote {
+      border-left: 3px solid var(--accent);
+      background: #eff4fc;
+      margin: 1.7rem 0; padding: .95rem 1.25rem;
+      color: #1d3a6e; line-height: 1.7;
+      border-radius: 0 5px 5px 0;
+    }
+    .post-content blockquote p { margin: 0; }
+    .post-content blockquote em { color: inherit; }
+    .post-content .q {
+      background: #eef3fc; color: #17386f;
+      padding: .05em .3em; border-radius: 3px;
+      font-weight: 500;
+    }
+    .post-content .pullquote {
+      font-weight: 500; color: #17386f;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Research Blog</span>
+  <ul class="nav-links">
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">딥리서치 보고서에 이미지를 넣는다</h1>
+  <p class="post-dek">텍스트 중심이던 Deep Research 보고서에 차트와 이미지를 어떻게 넣는지, 그리고 독자마다 다른 시각화를 주는 personalization까지 7편의 논문으로 따라간다.</p>
+
+  <div class="post-meta">
+    <span class="cat">Agent</span>
+    <span class="dot">·</span>
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span>Jun 2026</span>
+    <span class="dot">·</span>
+    <span>24 min read</span>
+  </div>
+
+  <div class="post-content">
+<p>ChatGPT, Gemini, Perplexity의 &quot;Deep Research&quot;가 내놓는 보고서는 잘 쓰였지만 대개 <strong>글뿐이다</strong>. 그런데 사람이 쓰는 진짜 리서치 보고서를 떠올려 보자. 재무 분석에는 추세 차트가, 시장 보고서에는 점유율 파이가, 기술 문서에는 아키텍처 다이어그램이 박혀 있다. 그림은 장식이 아니라 <strong>근거이자 설명 수단</strong>이다.</p>
+<p>이 글은 두 가지 질문을 따라간다. 첫째, <strong>딥리서치가 보고서를 쓸 때 이미지를 어떻게 넣는가</strong> — 직접 그리는가(차트 생성), 웹에서 가져오는가(이미지 검색), 그리고 그게 본문 주장과 진짜 맞물리는지 어떻게 검증·평가하는가. 둘째, 한 걸음 더 나아가 <strong>사람마다 잘 이해하는 시각화가 다른데, 독자에 맞춰 그림을 다르게 줄 수 있는가</strong> — 시각화의 personalization 문제다.</p>
+<div class="callout">
+<strong>다루는 소스 (7편)</strong>
+
+<ul style="margin:.4em 0 0;padding-left:1.2em;">
+<li>Multimodal DeepResearcher <span style="color:#888;">(arXiv:2506.02454)</span> — 차트를 직접 생성하는 text-chart interleaved 보고서</li>
+<li>Deep-Reporter <span style="color:#888;">(arXiv:2604.10741)</span> — 실제 이미지를 검색해 넣는 multimodal RAG</li>
+<li>TVIR <span style="color:#888;">(arXiv:2606.02320)</span> — 검색+생성 통합, 텍스트·시각 dual-path 평가</li>
+<li>Ptah <span style="color:#888;">(arXiv:2605.29861)</span> — Visual Working Memory와 verifier로 신뢰성 검증</li>
+<li>MMDeepResearch-Bench <span style="color:#888;">(arXiv:2601.12346)</span> — 멀티모달 딥리서치 평가 벤치마크</li>
+<li>Drillboards <span style="color:#888;">(arXiv:2410.12744)</span> — 독자 expertise에 맞춰 적응하는 시각화 대시보드</li>
+<li>StoryLensEdu <span style="color:#888;">(arXiv:2602.17067)</span> — 학습자 개인화 narrative 리포트</li>
+</ul>
+</div>
+
+<h2>Part 0 — Multimodal Deep Research란 무엇인가</h2>
+<p>Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색·추론하고, 인용이 달린 long-form 보고서를 생성하는 패러다임이다. 그런데 지금까지의 DR은 출력이 거의 <strong>글뿐</strong>이었다. <strong>Multimodal Deep Research</strong>(또는 multimodal report generation)는 이 보고서 생성 단계를 확장해, 본문에 <strong>차트·다이어그램·이미지를 함께 짜 넣는(text-visual interleaved)</strong> 것을 목표로 하는 갈래다. TVIR은 이 task를 아예 이름으로 못 박는다.</p>
+<blockquote>
+<p>&quot;rethinking deep research not as a purely textual task, but as a multimodal synthesis problem in which text and visuals must be jointly generated, and evaluated.&quot;</p>
+</blockquote>
+<p>핵심은 시각 요소가 <strong>사후 장식이 아니라 추론·근거의 일부</strong>여야 한다는 것이다. 그래서 이 분야의 질문은 하나가 아니라 다섯 축으로 갈라진다 — 이미지를 <strong>(1) 만들 것인가, (2) 가져올 것인가</strong>, 둘을 <strong>(3) 어떻게 통합·검증할 것인가</strong>, 결과를 <strong>(4) 어떻게 평가할 것인가</strong>, 그리고 한 걸음 더 — <strong>(5) 독자마다 다른 시각화를 줄 수 있는가</strong>.</p>
+<p>이 글이 다루는 7편을 이 다섯 축에 올려놓으면 분야의 지형이 한눈에 보인다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>무엇을 푸는가</th>
+<th>논문</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>① 이미지 <strong>생성</strong></td>
+<td>데이터→차트를 직접 그려 넣기</td>
+<td>Multimodal DeepResearcher</td>
+</tr>
+<tr>
+<td>② 이미지 <strong>검색</strong></td>
+<td>웹에서 실제 시각 근거 가져오기</td>
+<td>Deep-Reporter</td>
+</tr>
+<tr>
+<td>③ <strong>통합·검증</strong></td>
+<td>생성+검색을 합치고 정합성 검증</td>
+<td>TVIR · Ptah</td>
+</tr>
+<tr>
+<td>④ <strong>평가</strong></td>
+<td>보고서의 시각 근거를 객관적으로 채점</td>
+<td>MMDeepResearch-Bench</td>
+</tr>
+<tr>
+<td>⑤ <strong>개인화</strong></td>
+<td>독자 expertise·배경에 맞춘 시각화</td>
+<td>Drillboards · StoryLensEdu</td>
+</tr>
+</tbody></table>
+<p>아래에서는 먼저 &quot;왜 이미지인가&quot;(Part 1)로 분야의 공통 출발점을 잡고, ①–⑤ 축을 Part 2–6에서 논문별로 따라간 뒤, Part 7에서 아직 비어 있는 자리를 짚는다.</p>
+<h2>Part 1 — 왜 보고서에 이미지인가</h2>
+<p>거의 모든 논문이 같은 출발점을 공유한다. 딥리서치는 multi-step 검색·추론·long-form 생성에서 강해졌지만, <strong>벤치마크도 시스템도 여전히 text-centric</strong>이라는 것. TVIR은 이를 한 문장으로 요약한다.</p>
+<blockquote>
+<p>&quot;existing benchmarks and systems remain predominantly text-centric, with limited evaluation of whether visual elements are factually reliable and well aligned with the surrounding analysis.&quot;</p>
+</blockquote>
+<p>실제 전문 보고서는 글만으로 굴러가지 않는다. <span class="q">&quot;interleave narrative analysis with charts, diagrams, and images that serve as evidential artifacts&quot;</span> — 서사와 시각 근거가 번갈아 가며 주장(claim)을 떠받친다. 그런데 현재 시스템에서 시각 요소는 <span class="q">&quot;treated as decorative supplements rather than first-class reasoning components&quot;</span>, 즉 사후에 끼워 넣는 장식 취급이다.</p>
+<p>그렇다면 보고서에 들어가는 이미지는 <strong>두 종류</strong>다. Ptah가 깔끔하게 나눈다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/ptah_intro.png" alt="Interleaved image-text reports: benefits (illustration images, evidence images) vs challenges (incorrect references, invalid references, uninformative images, improper placement)">
+<figcaption><strong>Figure 1</strong> — 보고서 속 이미지의 두 역할과 함정. <strong>Illustration images</strong>는 개념을 구체화해 인지 부하를 줄이고, <strong>Evidence images</strong>는 측정 가능한 결과로 주장을 뒷받침한다. 오른쪽은 흔한 실패: 잘못된/무효한 image reference, 정보 없는 이미지, 엉뚱한 위치 배치. 출처: Ptah (arXiv:2605.29861), Fig 1.</figcaption>
+</figure>
+
+<ul>
+<li><strong>Illustration(설명용)</strong> — 개념을 그림으로 구체화해 이해를 돕는다. &quot;Transformer 구조&quot;를 글로만 설명하는 대신 도식을 보여주는 식.</li>
+<li><strong>Evidence(근거용)</strong> — 수치·결과를 차트로 제시해 주장을 입증한다. &quot;성능이 떨어진다&quot;가 아니라 떨어지는 곡선 그 자체.</li>
+</ul>
+<p>그리고 이 이미지를 보고서에 넣는 방법도 <strong>두 갈래</strong>로 갈린다. Deep-Reporter의 그림이 이 분기를 정확히 보여준다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/dreporter_paradigm.png" alt="Three paradigms: (a) text-only report, (b) text-to-image generation with hallucinations, (c) retrieving and integrating real-world visual evidence">
+<figcaption><strong>Figure 2</strong> — long-form 보고서 생성의 세 패러다임. (a) 전통적 text-only는 시각 정보가 없고, (b) 순수 T2I 생성은 <span class="q">"factual hallucinations and narrative fragmentation"</span>에 시달리며, (c) 실제 시각 근거를 검색·통합하면 coherence와 factuality를 함께 얻는다. 출처: Deep-Reporter (arXiv:2604.10741), Fig 1.</figcaption>
+</figure>
+
+<p>이미지를 <strong>만들 것인가(generate)</strong>, <strong>가져올 것인가(retrieve)</strong>. 데이터로부터 차트를 그려내는 쪽은 정확하지만 표현이 차트에 한정되고, 웹에서 실제 이미지를 가져오는 쪽은 풍부하지만 환각·정합성 위험이 따른다. 아래 Part 2·3은 각각의 갈래를, Part 4는 둘을 합치고 검증까지 붙인 시스템을 본다.</p>
+<h2>Part 2 — 이미지를 만든다: 차트 생성</h2>
+<p><strong>문제의식.</strong> 딥리서치 프레임워크는 학계·산업 모두 <span class="q">&quot;predominantly focus on generating textual content&quot;</span>다. Multimodal DeepResearcher는 정면으로 묻는다 — LLM이 처음부터 <strong>글과 차트가 번갈아 짜인(text-chart interleaved) 보고서</strong>를 통째로 생성하게 할 수 있는가? 개별 차트는 코딩으로 그릴 수 있지만, 그 차트를 텍스트 문맥에 자연스럽게 엮을 <strong>표현</strong>(representation)이 없다는 게 진짜 병목이다.</p>
+<p><strong>핵심 제안.</strong> <strong>Formal Description of Visualization</strong>(FDV) — 차트를 구조화된 텍스트로 기술하는 표현이다. grammar of graphics 이론에서 영감을 받아 시각화를 layout·scale·data·marks 네 관점으로 적는다. 이렇게 하면 LLM이 사람 전문가의 시각화를 in-context learning으로 배우고, 다시 다양한 고품질 차트로 생성할 수 있다.</p>
+<p><strong>작동 흐름.</strong> FDV 위에서 네 단계로 돈다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/mmdr_overview.png" alt="Multimodal DeepResearcher four stages: researching, exemplar textualization with FDV, planning, multimodal report generation with drafting/coding/refining">
+<figcaption><strong>Figure 3</strong> — Multimodal DeepResearcher의 4단계. (A) Researching: 주제를 반복 조사, (B) Exemplar Textualization: 전문가 보고서를 FDV(layout·scale·data·marks)로 텍스트화, (C) Planning: outline + 시각화 스타일 가이드, (D) Report Generation: drafting → coding → 반복 refining으로 최종 보고서. 출처: Multimodal DeepResearcher (arXiv:2506.02454), Fig 1.</figcaption>
+</figure>
+
+<ol>
+<li><strong>Researching</strong> — 검색·추론으로 주제 정보를 모은다.</li>
+<li><strong>Exemplar textualization</strong> — 사람 전문가의 멀티모달 보고서를 FDV로 옮겨 in-context 예시로 삼는다.</li>
+<li><strong>Planning</strong> — 내용 outline과 시각화 스타일 가이드를 정한다.</li>
+<li><strong>Multimodal generation</strong> — 초안 작성 → 코드 생성 → 차트 반복 개선으로 최종본을 낸다.</li>
+</ol>
+<p><strong>결과.</strong> 동일한 Claude 3.7 Sonnet으로 baseline(DataNarrative) 대비 <span style="background:#fef3c7;padding:0 .2em;"><strong>82% overall win rate</strong></span>. 생성되는 차트도 막대·선에 그치지 않고 stacked area, Sankey, infographic, 타임라인 막대, 파이 등으로 다양하다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/mmdr_cases.png" alt="Variety of generated charts: stacked area, Sankey diagram, infographic, horizontal bar, dashboard, pie chart">
+<figcaption><strong>Figure 4</strong> — 생성된 차트 예시. stacked area, Sankey diagram, infographic, horizontal bar, dashboard, pie 등 표현 형식이 다양하다. 출처: Multimodal DeepResearcher (arXiv:2506.02454).</figcaption>
+</figure>
+
+<p><strong>한계.</strong> 모든 시각 요소를 <strong>코드로 그릴 수 있는 차트</strong>로 환원한다. 데이터 기반 차트에는 강하지만, 실제 사진·다이어그램·지도처럼 &quot;검색해 와야 하는&quot; 이미지는 다루지 못한다.</p>
+<div class="callout"><strong>이 논문의 위치 —</strong> "이미지를 만든다" 갈래의 대표. 데이터→차트 생성은 정확하지만 표현이 차트로 한정된다는 점이, 다음 "가져온다" 갈래의 동기가 된다.</div>
+
+<h2>Part 3 — 이미지를 가져온다: 멀티모달 검색</h2>
+<p><strong>문제의식.</strong> 차트 생성만으로는 부족하다. 진짜 보고서에는 사진·실측 도표·실제 figure가 들어간다. Deep-Reporter는 text-only 생성과 순수 T2I 생성(환각 문제)을 모두 비판하며, <strong>웹에서 실제 시각 근거를 검색·통합</strong>하는 길을 택한다. 다만 텍스트 기반 agentic search를 멀티모달로 확장하는 데 세 가지 난제가 있다 — agentic multimodal retrieval, coherent multimodal long-form generation, 그리고 evaluation.</p>
+<p><strong>핵심 제안.</strong> 멀티모달 정보를 수집하는 multi-agent 프레임워크 + <span class="q">&quot;Checklist-Guided Incremental Synthesis&quot;</span> 합성 메커니즘. 보고서 구조를 &quot;Semantic Anchors&quot;로 형식화하고, 문맥을 누적 갱신하며 글과 이미지가 일관되게 interleave되도록 한다.</p>
+<p><strong>작동 흐름.</strong> planning → multimodal information seeking → incremental writing의 3축으로, 텍스트·시각 passage를 반복 검색하고 고가치 근거만 필터링해 점진적으로 작성한다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/dreporter_arch.png" alt="Deep-Reporter framework: multi-agent planning, multimodal information seeking, incremental writing; plus agentic trace construction pipeline">
+<figcaption><strong>Figure 5</strong> — Deep-Reporter 구조. (a) Inference: 멀티 에이전트가 planning·멀티모달 검색·점진적 작성을 오케스트레이션. (b) Training: 8K개 expert trajectory를 합성해 open-weight 모델에 멀티모달 능력을 주입. 출처: Deep-Reporter (arXiv:2604.10741), Fig 2.</figcaption>
+</figure>
+
+<p><strong>결과.</strong> open-weight 모델 학습을 위해 8K개 고품질 expert trajectory를 큐레이션하고, 평가용으로 정적 멀티모달 sandbox(95K 이미지, 108M text chunk; 보고서당 평균 102 이미지·168 chunk가 ground-truth 근거)를 구축했다. RAG baseline을 크게 앞선다.</p>
+<p><strong>한계.</strong> 검색 기반이라 코퍼스 품질·검색 정밀도에 성능이 묶이고, 검색해 온 이미지가 본문 주장과 실제로 정합한지(image-text consistency)는 여전히 까다로운 검증 대상이다 — 바로 다음 Part의 주제다.</p>
+<div class="callout"><strong>이 논문의 위치 —</strong> "이미지를 가져온다" 갈래의 대표. 실제 시각 근거를 넣어 풍부해지지만, 정합성 검증이라는 새 숙제를 남긴다.</div>
+
+<h2>Part 4 — 둘 다, 그리고 검증</h2>
+<p>생성과 검색은 양자택일이 아니다. 두 연구가 둘을 합치고 거기에 <strong>검증</strong>을 더한다.</p>
+<h3>TVIR — 검색 이미지 + 생성 차트, 그리고 dual-path 평가</h3>
+<p><strong>문제의식.</strong> 기존 벤치마크는 text-only이거나 시각 요소가 약하다. TVIR은 딥리서치를 아예 <span class="q">&quot;Text--Visual Interleaved Report Generation&quot;</span> 문제로 정의하고, 시각 요소가 <strong>특정 분석 sub-goal에 의미적으로 결속</strong>되도록 강제한다(사후에 갖다 붙이는 게 아니라).</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/tvir_intro.png" alt="Benchmark comparison: DeepResearch Bench (text-only), MultimodalReportBench (charts), LiveResearchBench (text-only), TVIR-Bench (charts and images)">
+<figcaption><strong>Figure 6</strong> — 벤치마크 비교. 기존 벤치마크는 text-only이거나 차트만 다루지만, TVIR-Bench는 <strong>검색한 이미지 + 코드 생성 차트</strong>가 모두 들어간 interleaved 보고서를 요구한다. 출처: TVIR (arXiv:2606.02320), Fig 1.</figcaption>
+</figure>
+
+<p><strong>핵심 제안.</strong> ① 100개 expert-curated 태스크의 <strong>TVIR-Bench</strong>, ② Planner·Visual Asset Instantiation·Writer·Polisher로 구성된 계층적 multi-agent <strong>baseline</strong>(이미지 검색 + 차트 생성을 둘 다 수행), ③ <strong>dual-path 평가</strong> — Textual Assessment(citation grounding·logical consistency·analytical depth)와 Visual Assessment(figure quality·chart fidelity·cross-modal alignment).</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/tvir_pipeline.png" alt="TVIR data construction pipeline (topic proposal, drafting, multi-expert review) and dual-path evaluation framework (textual assessment, visual assessment)">
+<figcaption><strong>Figure 7</strong> — (a) 데이터 구축: 도메인 전문가의 topic proposal → drafting → 다중 전문가 검토(design/factual/logical/multimodal). (b) 평가 프레임워크: Judge LLM이 Textual Assessment와 Visual Assessment를 함께 채점. 출처: TVIR (arXiv:2606.02320).</figcaption>
+</figure>
+
+<p><strong>결과.</strong> 9개 딥리서치 시스템 실험에서 핵심 통찰 하나 — 현재 LLM은 텍스트 유창성엔 강하지만 <span style="background:#ffd6d6;padding:0 .2em;"><strong>&quot;decorative&quot; 시각을 &quot;evidential&quot; 시각보다 우선</strong></span>하는 경향이 있다. 그럴듯하지만 근거가 안 되는 그림을 넣는다는 것.</p>
+<h3>Ptah — Visual Working Memory와 verifier로 신뢰성을 건다</h3>
+<p><strong>문제의식.</strong> 딥리서치는 (1) open-endedness(정답이 없어 검증이 어려움)와 (2) multimodal interleaving 두 난제를 동시에 안는다. 기존 파이프라인은 단계별 검증이 없어 초반 노이즈가 누적되고, 이미지 통합을 <span class="q">&quot;post-hoc decorative step&quot;</span>로 취급한다.</p>
+<p><strong>핵심 제안.</strong> Planning·Research·Writing 3단계 harness. 검색한 이미지를 <strong>Visual Working Memory</strong>에 source-aligned 상태로 유지하다가 보고서에 배치하고, 각 단계 사이에 <strong>verifier agent</strong>가 acceptance function으로서 factual grounding·citation fidelity·cross-modal consistency를 통과시켜야 다음으로 넘어간다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/ptah_arch.png" alt="Ptah three-stage harness: Planning (planner, visual requirements), Research (researcher, visual working memory, verifier), Writing (writer, image search/generation, refine/render)">
+<figcaption><strong>Figure 8</strong> — Ptah의 3단계 harness. Planning은 visual-aware 계획을, Research는 Visual Working Memory에 source-aligned 이미지 후보를 유지하며, 각 단계 사이 <strong>Verifier</strong>가 rubric/rule 기반 검증으로 통과를 결정한다. Writing은 image search·generation을 declarative tool로 호출해 최종 렌더링. 출처: Ptah (arXiv:2605.29861), Fig 2.</figcaption>
+</figure>
+
+<p><strong>작동 흐름.</strong> Plan(텍스트 구조 + 의도한 visual evidence 명세) → Research(claim-grounded 근거·인용·수치·시각 후보를 inspectable artifact로) → Write(declarative multimodal tool로 interleaved 보고서 작성). 전 구간에 verifier hook.</p>
+<p><strong>결과.</strong> image-level·presentation-level 평가를 더한 <strong>PtahEval</strong>로, 강한 baseline 대비 더 신뢰할 수 있고 시각적으로 유용한 사람-대면 보고서를 생성. 검색 이미지와 생성 차트를 모두 다룬다.</p>
+<p><strong>한계(TVIR·Ptah 공통).</strong> 검증·평가 모두 결국 LLM judge에 의존하고, &quot;어떤 그림이 정말 evidential한가&quot;의 판단 자체가 모델 능력에 묶인다.</p>
+<div class="callout"><strong>이 논문들의 위치 —</strong> 생성·검색을 통합하고 cross-modal 정합성 검증을 1급 단계로 끌어올렸다. 남는 질문은 "그래서 이걸 어떻게 객관적으로 측정하나" — Part 5.</div>
+
+<h2>Part 5 — 어떻게 평가하나</h2>
+<p><strong>문제의식.</strong> open-ended 보고서는 gold answer가 없어 평가가 어렵다. MMDeepResearch-Bench는 멀티모달 딥리서치를 <strong>integrated(통합) 능력과 atomic(기초) 능력 양쪽에서</strong> 재는 통일 벤치마크를 만든다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/mmb_intro.png" alt="MMDR-Bench evaluates two levels: integrated (multimodal task understanding, visually-grounded planning, citation-grounded reasoning, long-form synthesis) and atomic (visual perception, web search tools, long-context understanding, instruction following)">
+<figcaption><strong>Figure 9</strong> — MMDR-Bench의 두 레벨. <strong>Integrated</strong>: 멀티모달 task 이해·visually-grounded planning·citation-grounded reasoning·long-form 합성. <strong>Atomic</strong>: visual perception·web search·long-context·instruction following. 출처: MMDeepResearch-Bench (arXiv:2601.12346), Fig 2.</figcaption>
+</figure>
+
+<p><strong>핵심 제안.</strong> 140개 expert-crafted 태스크(Daily/Research 두 regime, 21개 도메인). 각 태스크는 image-text bundle로 패키징된다. 평가 프레임워크는 세 모듈 — <strong>FLAE</strong>(report 품질), <strong>TRACE</strong>(citation grounding·출처 품질), <strong>MOSAIC</strong>(text-image 일관성). 특히 <strong>Visual Evidence Fidelity</strong>(VEF)는 task별 textualized visual ground truth에 대해 PASS/FAIL hard 제약을 걸어, 시각 데이터를 오독하거나 환각하면 책임을 묻는다.</p>
+<p><strong>결과.</strong> 25개 SOTA 시스템 평가에서 writing quality·citation discipline·multimodal grounding 사이의 <strong>persistent trade-off</strong>가 드러난다 — 셋을 동시에 잘하는 시스템이 드물다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/mmb_results.png" alt="MMDR-Bench leaderboard bar plot of representative tool-using LMMs and Deep Research systems ranked by final score">
+<figcaption><strong>Figure 10</strong> — MMDR-Bench 종합 점수(0–100) 리더보드. 대표 tool-using LMM과 딥리서치 시스템을 점수순으로 정렬. 출처: MMDeepResearch-Bench (arXiv:2601.12346), Fig 1.</figcaption>
+</figure>
+
+<div class="callout"><strong>이 논문의 위치 —</strong> Part 2–4가 "더 잘 만드는" 시스템이었다면, 여기는 "제대로 만들었는지 재는" 자. VEF처럼 시각 근거를 hard 제약으로 채점하는 게 핵심 기여다.</div>
+
+<div class="pullquote">
+여기까지는 모두 <strong>모든 독자에게 동일한</strong> 멀티모달 보고서를 더 잘 만들고 검증하는 이야기다. 그런데 사람마다 잘 이해하는 시각화가 다르다면?
+</div>
+
+<h2>Part 6 — 사람마다 다른 시각화: 개인화</h2>
+<p>같은 데이터라도 초심자에게는 요약된 한 장이, 전문가에게는 세부 차트 여럿이 맞다. 같은 정보라도 누군가는 표를, 누군가는 그래프를 잘 읽는다. 이 <strong>시각화의 개인화</strong>를 다루는 두 연구를 본다 — 다만 둘 다 딥리서치가 아니라 인접한 HCI·교육 영역이라는 점이 중요하다.</p>
+<h3>Drillboards — expertise에 맞춰 펼쳐지는 대시보드</h3>
+<p><strong>문제의식.</strong> 대시보드는 <span class="q">&quot;designed for a specific audience and purpose, making them essentially immutable&quot;</span> — 특정 독자용으로 고정돼 있다. 같은 데이터를 보더라도 독자의 expertise·관심·들일 노력이 다른데도.</p>
+<p><strong>핵심 제안.</strong> <strong>drillboards</strong> — 차트들을 계층(hierarchy)으로 쌓아, 독자가 drill-down/roll-up으로 원하는 detail 수준까지 펼치거나 접는 적응형 대시보드. 바닥은 모든 차트가 펼쳐진 baseline, 위로 갈수록 차트를 병합해 추상화된다. &quot;novice / intermediate / expert&quot; 같은 사전 정의 레벨도 제공한다.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/drill_novice.png" alt="Drillboard novice view: aggregated, grouped charts at a higher level of abstraction">
+<figcaption><strong>Figure 11</strong> — 같은 데이터의 novice view. 차트가 상위 카테고리로 묶여(aggregated) 적은 수의 추상화된 뷰로 제시된다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
+</figure>
+
+<figure>
+<img src="img/multimodal-deep-research-reports/drill_expert.png" alt="Drillboard expert view: many detailed unit charts at full granularity">
+<figcaption><strong>Figure 12</strong> — 같은 데이터의 expert view. 모든 unit chart가 세부 단위까지 펼쳐진다. 독자의 expertise에 따라 동일 대시보드가 다르게 보인다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
+</figure>
+
+<p><strong>결과.</strong> 전문가 3명이 novice용 drillboard를 저작하고 일반 사용자 10명이 평가한 결과, 데이터의 맥락·출처를 전달하는 communication tool로 효과적이었고 novice가 전문가 의도를 빠르게 파악했다.</p>
+<p><strong>한계.</strong> 저작이 일반 대시보드보다 훨씬 복잡하고, 개인화 단위가 &quot;expertise 레벨&quot;에 머문다(직종·관심사별 figure 선택까지는 아님). 그리고 딥리서치 파이프라인과 무관한 별도 도구다.</p>
+<h3>StoryLensEdu — 학습자에 맞춘 narrative 리포트</h3>
+<p><strong>문제의식.</strong> 학습 분석 대시보드와 텍스트 리포트는 해석이 어렵고(<span class="q">&quot;poor interpretability&quot;</span>), 단조롭고, 일방향이다. 학생마다 데이터가 다른데 같은 형식으로 던져진다.</p>
+<p><strong>핵심 제안.</strong> 세 에이전트 multi-agent 시스템 — <strong>Data Analyst</strong>(learning-objective 중심으로 인사이트 추출), <strong>Teacher</strong>(교육적 가치 평가·맞춤 제안), <strong>Storyteller</strong>(Hero&#39;s Journey 서사 틀로 인사이트를 이야기로 조직). 생성 후 학생이 리포트의 시각·텍스트 요소를 골라 후속 질문하는 interaction 모듈까지.</p>
+<figure>
+<img src="img/multimodal-deep-research-reports/story_workflow.png" alt="StoryLensEdu workflow: Data Analyst, Teacher, Storyteller agents produce a personalized learning report plus interaction module for follow-up QA">
+<figcaption><strong>Figure 13</strong> — StoryLensEdu 워크플로. 학습자 데이터 + learning-objective graph를 Data Analyst·Teacher·Storyteller가 가공해 개인화 리포트를 만들고, Interaction Module로 요소를 골라 후속 질의응답까지. 출처: StoryLensEdu (arXiv:2602.17067), Fig 1.</figcaption>
+</figure>
+
+<p><strong>결과.</strong> 실제 고교 현장 formative study로 설계하고 실사용자 평가에서 engagement와 학습 과정 이해가 향상됐다. 핵심 기여는 데이터 인사이트와 narrative storytelling을 동적으로 결합해 <strong>non-expert를 위한 context-aware 시각화 추천</strong>을 자동화했다는 점.</p>
+<p><strong>한계.</strong> 교육 도메인 특화이고, 개인화가 narrative·설명 수준에 집중된다. 역시 딥리서치 보고서 생성은 아니다.</p>
+<div class="callout"><strong>이 두 논문의 위치 —</strong> "독자마다 다른 시각"이 가능함을 보여주지만, 둘 다 <strong>주어진 데이터 한 벌</strong>을 다루는 HCI/교육 도구다. 웹을 뒤져 보고서를 만드는 딥리서치 안으로는 아직 들어오지 않았다.</div>
+
+<h2>Part 7 — 열린 질문: 멀티모달 × 개인화의 빈칸</h2>
+<p>정리하면 두 흐름이 평행선을 달린다.</p>
+<table>
+<thead>
+<tr>
+<th>흐름</th>
+<th>한 일</th>
+<th>빠진 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>멀티모달 딥리서치</strong><br>(MMDR · Deep-Reporter · TVIR · Ptah · MMDR-Bench)</td>
+<td>보고서에 이미지를 생성·검색·검증·평가</td>
+<td>이미지가 <strong>모든 독자에게 동일</strong></td>
+</tr>
+<tr>
+<td><strong>시각화 개인화</strong><br>(Drillboards · StoryLensEdu)</td>
+<td>독자 expertise·배경에 맞춰 시각을 적응</td>
+<td><strong>주어진 데이터 한 벌</strong>만, 딥리서치 아님</td>
+</tr>
+</tbody></table>
+<p>두 원이 겹치는 가운데 — <strong>&quot;독자의 직종·배경·시각 이해 방식에 맞춰, 딥리서치 보고서에 들어갈 figure 자체를 다르게 검색·생성·배치하는&quot;</strong> 연구는 아직 비어 있다. 의대생과 환자가 같은 &quot;당뇨 치료 동향&quot;을 물어도, 텍스트뿐 아니라 <strong>그림도 달라야</strong> 한다. 한쪽엔 기전 다이어그램과 임상시험 forest plot을, 다른 쪽엔 생활 습관 인포그래픽을.</p>
+<p>세 가지가 동시에 풀려야 한다. ① 같은 정보를 <strong>어떤 형식</strong>(표/그래프/다이어그램/사진)으로 줄지의 개인화, ② <strong>어떤 figure를 고를지</strong>의 개인화, ③ 그 개인화가 정말 이해를 높였는지의 <strong>평가</strong>. 멀티모달 평가(VEF·MOSAIC)도, 개인화 평가(reference-free per-user scoring)도 따로는 있지만, 둘을 합친 잣대는 없다.</p>
+<blockquote>
+<p>멀티모달 보고서 생성은 여기까지 왔고, 시각화 개인화도 따로 무르익었다. 둘을 딥리서치 안에서 잇는 자리가 — 지금 비어 있다.</p>
+</blockquote>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>
