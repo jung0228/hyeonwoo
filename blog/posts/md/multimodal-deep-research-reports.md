@@ -78,7 +78,14 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 
 **문제의식.** 딥리서치 프레임워크는 학계·산업 모두 <span class="q">"predominantly focus on generating textual content"</span>다. Multimodal DeepResearcher는 정면으로 묻는다 — LLM이 처음부터 **글과 차트가 번갈아 짜인(text-chart interleaved) 보고서**를 통째로 생성하게 할 수 있는가? 개별 차트는 코딩으로 그릴 수 있지만, 그 차트를 텍스트 문맥에 자연스럽게 엮을 **표현**(representation)이 없다는 게 진짜 병목이다.
 
-**핵심 제안.** **Formal Description of Visualization**(FDV) — 차트를 구조화된 텍스트로 기술하는 표현이다. grammar of graphics 이론에서 영감을 받아 시각화를 layout·scale·data·marks 네 관점으로 적는다. 이렇게 하면 LLM이 사람 전문가의 시각화를 in-context learning으로 배우고, 다시 다양한 고품질 차트로 생성할 수 있다.
+**핵심 제안.** **Formal Description of Visualization**(FDV) — 차트를 구조화된 텍스트로 기술하는 표현이다. grammar of graphics 이론에서 영감을 받아 시각화를 **네 관점**으로 적는다.
+
+- **Overall layout** — 어떤 subplot들로 구성되고 공간적으로 어떻게 배치되는지.
+- **Plotting scale** — "데이터 → 시각 채널(위치·색 등)" 매핑의 스케일링 논리와 주석.
+- **Data** — 차트 생성에 쓰인 수치 데이터와 텍스트 요소.
+- **Marks** — 각 시각 요소(점·선·막대 등)의 디자인 명세.
+
+핵심은 **양방향**이라는 점이다. MLLM이 사람 전문가의 차트 이미지에서 FDV를 추출(textualize)하면 그 보고서가 통째로 텍스트가 되어 in-context 예시가 되고, 거꾸로 FDV를 코드로 구현(reconstruct)하면 다시 차트가 된다. 차트를 "글처럼" 다룰 수 있게 만든 표현이다.
 
 **작동 흐름.** FDV 위에서 네 단계로 돈다.
 
@@ -87,12 +94,14 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 <figcaption><strong>Figure 3</strong> — Multimodal DeepResearcher의 4단계. (A) Researching: 주제를 반복 조사, (B) Exemplar Textualization: 전문가 보고서를 FDV(layout·scale·data·marks)로 텍스트화, (C) Planning: outline + 시각화 스타일 가이드, (D) Report Generation: drafting → coding → 반복 refining으로 최종 보고서. 출처: Multimodal DeepResearcher (arXiv:2506.02454), Fig 1.</figcaption>
 </figure>
 
-1. **Researching** — 검색·추론으로 주제 정보를 모은다.
-2. **Exemplar textualization** — 사람 전문가의 멀티모달 보고서를 FDV로 옮겨 in-context 예시로 삼는다.
-3. **Planning** — 내용 outline과 시각화 스타일 가이드를 정한다.
-4. **Multimodal generation** — 초안 작성 → 코드 생성 → 차트 반복 개선으로 최종본을 낸다.
+1. **Researching** — 주제 `t`에서 키워드를 뽑아 웹 검색 → 결과를 추론·종합해 learnings `L`을 만들고, 다음 라운드의 research question을 세워 반복한다(`n_R`회).
+2. **Exemplar textualization** — 사람 전문가의 멀티모달 보고서에서 차트마다 MLLM으로 FDV를 추출해 이미지를 FDV 텍스트로 치환, in-context 예시 `R̃`을 만든다.
+3. **Planning** — learnings·exemplar를 바탕으로 hierarchical outline `O`와, 색 팔레트·폰트 위계 같은 **시각화 스타일 가이드** `G`(보고서 전체 차트 스타일을 일관되게)를 정한다.
+4. **Multimodal generation** — 먼저 차트 자리에 FDV를 placeholder로 둔 텍스트 보고서를 쓰고, 각 FDV를 **D3.js 코드**로 구현한다. 여기에 **actor-critic 루프**가 붙는다 — actor LLM이 코드를 짜면 브라우저로 렌더링해 console 에러와 스크린샷을 얻고, critic MLLM이 시각 품질을 보고 피드백을 준다. critic이 만족하거나 **최대 3회** 재시도까지 반복한 뒤 마지막 두 후보 중 더 나은 것을 고른다.
 
-**결과.** 동일한 Claude 3.7 Sonnet으로 baseline(DataNarrative) 대비 <span style="background:#fef3c7;padding:0 .2em;">**82% overall win rate**</span>. 생성되는 차트도 막대·선에 그치지 않고 stacked area, Sankey, infographic, 타임라인 막대, 파이 등으로 다양하다.
+D3.js를 쓰는 이유도 분명하다 — matplotlib 같은 declarative 라이브러리로는 FDV가 표현하는 자유로운 디자인을 다 못 그리기 때문에, imperative한 D3.js로 떨어뜨린다.
+
+**결과.** 동일한 Claude 3.7 Sonnet으로 baseline(DataNarrative) 대비 <span style="background:#fef3c7;padding:0 .2em;">**82% overall win rate**</span>. report-level·chart-level 각각 5개 지표로 자동·사람 평가했고, 생성 차트도 막대·선에 그치지 않고 stacked area, Sankey, infographic, 타임라인 막대, 파이 등으로 다양하다.
 
 <figure>
 <img src="img/multimodal-deep-research-reports/mmdr_cases.png" alt="Variety of generated charts: stacked area, Sankey diagram, infographic, horizontal bar, dashboard, pie chart">
@@ -107,16 +116,20 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 
 **문제의식.** 차트 생성만으로는 부족하다. 진짜 보고서에는 사진·실측 도표·실제 figure가 들어간다. Deep-Reporter는 text-only 생성과 순수 T2I 생성(환각 문제)을 모두 비판하며, **웹에서 실제 시각 근거를 검색·통합**하는 길을 택한다. 다만 텍스트 기반 agentic search를 멀티모달로 확장하는 데 세 가지 난제가 있다 — agentic multimodal retrieval, coherent multimodal long-form generation, 그리고 evaluation.
 
-**핵심 제안.** 멀티모달 정보를 수집하는 multi-agent 프레임워크 + <span class="q">"Checklist-Guided Incremental Synthesis"</span> 합성 메커니즘. 보고서 구조를 "Semantic Anchors"로 형식화하고, 문맥을 누적 갱신하며 글과 이미지가 일관되게 interleave되도록 한다.
+**핵심 제안.** Planner·Searcher-Filter·Reporter 세 에이전트 + <span class="q">"Checklist-Guided Incremental Synthesis"</span> 합성 메커니즘. 보고서 구조를 "Semantic Anchors"로 형식화하고, 문맥을 누적 갱신하며 글과 이미지가 일관되게 interleave되도록 한다.
 
-**작동 흐름.** planning → multimodal information seeking → incremental writing의 3축으로, 텍스트·시각 passage를 반복 검색하고 고가치 근거만 필터링해 점진적으로 작성한다.
+**작동 흐름.** 세 단계가 맞물린다.
+
+- **Sectional Planning(이중 입도 체크리스트)** — Planner가 질의를 섹션들 `{S₁…S_N}`로 분해하되, 각 섹션을 `(D_k, C_k)`로 적는다. `D_k`는 거친 입도의 내용 범위, `C_k`는 그 섹션이 다뤄야 할 **fact·argument를 콕 집은 semantic anchor**들. 이 이중 입도가 일관성과 정밀도를 동시에 잡는다.
+- **Agentic Multimodal Search & Filtering** — 섹션마다 **두 갈래 쿼리**를 만든다. Narrative Query(`Q_txt`)는 사실·통계 passage를, Visual Query(`Q_img`)는 차트·다이어그램·infographic을 노린다. 검색된 후보 풀은 필터가 거른다 — 텍스트는 LLM이 `(D_k, C_k)`와의 entailment를 보고, 이미지는 **VLM이 informativeness를 판정**해 장식용 이미지를 버리고 정보 밀도 높은 그림만 남긴다.
+- **Incremental Synthesis(순환 문맥 관리)** — 매 섹션을 plan·evidence·memory·position 조건으로 생성한다. 이미지가 토큰을 많이 먹어 전체를 한 프롬프트에 넣으면 context overflow가 나므로, 과거 문맥을 `m_global`(서사 전체의 재귀 요약)과 `m_local`(직전 섹션의 원문 꼬리)로 압축해 들고 다닌다. 이미지는 caption으로 텍스트화해 두고, 모델이 `![](cite:img1)` 같은 인용을 **적절한 위치에 삽입**하도록 학습된다.
 
 <figure>
 <img src="img/multimodal-deep-research-reports/dreporter_arch.png" alt="Deep-Reporter framework: multi-agent planning, multimodal information seeking, incremental writing; plus agentic trace construction pipeline">
 <figcaption><strong>Figure 5</strong> — Deep-Reporter 구조. (a) Inference: 멀티 에이전트가 planning·멀티모달 검색·점진적 작성을 오케스트레이션. (b) Training: 8K개 expert trajectory를 합성해 open-weight 모델에 멀티모달 능력을 주입. 출처: Deep-Reporter (arXiv:2604.10741), Fig 2.</figcaption>
 </figure>
 
-**결과.** open-weight 모델 학습을 위해 8K개 고품질 expert trajectory를 큐레이션하고, 평가용으로 정적 멀티모달 sandbox(95K 이미지, 108M text chunk; 보고서당 평균 102 이미지·168 chunk가 ground-truth 근거)를 구축했다. RAG baseline을 크게 앞선다.
+**결과.** open-weight 모델은 멀티모달 agentic 능력이 없으므로, 3단계 trace 합성 파이프라인으로 학습 데이터를 만든다 — ① 전문가가 9개 도메인에 걸쳐 outline·checklist를 다듬어 **1K개 질의**를 만들고, ② frontier 모델로 프레임워크를 돌려 전체 상호작용 trace **17K개**를 증류한 뒤, ③ 시각 환각·잘못된 이미지 인용·위치 결함 등을 공격적으로 걸러 **8K개 고품질 trace**만 남긴다(전문가 500개 샘플 검증에서 자동 필터와 92.4% 일치). 평가용으로는 정적 멀티모달 sandbox(95K 이미지, 108M text chunk; 보고서당 평균 102 이미지·168 chunk가 ground-truth 근거)를 구축해 검색 알고리즘만 격리 비교할 수 있게 했다. RAG baseline을 크게 앞선다.
 
 **한계.** 검색 기반이라 코퍼스 품질·검색 정밀도에 성능이 묶이고, 검색해 온 이미지가 본문 주장과 실제로 정합한지(image-text consistency)는 여전히 까다로운 검증 대상이다 — 바로 다음 Part의 주제다.
 
@@ -135,7 +148,11 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 <figcaption><strong>Figure 6</strong> — 벤치마크 비교. 기존 벤치마크는 text-only이거나 차트만 다루지만, TVIR-Bench는 <strong>검색한 이미지 + 코드 생성 차트</strong>가 모두 들어간 interleaved 보고서를 요구한다. 출처: TVIR (arXiv:2606.02320), Fig 1.</figcaption>
 </figure>
 
-**핵심 제안.** ① 100개 expert-curated 태스크의 **TVIR-Bench**, ② Planner·Visual Asset Instantiation·Writer·Polisher로 구성된 계층적 multi-agent **baseline**(이미지 검색 + 차트 생성을 둘 다 수행), ③ **dual-path 평가** — Textual Assessment(citation grounding·logical consistency·analytical depth)와 Visual Assessment(figure quality·chart fidelity·cross-modal alignment).
+**핵심 제안.** ① **TVIR-Bench** — 100개 태스크(중국어 50 + 영어 50), 10개 도메인·3단계 난이도, 8개 기능 유형(trend prediction·mechanism explanation·comparative analysis 등). 전문가 topic 제안 → Grok-4.1-Thinking 초안 → 3인 전문가 검토(design/factual/logical/multimodal validity) → 태스크별 검증 checklist 컴파일까지 거친다. ② 4단계 multi-agent **baseline**. ③ **dual-path 평가**.
+
+**baseline 4단계.** ⓐ **Research-Grounded Planning** — Planner가 검색으로 정보를 모아 outline을 짜는데, 각 섹션 unit `σ_i`에 제목·요약뿐 아니라 **planned visual requirement** `V_i^req`와, 인용·URL·핵심 발견이 담긴 research note `N_i`를 붙인다. ⓑ **Visual Asset Instantiation** — 두 전문 에이전트가 나눠 맡는다. **Image Searcher**는 인물·장면·아키텍처 도식을 Google 이미지로 검색→휴리스틱 필터→**VQA로 관련성 검증** 후 선택하고, **Chart Generator**는 데이터를 검색→출처 간 일관성 확인→Python 코드 생성→sandbox 실행으로 차트를 만든다. 검색 이미지는 출처 webpage URL을, 생성 차트는 데이터 출처 URL을 보존한다. ⓒ **Context-Aware Sequential Writing** — Writer가 직전 섹션들의 제목·요약을 담은 global context로 중복을 줄이며 섹션별로 작성하고, 설명에 맞춰 시각 자산의 **삽입 위치를 직접 결정**해 Markdown으로 interleave. ⓓ **Global Index Polishing** — Polisher가 미인용 reference 제거, URL·내용 기준 전역 dedup, figure/citation 재번호를 매겨 보고서 단위로 정리한다.
+
+**dual-path 평가.** Textual Assessment는 Citation Support·Instruction Alignment·Writing Quality·Analytical Depth&Breadth·Factual&Logical Consistency 5개, Visual Assessment는 Multimodal Composition·Figure Quality·Figure Caption Quality·Figure-Context Integration·Chart-Source Consistency 5개. 대부분 LLM-as-a-Judge(0–100)지만, Figure Quality는 해상도·선명도 같은 **CV 기반 측정**까지 섞는다.
 
 <figure>
 <img src="img/multimodal-deep-research-reports/tvir_pipeline.png" alt="TVIR data construction pipeline (topic proposal, drafting, multi-expert review) and dual-path evaluation framework (textual assessment, visual assessment)">
@@ -155,11 +172,13 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 <figcaption><strong>Figure 8</strong> — Ptah의 3단계 harness. Planning은 visual-aware 계획을, Research는 Visual Working Memory에 source-aligned 이미지 후보를 유지하며, 각 단계 사이 <strong>Verifier</strong>가 rubric/rule 기반 검증으로 통과를 결정한다. Writing은 image search·generation을 declarative tool로 호출해 최종 렌더링. 출처: Ptah (arXiv:2605.29861), Fig 2.</figcaption>
 </figure>
 
-**작동 흐름.** Plan(텍스트 구조 + 의도한 visual evidence 명세) → Research(claim-grounded 근거·인용·수치·시각 후보를 inspectable artifact로) → Write(declarative multimodal tool로 interleaved 보고서 작성). 전 구간에 verifier hook.
+**작동 흐름.** ⓐ **Planning** — Planner가 검색으로 도메인 지식을 훑어, 섹션별 research goal·expected evidence type과 함께 "시각 요소를 어디에, 어떤 역할로, 어떤 형태(차트/도식/스크린샷/삽화)로 넣을지"의 **visual specification**을 명시한 plan을 만든다. Verifier가 rule 기반(프로토콜·tool 제약·JSON 포맷) + LLM rubric(쿼리 coverage·섹션 일관성·시각-논증 관련성)으로 통과를 판정. ⓑ **Research** — 섹션마다 Researcher가 **병렬로** 조사해 findings·evidence·수치·표·인용·writing instruction이 담긴 research package를 만들고, 동시에 방문 webpage에서 이미지를 추출해 **Visual Working Memory**를 구축한다(rule 필터 → VLM 선별, 각 이미지에 출처 URL·문맥·섹션·의도된 역할을 함께 저장). 역시 Verifier가 claim support·수치 일관성·시각 관련성을 검사. ⓒ **Writing** — Writer가 텍스트와 image directive를 **함께** 생성(declarative)하고, harness가 세 연산을 중재한다 — **Image Reference**(VWM의 source-aligned 이미지 재사용, 우선), **Image Search**(부족하면 추가 검색), **Image Generation**(차트는 코드 렌더링, 삽화는 생성 모델).
 
-**결과.** image-level·presentation-level 평가를 더한 **PtahEval**로, 강한 baseline 대비 더 신뢰할 수 있고 시각적으로 유용한 사람-대면 보고서를 생성. 검색 이미지와 생성 차트를 모두 다룬다.
+**작동 흐름 — Test-Time Scaling.** raw 보고서를 바로 내지 않고 6단계 refinement hook을 건다 — ① Section Refine, ② **Image Refine**(각 이미지를 Keep/Delete/Edit 판정하고 Edit는 실행), ③ Overall Refine(전역 일관성·image-text alignment), ④ HTML Generate, ⑤ HTML Refine(간격·가독성), ⑥ Render(브라우저 렌더링된 사용자 대면 보고서).
 
-**한계(TVIR·Ptah 공통).** 검증·평가 모두 결국 LLM judge에 의존하고, "어떤 그림이 정말 evidential한가"의 판단 자체가 모델 능력에 묶인다.
+**결과.** **PtahEval**은 두 축 — Image Content Quality(Visual Clarity·Cross-Modal Alignment·Information Complementarity·Evidentiary Support)와 Multimodal Presentation Quality(렌더링된 페이지의 1000×2000 viewport를 캡처해 Density-Legibility·Saliency·Encoding Diversity·Ergonomics 평가), 각 5점 Likert. DeepConsult에서 평균 <span style="background:#fef3c7;padding:0 .2em;">**16.18 vs WebThinker 7.35**</span>로 멀티모달 baseline을 크게 앞선다.
+
+**한계(TVIR·Ptah 공통).** 검증·평가 모두 결국 LLM/VLM judge에 의존하고, "어떤 그림이 정말 evidential한가"의 판단 자체가 모델 능력에 묶인다.
 
 <div class="callout"><strong>이 논문들의 위치 —</strong> 생성·검색을 통합하고 cross-modal 정합성 검증을 1급 단계로 끌어올렸다. 남는 질문은 "그래서 이걸 어떻게 객관적으로 측정하나" — Part 5.</div>
 
@@ -172,7 +191,11 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 <figcaption><strong>Figure 9</strong> — MMDR-Bench의 두 레벨. <strong>Integrated</strong>: 멀티모달 task 이해·visually-grounded planning·citation-grounded reasoning·long-form 합성. <strong>Atomic</strong>: visual perception·web search·long-context·instruction following. 출처: MMDeepResearch-Bench (arXiv:2601.12346), Fig 2.</figcaption>
 </figure>
 
-**핵심 제안.** 140개 expert-crafted 태스크(Daily/Research 두 regime, 21개 도메인). 각 태스크는 image-text bundle로 패키징된다. 평가 프레임워크는 세 모듈 — **FLAE**(report 품질), **TRACE**(citation grounding·출처 품질), **MOSAIC**(text-image 일관성). 특히 **Visual Evidence Fidelity**(VEF)는 task별 textualized visual ground truth에 대해 PASS/FAIL hard 제약을 걸어, 시각 데이터를 오독하거나 환각하면 책임을 묻는다.
+**핵심 제안.** 140개 expert-crafted 태스크(Daily/Research 두 regime, 21개 도메인). 각 태스크는 image-text bundle로 패키징된다. 평가 프레임워크는 세 모듈이 **순차적으로** 돈다 — FLAE·TRACE를 병렬 계산하고, 둘 다 gating threshold를 넘을 때만 MOSAIC를 켠다(아니면 0점). 텍스트가 부실하면 멀티모달 채점 자체를 안 하는, 일종의 자격 게이트다.
+
+- **FLAE**(Formula-LLM Adaptive Evaluation) — 보고서 품질을 Readability·Insightfulness·Structural Completeness 3축으로 본다. 재현 가능한 **공식 채널**(lexical diversity·섹션 구조·문장 길이 분포 등 통계를 고정 변환)과 **LLM judge 채널**을 합치되, 가중치는 task별로 적응시킨다. 공식 채널 덕에 judge 없이도 안정적·감사 가능한 점수가 나온다.
+- **TRACE**(Trustworthy Retrieval-Aligned Citation Evaluation) — claim-URL 쌍을 만들어 인용된 페이지를 실제로 가져와 지지 여부를 판정(Consistency·Coverage·Fidelity). 여기에 **Visual Evidence Fidelity**(VEF)를 더한다 — task별 textualized visual ground truth에 대해 judge가 0–10점과 PASS/FAIL을 내고, **6점 미만이면 강제 FAIL**인 hard 제약. 시각 데이터를 오독하거나 환각하면 그 자체로 떨어뜨린다.
+- **MOSAIC**(Multimodal Support-Aligned Integrity Check) — 이미지를 인용한 문장(MM-item)을 추출해, 차트/도식/사진 **유형별로 라우팅**한 뒤 유형에 맞는 검사를 한다(차트는 수치 타당성, 도식은 구조 대응, 사진은 의미 grounding). Visual-Semantic Alignment·Data Interpretation Accuracy·Complex VQA Quality 3축으로 채점.
 
 **결과.** 25개 SOTA 시스템 평가에서 writing quality·citation discipline·multimodal grounding 사이의 **persistent trade-off**가 드러난다 — 셋을 동시에 잘하는 시스템이 드물다.
 
@@ -195,7 +218,7 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 
 **문제의식.** 대시보드는 <span class="q">"designed for a specific audience and purpose, making them essentially immutable"</span> — 특정 독자용으로 고정돼 있다. 같은 데이터를 보더라도 독자의 expertise·관심·들일 노력이 다른데도.
 
-**핵심 제안.** **drillboards** — 차트들을 계층(hierarchy)으로 쌓아, 독자가 drill-down/roll-up으로 원하는 detail 수준까지 펼치거나 접는 적응형 대시보드. 바닥은 모든 차트가 펼쳐진 baseline, 위로 갈수록 차트를 병합해 추상화된다. "novice / intermediate / expert" 같은 사전 정의 레벨도 제공한다.
+**핵심 제안.** **drillboards** — 차트들을 계층(hierarchy)으로 쌓아, 독자가 drill-down/roll-up으로 원하는 detail 수준까지 펼치거나 접는 적응형 대시보드. 바닥은 모든 차트가 펼쳐진 baseline, 위로 갈수록 차트를 병합해 추상화되고, 루트는 전체를 한눈에 보는 단일 차트다. 핵심은 임의로 묶는 게 아니라 **차트 표현의 formal vocabulary와 병합 규칙**을 정의해, baseline에서 규칙을 반복 적용해 계층을 만든다는 점(서로 다른 종류·데이터의 차트도 하나로 합칠 수 있다). 저작 도구 **DrillVis**로 만들고, "novice / intermediate / expert" 같은 사전 정의 레벨도 붙일 수 있다.
 
 <figure>
 <img src="img/multimodal-deep-research-reports/drill_novice.png" alt="Drillboard novice view: aggregated, grouped charts at a higher level of abstraction">
@@ -215,7 +238,7 @@ Deep Research(DR)는 질문 하나를 받아 여러 step에 걸쳐 웹을 검색
 
 **문제의식.** 학습 분석 대시보드와 텍스트 리포트는 해석이 어렵고(<span class="q">"poor interpretability"</span>), 단조롭고, 일방향이다. 학생마다 데이터가 다른데 같은 형식으로 던져진다.
 
-**핵심 제안.** 세 에이전트 multi-agent 시스템 — **Data Analyst**(learning-objective 중심으로 인사이트 추출), **Teacher**(교육적 가치 평가·맞춤 제안), **Storyteller**(Hero's Journey 서사 틀로 인사이트를 이야기로 조직). 생성 후 학생이 리포트의 시각·텍스트 요소를 골라 후속 질문하는 interaction 모듈까지.
+**핵심 제안.** 두 모듈로 나뉜다 — **report generation engine**과 **interaction module**. 엔진은 세 에이전트가 릴레이한다. **Data Analyst**가 learning-objective 중심 구조로 학생 데이터에서 인사이트를 뽑고(데이터 검색→전처리→insight 추출→시각화), **Teacher**가 그 인사이트의 교육적 가치를 평가하며 맞춤 제안을 더하고, **Storyteller**가 **Hero's Journey** 서사 틀에 얹어 학습자의 여정을 따라가는 이야기로 조직한다. 생성 후 학생이 리포트의 시각·텍스트 요소를 직접 골라 후속 질문하는 interaction module이 일방향성을 깬다. 즉 단순 차트 나열이 아니라, **데이터 인사이트 ↔ 서사**를 동적으로 결합한 context-aware 시각화 추천이다.
 
 <figure>
 <img src="img/multimodal-deep-research-reports/story_workflow.png" alt="StoryLensEdu workflow: Data Analyst, Teacher, Storyteller agents produce a personalized learning report plus interaction module for follow-up QA">
