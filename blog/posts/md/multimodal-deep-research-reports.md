@@ -216,23 +216,63 @@ D3.js를 쓰는 이유도 분명하다 — matplotlib 같은 declarative 라이�
 
 ### Drillboards — expertise에 맞춰 펼쳐지는 대시보드
 
-**문제의식.** 대시보드는 <span class="q">"designed for a specific audience and purpose, making them essentially immutable"</span> — 특정 독자용으로 고정돼 있다. 같은 데이터를 보더라도 독자의 expertise·관심·들일 노력이 다른데도.
+**문제의식.** 대시보드는 <span class="q">"designed for a specific audience and purpose, making them essentially immutable"</span> — 특정 독자용으로 고정돼 있다. 같은 데이터라도 독자의 expertise·관심·들일 시간이 다른데, 모두에게 동일한 뷰를 던진다. 이 논문은 네 가지 설계 목표를 세운다.
 
-**핵심 제안.** **drillboards** — 차트들을 계층(hierarchy)으로 쌓아, 독자가 drill-down/roll-up으로 원하는 detail 수준까지 펼치거나 접는 적응형 대시보드. 바닥은 모든 차트가 펼쳐진 baseline, 위로 갈수록 차트를 병합해 추상화되고, 루트는 전체를 한눈에 보는 단일 차트다. 핵심은 임의로 묶는 게 아니라 **차트 표현의 formal vocabulary와 병합 규칙**을 정의해, baseline에서 규칙을 반복 적용해 계층을 만든다는 점(서로 다른 종류·데이터의 차트도 하나로 합칠 수 있다). 저작 도구 **DrillVis**로 만들고, "novice / intermediate / expert" 같은 사전 정의 레벨도 붙일 수 있다.
+<div class="callout">
+<strong>설계 목표 (DG1–DG4)</strong>
+<ul style="margin:.5em 0 0;padding-left:1.2em;">
+<li><strong>DG1</strong> — 하나의 대시보드가 다양한 expertise 수준의 독자에게 동일한 콘텐츠를 (다른 추상도로) 제공할 것</li>
+<li><strong>DG2</strong> — 같은 대시보드로 다양한 task를 지원할 것 (detail 수준·시간·집중도가 다른 task)</li>
+<li><strong>DG3</strong> — 독자가 시간이 지나며 익숙해지거나 잊어버려도, 같은 대시보드를 계속 쓸 수 있을 것</li>
+<li><strong>DG4</strong> — 이런 적응형 대시보드를 만드는 저작이 비교적 쉬울 것</li>
+</ul>
+</div>
+
+**핵심 제안 — 공식 모델.** **drillboards** — 차트들을 계층(aggregation hierarchy)으로 쌓아, 독자가 drill-down / roll-up으로 원하는 detail 수준을 탐색하는 적응형 대시보드.
+
+구조가 명확하다. 대시보드를 데이터 + chart atom들의 집합으로 보고, drillboard는 여기에 **aggregation hierarchy**를 추가한다. 계층의 기본 단위는 두 가지다.
+
+- **Chart atom** — 더 쪼갤 수 없는 단일 차트. 잎 노드.
+- **Pile** — 하나 이상의 atom 또는 하위 pile을 담는 재귀 컨테이너. 자신의 시각 표현을 가진다.
+
+계층의 루트는 단일 pile(전체 데이터를 한 장에 요약), 바닥은 모든 chart atom이 펼쳐진 full-detail view다. 사용자가 보는 **현재 뷰**는 현재 펼쳐진 pile·atom의 시퀀스이고, drill-down(pile → 자식들)과 roll-up(자식 그룹 → 부모 pile)으로 이동한다. 저자는 "novice / intermediate / expert" 같은 **pre-defined view**를 계층 중간에 표시해둘 수 있다.
+
+**6가지 병합 연산 (Aggregation Operations).** 계층 구축은 임의 그룹핑이 아니라, 형식 어휘에서 정의된 6가지 Merge 연산을 반복 적용하는 것이다. 각 연산은 둘 이상의 차트를 단일 pile로 합치되 새 pile의 시각 표현을 결정한다.
+
+| 연산 | 기호 | 무슨 일 | 정보 손실 |
+|---|---|---|---|
+| **Label** | 🏁 | 자식들을 단일 텍스트 레이블로 대표 (평균·최솟값 등 scalar) | 높음 (시각화 없음) |
+| **Summarization** | 🔢 | 같은 유형 차트를 데이터 추상(평균·합·차)으로 하나로 합침 | 중간 |
+| **Archetype** | ⭐ | 자식 중 하나를 대표자로 선택해 나머지를 숨김 | 높음 (대표 1개만 남음) |
+| **Projection** | ⬇ | 두 차트의 데이터 차원을 scatterplot 축으로 투영 | 중간 |
+| **Juxtaposition** | ➕ | 자식 차트들을 small multiples로 pile 안에 나란히 배치 | 낮음 (정보 보존, 해상도↓) |
+| **Overlay** | 🗂 | 같은 축을 공유하는 차트들을 겹쳐 그림 | 낮음 (같은 유형 차트만 가능) |
+
+연산마다 제약이 있다. Summarization은 두 차트의 y축 단위가 같아야 하고, Overlay는 같은 차트 유형만 합칠 수 있다. DrillVis는 적용 불가한 연산을 자동으로 grayed-out해 저자가 헷갈리지 않게 한다.
+
+**저작 모드 (Author Mode).** DrillVis에서 저자는 두 단계로 drillboard를 만든다.
+
+1. **차트 생성** — CSV/TSV를 올리면 연속형 데이터는 line/histogram, 이산형은 bar chart로 자동 배치된다. 멀티레벨 드롭다운으로 원하는 feature·조건을 골라 뷰에 추가한다.
+2. **계층 구축** — 합치려는 차트들을 선택하고, 연산 패널에서 가능한 Merge 연산을 골라 적용한다. 왼쪽 treeview가 계층 구조를 실시간으로 반영한다. 만족하면 현재 상태를 named view(예: "novice")로 저장한다. 계층 최상단(루트 pile)과 최하단(모든 atom)은 자동으로 pre-defined view가 된다.
 
 <figure>
 <img src="img/multimodal-deep-research-reports/drill_novice.png" alt="Drillboard novice view: aggregated, grouped charts at a higher level of abstraction">
 <figcaption><strong>Figure 11</strong> — 같은 데이터의 novice view. 차트가 상위 카테고리로 묶여(aggregated) 적은 수의 추상화된 뷰로 제시된다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
 </figure>
 
+**독자 모드 (Reader Mode).** 독자는 자신의 expertise level에 맞는 pre-defined view에서 시작한다. 이후 두 가지 인터랙션으로 계층을 탐색한다.
+
+- **Drill-down** — pile(카드가 겹쳐 보이는 시각 단서)을 좌클릭하면 해당 pile이 사라지고 자식 차트들이 강조(highlighted)되어 등장한다. 각 depth마다 색·불투명도로 구분되고, treeview가 동기화된다.
+- **Roll-up** — 탐색 중인 차트를 우클릭하면 자식 그룹 전체가 부모 pile로 다시 접힌다. treeview도 함께 수축한다.
+
 <figure>
 <img src="img/multimodal-deep-research-reports/drill_expert.png" alt="Drillboard expert view: many detailed unit charts at full granularity">
-<figcaption><strong>Figure 12</strong> — 같은 데이터의 expert view. 모든 unit chart가 세부 단위까지 펼쳐진다. 독자의 expertise에 따라 동일 대시보드가 다르게 보인다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
+<figcaption><strong>Figure 12</strong> — 같은 데이터의 expert view. 모든 unit chart가 세부 단위까지 펼쳐진다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
 </figure>
 
-**결과.** 전문가 3명이 novice용 drillboard를 저작하고 일반 사용자 10명이 평가한 결과, 데이터의 맥락·출처를 전달하는 communication tool로 효과적이었고 novice가 전문가 의도를 빠르게 파악했다.
+**결과.** 전문가 3명이 농업 데이터셋에 대해 novice용 drillboard를 저작하고 일반 사용자 10명이 평가했다. 데이터의 맥락과 출처를 전달하는 communication tool로 효과적이었고, novice가 전문가 의도를 빠르게 파악했다. 특히 데이터의 provenance — "왜 이 차트들이 묶였는가"를 전달하는 데 강점을 보였다.
 
-**한계.** 저작이 일반 대시보드보다 훨씬 복잡하고, 개인화 단위가 "expertise 레벨"에 머문다(직종·관심사별 figure 선택까지는 아님). 그리고 딥리서치 파이프라인과 무관한 별도 도구다.
+**한계.** 저작이 일반 대시보드보다 훨씬 복잡하다. 개인화 단위가 "expertise 레벨" 하나에 머물고(직종·관심사별 figure 선택까지는 아님), 현재 구현은 단순 tabular 데이터와 line/bar/scatter에 한정된다. 딥리서치 파이프라인과는 별개 도구다.
 
 ### StoryLensEdu — 학습자에 맞춘 narrative 리포트
 
