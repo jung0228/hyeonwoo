@@ -260,8 +260,81 @@ D3.js를 쓰는 이유도 분명하다 — matplotlib 같은 declarative 라이�
 | **멀티모달 딥리서치**<br>(MMDR · Deep-Reporter · TVIR · Ptah · MMDR-Bench) | 보고서에 이미지를 생성·검색·검증·평가 | 이미지가 **모든 독자에게 동일** |
 | **시각화 개인화**<br>(Drillboards · StoryLensEdu) | 독자 expertise·배경에 맞춰 시각을 적응 | **주어진 데이터 한 벌**만, 딥리서치 아님 |
 
-두 원이 겹치는 가운데 — **"독자의 직종·배경·시각 이해 방식에 맞춰, 딥리서치 보고서에 들어갈 figure 자체를 다르게 검색·생성·배치하는"** 연구는 아직 비어 있다. 의대생과 환자가 같은 "당뇨 치료 동향"을 물어도, 텍스트뿐 아니라 **그림도 달라야** 한다. 한쪽엔 기전 다이어그램과 임상시험 forest plot을, 다른 쪽엔 생활 습관 인포그래픽을.
+두 원이 겹치는 가운데 — **"독자의 배경·수준·취향에 맞춰, 딥리서치 보고서의 figure 자체를 다르게 검색·생성·배치하는"** 연구는 아직 비어 있다. 의대생과 환자가 같은 "당뇨 치료 동향"을 물어도, 텍스트뿐 아니라 **그림도 달라야** 한다. 의대생에게는 기전 다이어그램과 임상시험 forest plot을, 환자에게는 생활 습관 인포그래픽을.
 
-세 가지가 동시에 풀려야 한다. ① 같은 정보를 **어떤 형식**(표/그래프/다이어그램/사진)으로 줄지의 개인화, ② **어떤 figure를 고를지**의 개인화, ③ 그 개인화가 정말 이해를 높였는지의 **평가**. 멀티모달 평가(VEF·MOSAIC)도, 개인화 평가(reference-free per-user scoring)도 따로는 있지만, 둘을 합친 잣대는 없다.
+### 질문을 세 겹으로 쪼개면
 
-> 멀티모달 보고서 생성은 여기까지 왔고, 시각화 개인화도 따로 무르익었다. 둘을 딥리서치 안에서 잇는 자리가 — 지금 비어 있다.
+시각화 개인화를 딥리서치 안에서 실현하려면 세 층위의 선택이 동시에 달라져야 한다.
+
+1. **어떤 형식으로** — 같은 사실이라도 표, 막대차트, 도식, 사진 중 무엇이 이 독자에게 더 잘 통하는가.
+2. **어떤 figure를** — 웹·데이터베이스에서 어떤 specific 이미지를 골라 넣을 것인가.
+3. **어떻게 재구성할지** — 선택한 이미지나 차트를 독자 수준에 맞게 스타일·추상도·설명 밀도를 바꿀 수 있는가.
+
+현재 시스템은 이 세 질문을 독자와 무관하게 고정 처리한다. Ptah의 Visual Working Memory도, TVIR의 Image Searcher도 주어진 보고서 맥락에는 최적화되어 있지만 "이 독자가 어떤 시각화를 더 잘 이해하는가"는 묻지 않는다.
+
+### Figure별 처리 정책 — baseline과 개인화 레이어
+
+지금 논문들이 그어놓은 핵심 경계선은 **illustration(설명용) vs evidence(근거용)** 구분이다. 이 구분이 개인화 설계의 출발점이 된다.
+
+<div class="callout">
+<strong>Figure 유형별 처리 원칙</strong>
+
+<ul style="margin:.5em 0 0;padding-left:1.2em;">
+<li><strong>Evidence(근거용)</strong> — 수치·측정·결과를 담는 차트·그래프. 데이터는 손대면 안 된다. 코드 렌더링(차트 재생성)이나 실제 이미지 검색(출처 URL 보존)이 baseline. 스타일(색·레이블·폰트)만 독자별로 바꿀 수 있고, 수치 자체를 바꾸는 순간 evidence가 깨진다.</li>
+<li><strong>Illustration(설명용)</strong> — 개념·구조·흐름을 보여주는 도식·다이어그램·삽화. 정보를 정확히 인코딩하면 스타일·복잡도·추상도를 독자에 맞춰 바꿔도 된다. 이미지 생성 모델을 쓸 수 있는 자리다.</li>
+</ul>
+</div>
+
+둘을 뒤섞으면 위험하다. Evidence에 생성 모델을 쓰면 수치를 hallucinate할 가능성이 있고, Illustration에 지나치게 사실 충실성을 요구하면 개인화 여지가 없어진다. TVIR의 Image Searcher(출처 URL 보존)와 Chart Generator(코드 렌더링 + 데이터 출처)의 역할 분리가 바로 이 경계를 지키는 방식이다.
+
+### 시각화 재구성의 스펙트럼
+
+개인화를 얼마나 깊이 파고드느냐에 따라 가능한 개입이 스펙트럼으로 늘어선다.
+
+| 개입 수준 | 무엇을 바꾸나 | evidence 가능 | illustration 가능 |
+|---|---|---|---|
+| **Restyle** | 색·폰트·여백·레이블 언어 | O | O |
+| **Re-encode** | 같은 데이터를 다른 차트 유형으로 | O (코드 재생성) | O |
+| **Re-aggregate** | granularity 조정 (Drillboards의 drill-down) | O (원본 데이터 있을 때) | — |
+| **Re-author** | 개념을 다른 맥락·비유·시각 스타일로 새로 그리기 | X (수치 변형 위험) | O |
+
+Re-author가 개인화의 가장 강력한 형태지만, evidence에는 쓸 수 없다. illustration에서만, 그리고 원본 개념을 정확히 보존한다는 조건 하에만 가능하다. FDV(Formal Description of Visualization)의 Data 필드가 "변경 불가 핵심", Marks/Overall layout 필드가 "재구성 가능 외피"를 가르는 기준이 될 수 있다.
+
+### 독자 시각 프로파일 — 무엇을 파악해야 하나
+
+텍스트 개인화(PersonaPlex의 explicit/implicit 선호, O-Mem의 주제별 기억)와 다르게, 시각 개인화에서 파악해야 할 독자 변수는 별도로 정의되어야 한다.
+
+- **Modality ratio** — 이 독자가 글로 된 설명과 그림 중 어느 쪽을 먼저 이해하는가.
+- **Form preference** — 표 vs 그래프 vs 도식 등 선호하는 시각화 형식.
+- **Register** — 전문적 figure(임상 논문 수준) vs 대중적 figure(인포그래픽 수준).
+- **Domain literacy** — 이 분야 특화 도식(회로도, 악보, 해부도)을 읽을 수 있는가.
+
+이 네 변수의 조합이 "같은 evidence figure라도 어떤 형식으로 re-encode할지"와 "illustration을 어떤 스타일로 re-author할지"를 결정한다.
+
+### 왜 개인화된 이미지가 실제로 도움이 되는가 — 근거
+
+직관적으로 맞아 보이지만 근거를 따져보면 층위가 나뉜다.
+
+**강한 근거 — 인지 부하와 expertise reversal effect.** Mayer의 multimedia principle은 잘 설계된 그림+글 조합이 글 단독보다 이해를 높인다는 것을 보여준다. 더 중요한 것은 **expertise reversal effect** — 초심자에게는 자세한 설명 도식이 인지 부하를 줄여 이해를 돕지만, 전문가에게는 오히려 방해가 된다(이미 아는 내용이 추가 처리 부담이 된다). 같은 이미지로 모든 독자를 만족시키는 것은 이 효과가 방향이 반대이기 때문에 구조적으로 불가능하다. Drillboards의 novice/expert view 분리가 정확히 이것을 겨냥한다.
+
+**중간 근거 — 스타일 개인화와 engagement.** 귀여운 스타일, 친숙한 비유, narrative 포장이 이해 자체를 높인다는 증거는 약하다. 하지만 **engagement와 만족도**를 높인다는 증거는 꽤 있다. StoryLensEdu가 평가 지표로 comprehension보다 engagement를 앞세운 것이 이 층위다. 즉 스타일 개인화는 "더 잘 이해시킨다"가 아니라 "더 오래 들여다보게 만든다"로 정당화된다.
+
+**주의할 근거 — 학습 스타일 이론.** "시각형/청각형/운동형 학습자"라는 학습 스타일 이론은 **반복 실험에서 재현되지 않아 현재 심리학계에서 부정된 가설**이다. 시각 개인화의 정당화로 학습 스타일을 끌어들이면 근거가 허물어진다.
+
+### Pedagogical agent — 개인화의 극단
+
+illustration re-author의 가장 강한 형태로 **pedagogical agent** — 캐릭터가 설명을 주도하는 방식을 상상해볼 수 있다. 독자가 애니 스타일의 마스코트를 좋아한다면, 딥리서치 보고서의 개념 도식이 그 캐릭터와 함께 표현되는 식이다.
+
+이것이 동작하려면 두 조건이 필요하다. ① **Character consistency** — 멀티턴 보고서 전체에서 같은 캐릭터를 유지해야 한다. 이미지 생성 모델의 reference image + fixed seed 조합으로 가능하다. ② **Germane load** — 캐릭터가 개념 설명의 일부로 동작해야 한다(germane). 단순히 옆에 서 있기만 하면 장식(decorative)이 되어 오히려 인지 분산을 일으킨다.
+
+이 구분은 단순해 보이지만 실제 구현에서 중요하다 — "캐릭터가 도식의 화살표를 가리키며 설명"은 germane, "보고서 상단에 캐릭터가 웃으며 서 있음"은 decorative. Mayer의 coherence principle이 decorative를 제거하라고 말하는 이유다.
+
+### 풀어야 할 것들
+
+두 흐름을 딥리서치 안에서 잇기 위해 구체적으로 남은 과제를 꼽으면:
+
+- **Per-figure routing policy** — 보고서의 각 figure slot에 대해 "검색할지 / 코드로 그릴지 / 개인화 재구성할지"를 독자 프로파일과 figure 유형(evidence/illustration)에 따라 자동으로 결정하는 모듈. Ptah의 Writing 단계에 네 번째 연산(Image Personalize)으로 끼워 넣는 것이 자연스러운 확장점이다.
+- **Faithfulness re-verification** — 재구성 후에도 원래 주장이 정확히 인코딩되어 있는지를 다시 확인하는 단계. VEF(Visual Evidence Fidelity)처럼 hard threshold를 두되, 재구성 전·후 양쪽을 비교해야 한다.
+- **Per-user evaluation** — VEF·MOSAIC은 ground-truth 기반이라 모든 독자에게 동일한 기준을 쓴다. 개인화된 figure의 효과를 재는 잣대는 reference-free per-user scoring이어야 한다. 이해도(comprehension)와 만족도(preference)를 분리해서 재는 것도 중요하다.
+
+> 멀티모달 보고서 생성은 여기까지 왔고, 시각화 개인화도 인접 분야에서 무르익었다. 둘을 딥리서치 파이프라인 안에서 잇는 자리가 — 지금 비어 있다.
