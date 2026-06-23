@@ -597,6 +597,11 @@
 </ul>
 </div>
 
+<figure>
+<img src="img/multimodal-deep-research-reports/drill_fig1.png" alt="Drillboards teaser: authoring mode (A) shows hierarchy browser and merge operations; reading mode (B) shows drill-down expanding a chart into 3 children, and roll-up collapsing them back">
+<figcaption><strong>Figure 11</strong> — Drillboards의 두 모드. <strong>(A) 저작 모드</strong>: ①차트를 선택하고, ④병합 연산(Summarize·Archetype 등)을 고른 뒤 제목·설명을 추가하면 ⑤차트가 병합된다. 왼쪽 treeview(②③)가 계층 변화를 실시간 반영. <strong>(B) 독자 모드</strong>: ①원하는 차트를 좌클릭하면 ⑥원본이 사라지고 3개의 자식 차트가 강조되어 등장. 자식 차트를 우클릭하면 ⑤다시 부모 pile로 roll-up. treeview(①→③)가 탐색 경로를 동기화한다. 출처: Drillboards (arXiv:2410.12744), Fig 1.</figcaption>
+</figure>
+
 <p><strong>핵심 제안 — 공식 모델.</strong> <strong>drillboards</strong> — 차트들을 계층(aggregation hierarchy)으로 쌓아, 독자가 drill-down / roll-up으로 원하는 detail 수준을 탐색하는 적응형 대시보드.</p>
 <p>구조가 명확하다. 대시보드를 데이터 + chart atom들의 집합으로 보고, drillboard는 여기에 <strong>aggregation hierarchy</strong>를 추가한다. 계층의 기본 단위는 두 가지다.</p>
 <ul>
@@ -659,7 +664,7 @@
 </ol>
 <figure>
 <img src="img/multimodal-deep-research-reports/drill_novice.png" alt="Drillboard novice view: aggregated, grouped charts at a higher level of abstraction">
-<figcaption><strong>Figure 11</strong> — 같은 데이터의 novice view. 차트가 상위 카테고리로 묶여(aggregated) 적은 수의 추상화된 뷰로 제시된다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
+<figcaption><strong>Figure 12</strong> — 같은 데이터의 novice view. 차트가 상위 카테고리로 묶여(aggregated) 적은 수의 추상화된 뷰로 제시된다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
 </figure>
 
 <p><strong>독자 모드 (Reader Mode).</strong> 독자는 자신의 expertise level에 맞는 pre-defined view에서 시작한다. 이후 두 가지 인터랙션으로 계층을 탐색한다.</p>
@@ -669,7 +674,7 @@
 </ul>
 <figure>
 <img src="img/multimodal-deep-research-reports/drill_expert.png" alt="Drillboard expert view: many detailed unit charts at full granularity">
-<figcaption><strong>Figure 12</strong> — 같은 데이터의 expert view. 모든 unit chart가 세부 단위까지 펼쳐진다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
+<figcaption><strong>Figure 13</strong> — 같은 데이터의 expert view. 모든 unit chart가 세부 단위까지 펼쳐진다. 출처: Drillboards (arXiv:2410.12744).</figcaption>
 </figure>
 
 <p><strong>결과.</strong> 전문가 3명이 농업 데이터셋에 대해 novice용 drillboard를 저작하고 일반 사용자 10명이 평가했다. 데이터의 맥락과 출처를 전달하는 communication tool로 효과적이었고, novice가 전문가 의도를 빠르게 파악했다. 특히 데이터의 provenance — &quot;왜 이 차트들이 묶였는가&quot;를 전달하는 데 강점을 보였다.</p>
