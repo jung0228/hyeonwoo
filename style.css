@@ -396,8 +396,13 @@ body {
   user-select: none;
 }
 .link-line {
-  stroke-opacity: 0.3;
   transition: stroke-opacity 0.2s;
+}
+.link-inner {
+  stroke-opacity: 0.38;   /* 클러스터 내부 — 선명 */
+}
+.link-cross {
+  stroke-opacity: 0.18;   /* 클러스터 간 — 은은하게 */
 }
 .link-line:hover { stroke-opacity: 0.9; }
 .link-insight-badge {

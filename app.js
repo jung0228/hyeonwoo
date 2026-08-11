@@ -266,7 +266,12 @@ function initGraph() {
 
   const linkLine = linkGroup.selectAll('line')
     .data(links).enter().append('line')
-    .attr('class', 'link-line')
+    .attr('class', d => {
+      const sn = nodeMap[typeof d.source === 'object' ? d.source.id : d.source];
+      const tn = nodeMap[typeof d.target === 'object' ? d.target.id : d.target];
+      const cross = sn && tn && getNodeCluster(sn) !== getNodeCluster(tn);
+      return cross ? 'link-line link-cross' : 'link-line link-inner';
+    })
     .attr('stroke', d => {
       const src = nodeMap[typeof d.source === 'object' ? d.source.id : d.source];
       return knowledgeData.categories[src?.category]?.color || '#555';
@@ -479,7 +484,9 @@ function highlightNeighbors(nodeId, linkLine, node) {
 
 function resetHighlight(linkLine, node) {
   node.style('opacity', 1);
-  linkLine.style('stroke-opacity', 0.3);
+  linkLine.style('stroke-opacity', function() {
+    return this.classList.contains('link-cross') ? 0.18 : 0.38;
+  });
 }
 
 function focusNode(nodeId) {
