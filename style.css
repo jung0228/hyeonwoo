@@ -405,6 +405,21 @@ body {
   user-select: none;
 }
 
+/* Cluster Hull & Label */
+.cluster-hull {
+  pointer-events: none;
+  border-radius: 20px;
+  filter: blur(0.5px);
+  transition: fill-opacity 0.3s;
+}
+.cluster-label {
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 12px rgba(0,0,0,0.8);
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.6);
+  stroke-width: 3px;
+}
+
 /* Note Panel */
 .note-panel {
   width: var(--panel-w);

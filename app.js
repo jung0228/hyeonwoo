@@ -1,5 +1,5 @@
 /* ============================================================
-   정현우의 지식 지도 — App Logic
+   정현우의 지식 지도 — App Logic (v2 with Cluster Layout)
    ============================================================ */
 
 /* ── State ── */
@@ -11,27 +11,40 @@ let activeCategory = null;
 
 /* ── Confidence Labels ── */
 const CONFIDENCE_LABELS = ['모름', '기초', '중급', '심화', '전문가'];
-const CONFIDENCE_STARS = ['☆☆☆☆', '★☆☆☆', '★★☆☆', '★★★☆', '★★★★'];
+const CONFIDENCE_STARS  = ['☆☆☆☆', '★☆☆☆', '★★☆☆', '★★★☆', '★★★★'];
 
 /* ── Relation Labels ── */
 const RELATION_LABELS = {
-  conceptual_root: '개념 근원',
-  derived: '파생',
-  comparison: '비교',
-  contains: '구성 요소',
-  applied_to: '응용',
-  scaled_up: '스케일업',
-  finetuned_with: '파인튜닝',
-  extended_to: '확장',
-  input_to: '입력',
-  enables_generation: '생성 가능',
-  instantiated_as: '구현체',
-  key_component: '핵심 요소',
-  is_a: '종류',
-  enables: '가능하게 함',
-  used_in: '사용됨',
-  uses_architecture: '아키텍처 사용',
-  enables_efficient: '효율화'
+  conceptual_root: '개념 근원', derived: '파생', comparison: '비교',
+  contains: '구성 요소', applied_to: '응용', scaled_up: '스케일업',
+  finetuned_with: '파인튜닝', extended_to: '확장', input_to: '입력',
+  enables_generation: '생성 가능', instantiated_as: '구현체',
+  key_component: '핵심 요소', is_a: '종류', enables: '가능하게 함',
+  used_in: '사용됨', uses_architecture: '아키텍처 사용',
+  enables_efficient: '효율화', interacts_with: '상호작용',
+  managed_by: '관리', implements: '구현', generalized_to: '일반화',
+  uses: '사용', related_to: '관련', derives: '유도', trains: '학습',
+  basis_of: '기반', learns: '학습', combined_with: '결합',
+  explains: '설명', comparison: '비교'
+};
+
+/* ── Cluster Configuration ── */
+const CLUSTER_MAP = {
+  'Generative':     'AI',
+  'Architecture':   'AI',
+  'Language Model': 'AI',
+  'Multimodal':     'AI',
+  'RL':             'AI',
+  'Training':       'AI',
+  'Math & Stats':   'AI',
+  'Systems':        '시스템',
+  'Algorithm':      '알고리즘'
+};
+
+const CLUSTER_CONFIG = {
+  'AI':       { color: '#8b5cf6', label: '🤖  AI / ML',   cx: 0.45, cy: 0.48 },
+  '시스템':   { color: '#ef4444', label: '💻  시스템',     cx: 0.13, cy: 0.48 },
+  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',   cx: 0.80, cy: 0.48 }
 };
 
 /* ============================================================
@@ -80,12 +93,12 @@ function switchView(view) {
    SEARCH
    ============================================================ */
 function initSearch() {
-  const input = document.getElementById('search-input');
+  const input   = document.getElementById('search-input');
   const results = document.getElementById('search-results');
 
   input.addEventListener('input', () => {
     const q = input.value.trim().toLowerCase();
-    if (!q || q.length < 1) { results.classList.remove('show'); return; }
+    if (!q) { results.classList.remove('show'); return; }
     const matches = knowledgeData.nodes.filter(n =>
       n.label.toLowerCase().includes(q) ||
       (n.tags || []).some(t => t.toLowerCase().includes(q))
@@ -118,9 +131,8 @@ function initSearch() {
   });
 
   document.addEventListener('click', e => {
-    if (!e.target.closest('.search-box') && !e.target.closest('.search-results')) {
+    if (!e.target.closest('.search-box') && !e.target.closest('.search-results'))
       results.classList.remove('show');
-    }
   });
 }
 
@@ -129,65 +141,114 @@ function updateStatsBadge() {
 }
 
 /* ============================================================
-   KNOWLEDGE GRAPH (D3.js)
+   KNOWLEDGE GRAPH (D3.js) — with Cluster Layout
    ============================================================ */
 function initGraph() {
   const container = document.getElementById('graph-container');
-  const svgEl = document.getElementById('graph-svg');
+  const svgEl     = document.getElementById('graph-svg');
   const W = container.clientWidth;
   const H = container.clientHeight;
 
-  svg = d3.select(svgEl)
-    .attr('viewBox', `0 0 ${W} ${H}`);
+  svg = d3.select(svgEl).attr('viewBox', `0 0 ${W} ${H}`);
 
-  // Zoom
   zoom = d3.zoom()
-    .scaleExtent([0.2, 3])
+    .scaleExtent([0.15, 3])
     .on('zoom', e => { g.attr('transform', e.transform); });
   svg.call(zoom);
 
   g = svg.append('g');
 
-  // Defs — arrowhead
+  /* ---- Defs ---- */
   const defs = svg.append('defs');
   defs.append('marker')
     .attr('id', 'arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 22).attr('refY', 0)
-    .attr('markerWidth', 6).attr('markerHeight', 6)
-    .attr('orient', 'auto')
-    .append('path')
-    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('viewBox', '0 -5 10 10').attr('refX', 22).attr('refY', 0)
+    .attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
+    .append('path').attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', 'rgba(255,255,255,0.15)');
 
-  // Build link & node data
+  /* ---- Build node / link data ---- */
   const nodeMap = {};
   knowledgeData.nodes.forEach(n => { nodeMap[n.id] = n; });
 
+  // Assign initial position biased toward cluster center
+  const nodes = knowledgeData.nodes.map(n => {
+    const clusterName = CLUSTER_MAP[n.category] || 'AI';
+    const cc = CLUSTER_CONFIG[clusterName];
+    const jitter = () => (Math.random() - 0.5) * 160;
+    return {
+      ...n,
+      cluster: clusterName,
+      x: W * cc.cx + jitter(),
+      y: H * cc.cy + jitter()
+    };
+  });
+
   const links = knowledgeData.edges.map(e => ({
-    source: e.source,
-    target: e.target,
-    relation: e.relation,
-    weight: e.weight || 1,
-    insight: e.insight || null
+    source: e.source, target: e.target,
+    relation: e.relation, weight: e.weight || 1, insight: e.insight || null
   }));
 
-  const nodes = knowledgeData.nodes.map(n => ({ ...n }));
+  /* ---- Cluster hull layer (drawn BEFORE nodes) ---- */
+  const hullGroup = g.append('g').attr('class', 'cluster-hulls');
+  const labelGroup = g.append('g').attr('class', 'cluster-labels');
 
-  // Force simulation
+  const hullPaths  = {};
+  const hullLabels = {};
+
+  Object.entries(CLUSTER_CONFIG).forEach(([name, cfg]) => {
+    // Background hull path
+    hullPaths[name] = hullGroup.append('path')
+      .attr('class', 'cluster-hull')
+      .attr('fill', cfg.color)
+      .attr('fill-opacity', 0.05)
+      .attr('stroke', cfg.color)
+      .attr('stroke-opacity', 0.25)
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '6,4');
+
+    // Cluster title label
+    hullLabels[name] = labelGroup.append('text')
+      .attr('class', 'cluster-label')
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '15')
+      .attr('font-weight', '700')
+      .attr('font-family', 'Pretendard, sans-serif')
+      .attr('fill', cfg.color)
+      .attr('fill-opacity', 0.7)
+      .attr('pointer-events', 'none')
+      .attr('user-select', 'none')
+      .text(cfg.label);
+  });
+
+  /* ---- Force simulation ---- */
   simulation = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(links)
       .id(d => d.id)
-      .distance(d => 120 - d.weight * 15)
-      .strength(d => 0.3 + d.weight * 0.05))
-    .force('charge', d3.forceManyBody().strength(-280))
-    .force('center', d3.forceCenter(W / 2, H / 2))
-    .force('collide', d3.forceCollide().radius(d => getNodeRadius(d) + 12));
+      .distance(d => {
+        // Cross-cluster links: long and weak
+        const sn = typeof d.source === 'object' ? d.source : nodeMap[d.source];
+        const tn = typeof d.target === 'object' ? d.target : nodeMap[d.target];
+        if (sn && tn && CLUSTER_MAP[sn.category] !== CLUSTER_MAP[tn.category])
+          return 260;
+        return 100 - (d.weight || 1) * 10;
+      })
+      .strength(d => {
+        const sn = typeof d.source === 'object' ? d.source : nodeMap[d.source];
+        const tn = typeof d.target === 'object' ? d.target : nodeMap[d.target];
+        if (sn && tn && CLUSTER_MAP[sn.category] !== CLUSTER_MAP[tn.category])
+          return 0.04;
+        return 0.28 + (d.weight || 1) * 0.04;
+      }))
+    .force('charge', d3.forceManyBody().strength(-220))
+    .force('collide', d3.forceCollide().radius(d => getNodeRadius(d) + 14))
+    .force('cluster', clusterForce(nodes, W, H))
+    .alphaDecay(0.025);
 
-  // Category filter click handler
+  /* ---- Category legend ---- */
   buildLegend(knowledgeData.categories);
 
-  // Links
+  /* ---- Links ---- */
   const linkGroup = g.append('g').attr('class', 'links');
 
   const linkLine = linkGroup.selectAll('line')
@@ -197,28 +258,21 @@ function initGraph() {
       const src = nodeMap[typeof d.source === 'object' ? d.source.id : d.source];
       return knowledgeData.categories[src?.category]?.color || '#555';
     })
-    .attr('stroke-width', d => 0.5 + d.weight * 0.4)
+    .attr('stroke-width', d => 0.5 + (d.weight || 1) * 0.4)
     .attr('stroke-dasharray', d => d.relation === 'comparison' ? '4,3' : null)
     .attr('marker-end', 'url(#arrow)');
 
-  // Insight labels on edges
   const insightLabels = linkGroup.selectAll('.insight-label')
     .data(links.filter(d => d.insight)).enter()
     .append('text')
     .attr('class', 'link-insight-badge')
-    .attr('text-anchor', 'middle')
-    .attr('dy', '-4')
-    .attr('font-size', '8')
-    .attr('fill', 'rgba(56,189,248,0.7)')
+    .attr('text-anchor', 'middle').attr('dy', '-4')
+    .attr('font-size', '8').attr('fill', 'rgba(56,189,248,0.7)')
     .attr('font-family', 'Pretendard, sans-serif')
-    .text(d => {
-      const text = d.insight;
-      return text.length > 20 ? text.slice(0, 20) + '…' : text;
-    })
-    .style('opacity', 0)
-    .style('pointer-events', 'none');
+    .text(d => d.insight.length > 22 ? d.insight.slice(0, 22) + '…' : d.insight)
+    .style('opacity', 0).style('pointer-events', 'none');
 
-  // Nodes
+  /* ---- Nodes ---- */
   const nodeGroup = g.append('g').attr('class', 'nodes');
 
   const node = nodeGroup.selectAll('g')
@@ -228,42 +282,23 @@ function initGraph() {
     .style('cursor', 'pointer')
     .call(d3.drag()
       .on('start', dragStart)
-      .on('drag', dragged)
-      .on('end', dragEnd));
+      .on('drag',  dragged)
+      .on('end',   dragEnd));
 
-  // Glow filter per category
-  const filterIds = {};
-  Object.entries(knowledgeData.categories).forEach(([cat, val]) => {
-    const fid = `glow-${cat.replace(/\s+/g, '_')}`;
-    filterIds[cat] = fid;
-    const filter = defs.append('filter').attr('id', fid);
-    filter.append('feGaussianBlur')
-      .attr('stdDeviation', '3').attr('result', 'blur');
-    const merge = filter.append('feMerge');
-    merge.append('feMergeNode').attr('in', 'blur');
-    merge.append('feMergeNode').attr('in', 'SourceGraphic');
-  });
-
-  // Circle
   node.append('circle')
     .attr('class', 'node-circle')
     .attr('r', d => getNodeRadius(d))
-    .attr('fill', d => {
-      const color = knowledgeData.categories[d.category]?.color || '#888';
-      return color;
-    })
+    .attr('fill', d => knowledgeData.categories[d.category]?.color || '#888')
     .attr('fill-opacity', d => 0.15 + (d.confidence / 4) * 0.6)
     .attr('stroke', d => knowledgeData.categories[d.category]?.color || '#888')
     .attr('stroke-width', 1.5)
-    .attr('stroke-opacity', 0.6);
+    .attr('stroke-opacity', 0.65);
 
-  // Inner dot
   node.append('circle')
     .attr('r', 3)
     .attr('fill', d => knowledgeData.categories[d.category]?.color || '#888')
     .attr('fill-opacity', 0.9);
 
-  // Label
   node.append('text')
     .attr('class', 'node-label')
     .attr('text-anchor', 'middle')
@@ -274,7 +309,7 @@ function initGraph() {
     .attr('fill', 'rgba(232,234,240,0.85)')
     .text(d => d.label);
 
-  // Tooltip
+  /* ---- Tooltip ---- */
   const tooltip = document.getElementById('node-tooltip');
   node.on('mouseover', (event, d) => {
     const color = knowledgeData.categories[d.category]?.color || '#888';
@@ -285,66 +320,100 @@ function initGraph() {
       <div class="tt-tags">${(d.tags || []).map(t => `<span class="tt-tag">${t}</span>`).join('')}</div>
     `;
     tooltip.classList.add('visible');
-
-    // Highlight connected
     highlightNeighbors(d.id, linkLine, node);
     insightLabels.style('opacity', l => {
-      const srcId = typeof l.source === 'object' ? l.source.id : l.source;
-      const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
-      return (srcId === d.id || tgtId === d.id) ? 1 : 0;
+      const s = typeof l.source === 'object' ? l.source.id : l.source;
+      const t = typeof l.target === 'object' ? l.target.id : l.target;
+      return (s === d.id || t === d.id) ? 1 : 0;
     });
   })
   .on('mousemove', event => {
     tooltip.style.left = (event.offsetX + 14) + 'px';
-    tooltip.style.top = (event.offsetY - 10) + 'px';
+    tooltip.style.top  = (event.offsetY - 10) + 'px';
   })
   .on('mouseout', () => {
     tooltip.classList.remove('visible');
     resetHighlight(linkLine, node);
     insightLabels.style('opacity', 0);
   })
-  .on('click', (event, d) => {
-    event.stopPropagation();
-    openNotePanel(d);
-  });
+  .on('click', (event, d) => { event.stopPropagation(); openNotePanel(d); });
 
-  // Simulation tick
+  /* ---- Tick ---- */
   simulation.on('tick', () => {
     linkLine
-      .attr('x1', d => d.source.x)
-      .attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x)
-      .attr('y2', d => d.target.y);
+      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
 
     insightLabels
       .attr('x', d => (d.source.x + d.target.x) / 2)
       .attr('y', d => (d.source.y + d.target.y) / 2);
 
     node.attr('transform', d => `translate(${d.x},${d.y})`);
+
+    /* ---- Update cluster hulls ---- */
+    Object.entries(CLUSTER_CONFIG).forEach(([clusterName, cfg]) => {
+      const clusterNodes = nodes.filter(d => d.cluster === clusterName);
+      if (clusterNodes.length < 2) return;
+
+      const pts = clusterNodes.map(d => [d.x, d.y]);
+      // Need at least 3 points for hull; duplicate if fewer
+      while (pts.length < 3) pts.push([...pts[0]]);
+      const hull = d3.polygonHull(pts);
+      if (!hull) return;
+
+      // Expand hull outward from centroid
+      const cx = d3.mean(hull, p => p[0]);
+      const cy = d3.mean(hull, p => p[1]);
+      const pad = 52;
+      const expanded = hull.map(p => {
+        const dx = p[0] - cx, dy = p[1] - cy;
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        return [p[0] + dx / len * pad, p[1] + dy / len * pad];
+      });
+
+      hullPaths[clusterName]
+        .attr('d', `M${expanded.map(p => p.join(',')).join('L')}Z`);
+
+      // Position label above the hull
+      const minY = d3.min(expanded, p => p[1]);
+      hullLabels[clusterName]
+        .attr('x', cx)
+        .attr('y', minY - 14);
+    });
   });
 
-  // Zoom controls
-  document.getElementById('btn-zoom-in').addEventListener('click', () => {
-    svg.transition().duration(300).call(zoom.scaleBy, 1.3);
-  });
-  document.getElementById('btn-zoom-out').addEventListener('click', () => {
-    svg.transition().duration(300).call(zoom.scaleBy, 0.77);
-  });
-  document.getElementById('btn-zoom-reset').addEventListener('click', () => {
-    svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity);
-  });
+  /* ---- Zoom controls ---- */
+  document.getElementById('btn-zoom-in').addEventListener('click', () =>
+    svg.transition().duration(300).call(zoom.scaleBy, 1.3));
+  document.getElementById('btn-zoom-out').addEventListener('click', () =>
+    svg.transition().duration(300).call(zoom.scaleBy, 0.77));
+  document.getElementById('btn-zoom-reset').addEventListener('click', () =>
+    svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity));
 
-  // Close panel on svg click
   svg.on('click', () => closeNotePanel());
-
-  // Note close button
   document.getElementById('note-close').addEventListener('click', closeNotePanel);
+}
+
+/* ---- Custom Cluster Force ---- */
+function clusterForce(nodes, W, H) {
+  const strength = 0.12;
+  return function(alpha) {
+    nodes.forEach(d => {
+      const cfg = CLUSTER_CONFIG[d.cluster];
+      if (!cfg) return;
+      const tx = W * cfg.cx;
+      const ty = H * cfg.cy;
+      d.vx += (tx - d.x) * alpha * strength;
+      d.vy += (ty - d.y) * alpha * strength;
+    });
+  };
 }
 
 function getNodeRadius(d) {
   return 12 + (d.confidence || 0) * 4 + (d.studyCount || 0) * 1.2;
 }
 
+/* ---- Legend ---- */
 function buildLegend(categories) {
   const legend = document.getElementById('legend');
   Object.entries(categories).forEach(([name, val]) => {
@@ -373,23 +442,25 @@ function filterByCategory(cat) {
   d3.selectAll('.link-line').transition().duration(300)
     .style('opacity', d => {
       if (!cat) return null;
-      const srcCat = typeof d.source === 'object' ? d.source.category : null;
-      const tgtCat = typeof d.target === 'object' ? d.target.category : null;
-      return (srcCat === cat || tgtCat === cat) ? 0.6 : 0.05;
+      const sc = typeof d.source === 'object' ? d.source.category : null;
+      const tc = typeof d.target === 'object' ? d.target.category : null;
+      return (sc === cat || tc === cat) ? 0.6 : 0.05;
     });
 }
 
 function highlightNeighbors(nodeId, linkLine, node) {
   const neighborIds = new Set([nodeId]);
   knowledgeData.edges.forEach(e => {
-    if (e.source === nodeId || (typeof e.source === 'object' && e.source.id === nodeId)) neighborIds.add(typeof e.target === 'object' ? e.target.id : e.target);
-    if (e.target === nodeId || (typeof e.target === 'object' && e.target.id === nodeId)) neighborIds.add(typeof e.source === 'object' ? e.source.id : e.source);
+    const s = typeof e.source === 'object' ? e.source.id : e.source;
+    const t = typeof e.target === 'object' ? e.target.id : e.target;
+    if (s === nodeId) neighborIds.add(t);
+    if (t === nodeId) neighborIds.add(s);
   });
-  node.style('opacity', d => neighborIds.has(d.id) ? 1 : 0.2);
+  node.style('opacity', d => neighborIds.has(d.id) ? 1 : 0.15);
   linkLine.style('stroke-opacity', d => {
-    const src = typeof d.source === 'object' ? d.source.id : d.source;
-    const tgt = typeof d.target === 'object' ? d.target.id : d.target;
-    return (src === nodeId || tgt === nodeId) ? 0.8 : 0.05;
+    const s = typeof d.source === 'object' ? d.source.id : d.source;
+    const t = typeof d.target === 'object' ? d.target.id : d.target;
+    return (s === nodeId || t === nodeId) ? 0.9 : 0.03;
   });
 }
 
@@ -401,16 +472,10 @@ function resetHighlight(linkLine, node) {
 function focusNode(nodeId) {
   const nodeData = knowledgeData.nodes.find(n => n.id === nodeId);
   if (!nodeData) return;
-  const nodeEl = d3.select(`#node-${nodeId}`);
-  if (nodeEl.empty()) return;
-  const transform = d3.select('#graph-container svg g').attr('transform') || '';
   openNotePanel(nodeData);
-  // Pulse animation on the node
-  nodeEl.select('circle')
-    .transition().duration(300)
-    .attr('r', getNodeRadius(nodeData) * 1.4)
-    .transition().duration(300)
-    .attr('r', getNodeRadius(nodeData));
+  d3.select(`#node-${nodeId}`).select('circle')
+    .transition().duration(300).attr('r', getNodeRadius(nodeData) * 1.4)
+    .transition().duration(300).attr('r', getNodeRadius(nodeData));
 }
 
 function dragStart(event, d) {
@@ -428,24 +493,26 @@ function dragEnd(event, d) {
    ============================================================ */
 async function openNotePanel(nodeData) {
   currentNodeId = nodeData.id;
-  const panel = document.getElementById('note-panel');
+  const panel   = document.getElementById('note-panel');
   const titleEl = document.getElementById('note-panel-title');
-  const metaEl = document.getElementById('note-panel-meta');
-  const bodyEl = document.getElementById('note-panel-body');
+  const metaEl  = document.getElementById('note-panel-meta');
+  const bodyEl  = document.getElementById('note-panel-body');
 
   const catColor = knowledgeData.categories[nodeData.category]?.color || '#888';
-  const catIcon = knowledgeData.categories[nodeData.category]?.icon || '';
+  const catIcon  = knowledgeData.categories[nodeData.category]?.icon  || '';
+  const cluster  = CLUSTER_MAP[nodeData.category] || '';
+  const clusterColor = CLUSTER_CONFIG[cluster]?.color || catColor;
 
   titleEl.textContent = nodeData.label;
   metaEl.innerHTML = `
-    <span class="note-panel-badge" style="background:${catColor}22;color:${catColor};border:1px solid ${catColor}44">${catIcon} ${nodeData.category}</span>
+    <span class="note-panel-badge" style="background:${clusterColor}22;color:${clusterColor};border:1px solid ${clusterColor}44">${CLUSTER_CONFIG[cluster]?.label || cluster}</span>
+    <span class="note-panel-badge" style="background:${catColor}18;color:${catColor};border:1px solid ${catColor}33">${catIcon} ${nodeData.category}</span>
     <span style="color:var(--accent-yellow)">${CONFIDENCE_STARS[nodeData.confidence] || ''}</span>
     <span style="color:var(--text-muted)">복습 ${nodeData.studyCount || 0}회</span>
   `;
 
   panel.classList.add('open');
 
-  // Load note markdown
   let content = '';
   try {
     const res = await fetch(`data/notes/${nodeData.id}.md`);
@@ -459,13 +526,10 @@ async function openNotePanel(nodeData) {
         <p style="font-size:12px;color:var(--text-muted)">data/notes/${nodeData.id}.md 파일을 만들어 채워 주세요!</p>
       </div>`;
     }
-  } catch (e) {
-    content = `<div class="note-placeholder" style="min-height:200px">
-      <p>노트를 불러올 수 없습니다.</p>
-    </div>`;
+  } catch {
+    content = `<div class="note-placeholder" style="min-height:200px"><p>노트를 불러올 수 없습니다.</p></div>`;
   }
 
-  // Connected concepts
   const connected = getConnectedNodes(nodeData.id);
   let connectedHtml = '';
   if (connected.length) {
@@ -475,10 +539,14 @@ async function openNotePanel(nodeData) {
         <div class="connected-list">
           ${connected.map(c => {
             const color = knowledgeData.categories[c.node.category]?.color || '#888';
+            const cCluster = CLUSTER_MAP[c.node.category];
+            const cClusterCfg = CLUSTER_CONFIG[cCluster];
             return `<div class="connected-item" onclick="focusNode('${c.node.id}');openNotePanel(knowledgeData.nodes.find(n=>n.id==='${c.node.id}'))">
               <span class="connected-dot" style="background:${color}"></span>
               <div class="connected-info">
-                <div class="connected-label">${c.node.label}</div>
+                <div class="connected-label">${c.node.label}
+                  <span style="font-size:10px;color:${cClusterCfg?.color || '#888'};margin-left:4px">${cClusterCfg?.label || ''}</span>
+                </div>
                 ${c.edge.insight ? `<div class="connected-insight">${c.edge.insight}</div>` : ''}
                 <div class="connected-relation">${RELATION_LABELS[c.edge.relation] || c.edge.relation || ''}</div>
               </div>
@@ -490,12 +558,11 @@ async function openNotePanel(nodeData) {
 
   bodyEl.innerHTML = content + connectedHtml;
 
-  // Render KaTeX
   if (window.renderMathInElement) {
     renderMathInElement(bodyEl, {
       delimiters: [
         { left: '$$', right: '$$', display: true },
-        { left: '$', right: '$', display: false }
+        { left: '$',  right: '$',  display: false }
       ]
     });
   }
@@ -509,13 +576,13 @@ function closeNotePanel() {
 function getConnectedNodes(nodeId) {
   const result = [];
   knowledgeData.edges.forEach(e => {
-    const srcId = typeof e.source === 'object' ? e.source.id : e.source;
-    const tgtId = typeof e.target === 'object' ? e.target.id : e.target;
-    if (srcId === nodeId) {
-      const n = knowledgeData.nodes.find(n => n.id === tgtId);
+    const s = typeof e.source === 'object' ? e.source.id : e.source;
+    const t = typeof e.target === 'object' ? e.target.id : e.target;
+    if (s === nodeId) {
+      const n = knowledgeData.nodes.find(n => n.id === t);
       if (n) result.push({ node: n, edge: e, direction: 'out' });
-    } else if (tgtId === nodeId) {
-      const n = knowledgeData.nodes.find(n => n.id === srcId);
+    } else if (t === nodeId) {
+      const n = knowledgeData.nodes.find(n => n.id === s);
       if (n) result.push({ node: n, edge: e, direction: 'in' });
     }
   });
@@ -532,55 +599,38 @@ function initHeatmap() {
 }
 
 function buildCalendarHeatmap() {
-  const grid = document.getElementById('heatmap-grid');
+  const grid     = document.getElementById('heatmap-grid');
   const monthsEl = document.getElementById('heatmap-months');
-  grid.innerHTML = '';
-  monthsEl.innerHTML = '';
+  grid.innerHTML = ''; monthsEl.innerHTML = '';
 
   const sessionMap = {};
-  knowledgeData.sessions.forEach(s => {
-    sessionMap[s.date] = s;
-  });
+  knowledgeData.sessions.forEach(s => { sessionMap[s.date] = s; });
 
-  // Build 16 weeks (112 days) ending today
   const today = new Date();
   const startDate = new Date(today);
   startDate.setDate(today.getDate() - 112 + 1);
-  // Align to Monday
-  const dayOfWeek = (startDate.getDay() + 6) % 7; // 0=Mon
-  startDate.setDate(startDate.getDate() - dayOfWeek);
+  const dow = (startDate.getDay() + 6) % 7;
+  startDate.setDate(startDate.getDate() - dow);
 
   const weeks = [];
   const cur = new Date(startDate);
   while (cur <= today || weeks.length < 1 || weeks[weeks.length - 1].length < 7) {
-    if (weeks.length === 0 || weeks[weeks.length - 1].length === 7) {
-      weeks.push([]);
-    }
+    if (weeks.length === 0 || weeks[weeks.length - 1].length === 7) weeks.push([]);
     weeks[weeks.length - 1].push(new Date(cur));
     cur.setDate(cur.getDate() + 1);
     if (weeks.length > 16 && weeks[weeks.length - 1].length === 7) break;
   }
 
-  // Month labels
   let lastMonth = null;
   weeks.forEach(week => {
-    const firstOfWeek = week[0];
-    const month = firstOfWeek.getMonth();
-    if (month !== lastMonth) {
-      lastMonth = month;
-      const span = document.createElement('span');
-      span.className = 'heatmap-month-label';
-      span.textContent = firstOfWeek.toLocaleDateString('ko-KR', { month: 'short' });
-      monthsEl.appendChild(span);
-    } else {
-      const span = document.createElement('span');
-      span.className = 'heatmap-month-label';
-      span.textContent = '';
-      monthsEl.appendChild(span);
-    }
+    const m = week[0].getMonth();
+    const span = document.createElement('span');
+    span.className = 'heatmap-month-label';
+    span.textContent = m !== lastMonth ? week[0].toLocaleDateString('ko-KR', { month: 'short' }) : '';
+    monthsEl.appendChild(span);
+    lastMonth = m;
   });
 
-  // Cells
   weeks.forEach(week => {
     const weekEl = document.createElement('div');
     weekEl.className = 'heatmap-week';
@@ -591,14 +641,8 @@ function buildCalendarHeatmap() {
       const session = sessionMap[dateStr];
       const intensity = session ? Math.min(4, session.topics.length) : 0;
       cell.dataset.intensity = intensity;
-      cell.title = session
-        ? `${dateStr}: ${session.topics.length}개 주제 — ${session.note || ''}`
-        : dateStr;
-      if (session) {
-        cell.addEventListener('click', () => {
-          scrollToSession(dateStr);
-        });
-      }
+      cell.title = session ? `${dateStr}: ${session.topics.length}개 주제 — ${session.note || ''}` : dateStr;
+      if (session) cell.addEventListener('click', () => scrollToSession(dateStr));
       weekEl.appendChild(cell);
     });
     grid.appendChild(weekEl);
@@ -639,13 +683,11 @@ function buildCategoryActivityBars() {
     .sort((a, b) => b[1] - a[1])
     .map(([cat, count]) => {
       const color = knowledgeData.categories[cat]?.color || '#888';
-      const icon = knowledgeData.categories[cat]?.icon || '';
-      const pct = Math.round((count / maxCount) * 100);
+      const icon  = knowledgeData.categories[cat]?.icon  || '';
+      const pct   = Math.round((count / maxCount) * 100);
       return `<div class="cat-bar-item">
         <div class="cat-bar-label">${icon} ${cat}</div>
-        <div class="cat-bar-track">
-          <div class="cat-bar-fill" style="width:${pct}%;background:${color}"></div>
-        </div>
+        <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${pct}%;background:${color}"></div></div>
         <div class="cat-bar-count">${count}회</div>
       </div>`;
     }).join('');
@@ -653,16 +695,15 @@ function buildCategoryActivityBars() {
 
 function scrollToSession(dateStr) {
   const el = document.getElementById(`session-${dateStr}`);
-  if (el) {
-    switchView('heatmap');
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('btn-heatmap').classList.add('active');
-    setTimeout(() => {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el.style.outline = '2px solid var(--accent-purple)';
-      setTimeout(() => el.style.outline = '', 2000);
-    }, 300);
-  }
+  if (!el) return;
+  switchView('heatmap');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-heatmap').classList.add('active');
+  setTimeout(() => {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.outline = '2px solid var(--accent-purple)';
+    setTimeout(() => el.style.outline = '', 2000);
+  }, 300);
 }
 
 function formatDate(date) {
@@ -683,37 +724,32 @@ function initProgress() {
 }
 
 function buildSummaryCards() {
-  const nodes = knowledgeData.nodes;
-  const avgConf = nodes.reduce((s, n) => s + (n.confidence || 0), 0) / nodes.length;
-  const totalSessions = knowledgeData.sessions.length;
+  const nodes    = knowledgeData.nodes;
+  const avgConf  = nodes.reduce((s, n) => s + (n.confidence || 0), 0) / nodes.length;
   const highConf = nodes.filter(n => n.confidence >= 3).length;
-  const lowConf = nodes.filter(n => n.confidence <= 1).length;
-
+  const lowConf  = nodes.filter(n => n.confidence <= 1).length;
   const cards = [
     { icon: '🧠', value: nodes.length, label: '총 개념 수' },
-    { icon: '📚', value: totalSessions, label: '학습 세션' },
+    { icon: '📚', value: knowledgeData.sessions.length, label: '학습 세션' },
     { icon: '⭐', value: highConf, label: '숙련 개념 (중급↑)' },
-    { icon: '🔴', value: lowConf, label: '보완 필요 개념' },
+    { icon: '🔴', value: lowConf,  label: '보완 필요 개념' },
     { icon: '📈', value: (avgConf / 4 * 100).toFixed(0) + '%', label: '평균 자신감' },
     { icon: '🔗', value: knowledgeData.edges.length, label: '개념 연결' }
   ];
-
-  const gradients = [
-    'linear-gradient(135deg, #8b5cf6, #6366f1)',
-    'linear-gradient(135deg, #38bdf8, #0ea5e9)',
-    'linear-gradient(135deg, #34d399, #10b981)',
-    'linear-gradient(135deg, #f472b6, #ec4899)',
-    'linear-gradient(135deg, #fbbf24, #f59e0b)',
-    'linear-gradient(135deg, #fb923c, #f97316)'
+  const grads = [
+    'linear-gradient(135deg,#8b5cf6,#6366f1)',
+    'linear-gradient(135deg,#38bdf8,#0ea5e9)',
+    'linear-gradient(135deg,#34d399,#10b981)',
+    'linear-gradient(135deg,#f472b6,#ec4899)',
+    'linear-gradient(135deg,#fbbf24,#f59e0b)',
+    'linear-gradient(135deg,#fb923c,#f97316)'
   ];
-
   document.getElementById('summary-cards').innerHTML = cards.map((c, i) => `
     <div class="summary-card animate-in" style="animation-delay:${i * 0.08}s">
       <div class="card-icon">${c.icon}</div>
-      <div class="card-value" style="background:${gradients[i]};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${c.value}</div>
+      <div class="card-value" style="background:${grads[i]};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${c.value}</div>
       <div class="card-label">${c.label}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function buildCategoryProgress() {
@@ -723,7 +759,6 @@ function buildCategoryProgress() {
     if (!grouped[n.category]) grouped[n.category] = [];
     grouped[n.category].push(n);
   });
-
   el.innerHTML = Object.entries(grouped)
     .sort((a, b) => {
       const avgA = a[1].reduce((s, n) => s + n.confidence, 0) / a[1].length;
@@ -732,12 +767,12 @@ function buildCategoryProgress() {
     })
     .map(([cat, nodes]) => {
       const color = knowledgeData.categories[cat]?.color || '#888';
-      const icon = knowledgeData.categories[cat]?.icon || '';
-      const avg = nodes.reduce((s, n) => s + (n.confidence || 0), 0) / nodes.length;
-      const pct = Math.round((avg / 4) * 100);
+      const icon  = knowledgeData.categories[cat]?.icon  || '';
+      const avg   = nodes.reduce((s, n) => s + (n.confidence || 0), 0) / nodes.length;
+      const pct   = Math.round((avg / 4) * 100);
       const chips = nodes.map(n => {
         const stars = '★'.repeat(n.confidence) + '☆'.repeat(4 - n.confidence);
-        return `<span class="cat-concept-chip" 
+        return `<span class="cat-concept-chip"
           style="color:${color};border-color:${color}44;background:${color}12;cursor:pointer"
           onclick="focusNode('${n.id}');switchView('graph');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-graph').classList.add('active')">
           ${n.label} <span class="confidence-star" style="color:${color}">${stars}</span>
@@ -760,10 +795,8 @@ function buildCategoryProgress() {
 }
 
 function buildWeakSpots() {
-  const weak = knowledgeData.nodes
-    .filter(n => n.confidence <= 1)
+  const weak = knowledgeData.nodes.filter(n => n.confidence <= 1)
     .sort((a, b) => a.confidence - b.confidence);
-
   document.getElementById('weak-spots-list').innerHTML = weak.map(n => {
     const color = knowledgeData.categories[n.category]?.color || '#888';
     return `<div class="spot-card weak animate-in" onclick="focusNode('${n.id}');switchView('graph');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-graph').classList.add('active')">
@@ -775,10 +808,8 @@ function buildWeakSpots() {
 }
 
 function buildStrongList() {
-  const strong = knowledgeData.nodes
-    .filter(n => n.confidence >= 3)
+  const strong = knowledgeData.nodes.filter(n => n.confidence >= 3)
     .sort((a, b) => b.confidence - a.confidence || b.studyCount - a.studyCount);
-
   document.getElementById('strong-list').innerHTML = strong.map(n => {
     const color = knowledgeData.categories[n.category]?.color || '#888';
     return `<div class="spot-card strong animate-in" onclick="focusNode('${n.id}');switchView('graph');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-graph').classList.add('active')">
