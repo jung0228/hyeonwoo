@@ -29,22 +29,35 @@ const RELATION_LABELS = {
 };
 
 /* ── Cluster Configuration ── */
+// Category → Cluster (기본 매핑)
 const CLUSTER_MAP = {
-  'Generative':     'AI',
-  'Architecture':   'AI',
-  'Language Model': 'AI',
-  'Multimodal':     'AI',
-  'RL':             'AI',
-  'Training':       'AI',
-  'Math & Stats':   'AI',
+  'Generative':     'AI',       // 딥러닝
+  'Architecture':   'AI',       // 딥러닝
+  'Language Model': 'AI',       // 딥러닝
+  'Multimodal':     'AI',       // 딥러닝
+  'Training':       'AI',       // 딥러닝
+  'RL':             'ML',       // 기본 RL은 머신러닝
+  'Math & Stats':   'ML',       // 확률/통계/선형대수
   'Systems':        '시스템',
   'Algorithm':      '알고리즘'
 };
 
+// 노드별 개별 오버라이드 (카테고리 매핑보다 우선)
+const NODE_CLUSTER_OVERRIDE = {
+  'rlhf': 'AI'   // RLHF는 LLM alignment → 딥러닝 쪽
+};
+
+// 헬퍼: 노드의 최종 클러스터 반환
+function getNodeCluster(node) {
+  return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || 'AI';
+}
+
+// 4개 클러스터, 왼쪽→오른쪽: 시스템 / ML / AI / 알고리즘
 const CLUSTER_CONFIG = {
-  'AI':       { color: '#8b5cf6', label: '🤖  AI / ML',   cx: 0.45, cy: 0.48 },
-  '시스템':   { color: '#ef4444', label: '💻  시스템',     cx: 0.13, cy: 0.48 },
-  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',   cx: 0.80, cy: 0.48 }
+  '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.10, cy: 0.48 },
+  'ML':       { color: '#34d399', label: '📐  머신러닝',      cx: 0.36, cy: 0.48 },
+  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.63, cy: 0.48 },
+  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.89, cy: 0.48 }
 };
 
 /* ============================================================
@@ -173,9 +186,9 @@ function initGraph() {
 
   // Assign initial position biased toward cluster center
   const nodes = knowledgeData.nodes.map(n => {
-    const clusterName = CLUSTER_MAP[n.category] || 'AI';
+    const clusterName = getNodeCluster(n);
     const cc = CLUSTER_CONFIG[clusterName];
-    const jitter = () => (Math.random() - 0.5) * 160;
+    const jitter = () => (Math.random() - 0.5) * 130;
     return {
       ...n,
       cluster: clusterName,
