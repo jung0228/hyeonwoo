@@ -1,0 +1,42 @@
+\begin{table}[ht]
+    \centering
+    \begin{minipage}[t]{0.47\textwidth}
+        \centering
+        \small
+        \resizebox{\linewidth}{!}{
+        \begin{tabular}{lc|c|ccc}
+        \toprule
+         \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Re-Indexing}} & \textbf{StrBench} & \multicolumn{3}{c}{\textbf{OVO-Bench}} \\
+        %\cmidrule(lr){4-6}
+        & & Real-Time & Real-Time & Backward & \textbf{Avg.}\\
+        \midrule
+        \llava & - & 71.34 & 63.06 & 43.64 & 53.35 \\
+        \rowcolor{gray!40} \hspace{3pt}+ HERMES & lazy & \textbf{72.63} & \textbf{65.07} & \textbf{48.80} & \textbf{56.94} \\
+        \hspace{3pt}+ HERMES & eager & 72.30 & 64.91 & 47.21 & 56.06 \\
+        \bottomrule
+        \end{tabular}
+        }
+        \caption{Ablation on different re-indexing strategies on streaming benchmarks. The gray row represents our default setting in all evaluations for streaming benchmarks. "StrBench" represents \textit{StreamingBench}.}
+        \label{tab:pos_ablation_streaming}
+    \end{minipage}%
+    \quad
+    \begin{minipage}[t]{0.47\textwidth}
+        \centering
+        \small
+        \resizebox{\linewidth}{!}{
+        \begin{tabular}{lc|cccc}
+        \toprule
+         \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Re-Indexing}} & \multicolumn{4}{c}{\textbf{VideoMME}} \\
+        %\cmidrule(lr){3-6}
+        & & Short & Medium & Long & \textbf{Avg.}\\
+        \midrule
+        \llava & - & 69.89 & 55.11 & 48.00 & 57.67 \\
+        \hspace{3pt}+ HERMES & lazy & 69.67 & 51.67 & 43.44 & 54.93 \\
+        \rowcolor{gray!40} \hspace{3pt}+ HERMES & eager & \textbf{71.33} & 54.89 & \textbf{49.11} & \textbf{58.44} \\
+        \bottomrule
+        \end{tabular}
+        }
+        \caption{Ablation on different re-indexing strategies on offline benchmark VideoMME. The gray row represents our default setting in all evaluations for offline benchmarks.}
+        \label{tab:pos_ablation_offline}
+    \end{minipage}
+\end{table}

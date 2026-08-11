@@ -1,0 +1,91 @@
+\section{Details of Position Re-Indexing}
+
+Inspired by StreamingVLM's strategy of managing positional stability in streaming scenarios~\cite{xu2025streamingvlmrealtimeunderstandinginfinite},  we adopt a unified left-compaction re-indexing scheme to eliminate positional gaps introduced by KV-cache pruning while preserving the semantic anchoring of the system prompt. Concretely, system text tokens are kept fixed to provide a stable textual anchor, whereas retained video tokens are re-indexed in a left-compact manner and placed contiguously after the static prefix. To reuse cached key states without re-computation, we further apply a delta-based rotary correction that compensates for the positional displacement.
+
+\subsection{Re-indexing for LLaVA-OV (1D RoPE)}
+\label{app:1d_pos}
+
+LLaVA-OV employs standard 1D RoPE, where each token is associated with a scalar positional index $p$. Therefore, we perform left-compaction of the 1D indices: the system prefix positions remain unchanged, while the retained positions of video tokens are reassigned to form a dense contiguous segment immediately following the fixed prefix.
+
+Let \texttt{offset} denote the length of the system prompt prefix tokens, and let
+\[
+\mathcal{P} = \{ p_0 < p_1 < \cdots < p_{N-1} \}
+\]
+be the sorted set of retained video token positions (excluding the fixed prefix). For a retained video token originally at position $p_{\mathrm{old}} \in \mathcal{P}$, its compacted 1D position is defined as
+\begin{equation}
+p_{\mathrm{new}}
+=
+\texttt{offset}
++
+\operatorname{rank}_{\mathcal{P}}\!\left(p_{\mathrm{old}}\right).
+\end{equation}
+This mapping removes gaps while preserving the original temporal ordering along the stream, and ensures that the video region occupies a dense range directly after the static text region.
+
+To align cached key states with the updated positions, we avoid re-generating keys and instead apply a rotary delta correction induced by the positional shift. For a cached key vector $\mathbf{k}_{\mathrm{old}}$ associated with position $p_{\mathrm{old}}$ and remapped to $p_{\mathrm{new}}$, we compute
+\begin{equation}
+\mathbf{k}_{\mathrm{new}}
+=
+\mathbf{k}_{\mathrm{old}}
+\odot
+\mathrm{RotaryDelta}\!\left(p_{\mathrm{old}}, p_{\mathrm{new}}\right),
+\end{equation}
+where the relative phase shift is
+\begin{equation}
+\mathrm{RotaryDelta}\!\left(p_{\mathrm{old}}, p_{\mathrm{new}}\right)
+=
+e^{i(p_{\mathrm{new}} - p_{\mathrm{old}})\boldsymbol{\theta}},
+\end{equation}
+and $\boldsymbol{\theta}$ denotes the RoPE frequency vector. This update preserves the correctness of attention under the new indexing while enabling direct reuse of the cached KV states.
+
+
+\subsection{Re-indexing for Qwen2.5-VL (3D M-RoPE)}
+\label{app:3d_pos}
+
+For Qwen2.5-VL, video tokens are indexed by a 3D M-RoPE coordinate $\mathbf{p} = (p^{(t)}, p^{(h)}, p^{(w)})$, covering temporal and spatial dimensions. After pruning, the retained video tokens typically occupy sparse coordinates along each dimension $d \in \{t, h, w\}$. To eliminate the gaps without disturbing the monotonic ordering, we apply dimension-wise left-compaction independently along each axis, while keeping the system token prefix fixed.
+
+Let
+\[
+\mathcal{P}^{(d)} = \{ p^{(d)}_0 < p^{(d)}_1 < \cdots < p^{(d)}_{N_{d}-1} \}
+\]
+denote the sorted set of retained coordinates along dimension $d$. For a token originally located at $p^{(d)}_{\mathrm{old}} \in \mathcal{P}^{(d)}$, its compacted coordinate is defined by its rank within $\mathcal{P}^{(d)}$, shifted by the fixed prefix \texttt{offset}:
+\begin{equation}
+p^{(d)}_{\mathrm{new}}
+=
+\texttt{offset}
++
+\operatorname{rank}_{\mathcal{P}^{(d)}}\!\left(p^{(d)}_{\mathrm{old}}\right),
+\qquad
+d \in \{t, h, w\}.
+\end{equation}
+This procedure yields a dense and contiguous $(t,h,w)$ grid for the video tokens placed immediately after the static text region, thereby ensuring positional continuity while preserving the distinct semantic roles of temporal and spatial indices.
+
+As in the 1D case, we reuse cached keys by applying a M-RoPE correction. Given a key $\mathbf{k}_{\mathrm{old}}$ associated with
+\[
+\mathbf{p}_{\mathrm{old}} = (p^{(t)}_{\mathrm{old}}, p^{(h)}_{\mathrm{old}}, p^{(w)}_{\mathrm{old}})
+\]
+and remapped to
+\[
+\mathbf{p}_{\mathrm{new}} = (p^{(t)}_{\mathrm{new}}, p^{(h)}_{\mathrm{new}}, p^{(w)}_{\mathrm{new}}),
+\]
+the corrected key is obtained as
+\begin{equation}
+\mathbf{k}_{\mathrm{new}}
+=
+\mathbf{k}_{\mathrm{old}}
+\odot
+\mathrm{RotaryDelta}\!\left(\mathbf{p}_{\mathrm{old}}, \mathbf{p}_{\mathrm{new}}\right),
+\end{equation}
+with the relative phase shift:
+\begin{equation}
+\mathrm{RotaryDelta}\!\left(\mathbf{p}_{\mathrm{old}}, \mathbf{p}_{\mathrm{new}}\right)
+=
+\operatorname*{Concat}_{d \in \{t, h, w\}}
+\left(
+e^{i
+(
+p^{(d)}_{\mathrm{new}} - p^{(d)}_{\mathrm{old}}
+)
+\boldsymbol{\theta}^{(d)}
+}\right),
+\end{equation}
+where $\operatorname*{Concat}$ denotes the concatenation operation along the channel dimension, and $\boldsymbol{\theta}^{(d)}$ represents the rotary frequency vector corresponding to the channel section allocated for dimension $d$.

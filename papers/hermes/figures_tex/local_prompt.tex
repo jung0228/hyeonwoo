@@ -1,0 +1,28 @@
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}[t]{0.47\textwidth}
+    \begin{tcolorbox}[colback=black!7.5!white, colframe=black!30!white, fontupper=\footnotesize, fonttitle=\footnotesize]
+    Find recent details related to: \{last\_conv\}. Describe the current scene in detail, focusing on specific objects, fine-grained actions, and spatial relationships.
+    \end{tcolorbox}
+    \caption{Local guidance prompt to guide the token compression if conversation history exists. "last\_conv" refers to the last user query and the corresponding model answer from the conversation history.}
+    \end{minipage}
+    \quad
+    \begin{minipage}[t]{0.47\textwidth}
+    \begin{tcolorbox}[colback=black!7.5!white, colframe=black!30!white, fontupper=\footnotesize, fonttitle=\footnotesize]
+    % \texttt{[User Input]}: \vspace{2pt}\\
+    Describe the current scene in detail, focusing on specific objects, fine-grained actions, and spatial relationships.
+    \end{tcolorbox}
+    \caption{Local guidance prompt to guide the token compression if there is no conversation history.}
+    \end{minipage}
+\end{figure}
+
+% \begin{figure}[ht]
+% \centering
+% \begin{minipage}{0.9\columnwidth}
+% \begin{tcolorbox}[colback=black!7.5!white, colframe=black!30!white, fontupper=\footnotesize, fonttitle=\footnotesize]
+% % \texttt{[User Input]}: \vspace{2pt}\\
+% Describe the current scene in detail, focusing on specific objects, fine-grained actions, and spatial relationships.
+% \end{tcolorbox}
+% \end{minipage}
+% \caption{Local guidance prompt to guide the token compression if there is no conversation history.}
+% \end{figure}

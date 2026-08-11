@@ -1,0 +1,24 @@
+\begin{figure}[t]
+% \captionsetup{font=normalsize}
+% \captionsetup[sub]{font=normalsize}
+\setlength{\belowcaptionskip}{0.5\baselineskip}
+\centering
+    \begin{subfigure}{.5\linewidth}
+        \centering
+        \includegraphics[width=.95\linewidth]{figures/src/retrieve_size.pdf}
+        \caption{}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{.5\linewidth}
+        \centering
+        \includegraphics[width=.95\linewidth]{figures/src/chunk_size.pdf}
+        \caption{}
+    \end{subfigure}
+\vspace{-15pt}
+\caption{
+\textbf{Ablation study of retrieval hyperparameters:}
+(a) number of retrieved frames and (b) number of frames per retrieval block.
+Experiments are conducted with \texttt{LLaVA-OV-7B}.
+}
+\label{fig:ablation_retrieval}
+\end{figure}

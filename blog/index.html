@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: 0.88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+
+    /* thin accent bar */
+    .masthead-bar {
+      height: 3px;
+      background: var(--text);
+      margin-bottom: 0;
+    }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1;
+      color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover, .tag-btn.active { color: var(--accent); }
+
+    /* ─── MAIN ─── */
+    .blog-main { max-width: 1080px; margin: 0 auto; padding: 0 3rem 6rem; }
+
+    /* ─── FEATURED ─── */
+    .featured {
+      padding: 1.8rem 0 1.6rem;
+      border-bottom: 3px double var(--text);
+    }
+    .eyebrow {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .63rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .2em;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--rule-lt); }
+
+    .featured-headline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); text-decoration: none;
+      display: block; margin-bottom: .7rem;
+      max-width: 780px;
+      word-break: keep-all;
+      transition: color .15s;
+    }
+    .featured-headline:hover { color: var(--accent); }
+
+    .featured-dek {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: .92rem;
+      color: var(--muted); line-height: 1.7;
+      max-width: 640px; margin-bottom: .9rem;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .post-meta-line {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+    }
+    .post-meta-line .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+    .post-meta-line .dot { color: var(--rule-lt); }
+
+    /* ─── SECTION DIVIDER ─── */
+    .section-header {
+      display: flex; align-items: center; gap: .8rem;
+      padding: 2.2rem 0 1.2rem;
+    }
+    .section-name {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .63rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .2em;
+      color: var(--muted); white-space: nowrap;
+    }
+    .section-rule { flex: 1; height: 1px; background: var(--rule-lt); }
+
+    /* ─── GRID ─── */
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.4rem 2.8rem;
+    }
+    .post-card {
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      padding-bottom: 1.8rem;
+      border-bottom: 1px solid var(--rule-lt);
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+    .card-cat {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .62rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--accent); margin-bottom: .5rem;
+    }
+    .card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text); line-height: 1.35;
+      margin-bottom: .55rem;
+      transition: color .15s;
+      height: 2.97rem; /* fixed: exactly 2 lines */
+      overflow: hidden;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .post-card:hover .card-title { color: var(--accent); }
+    .card-desc {
+      font-size: .88rem; color: var(--muted);
+      line-height: 1.7;
+      height: 4.49rem; /* fixed: exactly 3 lines */
+      overflow: hidden;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      margin-bottom: .65rem;
+    }
+    .card-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .67rem; color: var(--muted);
+    }
+
+    .empty {
+      grid-column: 1/-1; text-align: center;
+      padding: 4rem 0; color: var(--muted);
+      font-style: italic; font-size: .95rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .post-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      .post-grid { grid-template-columns: 1fr; }
+      nav .nav-links { display: none; }
+      .masthead, .filter-bar, .blog-main { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 2rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      .featured { padding: 1.4rem 0 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Research Blog</span>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn active" onclick="filterPosts('all',this)">All</button>
+    <button class="tag-btn" onclick="filterPosts('Multimodal',this)">Multimodal</button>
+    <button class="tag-btn" onclick="filterPosts('Video',this)">Video</button>
+    <button class="tag-btn" onclick="filterPosts('Math',this)">Math</button>
+    <button class="tag-btn" onclick="filterPosts('Agent',this)">Agent</button>
+    <button class="tag-btn" onclick="filterPosts('Speech',this)">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="blog-main">
+
+  <div class="section-header">
+    <span class="section-name" id="section-label">Posts</span>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="post-grid" id="post-grid">
+    <a class="post-card" href="posts/multimodal-deep-research-reports.html" data-tags="Agent,LLM,Multimodal">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">딥리서치 보고서에 이미지를 넣는다</div>
+      <div class="card-desc">Deep Research 보고서가 텍스트 일색에서 벗어나 차트·이미지를 본문에 끼워 넣는 multimodal report generation 연구를, 이미지 생성·검색·검증·평가·개인화 다섯 축으로 7편의 논문을 통해 정리한다.</div>
+      <div class="card-meta">Jun 2026 · 24 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/personalized-deep-research.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Deep Research와 Personalization 연구 정리</div>
+      <div class="card-desc">Deep Research의 정의·파이프라인·목적 task를 먼저 정리하고, 그 위에서 personalization 연구가 개인화 프레임워크·benchmark·평가 방법론·memory로 이어지는 흐름을 5편의 논문으로 상세히 정리한다.</div>
+      <div class="card-meta">Jun 2026 · 26 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/streamkv.html" data-tags="Video,LLM">
+      <div class="card-cat">Video · LLM · 슬라이드 덱</div>
+      <div class="card-title">StreamKV: 스트리밍 비디오에서 KV 캐시를 압축하고 정밀하게 검색하는 법</div>
+      <div class="card-desc">Semantic 분할, Guidance Prompt 압축, Layer-Adaptive Selection — 세 모듈이 하나로. 90% 압축에서도 오프라인 베이스라인을 상회한다. 13슬라이드 덱.</div>
+      <div class="card-meta">Jun 11, 2026 · 13 min read</div>
+    </a>
+    <a class="post-card" href="posts/deep-research-survey.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Deep Research Survey — 자율 리서치 에이전트를 4단계로 해부하다</div>
+      <div class="card-desc">arXiv:2508.12752 정독. Deep Research를 planning·question developing·web exploration·report generation의 4단계 파이프라인으로 체계화하고, 각 단계의 방법 taxonomy(Table 1–4)·최적화·벤치마크 coverage·미래 5대 과제까지. 논문 Fig 1 사용. (슬라이드 덱)</div>
+      <div class="card-meta">Jun 2026 · 12 min read · Deck</div>
+    </a>
+    <a class="post-card" href="posts/deep-research.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Deep Research 입문 — 검색을 도구로 쓰는 다단계 reasoning agent</div>
+      <div class="card-desc">Deep Research가 무엇이고, 4단계 파이프라인(planning→question→web exploration↻→report)으로 어떻게 굴러가며, 능력 3축(찾기·풀기·쓰기)과 GAIA·BrowseComp·HLE로 어떻게 평가하는지 — 분야를 처음 보는 사람을 위한 field primer. (슬라이드 덱)</div>
+      <div class="card-meta">Jun 2026 · 12 min read · Deck</div>
+    </a>
+    <a class="post-card" href="posts/thinking-in-space.html" data-tags="Multimodal,Video,LLM">
+      <div class="card-cat">Multimodal</div>
+      <div class="card-title">Thinking in Space: MLLM은 공간을 어떻게 보고·기억하고·회상하는가</div>
+      <div class="card-desc">영상 기반 시각-공간 지능 벤치마크 VSI-Bench. MLLM은 인간 이하지만 경쟁력 있고, 공간추론이 병목이며, 언어 prompting은 오히려 해롭다 — 그러나 cognitive map은 거리추론을 끌어올린다. (슬라이드 덱)</div>
+      <div class="card-meta">Jun 2026 · 10 min read · Deck</div>
+    </a>
+    <a class="post-card" href="posts/hmt.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">HMT: 웹 에이전트 메모리를 계층으로 쪼개면 왜 강해질까</div>
+      <div class="card-desc">Hierarchical Memory Tree는 웹 에이전트 메모리를 intent, stage, action 계층으로 구조화해 cross-website generalization을 크게 끌어올린다.</div>
+      <div class="card-meta">Apr 2026 · 14 min read</div>
+    </a>
+    <a class="post-card" href="posts/synapse-to-awm-memory-evolution.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Synapse에서 AWM까지: 웹 에이전트 메모리는 trajectory를 어떻게 workflow로 바꾸는가</div>
+      <div class="card-desc">웹 에이전트는 무엇을 기억해야 할까? Synapse와 Agent Workflow Memory를 함께 읽으면, exemplar memory가 workflow memory로 진화하는 흐름과 그 이유를 한 번에 이해할 수 있다.</div>
+      <div class="card-meta">Apr 2026 · 17 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/synapse.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Synapse: trajectory를 예시로 넣는 웹 에이전트</div>
+      <div class="card-desc">Synapse는 state abstraction, trajectory-as-exemplar prompting, exemplar memory를 결합해 MiniWoB++와 Mind2Web에서 당시 SOTA ICL 웹 에이전트를 크게 앞질렀다.</div>
+      <div class="card-meta">Apr 2026 · 14 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/agent-workflow-memory.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Agent Workflow Memory: 웹 에이전트가 루틴을 배워 점점 강해지는 법</div>
+      <div class="card-desc">성공 trajectory를 그대로 저장하는 대신, 반복되는 웹 작업 루틴을 workflow로 추상화하면 무엇이 달라질까? AWM은 offline과 online 모두에서 agent memory를 workflow 중심으로 재구성한다.</div>
+      <div class="card-meta">Apr 2026 · 15 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/skillrl.html" data-tags="Agent,LLM,RL">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">SkillRL: 기억을 쌓는 대신 스킬로 진화하는 에이전트</div>
+      <div class="card-desc">LLM 에이전트 메모리의 핵심이 저장이 아니라 추상화라면? SkillRL은 trajectory를 skill bank로 distill하고, 그 skill bank를 RL 중 재귀적으로 진화시킨다.</div>
+      <div class="card-meta">Apr 2026 · 14 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/reasoningbank.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">ReasoningBank: 실패에서 배우는 에이전트 메모리</div>
+      <div class="card-desc">성공과 실패를 모두 추상화해 재사용 가능한 추론 전략을 쌓는 메모리 프레임워크 — 그리고 메모리와 테스트타임 스케일링의 시너지</div>
+      <div class="card-meta">Wed Apr 15 2026 09:00:00 GMT+0900 (Korean Standard Time) · 14</div>
+    </a>
+
+    <a class="post-card" href="posts/insid3.html" data-tags="Computer Vision,Multimodal">
+      <div class="card-cat">Vision</div>
+      <div class="card-title">INSID3: 단 하나의 자기지도 모델로 In-context Segmentation</div>
+      <div class="card-desc">DINOv3 피처만으로 파인튜닝 없이 객체·부분·개인화 세그멘테이션을 모두 달성한 CVPR 2026 Oral 논문.</div>
+      <div class="card-meta">Apr 2026 · 10 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/avigate.html" data-tags="Multimodal,Computer Vision,Video">
+      <div class="card-cat">Multimodal</div>
+      <div class="card-title">AVIGATE: 오디오를 선택적으로 섞는 비디오-텍스트 검색</div>
+      <div class="card-desc">배경 음악은 무시하고, 말소리는 활용하는 — 게이팅으로 오디오의 기여를 동적으로 조절하다</div>
+      <div class="card-meta">Thu Apr 10 2025 09:00:00 GMT+0900 (Korean Standard Time) · 10</div>
+    </a>
+
+    <a class="post-card" href="posts/tcvp.html" data-tags="Video,Multimodal">
+      <div class="card-cat">Video</div>
+      <div class="card-title">TCVP: Timestamped Comment-guided VMR Pipeline</div>
+      <div class="card-desc">기존 VMR 데이터셋의 두 가지 한계—중요하지 않은 구간 선택, 캡션처럼 생긴 쿼리—를 유튜브 타임스탬프 댓글로 해결한 데이터 구축 파이프라인 TCVP를 제안한다.</div>
+      <div class="card-meta">Apr 2026 · 10 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/web-navigator.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">WebNavigator: Global Web Navigation via Interaction Graph Retrieval</div>
+      <div class="card-desc">웹 에이전트의 근본 한계인 Topological Blindness를 진단하고, 오프라인 그래프 탐색 + 온라인 Retrieve-Reason-Teleport 워크플로우로 WebArena 멀티사이트 72.9% 달성.</div>
+      <div class="card-meta">Apr 2026 · 11 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/wma-web-agent.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Web Agents with World Models</div>
+      <div class="card-desc">LLM 기반 웹 에이전트에 World Model을 접목해 행동의 결과를 미리 시뮬레이션하고, Tree Search 수준의 성능을 훨씬 낮은 비용으로 달성한 ICLR 2025 연구.</div>
+      <div class="card-meta">Apr 2026 · 10 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/trisense.html" data-tags="Multimodal,Video,LLM">
+      <div class="card-cat">Multimodal</div>
+      <div class="card-title">TriSense: 보고, 듣고, 말을 이해하는 비디오 LLM</div>
+      <div class="card-desc">시각·오디오·음성 세 모달리티를 쿼리에 맞게 동적으로 조합하는 모멘트 검색·캡셔닝 모델</div>
+      <div class="card-meta">2026-04-08 · 20</div>
+    </a>
+
+    <a class="post-card" href="posts/momentseeker.html" data-tags="Video,LLM,Multimodal">
+      <div class="card-cat">Video</div>
+      <div class="card-title">MomentSeeker: 긴 영상에서 핵심 장면을 찾는 법</div>
+      <div class="card-desc">LVU의 숨겨진 전제 — 답을 내리기 전에 '어디를 봐야 하는가'를 알고 있는가?</div>
+      <div class="card-meta">2026-04-07 · 22</div>
+    </a>
+
+    <a class="post-card" href="posts/longvale.html" data-tags="Multimodal,Video">
+      <div class="card-cat">Multimodal</div>
+      <div class="card-title">LongVALE: 오디오·영상·언어를 아우르는 첫 번째 옴니모달 벤치마크</div>
+      <div class="card-desc">시각만 보던 비디오 AI가 소리까지 듣기 시작했다 — 105K 이벤트, 8.4K 롱 비디오, 그리고 교차 모달 추론의 시작</div>
+      <div class="card-meta">2026-04-07 · 18</div>
+    </a>
+
+    <a class="post-card" href="posts/vmr-three-papers.html" data-tags="Computer Vision,Video,Multimodal">
+      <div class="card-cat">Vision</div>
+      <div class="card-title">비디오 모멘트 검색의 현재: TCVP · LongVALE · Momentseeker 심층 분석</div>
+      <div class="card-desc">세 논문 완전 비교 분석 — 데이터 철학의 차이, 오디오 처리 방식, 그리고 VMR이 아직 70%를 틀리는 이유.</div>
+      <div class="card-meta">Apr 2026 · 28 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/video-moment-retrieval-analysis.html" data-tags="Computer Vision,Video,Multimodal,LLM">
+      <div class="card-cat">Vision</div>
+      <div class="card-title">비디오 모멘트 검색의 현재와 미래: LongVALE, Momentseeker, TCVP 심층 분석</div>
+      <div class="card-desc">3개 최신 논문의 완전 분석 + 실험 로드맵. 데이터셋부터 모델까지 비디오 검색의 모든 것.</div>
+      <div class="card-meta">Apr 2026 · 35 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/web-agent-2025-survey.html" data-tags="Agent,LLM,Multimodal">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">웹 에이전트 2025–2026 연구 총정리</div>
+      <div class="card-desc">ICLR·NeurIPS·CVPR 2025와 2026 arXiv까지 — 웹 에이전트 연구의 판을 바꾼 논문들을 트렌드별로 깊게 분석한다.</div>
+      <div class="card-meta">Mar 2026 · 22 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/weg-agent.html" data-tags="Agent,Multimodal,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">웹 에이전트 직접 만들어보기: SoM + ReAct + LLM-as-Judge</div>
+      <div class="card-desc">SoM 퍼셉션, ReAct 루프, LLM-as-Judge 평가까지 — 웹 에이전트의 핵심 컴포넌트를 직접 구현하며 배운 것들.</div>
+      <div class="card-meta">Mar 2026 · 14 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/tcvp-imr-pipeline.html" data-tags="Video,Multimodal,LLM">
+      <div class="card-cat">Video</div>
+      <div class="card-title">TCVP-IMR: 타임스탬프 댓글로 IMR 학습 데이터 자동 구축하기</div>
+      <div class="card-desc">MomentSeeker가 수동으로 만든 것을 YouTube 댓글로 자동화할 수 있을까.</div>
+      <div class="card-meta">2026-03-15 · 10 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/visual-query-survey.html" data-tags="Video,Multimodal,LLM">
+      <div class="card-cat">Video</div>
+      <div class="card-title">이미지 쿼리로 영상 장면 찾기: Visual Query VMR 연구 동향</div>
+      <div class="card-desc">텍스트만으론 부족한가? Composed Retrieval과 Image-Conditioned Moment Search 최신 흐름 정리</div>
+      <div class="card-meta">2026-03-16 · 12</div>
+    </a>
+
+    <a class="post-card" href="posts/tcvp-emnlp-plan.html" data-tags="Multimodal">
+      <div class="card-cat">Multimodal</div>
+      <div class="card-title">EMNLP를 향해: TCVP 리뷰 분석과 개선 계획</div>
+      <div class="card-desc">ACL ARR 리뷰어 지적 정리 및 Visual Query 추가, Mixed Modality 편입, LanguageBind fine-tuning 등 5가지 개선 방향.</div>
+      <div class="card-meta">Mar 12, 2026 · 15 min read</div>
+    </a>
+    <a class="post-card" href="posts/tcvp-review.html" data-tags="Multimodal">
+      <div class="card-cat">Multimodal</div>
+      <div class="card-title">ACL 이후 EMNLP를 향해: TCVP 약점 분석과 개선 로드맵</div>
+      <div class="card-desc">데이터셋 규모 · downstream training exp 부재 · 40-sample human eval — 9가지 약점 분석과 EMNLP 2026 타겟 로드맵.</div>
+      <div class="card-meta">Mar 10, 2026 · 20 min read</div>
+    </a>
+    <a class="post-card" href="posts/web-agent-deep-dive.html" data-tags="Agent,LLM,Multimodal">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">웹 에이전트 심층 분석: 동작 원리, 벤치마크, 핵심 시스템</div>
+      <div class="card-desc">웹 에이전트의 동작 원리(Playwright/CDP/AX Tree/SoM)부터 4대 벤치마크(Mind2Web·WebArena·WebVoyager·VisualWebArena), Mind2Web·WebVoyager·Agent-E·Browser Use 시스템 분석까지 한 편에.</div>
+      <div class="card-meta">Mar 2026 · 35 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/mle-map-problems.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">MLE & MAP 심화 문제</div>
+      <div class="card-desc">MLE & MAP 포스트의 심화 버전. Fisher Information, L1/L2 기하학, Empirical Bayes, EM 알고리즘, 베이즈 모델 선택을 다룬다.</div>
+      <div class="card-meta">Mar 2026 · 20 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/information-theory-problems.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">정보이론 심화 문제</div>
+      <div class="card-desc">정보이론 포스트의 심화 버전. ELBO 유도, KL 비대칭성, 정보 병목 이론, Rényi 엔트로피, Data Processing Inequality를 다룬다.</div>
+      <div class="card-meta">Mar 2026 · 20 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/eigenvalue-properties-problems.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">고유값의 성질 심화 문제</div>
+      <div class="card-desc">고유값의 성질 포스트의 심화 버전. SAM, RNN 그래디언트 소실/폭발, Spectral Normalization, Power Iteration, PSD와 커널 방법을 다룬다.</div>
+      <div class="card-meta">Mar 2026 · 20 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/eigendecomposition-svd-problems.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">고유값 분해 & SVD 심화 문제</div>
+      <div class="card-desc">고유값 분해 & SVD 포스트의 심화 버전. PCA 구현 비교, LoRA와 저계수 근사, Nuclear Norm, Randomized SVD, Attention 행렬 해석을 다룬다.</div>
+      <div class="card-meta">Mar 2026 · 20 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/gradient-descent.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">경사하강법과 최적화 알고리즘</div>
+      <div class="card-desc">손실 함수의 최솟값을 찾아가는 원리 — Batch GD부터 Adam까지, 그리고 복습 퀴즈.</div>
+      <div class="card-meta">Mar 2026 · 12 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/browser-use.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Browser Use: 오픈소스 웹 자동화 프레임워크 해부</div>
+      <div class="card-desc">4일 데모에서 GitHub stars 80,000으로 — 단일 에이전트 루프, DOM 95% 압축, CDP 직접 통신. WebVoyager 89.1% SOTA를 오픈소스로 달성한 구조를 분석한다.</div>
+      <div class="card-meta">Mar 2026 · 22 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/agent-e.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Agent-E: 웹 자동화에서 에이전틱 시스템 설계 원칙으로</div>
+      <div class="card-desc">멀티모달도 사이트별 특화 프롬프트도 없이 SOTA를 갱신한 Agent-E — 그 설계 원칙 네 가지를 완전 분석.</div>
+      <div class="card-meta">Mar 2026 · 20 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/mind2web.html" data-tags="Agent,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Mind2Web — Towards a Generalist Agent for the Web</div>
+      <div class="card-desc">실제 웹사이트 137개·2,350개 태스크로 구성된 Mind2Web 데이터셋과 MindAct 프레임워크 분석.</div>
+      <div class="card-meta">Mar 2026 · 12 min read</div>
+    </a>
+
+    <a class="post-card" href="posts/webvoyager.html" data-tags="Agent,Multimodal,LLM">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">WebVoyager: 진짜 웹에서 동작하는 멀티모달 에이전트</div>
+      <div class="card-desc">텍스트만 보던 에이전트에서 스크린샷을 직접 보는 에이전트로 — WebVoyager가 해결한 두 가지 핵심 문제.</div>
+      <div class="card-meta">Mar 2026 · 12 min read</div>
+    </a>
+
+
+<a class="post-card" href="posts/web-agent-benchmarks.html" data-tags="Agent">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">웹 에이전트 벤치마크 해부: LLM 출력이 점수가 되는 방법</div>
+      <div class="card-desc">Mind2Web 수식, WebArena 기능적 검증, WebVoyager GPT-4V 심판, VisualWebArena, WorkArena, WebLINX, WebCanvas — 그리고 "Illusion of Progress"가 폭로한 벤치마크의 허상까지.</div>
+      <div class="card-meta">Mar 7, 2026 · 32 min read</div>
+    </a>
+    <a class="post-card" href="posts/web-agent-internals.html" data-tags="Agent">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">웹 에이전트 해부: 브라우저와 소통하는 법, 입출력의 진실, 그리고 평가까지</div>
+      <div class="card-desc">실제 데이터 샘플로 보는 LLM/VLM 입출력, Playwright·CDP 통신 레이어, Mind2Web(offline)과 WebArena(Docker) 평가의 근본적 차이, 주요 논문 기술 해부.</div>
+      <div class="card-meta">Mar 6, 2026 · 28 min read</div>
+    </a>
+    <a class="post-card" href="posts/web-agent-survey.html" data-tags="Agent">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Web Agent 연구 4년: 14%에서 60%로, 그리고 아직 남은 것들</div>
+      <div class="card-desc">세 번의 패러다임 전환, 벤치마크 인플레이션의 함정, Prompt Injection부터 Long-horizon Planning까지 — 웹 에이전트 연구 4년의 흐름과 미해결 문제들을 분석합니다.</div>
+      <div class="card-meta">Mar 6, 2026 · 20 min read</div>
+    </a>
+    <a class="post-card" href="posts/information-theory.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">정보이론 기초: 엔트로피, 교차 엔트로피, KL Divergence</div>
+      <div class="card-desc">불확실성을 수로 표현하는 방법 — 손실 함수와 생성 모델의 수학적 토대.</div>
+      <div class="card-meta">Mar 4, 2026 · 20 min read</div>
+    </a>
+    <a class="post-card" href="posts/mle-map.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">최대 우도 추정(MLE)과 최대 사후 추정(MAP): 파라미터를 추정하는 두 관점</div>
+      <div class="card-desc">딥러닝 손실 함수와 정규화가 MLE·MAP에서 어떻게 도출되는지 정리한다.</div>
+      <div class="card-meta">Mar 4, 2026 · 18 min read</div>
+    </a>
+    <a class="post-card" href="posts/personaplex.html" data-tags="Speech">
+      <div class="card-cat">Speech</div>
+      <div class="card-title">PersonaPlex: Full-Duplex 대화 AI에 목소리와 역할을 입히다</div>
+      <div class="card-desc">자연스러운 대화 vs. 페르소나 제어 — 오랫동안 양립하기 어려웠던 트레이드오프를 NVIDIA Research가 dual prompting으로 어떻게 깼는지 정리합니다.</div>
+      <div class="card-meta">Mar 3, 2026 · 14 min read</div>
+    </a>
+    <a class="post-card" href="posts/web-navigation-agents.html" data-tags="Agent">
+      <div class="card-cat">Agent</div>
+      <div class="card-title">Web을 탐색하는 AI Agent: 개념부터 최신 연구까지</div>
+      <div class="card-desc">브라우저를 직접 조작하는 AI — Web Navigation Agent의 핵심 개념과 Mind2Web, WebVoyager, Agent-E, Browser Use까지 흐름을 정리합니다.</div>
+      <div class="card-meta">Mar 3, 2026 · 12 min read</div>
+    </a>
+    <a class="post-card" href="posts/rekv.html" data-tags="Video,LLM">
+      <div class="card-cat">Video · LLM</div>
+      <div class="card-title">ReKV: 비디오 KV Cache를 RAM에 쌓고, 질문이 오면 꺼내 쓴다</div>
+      <div class="card-desc">긴 비디오 스트리밍 QA를 위해 KV Cache를 GPU 밖으로 오프로드하고 질문 관련 프레임만 검색해 로드. External(CLIP)·Internal(Key 벡터) 두 가지 검색 방식을 제안한다.</div>
+      <div class="card-meta">Feb 27, 2026 · 15 min read</div>
+    </a>
+    <a class="post-card" href="posts/kv-cache.html" data-tags="LLM">
+      <div class="card-cat">LLM</div>
+      <div class="card-title">KV Cache: Transformer 추론의 병목과 그 해법</div>
+      <div class="card-desc">오토리그레시브 생성의 O(T²) 낭비를 없애는 KV Cache. 왜 필요한지, 어떻게 동작하는지, 그리고 메모리 폭발을 다루는 Sliding Window·Compression·Retrieval까지.</div>
+      <div class="card-meta">Feb 27, 2026 · 18 min read</div>
+    </a>
+    <a class="post-card" href="posts/eigenvalue-properties.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">고유값의 성질: 복소수, 부호, 그리고 특수 행렬들</div>
+      <div class="card-desc">실수 행렬인데 복소 고유값이 나오는 이유, 대칭 행렬에서 항상 실수인 증명, 양정치성과 부호, 직교·투영·반대칭·멱영 행렬의 고유값 특성, Gershgorin 정리까지.</div>
+      <div class="card-meta">Feb 27, 2026 · 22 min read</div>
+    </a>
+    <a class="post-card" href="posts/eigendecomposition-svd.html" data-tags="Math">
+      <div class="card-cat">Math</div>
+      <div class="card-title">고유값 분해(Eigendecomposition)와 특이값 분해(SVD): 행렬을 보는 두 가지 방법</div>
+      <div class="card-desc">선형 변환의 핵심 구조를 드러내는 고유값 분해와, 임의의 직사각형 행렬로 확장한 SVD. 두 분해의 연결과 PCA, LoRA, 추천 시스템 등 ML 응용까지.</div>
+      <div class="card-meta">Feb 26, 2026 · 20 min read</div>
+    </a>
+    <a class="post-card" href="posts/cosmos-policy.html" data-tags="Video,Multimodal">
+      <div class="card-cat">Video · Multimodal</div>
+      <div class="card-title">Cosmos Policy: 비디오 생성 모델을 로봇 정책으로 파인튜닝하기</div>
+      <div class="card-desc">아키텍처 변경 없이 Latent Frame Injection만으로 액션·World Model·Value Function을 통합한 NVIDIA의 단일 단계 파인튜닝 접근법.</div>
+      <div class="card-meta">Feb 23, 2026 · 15 min read</div>
+    </a>
+    <a class="post-card" href="posts/example.html" data-tags="Multimodal,Video">
+      <div class="card-cat">Multimodal · Video</div>
+      <div class="card-title">Video-Language Models 완전 정리</div>
+      <div class="card-desc">비디오와 언어를 함께 이해하는 멀티모달 모델들의 흐름을 정리합니다. CLIP, VideoCLIP, InternVideo 등 주요 모델들의 구조와 차이점을 비교합니다.</div>
+      <div class="card-meta">Feb 22, 2026 · 10 min read</div>
+    </a>
+    <p class="empty" id="empty-msg" style="display:none;">More posts coming soon.</p>
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+<script>
+  const urlTag = new URLSearchParams(location.search).get('tag');
+  if (urlTag) {
+    const btn = [...document.querySelectorAll('.tag-btn')].find(b => b.textContent.trim() === urlTag);
+    if (btn) filterPosts(urlTag, btn);
+  }
+
+  function filterPosts(tag, btn) {
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cards = document.querySelectorAll('.post-card');
+    let vis = 0;
+    cards.forEach(c => {
+      const show = tag === 'all' || (c.dataset.tags || '').includes(tag);
+      c.style.display = show ? 'flex' : 'none';
+      if (show) vis++;
+    });
+    document.getElementById('section-label').textContent = tag === 'all' ? 'Posts' : tag;
+    document.getElementById('empty-msg').style.display = vis === 0 ? 'block' : 'none';
+  }
+</script>
+</body>
+</html>

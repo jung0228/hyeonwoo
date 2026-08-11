@@ -1,0 +1,126 @@
+\section{The LongVALE Benchmark}
+To build LongVALE, we propose an efficient and scalable pipeline that includes high-quality multi-modal long video filtering (Sec.~\ref{sec:filter}), omni-modal event boundary detection (Sec.~\ref{sec:boundary}), and omni-modal event captioning with audio-visual correlation reasoning (Sec.~\ref{sec:3.3}). 
+The annotation process is illustrated in Fig.~\ref{fig:dataset_pipeline}.
+{\color{black}More details are in Appendix.}
+
+
+\subsection{Data Collection and Filtering}
+\label{sec:filter}
+We source videos from ACAV-100M~\cite{lee2021acav100m}, which contains video clips with high audio-visual correspondence, covering a wide variety of topics. 
+We download raw videos on YouTube without cutting to maintain the integrity of the video content, where the videos span 30 seconds to 10 minutes. 
+Then, we design a filtering strategy to obtain high-quality videos containing rich visual and audio semantics, as well as temporal dynamic information. 
+
+Firstly, we use metadata to filter out low-quality videos with resolutions below 360p and retain only those with English transcripts.
+To collect videos with diverse sounds (\eg, \textit{people clapping/laughing}, \textit{dog barking}), we exclude those where speech dominates, defined as when subtitles cover over 95\% of the duration.
+Further, we remove videos with static content (\ie, slide shows) using PySceneDetect~\cite{Pyscenedetect} to detect scenes.
+If a scene's average frame difference is below a threshold, it is considered static, and videos with over 80\% static scenes are filtered to ensure diverse motion content.
+Finally, we select videos with segments that have consistent audio-visual semantics. 
+We split each video into 5-second visual and audio segments, then use C-MCR~\cite{wang2023connecting}, an audio-visual contrastive learning model, to compute similarity scores between segment embeddings. Videos with at least one segment having audio-visual similarity above 0.25 are retained.
+This effectively filters out videos with irrelevant audio-visual signals, such as edited or overdubbed audio (\eg, background music and narration).
+
+As a result, from a total of 100K raw videos collected from ACAV-100M, we obtained 8.4K videos, highlighting our high standard for video quality.
+
+\subsection{Omni-Modal Event Boundary Detection}
+\label{sec:boundary}
+Existing video benchmarks~\cite{wang2023internvid,chen2024panda,krishna2017dense,gao2017tall} segment videos into events based solely on visual signals. 
+However, audio is equally crucial for a complete video content understanding, and audio events often have boundaries that do not align with visual ones. 
+For example, a scene shift from a stage performance to the audience or a news broadcast cutting from a live scene to the studio may disrupt the visual event, but the audio continues.
+Thus, relying only on visual cues for event boundary detection can severely break the semantic coherence of the audio.
+To solve the issue, we propose to detect omni-modal event boundaries for the first time, considering both visual and audio scene boundaries. 
+
+\noindent \textbf{Visual event boundary.}
+Using only visual cues, we apply a two-stage detection method~\cite{chen2024panda} which includes splitting basic visual scenes and then merging semantically similar ones.
+Notably, we refine the previous method to handle both very short and long visual events (2 seconds to 10 minutes) in long videos.
+Besides, post-processing is also applied to exclude static scenes and transition clips, ensuring each visual event contains rich and meaningful content.
+
+\noindent \textbf{Generic semantics-aware audio event boundary.}
+Although audio is crucial for temporal video understanding, no method exists for detecting generic audio event boundaries without pre-defined categories.
+To fill this gap, we design a generic method that segments long audio sequences into semantically coherent clips leveraging distinct audio properties.
+Specifically, we first extract audio features using Mel-Frequency Cepstral Coefficients (MFCC)~\cite{juvela2018speech,hansen2015speaker},
+which captures the audio's key frequency characteristics aligned with human auditory perception.
+Then, we compute the mean of MFCC deltas (first-order differences) to summarize temporal variations, identifying values above a threshold as significant audio transitions.
+Since such splitting only considers changes in spectral properties and overlooks semantic transitions, we further adopt CLAP~\cite{wu2023large} to extract audio embeddings, stitching adjacent clips if they are semantically similar.
+We also implement additional procedures to merge segments split by abrupt changes, \eg, pauses between spoken words or sudden shifts in music.  
+
+\noindent \textbf{Omni-modal event boundary.}
+After identifying the single-modality event boundaries, we found visual events tend to be longer than audio ones, with multiple audio events often occurring within a single visual event. 
+To define omni-modal event boundaries, we primarily rely on visual boundaries while preserving the integrity of audio events. 
+Specifically, for each visual event, we set its start time as the beginning of the omni-modal event and include all overlapping audio events without truncation to determine the event's end. 
+By doing this, we can maximize the semantic integrity and coherence of events across both modalities.
+
+
+\subsection{Omni-Modal Event Captioning}
+\label{sec:3.3}
+We develop a comprehensive relation-aware captioning strategy to generate high-quality omni-modality dense captions for long videos by integrating all modality information (\ie, visual, audio, and speech). 
+As shown in Fig.~\ref{fig:dataset_pipeline}, we first generate detailed dense captions for each modality, and then integrate them to obtain omni-modality captions, emphasizing the reasoning of semantic and temporal relationships across events from various modalities.
+
+
+\begin{figure*}[ht]
+  \centering
+  \setlength{\abovecaptionskip}{1.0mm}
+   \includegraphics[width=1.0\linewidth]{figures/new/fig3.jpg}
+   \vspace{-5mm}
+   \caption{Statistics of LongVALE benchmark. (a) Video duration distribution of both training and test sets. (b) Distribution of the number of omni-modal events in videos for both training and test sets. (c) Distribution of omni-modal event duration. (d) Distribution of audio-visual correlation types. The examples of omni-modal events with different audio-visual correlations are also illustrated.}
+   \label{fig:dataset_overall}
+     \vspace{-5mm}
+\end{figure*}
+
+\noindent \textbf{Dual-focus visual captioning.}
+Existing video automatic captioning strategies~\cite{rizve2024vidla,chen2023vast,chen2024sharegpt4video} only use image captioners like BLIP~\cite{li2022blip} and GPT-4V~\cite{Gpt-4v} to describe uniformly sampled frames, lacking the awareness of temporal dynamic knowledge in videos. 
+In contrast, we focus on both spatial visual details and significant dynamic information (\ie, actions and camera movements), and also consider the complexities of long video events. 
+Specifically, we employ LLaVA-NeXT-Video~\cite{zhang2024llavanextvideo} to caption each video event. 
+However, the model's performance drops with longer clips, so we divide clips longer than 30 seconds and caption them separately to preserve as many dynamic details as possible.
+Additionally, we sample the center frame of each cropped clip as the keyframe and use GPT-4o~\cite{Gpt-4o} to generate comprehensive image captions. 
+Incorporating such precise spatial details (\ie, OCR, object appearance, and scene context) helps improve caption quality and effectively correct errors caused by hallucinations from the video model.
+
+\noindent \textbf{Audio and speech captioning.}
+To capture the full details for each audio event, we focus on both general audio and speech captioning, as they are equally essential for audio content understanding.
+Specifically, we employ Qwen-Audio~\cite{chu2023qwen}, a general large audio-language model, to obtain detailed audio descriptions. 
+At the same time, Whisper-Large~\cite{radford2023robust}, a strong automatic speech recognition (ASR) model, is applied to get accurate subtitles if the clip contains speech content.  
+Additionally, we perform further data refinement to minimize the impact of hallucinations. 
+
+
+\noindent \textbf{Relation-aware omni-modal event captioning.}
+Our goal is to generate high-quality omni-modal event captions by reasoning about audio-visual correlations and temporal dynamics across modality-specific events.
+Specifically, instead of simply concatenating modality-specific captions~\cite{chen2023vast,liu2024valor}, we instruct Gemini-1.5-Pro~\cite{Gemini} to establish meaningful connections between them, such as analyzing whether audio events are visible, identifying sound sources, and reasoning about causality, \etc.
+Additionally, we provide the model with single-modal event boundaries, guiding it to perceive fine-grained temporal changes within an omni-modal event, such as camera movements or sequential speaking in conversations, and summarize these to create fine-grained time-aware descriptions.  
+Moreover, we feed the generated captions of previous omni-modal events as context, enabling the model to produce a more coherent and accurate caption for the current omni-modal event, thereby ensuring a more seamless dense narrative for a long video. 
+
+
+\subsection{Subset Split and Manual Efforts}
+\vspace{-1mm}
+Through the above carefully designed scalable pipeline, we automatically collect 8,411 high-quality long videos with highly valuable dense omni-modal event annotations. 
+We then meticulously divide the data into training and test sets, ensuring consistent data distribution (\eg, video duration and event counts) between them.
+The final training and test sets consist of 7,240 and 1,171 long videos, respectively.
+
+\noindent\textbf{Test set manual check and correction.}
+To build a high-quality test set, we conducted thorough manual checks and corrections.
+We developed an interface where one group reviews entire videos to verify the accuracy of omni-modal event boundaries and captions. Another group then corrects flagged errors to ensure high precision of annotations.
+
+
+
+\subsection{Statistic Analysis}
+\label{sec:3.5}
+\vspace{-1mm}
+Overall, our LongVALE is the first-ever omni-modality long video understanding benchmark with dense event-level annotations. The statistics are shown in Fig.~\ref{fig:dataset_overall}.
+It includes 8,411 long videos spanning over 549 hours, with an average video duration of 3.9 minutes. 
+Notably, the dataset contains 105,730 omni-modal events (91,863/13,867 in train/test split), each annotated with accurate temporal boundaries and omni-modality relation-aware captions.  
+
+\noindent \textbf{Omni-modal event distribution.}
+As shown in Fig.~\ref{fig:dataset_overall}(b), a large number of videos contain multiple omni-modal events, with an average of 12.6 events per video. 
+Besides, the events have various lengths spanning from 1 second to even 10 minutes, with an average length of 16.7 seconds. 
+Most events are relatively short, with 60\% lasting under 10 seconds and 97\% under 30 seconds as shown in Fig.~\ref{fig:dataset_overall}(c). 
+Moreover, all events are non-overlapping and cover 89\% of the total video duration, highlighting the dense nature and complexity of real-world multi-modal long videos.
+
+\noindent \textbf{Omni-modal caption characteristics.}
+We highlight that omni-modal captions exhibit unique characteristics of \textit{audio-visual correlations} and \textit{fine-grained temporal dynamics}.
+We further analyze all omni-modal captions in our test set using Gemini-1.5-Pro~\cite{Gemini} to identify these characteristics:
+\textbf{1)} We define seven types of audio-visual correlations with two unimodal types (\ie, visual/audio-only). 
+The occurrences of each type are shown in Fig.~\ref{fig:dataset_overall}(d).
+It indicates that \textit{complementary}, \textit{synchronicity} and \textit{enhancement} are common correlation types. 
+As shown in Fig.~\ref{fig:dataset_overall}, the speech content \textit{complements} the visual scene, where the visible woman speaker reflects \textit{synchronized} visual and audio events (example 1), and the off-screen commentator's excited tone \textit{enhances} the intense competition atmosphere (example 3).
+Besides, there also exist other correlations, such as in the second example, where the crowd's cheers indicate a \textit{scene-aware} context of the stadium and the athlete's success triggers roars, demonstrating the \textit{causality} and \textit{temporal association} between the visual and audio events. 
+Moreover, audio can provide \textit{corrective} insights for misleading visual cues, as seen in the fourth example where background laughter reveals a comedy show despite the man's serious face.
+\textbf{2)} Additionally, the quantitative analysis also indicates that 78\% of the omni-modal captions capture fine-grained temporal dynamics. As highlighted in the blue words in Fig.~\ref{fig:dataset_overall}, the captions reflect a high-level understanding of sequential sub-events across different modalities, \eg, camera zooms and plot progressions. 
+It underscores the extensive and complex semantic information embedded in our omni-modal captions.
+

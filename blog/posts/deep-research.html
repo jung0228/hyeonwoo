@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Research 입문 — Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f9f8f4; --text:#0f0f0f; --muted:#6b6b6b; --accent:#1a56c4;
+      --rule:#999; --rule-lt:#d8d8d2; --bg2:#efede6; --accent-lt:#dbe5f7;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',Georgia,serif; line-height:1.55; overflow:hidden; }
+    .deck { height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; }
+    .deck::-webkit-scrollbar { display:none; }
+    .slide { height:100vh; scroll-snap-align:start; scroll-snap-stop:always; display:flex; flex-direction:column; overflow:hidden;
+      padding:6.4vh 4.5vw 4.4vh; position:relative; max-width:1680px; margin:0 auto; }
+    .s-head { border-bottom:2px solid var(--text); padding-bottom:1.1vh; margin-bottom:2.2vh; }
+    .slide h2 { font-family:'Playfair Display',Georgia,serif; font-weight:800; letter-spacing:-.02em; line-height:1.04; font-size:clamp(2rem,3.5vw,3.2rem); }
+    .desc { font-size:clamp(1rem,1.3vw,1.28rem); color:#333; max-width:none; margin-top:1vh; }
+    .body { flex:1; min-height:0; display:grid; grid-template-columns:1.05fr 1fr; gap:3vw; align-items:stretch; }
+    .body.solo { display:flex; flex-direction:column; }
+    .body.solo > * { flex:1; min-height:0; }
+    .body.stack { display:flex; flex-direction:column; gap:1.6vh; }
+    .body.stack .col { flex:1 1 auto; min-height:0; justify-content:center; }
+    .body.stack .eqs { height:100%; display:flex; flex-direction:column; justify-content:space-evenly; gap:1.2vh; align-content:start; }
+    .body.stack .eqs .step { align-items:center; }
+    .body.stack .fig { flex:0 1 auto; min-height:0; max-height:52vh; }
+    .col { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:1.4vh; }
+    ul.pts { list-style:none; height:100%; display:flex; flex-direction:column; justify-content:space-evenly; }
+    ul.pts li { font-size:clamp(1.02rem,1.45vw,1.42rem); padding:0 0 0 1.8rem; position:relative; display:flex; align-items:center; flex:1; border-bottom:1px solid var(--rule-lt); }
+    ul.pts li:last-child { border-bottom:none; }
+    ul.pts li::before { content:"→"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+    ul.pts li b { font-weight:600; }
+    .eqs { display:flex; flex-direction:column; justify-content:center; height:100%; gap:1.6vh; }
+    .eqs .step { display:flex; gap:1rem; align-items:baseline; }
+    .eqs .lab { font-family:var(--sans); font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); min-width:11ch; padding-top:.2em; }
+    .eqs .ex { font-size:clamp(1rem,1.25vw,1.2rem); }
+    .kw  { background:#fef3c7; padding:0 .2em; border-radius:2px; }
+    .kw2 { background:#d4f7d4; padding:0 .2em; border-radius:2px; }
+    .kw3 { background:#ffd6d6; padding:0 .2em; border-radius:2px; }
+    .fig { background:transparent; border:none; padding:0; display:flex; flex-direction:column; min-height:0; overflow:visible; }
+    .fig svg { width:100%; flex:0 1 auto; min-height:0; max-height:44vh; display:block; background:linear-gradient(180deg,#fff 0%,#fcfbf8 100%); border:1px solid var(--rule-lt); border-radius:10px; padding:1.4rem; box-shadow:0 6px 22px rgba(16,48,110,.07); }
+    .fig figcaption { font-family:var(--sans); font-size:.78rem; color:var(--muted); margin-top:.9rem; line-height:1.45; }
+    .fig figcaption b { color:var(--text); }
+    table { width:100%; height:100%; border-collapse:separate; border-spacing:0; font-family:var(--sans); }
+    th,td { text-align:left; padding:.35rem 1.2rem; vertical-align:middle; border-bottom:1px solid var(--rule-lt); font-size:clamp(.92rem,1.15vw,1.18rem); }
+    thead th { font-size:.74rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--text); padding-bottom:1.1vh; }
+    tbody td { height:1px; }
+    tbody tr:not(.era):nth-child(even) td { background:rgba(26,86,196,.04); }
+    td.hl { font-weight:700; color:var(--accent); box-shadow:inset 3px 0 0 var(--accent); }
+    td.no { color:var(--muted); }
+    .era td { background:var(--accent-lt); font-weight:700; color:#10306e; font-family:var(--sans); font-size:.84rem; letter-spacing:.05em; text-transform:uppercase; box-shadow:none; padding:.5rem 1.2rem; }
+    .title-slide { justify-content:center; }
+    .title-slide .masthead-mini { font-family:var(--sans); font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:.5rem 0; display:inline-block; margin-bottom:2.5vh; }
+    .title-slide h1 { font-family:'Playfair Display',serif; font-weight:800; letter-spacing:-.02em; line-height:1.02; font-size:clamp(2.4rem,5.6vw,4.8rem); }
+    .title-slide .lead { font-family:'Playfair Display',serif; font-style:italic; color:var(--muted); font-size:clamp(1.05rem,1.7vw,1.5rem); max-width:none; margin-top:2.2vh; }
+    .title-slide .by { font-family:var(--sans); font-size:.95rem; color:var(--muted); margin-top:3.5vh; }
+    ol.agenda { list-style:none; counter-reset:ag; display:grid; grid-template-columns:1fr; grid-auto-rows:minmax(0,1fr); gap:0; height:100%; }
+    ol.agenda li { counter-increment:ag; display:flex; gap:1.3rem; align-items:center; border-bottom:1px solid var(--rule-lt); }
+    ol.agenda li::before { content:counter(ag,decimal-leading-zero); font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(1.4rem,2.2vw,2rem); color:var(--accent); min-width:2.4ch; }
+    ol.agenda .t { font-size:clamp(1.02rem,1.4vw,1.4rem); font-weight:600; }
+    ol.agenda .d { font-family:var(--sans); font-size:clamp(.8rem,1vw,1rem); color:var(--muted); display:block; margin-top:.2rem; font-weight:400; }
+    ol.refs { list-style:none; counter-reset:rf; display:flex; flex-direction:column; height:100%; }
+    ol.refs li { counter-increment:rf; position:relative; padding-left:2.8rem; flex:1; display:flex; align-items:center; border-bottom:1px solid var(--rule-lt); font-family:var(--sans); font-size:clamp(.9rem,1.15vw,1.15rem); }
+    ol.refs li:last-child { border-bottom:none; }
+    ol.refs li::before { content:"["counter(rf)"]"; position:absolute; left:0; color:var(--accent); font-weight:700; font-family:'Playfair Display',serif; font-size:1.1em; }
+    ol.refs a { color:var(--accent); text-decoration:none; }
+    ol.refs a:hover { text-decoration:underline; }
+    ol.refs .src { color:var(--muted); }
+    .s-foot { position:absolute; left:4.5vw; right:4.5vw; bottom:1.6vh; display:flex; justify-content:space-between; font-family:var(--sans); font-size:.76rem; color:var(--muted); letter-spacing:.04em; }
+    .s-foot b { color:var(--text); }
+    /* SVG diagram text */
+    .dg-t { font-family:var(--sans); font-weight:700; fill:#10306e; }
+    .dg-s { font-family:var(--sans); fill:#3a3a3a; }
+    .dg-lab { font-family:var(--sans); font-weight:700; fill:var(--accent); letter-spacing:.06em; }
+    .progress { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--accent); z-index:200; transition:width .15s; }
+    .dots { position:fixed; right:1.4rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.7rem; z-index:200; }
+    .dots button { width:9px; height:9px; border-radius:50%; border:1.5px solid var(--rule); background:transparent; cursor:pointer; padding:0; transition:.2s; }
+    .dots button.active { background:var(--accent); border-color:var(--accent); transform:scale(1.3); }
+    .back-link { position:fixed; left:1rem; top:.7rem; z-index:200; font-family:var(--sans); font-size:.78rem; color:var(--muted); text-decoration:none; }
+    .back-link:hover { color:var(--accent); }
+    @media (max-width:780px){
+      .slide{ overflow-y:auto; }
+      .body{ grid-template-columns:1fr; gap:1.4rem; }
+      .body.solo > * { flex:none; }
+      .dots{ display:none; }
+      ul.pts li{ flex:none; padding:.7rem 0 .7rem 1.8rem; }
+      ol.agenda{ grid-auto-rows:auto; }
+      ol.agenda li{ padding:1rem 0; }
+      ol.refs li{ flex:none; padding:.8rem 0 .8rem 2.8rem; }
+      table{ height:auto; }
+      .fig svg{ max-height:38vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <a href="../index.html" class="back-link">← Index</a>
+  <nav class="dots" id="dots"></nav>
+
+  <main class="deck" id="deck">
+
+    <!-- 1 · TITLE -->
+    <section class="slide title-slide">
+      <span class="masthead-mini">Hyeonwoo Jung · Field Primer · 2026</span>
+      <h1>Deep Research</h1>
+      <p class="lead">검색을 도구로 쓰는 다단계 reasoning agent — LLM이 스스로 계획하고, 반복 검색하고, 종합해 리포트를 쓰는 패러다임을 처음부터 정리한다.</p>
+      <p class="by">정의 · 동작 과정 · 능력 3축 · 벤치마크 · 논문 계보 · 12 min read</p>
+    </section>
+
+    <!-- 2 · AGENDA -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>오늘 다룰 흐름</h2>
+        <p class="desc">Deep Research가 <b>무엇인지</b> → <b>어떻게 굴러가는지</b> → <b>어떻게 평가하는지</b>를 처음 보는 사람 기준으로. 마지막에 읽기 로드맵.</p>
+      </div>
+      <div class="body solo">
+        <ol class="agenda">
+          <li><div><span class="t">Deep Research란 무엇인가</span><span class="d">정의 · 왜 지금 뜨나</span></div></li>
+          <li><div><span class="t">RAG · Web agent와 무엇이 다른가</span><span class="d">검색이 추론 루프 안에서 반복된다</span></div></li>
+          <li><div><span class="t">한 번 도는 과정 (4단계 파이프라인)</span><span class="d">planning → question → web exploration ↻ → report</span></div></li>
+          <li><div><span class="t">능력 3축 프레임</span><span class="d">찾기 · 풀기 · 쓰기 + 사실성</span></div></li>
+          <li><div><span class="t">벤치마크 지도 & 평가 방법</span><span class="d">GAIA · BrowseComp · HLE · 채점 방식</span></div></li>
+          <li><div><span class="t">대표 논문 계보 & 방법론</span><span class="d">WebGPT → Search-R1 → WebThinker</span></div></li>
+          <li><div><span class="t">읽기 로드맵 & References</span><span class="d">이 순서로 5개 먼저</span></div></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>02</b> / 13</span></div>
+    </section>
+
+    <!-- 3 · DEFINITION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>Deep Research란 무엇인가</h2>
+        <p class="desc">사람이 주제를 조사하는 과정 — 질문을 쪼개고 → 검색하고 → 읽다가 모르면 또 검색하고 → 출처를 비교해 → 보고서를 쓴다. <b>이 루프를 LLM이 자동으로 수행</b>하게 만든 것이 Deep Research다.</p>
+      </div>
+      <div class="body solo">
+        <div class="eqs">
+          <div class="step"><span class="lab">정의</span><span class="ex">agent가 능동적으로 <b>planning · retrieval · synthesis</b>에 관여해, <b>웹 근거에 기반한 충실한(faithful) 분석 리포트</b>를 생성하는 패러다임 <span style="color:var(--muted)">(Survey 2025)</span></span></div>
+          <div class="step"><span class="lab">왜 — 추론모델</span><span class="ex">o1/o3·R1 같은 <b>reasoning model</b>이 긴 사고사슬을 안정적으로 굴리며 "생각하다 검색하고 또 생각하는" 루프가 실용화</span></div>
+          <div class="step"><span class="lab">왜 — scaling</span><span class="ex"><b>test-time scaling</b>: 추론 시점에 연산(생각·검색)을 더 쓸수록 어려운 문제가 풀린다 → 그 "더 오래 일하기"를 검색에 적용</span></div>
+          <div class="step"><span class="lab">왜 — 제품화</span><span class="ex">OpenAI Deep Research, Gemini Deep Research, Perplexity Deep Research가 2025년 연이어 등장하며 분야로 정착</span></div>
+        </div>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey (arXiv:2508.12752)</span><span><b>03</b> / 13</span></div>
+    </section>
+
+    <!-- 4 · VS RAG / WEB AGENT -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>RAG · Web agent와 무엇이 다른가</h2>
+        <p class="desc">가장 헷갈리는 구분. 핵심은 <b>"검색이 추론과 얽혀 동적으로 반복되느냐"</b> — 이걸 <b>agentic search</b> 또는 <b>reason-in-search</b>라 한다.</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:18%"></th><th>한 줄 정의</th><th style="width:14%">검색 횟수</th><th style="width:10%">추론</th><th style="width:18%">산출물</th></tr></thead>
+          <tbody>
+            <tr><td class="hl">RAG (전통)</td><td>질문 → <b>한 번 검색</b> → 그 문서로 답</td><td>보통 1회</td><td class="no">거의 없음</td><td>짧은 답</td></tr>
+            <tr><td class="hl">Web agent</td><td>웹에서 <b>클릭·입력 등 행동(action)</b>으로 과제 수행</td><td>다회(행동)</td><td>중간</td><td>과제 완료(예약 등)</td></tr>
+            <tr><td class="hl">Deep Research</td><td><b>추론 도중 필요할 때마다</b> 반복 검색 + 종합</td><td><b>다회·동적</b></td><td><b>핵심</b></td><td><b>긴 리포트 / 검증된 정답</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span></span><span><b>04</b> / 13</span></div>
+    </section>
+
+    <!-- 5 · PIPELINE -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>한 번 도는 과정 — 4단계 파이프라인</h2>
+        <p class="desc">핵심은 <b>③ web exploration이 한 번이 아니라 루프</b>라는 것. 읽다가 지식 공백이 보이면 <b>다시 쿼리를 만들어 또 검색</b>한다. 이 "스스로 공백을 메우는 반복"이 Deep Research의 정체성.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">① planning</span><span class="ex">질문을 <b>하위 과제로 분해</b>하고 조사 계획 수립</span></div>
+            <div class="step"><span class="lab">② question dev</span><span class="ex">각 하위 과제를 <b>구체적 검색 쿼리</b>로 변환</span></div>
+            <div class="step"><span class="lab">③ web exploration</span><span class="ex">검색 → 열람 → 읽기 → 추출, <span class="kw">공백 발견 시 ①/②로 되돌아가 반복</span></span></div>
+            <div class="step"><span class="lab">④ report gen</span><span class="ex">근거를 <b>종합·교차검증</b>해 리포트(또는 정답) 작성 + 인용</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <svg viewBox="0 0 1180 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Deep Research 4단계 파이프라인">
+            <defs>
+              <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1a56c4"/></marker>
+              <marker id="arl" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0392b"/></marker>
+              <filter id="soft" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#10306e" flood-opacity="0.16"/></filter>
+              <linearGradient id="gstage" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf1fc"/><stop offset="1" stop-color="#d4e1f6"/></linearGradient>
+              <linearGradient id="gweb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a66d6"/><stop offset="1" stop-color="#1648a8"/></linearGradient>
+            </defs>
+            <!-- input -->
+            <rect x="20" y="150" width="120" height="70" rx="10" fill="#f0efe9" stroke="#cfcfc8"/>
+            <text x="80" y="190" text-anchor="middle" class="dg-s" font-size="20">질문</text>
+            <!-- stages -->
+            <rect x="190" y="135" width="180" height="100" rx="14" fill="url(#gstage)" stroke="#1a56c4" filter="url(#soft)"/>
+            <text x="280" y="178" text-anchor="middle" class="dg-t" font-size="21">① Planning</text>
+            <text x="280" y="205" text-anchor="middle" class="dg-s" font-size="15">과제 분해</text>
+
+            <rect x="420" y="135" width="180" height="100" rx="14" fill="url(#gstage)" stroke="#1a56c4" filter="url(#soft)"/>
+            <text x="510" y="172" text-anchor="middle" class="dg-t" font-size="20">② Question</text>
+            <text x="510" y="195" text-anchor="middle" class="dg-t" font-size="20">developing</text>
+            <text x="510" y="220" text-anchor="middle" class="dg-s" font-size="14">쿼리 생성</text>
+
+            <rect x="650" y="135" width="180" height="100" rx="14" fill="url(#gweb)" stroke="#10306e" filter="url(#soft)"/>
+            <text x="740" y="172" text-anchor="middle" font-size="20" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">③ Web</text>
+            <text x="740" y="195" text-anchor="middle" font-size="20" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">exploration</text>
+            <text x="740" y="220" text-anchor="middle" font-size="14" fill="#cfe0fb" font-family="-apple-system,sans-serif">검색·열람·추출</text>
+
+            <rect x="880" y="135" width="180" height="100" rx="14" fill="url(#gstage)" stroke="#1a56c4" filter="url(#soft)"/>
+            <text x="970" y="172" text-anchor="middle" class="dg-t" font-size="20">④ Report</text>
+            <text x="970" y="195" text-anchor="middle" class="dg-t" font-size="20">generation</text>
+            <text x="970" y="220" text-anchor="middle" class="dg-s" font-size="14">종합·인용</text>
+            <!-- output -->
+            <rect x="1100" y="150" width="62" height="70" rx="10" fill="#f0efe9" stroke="#cfcfc8"/>
+            <text x="1131" y="183" text-anchor="middle" class="dg-s" font-size="14">리포트</text>
+            <text x="1131" y="200" text-anchor="middle" class="dg-s" font-size="14">/정답</text>
+            <!-- arrows -->
+            <line x1="142" y1="185" x2="186" y2="185" stroke="#1a56c4" stroke-width="2.5" marker-end="url(#ar)"/>
+            <line x1="372" y1="185" x2="416" y2="185" stroke="#1a56c4" stroke-width="2.5" marker-end="url(#ar)"/>
+            <line x1="602" y1="185" x2="646" y2="185" stroke="#1a56c4" stroke-width="2.5" marker-end="url(#ar)"/>
+            <line x1="832" y1="185" x2="876" y2="185" stroke="#1a56c4" stroke-width="2.5" marker-end="url(#ar)"/>
+            <line x1="1062" y1="185" x2="1098" y2="185" stroke="#1a56c4" stroke-width="2.5" marker-end="url(#ar)"/>
+            <!-- loop arrow ③ -> ② -->
+            <path d="M 700 135 C 700 60, 510 60, 510 133" fill="none" stroke="#c0392b" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#arl)"/>
+            <text x="605" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="#c0392b" font-family="-apple-system,sans-serif">지식 공백 시 재검색 (loop)</text>
+          </svg>
+          <figcaption><b>그림 1.</b> Deep Research의 4단계 파이프라인. 파란 ③ web exploration이 핵심 루프 — 부족하면 ②로 돌아가 새 쿼리로 다시 검색한다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Deep Research Survey (arXiv:2508.12752)</span><span><b>05</b> / 13</span></div>
+    </section>
+
+    <!-- 6 · WALKTHROUGH -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>워크스루 — 안에서 무슨 일이 벌어지나</h2>
+        <p class="desc">예시 질문: <b>"최근 3년간 on-device LLM 추론 가속 기법들을 비교 정리해줘."</b> 4단계가 실제로 어떻게 도는지 따라가 본다.</p>
+      </div>
+      <div class="body solo">
+        <ul class="pts">
+          <li><b>① Planning</b> — 과제를 쪼갠다: (a) quantization, (b) KV cache 최적화, (c) speculative decoding, (d) 하드웨어(NPU) 측면.</li>
+          <li><b>② Question developing</b> — 각각을 쿼리로: <span style="font-family:var(--sans);font-size:.92em;color:#444">"LLM 4-bit quantization 2024 survey", "KV cache compression on-device"</span> …</li>
+          <li><b>③ Web exploration ↻</b> — 검색·논문 열람·수치 추출. (b)를 읽다 <span class="kw">"sliding-window attention과의 관계가 빠졌네"</span> → 새 쿼리로 <b>다시 검색</b>(루프).</li>
+          <li><b>④ Report generation</b> — 4개 축으로 표를 만들고, 출처를 달고, 트레이드오프를 종합 → 리포트.</li>
+        </ul>
+      </div>
+      <div class="s-foot"><span></span><span><b>06</b> / 13</span></div>
+    </section>
+
+    <!-- 7 · 3 AXES -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>능력 3축 프레임 — 이 분야를 보는 척추</h2>
+        <p class="desc">Deep Research agent가 잘해야 하는 능력은 <b>찾기 · 풀기 · 쓰기</b> 3축 + 가로축 <b>사실성</b>으로 갈린다. 벤치마크도 이 축을 따라 설계된다 — "어느 축을 공략하는 논문/벤치인가"로 보면 정리된다.</p>
+      </div>
+      <div class="body stack">
+        <figure class="fig">
+          <svg viewBox="0 0 1180 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="능력 3축 프레임">
+            <defs>
+              <filter id="soft2" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#10306e" flood-opacity="0.14"/></filter>
+              <linearGradient id="gcol" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef3fd"/><stop offset="1" stop-color="#dbe5f7"/></linearGradient>
+            </defs>
+            <!-- columns -->
+            <rect x="40" y="20" width="340" height="210" rx="14" fill="url(#gcol)" stroke="#1a56c4" filter="url(#soft2)"/>
+            <text x="210" y="68" text-anchor="middle" class="dg-lab" font-size="18">찾기 · SEARCH</text>
+            <line x1="135" y1="84" x2="285" y2="84" stroke="#1a56c4" stroke-width="2"/>
+            <text x="210" y="124" text-anchor="middle" class="dg-s" font-size="17">필요한 정보를 여러 홉/</text>
+            <text x="210" y="149" text-anchor="middle" class="dg-s" font-size="17">페이지를 거쳐</text>
+            <text x="210" y="174" text-anchor="middle" class="dg-s" font-size="17">찾아내는가</text>
+
+            <rect x="420" y="20" width="340" height="210" rx="14" fill="url(#gcol)" stroke="#1a56c4" filter="url(#soft2)"/>
+            <text x="590" y="68" text-anchor="middle" class="dg-lab" font-size="18">풀기 · REASON</text>
+            <line x1="515" y1="84" x2="665" y2="84" stroke="#1a56c4" stroke-width="2"/>
+            <text x="590" y="124" text-anchor="middle" class="dg-s" font-size="17">찾은 정보로</text>
+            <text x="590" y="149" text-anchor="middle" class="dg-s" font-size="17">다단계 추론·계산을</text>
+            <text x="590" y="174" text-anchor="middle" class="dg-s" font-size="17">해내는가</text>
+
+            <rect x="800" y="20" width="340" height="210" rx="14" fill="url(#gcol)" stroke="#1a56c4" filter="url(#soft2)"/>
+            <text x="970" y="68" text-anchor="middle" class="dg-lab" font-size="18">쓰기 · WRITE</text>
+            <line x1="895" y1="84" x2="1045" y2="84" stroke="#1a56c4" stroke-width="2"/>
+            <text x="970" y="124" text-anchor="middle" class="dg-s" font-size="17">모은 근거를</text>
+            <text x="970" y="149" text-anchor="middle" class="dg-s" font-size="17">일관된 장문 리포트로</text>
+            <text x="970" y="174" text-anchor="middle" class="dg-s" font-size="17">합성하는가</text>
+            <!-- factuality bar -->
+            <rect x="40" y="255" width="1100" height="52" rx="10" fill="#10306e" filter="url(#soft2)"/>
+            <text x="590" y="287" text-anchor="middle" font-size="17" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">가로축 · 사실성 (FACTUALITY) — 주장이 맞고, 출처에 제대로 근거(인용)하는가</text>
+          </svg>
+          <figcaption><b>그림 2.</b> 능력 3축 + 사실성 가로축. 답을 <b>짧게</b> 만든 벤치(BrowseComp·HLE)는 "쓰기"를 배제해 찾기/풀기를 깨끗이 재고, <b>장문</b> 리포트 벤치는 쓰기/종합을 잰다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span></span><span><b>07</b> / 13</span></div>
+    </section>
+
+    <!-- 8 · BENCHMARK MAP -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>벤치마크 지도</h2>
+        <p class="desc">단일 canonical 벤치는 아직 없다. 논문마다 <b>"찾기용 + 풀기용 + 쓰기용"</b>을 골라 조합한다. 주 측정 축으로 정리하면:</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:24%">벤치마크</th><th style="width:14%">주 축</th><th style="width:12%">답 형식</th><th>한 줄</th></tr></thead>
+          <tbody>
+            <tr><td class="hl">HotpotQA · 2Wiki · MuSiQue</td><td>찾기(+추론)</td><td>단답</td><td>RL-search 논문의 표준 체급 측정용 multi-hop QA</td></tr>
+            <tr><td class="hl">GAIA</td><td>찾기+풀기+tool</td><td>단답</td><td>466문항·3난도. 사람 92% vs GPT-4+plugin 15%. assistant 기준점</td></tr>
+            <tr><td class="hl">FRAMES</td><td>셋 다</td><td>단답</td><td>824 multi-hop, 2~15개 위키 통합. single 0.40 → multi 0.66</td></tr>
+            <tr><td class="hl">BrowseComp</td><td>찾기(극악)</td><td>짧은 단답</td><td>"풀긴 어렵고 검증은 쉽게". LLM이 CORRECT/INCORRECT 판정</td></tr>
+            <tr><td class="hl">HLE</td><td>풀기(극악)</td><td>MC/단답</td><td>2,500문항·100+분야. <b>빠른 검색으론 안 풀리는</b> 끝판 변별</td></tr>
+            <tr><td class="hl">DeepResearch Bench</td><td>쓰기/종합</td><td>장문 리포트</td><td>100 PhD급 과제. RACE 프레임으로 4차원 채점</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span>출처: 각 벤치마크 원논문 (References 참고)</span><span><b>08</b> / 13</span></div>
+    </section>
+
+    <!-- 9 · EVALUATION METHOD -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>어떻게 채점하나 — 3가지 방식</h2>
+        <p class="desc">"평가"가 추상적으로 들리지만, 실제론 답 형식에 따라 채점 방식이 정해진다. 단답이면 매칭, 장문이면 LLM이 심사, 인용은 따로 검증.</p>
+      </div>
+      <div class="body solo">
+        <ul class="pts">
+          <li><b>① Exact / fuzzy match</b> — 정답 문자열과 비교(단답 벤치). 가장 객관적, 단답에만 가능. <span style="font-family:var(--sans);font-size:.9em;color:#444">예: 정답 "1923" → 모델 "1923년" → 정답 처리</span></li>
+          <li><b>② LLM-as-judge</b> — 강한 LLM이 채점. <b>BrowseComp</b>: 모델 답 vs 정답 → <span class="kw">CORRECT/INCORRECT 이진</span>. <b>DeepResearch Bench(RACE)</b>: 포괄성·깊이·지시준수·가독성 <b>4차원</b> 점수.</li>
+          <li><b>③ Factuality / citation 검증</b> — 리포트의 각 주장이 인용 출처에 실제로 근거하는지 확인. <span class="kw3">hallucination·허위인용 잡기</span>.</li>
+          <li><b>채점 예시 (BrowseComp식)</b> — 답이 짧아 "쓰기"가 안 섞임 → 모델이 <span style="font-family:var(--sans);font-size:.9em;color:#444">"&lt;논문 제목&gt; (confidence 0.7)"</span> 출력 → judge가 정답과 대조 → <b>CORRECT</b>. 순수 "찾기"만 측정.</li>
+        </ul>
+      </div>
+      <div class="s-foot"><span></span><span><b>09</b> / 13</span></div>
+    </section>
+
+    <!-- 10 · LINEAGE -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>대표 논문 계보</h2>
+        <p class="desc">"검색하는 LLM"의 뿌리 → reasoning model 시대 → 검색을 RL로 훈련 → 계획·탐색·리포트까지 하는 본격 agent. 시대순으로.</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <tbody>
+            <tr class="era"><td colspan="2">뿌리 — 검색하는 LLM (2021–2023)</td></tr>
+            <tr><td class="hl" style="width:30%">WebGPT · ReAct · Toolformer</td><td>브라우저 검색+인용 / reasoning↔acting / API 호출 학습 — <b>agentic search의 원형</b></td></tr>
+            <tr><td class="hl">Self-RAG · FLARE</td><td>언제·무엇을 검색할지 스스로 제어, 생성 도중 능동 검색</td></tr>
+            <tr class="era"><td colspan="2">reasoning model 시대 — agentic RAG (2025)</td></tr>
+            <tr><td class="hl">Search-o1</td><td>o1류 LRM + agentic RAG — 추론 중간에 검색을 끼워 넣는 reason-in-search</td></tr>
+            <tr class="era"><td colspan="2">RL for search (2025)</td></tr>
+            <tr><td class="hl">Search-R1 · R1-Searcher</td><td>검색 호출을 <b>RL로 훈련</b>(outcome reward). Search-R1 +41%(Qwen2.5-7B)</td></tr>
+            <tr class="era"><td colspan="2">본격 deep research agent (2025)</td></tr>
+            <tr><td class="hl">WebThinker · STORM</td><td>Think-Search-Draft로 리포트까지 / 다관점 질문으로 위키식 장문 작성</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span></span><span><b>10</b> / 13</span></div>
+    </section>
+
+    <!-- 11 · PARADIGMS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>방법론 패러다임 — 어떻게 만드나</h2>
+        <p class="desc">크게 세 갈래. 실무에선 섞어 쓴다 — RL로 검색을 키운 모델을 framework 안에 넣고 prompting으로 흐름을 제어.</p>
+      </div>
+      <div class="body solo">
+        <table>
+          <thead><tr><th style="width:22%">패러다임</th><th>방식</th><th style="width:24%">장점</th><th style="width:24%">단점</th></tr></thead>
+          <tbody>
+            <tr><td class="hl">Prompting / agentic-RAG</td><td>학습 없이 프롬프트·스캐폴딩으로 검색 루프 구성 <span style="color:var(--muted)">(Search-o1)</span></td><td>빠르고 모델 안 건드림</td><td class="no">검색 타이밍·품질 불안정</td></tr>
+            <tr><td class="hl">RL for search</td><td>검색 호출을 RL로 훈련 <span style="color:var(--muted)">(Search-R1, R1-Searcher)</span></td><td>검색을 "잘" 쓰게 내재화, 성능↑</td><td class="no">학습 비용·실웹 환경 구축</td></tr>
+            <tr><td class="hl">Framework / multi-agent</td><td>planner·searcher·writer 분업 <span style="color:var(--muted)">(STORM, GPT-Researcher)</span></td><td>모듈화·긴 리포트에 강함</td><td class="no">오케스트레이션 복잡, 오류 전파</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s-foot"><span></span><span><b>11</b> / 13</span></div>
+    </section>
+
+    <!-- 12 · ROADMAP -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>정리 & 읽기 로드맵</h2>
+        <p class="desc">한 문장: <b>Deep Research = 검색을 추론 루프 안에 끼워 반복하는 multi-step agent.</b> 처음 판다면 이 순서로.</p>
+      </div>
+      <div class="body solo">
+        <ol class="agenda">
+          <li><div><span class="t">WebGPT</span><span class="d">"검색하는 LLM"의 원형 감 잡기 (arXiv:2112.09332)</span></div></li>
+          <li><div><span class="t">ReAct</span><span class="d">reasoning + acting 패턴, agentic의 기본기 (2210.03629)</span></div></li>
+          <li><div><span class="t">Search-R1</span><span class="d">RL-for-search 현대 패러다임 (2503.09516)</span></div></li>
+          <li><div><span class="t">WebThinker</span><span class="d">계획·탐색·리포트까지 하는 본격 agent (2504.21776)</span></div></li>
+          <li><div><span class="t">Deep Research Survey</span><span class="d">마지막에 읽으면 퍼즐이 맞춰짐 (2508.12752)</span></div></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span>벤치는 GAIA → BrowseComp → HLE 순으로 훑으면 난도 상승이 체감됨</span><span><b>12</b> / 13</span></div>
+    </section>
+
+    <!-- 13 · REFERENCES -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>참고 문헌</h2>
+        <p class="desc">원논문 링크. 2025 자료는 빠르게 갱신되니 인용 전 제목으로 재확인 권장.</p>
+      </div>
+      <div class="body solo">
+        <ol class="refs">
+          <li><span><b>Deep Research: A Survey of Autonomous Research Agents.</b> <span class="src">2025.</span> <a href="https://arxiv.org/abs/2508.12752">arXiv:2508.12752</a> — 4단계 파이프라인 출처</span></li>
+          <li><span><b>WebGPT</b> <a href="https://arxiv.org/abs/2112.09332">2112.09332</a> · <b>ReAct</b> <a href="https://arxiv.org/abs/2210.03629">2210.03629</a> · <b>Toolformer</b> <a href="https://arxiv.org/abs/2302.04761">2302.04761</a> · <b>Self-RAG</b> <a href="https://arxiv.org/abs/2310.11511">2310.11511</a></span></li>
+          <li><span><b>Search-o1</b> <a href="https://arxiv.org/abs/2501.05366">2501.05366</a> · <b>Search-R1</b> <a href="https://arxiv.org/abs/2503.09516">2503.09516</a> · <b>R1-Searcher</b> <a href="https://arxiv.org/abs/2503.05592">2503.05592</a> · <b>WebThinker</b> <a href="https://arxiv.org/abs/2504.21776">2504.21776</a> · <b>STORM</b> <a href="https://arxiv.org/abs/2402.14207">2402.14207</a></span></li>
+          <li><span>벤치 — <b>GAIA</b> <a href="https://arxiv.org/abs/2311.12983">2311.12983</a> · <b>FRAMES</b> <a href="https://arxiv.org/abs/2409.12941">2409.12941</a> · <b>HLE</b> <a href="https://arxiv.org/abs/2501.14249">2501.14249</a> · <b>BrowseComp</b> <a href="https://arxiv.org/abs/2504.12516">2504.12516</a> · <b>DeepResearch Bench</b> <a href="https://arxiv.org/abs/2506.11763">2506.11763</a></span></li>
+          <li><span>본 자료는 학습 정리용 field primer. <span class="src">연결 노트: research_note/DEEP_RESEARCH_PRIMER.md</span></span></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>13</b> / 13</span></div>
+    </section>
+
+  </main>
+
+  <script>
+    const deck=document.getElementById('deck');
+    const slides=[...deck.querySelectorAll('.slide')];
+    const dotsWrap=document.getElementById('dots');
+    const progress=document.getElementById('progress');
+    slides.forEach((s,i)=>{ const b=document.createElement('button'); b.addEventListener('click',()=>slides[i].scrollIntoView()); dotsWrap.appendChild(b); });
+    const dots=[...dotsWrap.children];
+    let current=0;
+    function setActive(i){ current=i; dots.forEach((d,k)=>d.classList.toggle('active',k===i)); progress.style.width=(i/(slides.length-1)*100)+'%'; }
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) setActive(slides.indexOf(e.target)); }),{threshold:0.6});
+    slides.forEach(s=>io.observe(s));
+    window.addEventListener('keydown',e=>{
+      if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); slides[Math.min(current+1,slides.length-1)].scrollIntoView(); }
+      else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); slides[Math.max(current-1,0)].scrollIntoView(); }
+    });
+    setActive(0);
+  </script>
+</body>
+</html>

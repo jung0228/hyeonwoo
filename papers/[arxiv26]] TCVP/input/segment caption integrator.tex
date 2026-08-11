@@ -1,0 +1,51 @@
+\begin{tcolorbox}[
+  colback=blue!3!white,
+  colframe=blue!70!black,
+  width=\linewidth,
+  arc=1mm,
+  boxrule=0.45pt,
+  boxsep=0.8mm,
+  left=1.6mm,
+  right=1.6mm,
+  top=1.2mm,
+  bottom=1.2mm,
+  title=\textbf{Segment Caption Integrator},
+  colbacktitle=blue!70!black,
+  coltitle=white,
+  fonttitle=\scriptsize\bfseries\sffamily,
+  halign title=center
+]
+\setlength{\parindent}{0pt}
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  breakatwhitespace=true,
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,
+  showstringspaces=false,
+  aboveskip=0pt,
+  belowskip=0pt
+]
+You consolidate consecutive caption segments into one caption with no information loss.
+
+Input has {segment_count} captions labeled S1 through S{segment_count}.
+Return only valid JSON and do not output any other text.
+
+Write in present tense with a neutral descriptive tone and keep the event order consistent with the input.
+
+Use many short sentences and keep each sentence under 15 words.
+Make each sentence atomic and keep one concrete observation per sentence.
+Do not merge different events into one sentence.
+
+Do not summarize and do not invent details.
+Do not include timestamps or durations and avoid transition words such as then or afterward.
+
+visual_caption describes only what is visible, including people, actions, objects, motion, background, lighting, camera viewpoint, and on screen text.
+audio_caption describes only what is audible, including speech content, speaker tone, music, ambient noise, sound effects, silence, laughter, and applause.
+
+{
+  "visual_caption": "<short sentences describing only visible content>",
+  "audio_caption": "<short sentences describing only audible content>"
+}
+\end{lstlisting}
+\end{tcolorbox}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { background: #f8f8f8; display: flex; justify-content: center; padding: 40px; font-family: 'Helvetica Neue', sans-serif; }
+</style>
+</head>
+<body>
+<svg width="900" height="680" viewBox="0 0 900 680" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#a855f7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="36" text-anchor="middle" font-size="18" font-weight="bold" fill="#111">TCVP Visual Query Pipeline</text>
+  <text x="450" y="56" text-anchor="middle" font-size="12" fill="#666">Automatic (q_I, q_T, video_segment) Triple Generation from YouTube Timestamp Comments</text>
+
+  <!-- ===== STEP 1: INPUT ===== -->
+  <rect x="30" y="74" width="840" height="96" rx="10" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="50" y="96" font-size="11" font-weight="bold" fill="#6b7280">STEP 1 — INPUT</text>
+
+  <rect x="50" y="104" width="480" height="48" rx="6" fill="#1e293b"/>
+  <text x="70" y="122" font-size="11" fill="#94a3b8">YouTube Video (20 min)</text>
+  <rect x="128" y="110" width="2" height="36" fill="#f59e0b"/>
+  <rect x="228" y="110" width="2" height="36" fill="#f59e0b"/>
+  <rect x="358" y="110" width="2" height="36" fill="#ef4444" stroke-width="0"/>
+  <rect x="458" y="110" width="2" height="36" fill="#f59e0b"/>
+  <text x="120" y="158" font-size="9" fill="#f59e0b">t₁</text>
+  <text x="220" y="158" font-size="9" fill="#f59e0b">t₂</text>
+  <text x="350" y="158" font-size="9" fill="#ef4444" font-weight="bold">t★</text>
+  <text x="450" y="158" font-size="9" fill="#f59e0b">t₄</text>
+
+  <rect x="550" y="100" width="300" height="56" rx="6" fill="#fef9c3" stroke="#fbbf24" stroke-width="1.2"/>
+  <text x="563" y="118" font-size="10" fill="#92400e">💬 Timestamp Comment @ t★</text>
+  <text x="563" y="134" font-size="11" font-weight="bold" fill="#111">"드디어 완성된 순간! 대박"</text>
+  <text x="563" y="150" font-size="10" fill="#6b7280">→ Visual type comment</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="170" x2="450" y2="196" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== STEP 2: TRACKING ===== -->
+  <rect x="30" y="198" width="840" height="104" rx="10" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="50" y="220" font-size="11" font-weight="bold" fill="#6b7280">STEP 2 — OBJECT TRACKING (SAM2 + Grounding DINO)</text>
+
+  <rect x="50" y="230" width="480" height="56" rx="6" fill="#0f172a"/>
+
+  <!-- Person A track -->
+  <rect x="78" y="236" width="55" height="11" rx="3" fill="#3b82f6"/>
+  <rect x="208" y="236" width="55" height="11" rx="3" fill="#3b82f6"/>
+  <rect x="338" y="236" width="55" height="11" rx="3" fill="#3b82f6"/>
+  <rect x="438" y="236" width="55" height="11" rx="3" fill="#3b82f6"/>
+  <line x1="133" y1="241" x2="208" y2="241" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="263" y1="241" x2="338" y2="241" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="393" y1="241" x2="438" y2="241" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="56" y="245" font-size="8" fill="#93c5fd">Person A</text>
+
+  <!-- Object B track -->
+  <rect x="148" y="254" width="45" height="11" rx="3" fill="#10b981"/>
+  <rect x="328" y="254" width="45" height="11" rx="3" fill="#10b981"/>
+  <rect x="418" y="254" width="45" height="11" rx="3" fill="#10b981"/>
+  <line x1="193" y1="259" x2="328" y2="259" stroke="#10b981" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="373" y1="259" x2="418" y2="259" stroke="#10b981" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="56" y="263" font-size="8" fill="#6ee7b7">Object B</text>
+
+  <!-- t* marker -->
+  <line x1="355" y1="230" x2="355" y2="276" stroke="#ef4444" stroke-width="2"/>
+  <text x="346" y="288" font-size="9" fill="#ef4444" font-weight="bold">t★ target</text>
+
+  <text x="550" y="248" font-size="10" fill="#374151">t★에서 추적된 객체: <tspan font-weight="bold" fill="#3b82f6">Person A</tspan></text>
+  <text x="550" y="264" font-size="10" fill="#374151">같은 객체 등장 시점: t₁, t₂, t₄</text>
+  <text x="550" y="282" font-size="10" fill="#16a34a" font-weight="bold">→ q_I 후보: t₁ 선택 (|t★ - t₁| > 30s)</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="302" x2="450" y2="328" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== STEP 3: QUERY CONSTRUCTION ===== -->
+  <rect x="30" y="330" width="840" height="134" rx="10" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="50" y="352" font-size="11" font-weight="bold" fill="#6b7280">STEP 3 — IMR TRIPLE CONSTRUCTION</text>
+
+  <!-- q_I -->
+  <rect x="50" y="362" width="175" height="88" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="137" y="380" text-anchor="middle" font-size="10" font-weight="bold" fill="#1d4ed8">q_I  (Reference Image)</text>
+  <rect x="70" y="386" width="135" height="42" rx="4" fill="#bfdbfe"/>
+  <text x="137" y="406" text-anchor="middle" font-size="10" fill="#1e40af">Keyframe @ t₁</text>
+  <text x="137" y="420" text-anchor="middle" font-size="9" fill="#3b82f6">same person, diff. context</text>
+  <text x="137" y="442" text-anchor="middle" font-size="9" fill="#6b7280">≠ target frame ✓</text>
+
+  <!-- q_T -->
+  <rect x="248" y="362" width="210" height="88" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="353" y="380" text-anchor="middle" font-size="10" font-weight="bold" fill="#15803d">q_T  (Text Query)</text>
+  <text x="353" y="398" text-anchor="middle" font-size="9" fill="#166534">LLM reformulation of comment:</text>
+  <text x="353" y="414" text-anchor="middle" font-size="10" font-style="italic" fill="#111">"Find the moment when the</text>
+  <text x="353" y="428" text-anchor="middle" font-size="10" font-style="italic" fill="#111"> person in this image finishes</text>
+  <text x="353" y="442" text-anchor="middle" font-size="10" font-style="italic" fill="#111"> the final product"</text>
+
+  <!-- Ground Truth -->
+  <rect x="482" y="362" width="175" height="88" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="569" y="380" text-anchor="middle" font-size="10" font-weight="bold" fill="#b91c1c">Ground Truth</text>
+  <text x="569" y="404" text-anchor="middle" font-size="15" font-weight="bold" fill="#ef4444">[t★ − δ, t★ + δ]</text>
+  <text x="569" y="422" text-anchor="middle" font-size="9" fill="#6b7280">타임스탬프 댓글에서</text>
+  <text x="569" y="436" text-anchor="middle" font-size="9" fill="#6b7280">자동 추출 (annotation 불필요)</text>
+
+  <!-- Triple -->
+  <rect x="682" y="378" width="162" height="52" rx="8" fill="#faf5ff" stroke="#a855f7" stroke-width="2"/>
+  <text x="763" y="398" text-anchor="middle" font-size="11" font-weight="bold" fill="#7e22ce">IMR Triple</text>
+  <text x="763" y="416" text-anchor="middle" font-size="10" fill="#6b7280">(q_I,  q_T,  segment)</text>
+
+  <line x1="225" y1="406" x2="682" y2="404" stroke="#a855f7" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrow-purple)"/>
+  <line x1="458" y1="406" x2="682" y2="404" stroke="#a855f7" stroke-width="1.2" stroke-dasharray="5,3"/>
+  <line x1="657" y1="406" x2="682" y2="404" stroke="#a855f7" stroke-width="1.2" stroke-dasharray="5,3"/>
+
+  <!-- Arrow -->
+  <line x1="450" y1="464" x2="450" y2="490" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== STEP 4: FINE-TUNING ===== -->
+  <rect x="30" y="492" width="840" height="74" rx="10" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="50" y="514" font-size="11" font-weight="bold" fill="#6b7280">STEP 4 — LANGUAGEBIND FINE-TUNING &amp; EVALUATION</text>
+
+  <rect x="50" y="524" width="210" height="34" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+  <text x="155" y="538" text-anchor="middle" font-size="10" fill="#1d4ed8">query = (img_emb + txt_emb) / 2</text>
+  <text x="155" y="552" text-anchor="middle" font-size="9" fill="#6b7280">LanguageBind image + text encoder</text>
+
+  <line x1="260" y1="541" x2="318" y2="541" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="318" y="524" width="160" height="34" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="398" y="538" text-anchor="middle" font-size="10" fill="#15803d">Contrastive Loss</text>
+  <text x="398" y="552" text-anchor="middle" font-size="9" fill="#6b7280">(기존과 동일 framework)</text>
+
+  <line x1="478" y1="541" x2="536" y2="541" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="536" y="524" width="310" height="34" rx="6" fill="#fef9c3" stroke="#f59e0b" stroke-width="1"/>
+  <text x="691" y="538" text-anchor="middle" font-size="10" fill="#92400e">MomentSeeker IMR Eval</text>
+  <text x="691" y="552" text-anchor="middle" font-size="9" fill="#6b7280">LanguageBind baseline 18.2 R@1 → fine-tuned ???</text>
+
+  <!-- ===== Key Insight ===== -->
+  <rect x="30" y="586" width="840" height="80" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="50" y="608" font-size="11" font-weight="bold" fill="#7e22ce">왜 이 파이프라인이 동작하는가</text>
+  <text x="50" y="626" font-size="11" fill="#374151">① q_I ≠ target frame  →  단순 feature matching 불가, 텍스트 이해해야 정답 가능 (temporal variation)</text>
+  <text x="50" y="644" font-size="11" fill="#374151">② 댓글 = 실제 유저 검색 의도  →  large-scale, no human annotation, MomentSeeker보다 10× 많은 학습 데이터</text>
+  <text x="50" y="662" font-size="11" fill="#374151">③ 유명인 → 일반인 난이도 스펙트럼  →  시각적 re-ID 일반화 능력 검증 (known vs. unknown person)</text>
+</svg>
+</body>
+</html>

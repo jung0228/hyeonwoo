@@ -1,0 +1,75 @@
+\begin{figure*}[!t]
+  \centering
+
+  % ---------- 第一行：a 和 c ----------
+  % \begin{subfigure}[t]{0.496\textwidth}
+  %   \centering
+  %   \includegraphics[width=\linewidth]{figures/vis/shallow.pdf}
+  %   \caption{Visualization of shallow layer attention.}
+  %   \label{fig:shallow_vis}
+  % \end{subfigure}
+  % \begin{subfigure}[t]{0.496\textwidth}
+  %   \centering
+  %   \includegraphics[width=\linewidth]{figures/vis/deep.pdf}
+  %   \caption{Visualization of deep layer attention.}
+  %   \label{fig:deep_vis}
+  % \end{subfigure}
+
+\begin{subfigure}[t]{0.246\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/vis/layer_00_attention.pdf}
+    \caption{Shallow layer attention.}
+    \label{fig:shallow_vis}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.50\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/vis/deep.pdf}
+    \caption{Deep layer attention.}
+    \label{fig:deep_vis}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.242\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/vis/layer_08_attention.pdf}
+    \caption{Middle layer attention.}
+    \label{fig:mid_vis}
+  \end{subfigure}
+  
+
+  %\vspace{0em} % ↓ 比 1em 紧很多
+
+  % ---------- 第二行：b ----------
+  % \begin{subfigure}[t]{\textwidth}
+  %   \centering
+  %   \includegraphics[width=\linewidth]{figures/vis/mid_horizon.pdf}
+  %   \caption{Visualization of middle layer attention.}
+  %   \label{fig:mid_vis}
+  % \end{subfigure}
+  \caption{Visualization of the average attention weights (log scale) for user queries over video tokens in \llava with a FIFO KV cache budget of 6K video tokens per layer, averaged across 300 user video questions.}
+  \label{fig:layer_vis}
+\end{figure*}
+
+% \begin{figure*}[!t]
+%   \centering
+
+%   % ---------- 第一行：a 和 c ----------
+%   \begin{subfigure}[t]{0.496\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/vis/shallow.pdf}
+%     \caption{Visualization of shallow layer attention.}
+%     \label{fig:shallow_vis}
+%   \end{subfigure}
+%   \begin{subfigure}[t]{0.496\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/vis/deep.pdf}
+%     \caption{Visualization of deep layer attention.}
+%     \label{fig:deep_vis}
+%   \end{subfigure}
+
+%   %\vspace{0em} % ↓ 比 1em 紧很多
+
+%   \caption{Visualization of the average attention weights over video tokens in \llava under a sliding window size of 6,000 video tokens, averaged across 300 user video questions.}
+%   \label{fig:layer_vis}
+% \end{figure*}
+% \todo{Fig2: delete one line as the placeholder}
+
+

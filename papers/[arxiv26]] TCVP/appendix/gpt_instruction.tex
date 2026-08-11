@@ -1,0 +1,220 @@
+% \clearpage
+
+% -------------------------
+% Prompt 1: Segment Caption Integrator
+% -------------------------
+\begin{figure*}[t]
+\centering
+\begin{tcolorbox}[
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  width=\linewidth,
+  arc=1mm,
+  boxrule=0.8pt,
+  title=\textbf{Segment Caption Integrator},
+  colbacktitle=blue!75!black,
+  coltitle=white,
+  fonttitle=\bfseries\sffamily,
+  halign title=center,
+  top=4mm,
+  bottom=4mm,
+  left=3mm,
+  right=3mm
+]
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+  aboveskip=0pt,
+  belowskip=0pt,
+  gobble=0,
+  breakindent=0pt,
+  breakautoindent=false
+]
+You consolidate consecutive caption segments into one caption with no information loss.
+
+Input has {segment_count} captions labeled S1 through S{segment_count}.
+Return only valid JSON and do not output any other text.
+
+Write in present tense with a neutral descriptive tone and keep the event order consistent with the input.
+
+Use many short sentences and keep each sentence under 15 words.
+Make each sentence atomic and keep one concrete observation per sentence.
+Do not merge different events into one sentence.
+
+Do not summarize and do not invent details.
+Do not include timestamps or durations and avoid transition words such as then or afterward.
+
+visual_caption describes only what is visible, including people, actions, objects, motion, background, lighting, camera viewpoint, and on screen text.
+audio_caption describes only what is audible, including speech content, speaker tone, music, ambient noise, sound effects, silence, laughter, and applause.
+
+{
+  "visual_caption": "<short sentences describing only visible content>",
+  "audio_caption": "<short sentences describing only audible content>"
+}
+\end{lstlisting}
+\end{tcolorbox}
+\caption{Prompt template for segment caption integration.}
+\label{fig:caption_generation_prompt}
+\end{figure*}
+
+
+% -------------------------
+% Prompt 2: Modality Specific Captioning
+% -------------------------
+\begin{figure*}[t]
+\centering
+\begin{tcolorbox}[
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  width=\linewidth,
+  arc=1mm,
+  boxrule=0.8pt,
+  title=\textbf{Modality Specific Captioning},
+  colbacktitle=blue!75!black,
+  coltitle=white,
+  fonttitle=\bfseries\sffamily,
+  halign title=center,
+  top=4mm,
+  bottom=4mm,
+  left=3mm,
+  right=3mm
+]
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+  aboveskip=0pt,
+  belowskip=0pt,
+  gobble=0,
+  breakindent=0pt,
+  breakautoindent=false
+]
+Analyze this {segment_duration}-second video segment and write exactly two parts as two lines.
+
+VISUAL: Describe only what is visible, including people, objects, actions, scene context, colors, and motion.
+AUDIO: Describe only what is audible, including speech content, speaker tone, music, sound effects, ambient sounds, and silence.
+
+Keep both lines concise but informative and do not add any other text.
+\end{lstlisting}
+\end{tcolorbox}
+\caption{Prompt template for modality specific captioning.}
+\label{fig:modality_captioning_prompt}
+\end{figure*}
+
+
+% -------------------------
+% Prompt 3: Moment Search Query Generation
+% -------------------------
+\begin{figure*}[t]
+\centering
+\begin{tcolorbox}[
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  width=\linewidth,
+  arc=1mm,
+  boxrule=0.8pt,
+  title=\textbf{Moment Search Query Generation},
+  colbacktitle=blue!75!black,
+  coltitle=white,
+  fonttitle=\bfseries\sffamily,
+  halign title=center,
+  top=4mm,
+  bottom=4mm,
+  left=3mm,
+  right=3mm
+]
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+  aboveskip=0pt,
+  belowskip=0pt,
+  gobble=0,
+  breakindent=0pt,
+  breakautoindent=false
+]
+Generate one short and realistic query that a viewer would type to revisit the exact moment behind the comment.
+
+First infer whether the intent is visual or audio.
+Extract comment_keywords as words or short phrases taken from the comment.
+Select focus_keywords as the smallest subset that carries the retrieval intent.
+
+Write one query that centers on focus_keywords and add one or two small cues that help localize the moment.
+Use a conversational search style and write one sentence in 12 to 25 words.
+
+For visual queries emphasize visible entities, actions, and scene details.
+For audio queries include a short quote or a natural paraphrase and add sound cues when helpful.
+
+Avoid timestamps and durations and avoid narration that describes watching the video.
+Return valid JSON only and follow this schema.
+
+{
+  "modality": "visual" or "audio",
+  "comment_keywords": ["phrases taken from the comment"],
+  "focus_keywords": ["subset used to build the query"],
+  "intent": "one sentence describing what the user wants to revisit",
+  "query": "one natural query in 12 to 25 words",
+  "rationale": "why the focus keywords and cues match the comment intent"
+}
+
+Example
+Comment: "Love this quote, Jillian isn't sick she's a dancer!"
+{
+  "modality": "audio",
+  "comment_keywords": ["Love this quote", "Jillian isn't sick", "dancer"],
+  "focus_keywords": ["Jillian isn't sick", "dancer"],
+  "intent": "Find the moment when the memorable Jillian line is spoken",
+  "query": "the moment someone says Jillian isn't sick she's a dancer and the audience reacts",
+  "rationale": "The key phrase comes from the comment and the reaction cue helps localization"
+}
+\end{lstlisting}
+\end{tcolorbox}
+\caption{Prompt template for moment search query generation.}
+\label{fig:search_query_generation_prompt}
+\end{figure*}
+
+\begin{tcolorbox}[
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  width=\textwidth,
+  arc=1mm,
+  boxrule=0.8pt,
+  boxsep=1mm,
+  title=\textbf{Modality Specific Captioning},
+  colbacktitle=blue!75!black,
+  coltitle=white,
+  fonttitle=\bfseries\sffamily,
+  halign title=center,
+  top=2mm,
+  bottom=2mm,
+  left=2mm,
+  right=2mm
+]
+\small
+\setlength{\parindent}{0pt}
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  aboveskip=0pt,
+  belowskip=0pt
+]
+Analyze this {segment_duration}-second video segment and write exactly two parts as two lines.
+
+VISUAL: Describe only what is visible, including people, objects, actions, scene context, colors, and motion.
+AUDIO: Describe only what is audible, including speech content, speaker tone, music, sound effects, ambient sounds, and silence.
+
+Keep both lines concise but informative and do not add any other text.
+\end{lstlisting}
+\end{tcolorbox}

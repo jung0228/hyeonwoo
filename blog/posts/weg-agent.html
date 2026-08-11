@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>웹 에이전트 직접 만들어보기: v1→v5 삽질 기록 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .55rem .9rem;
+      border-bottom: 2px solid var(--text);
+      color: var(--text); letter-spacing: .04em;
+    }
+    .post-content td {
+      padding: .5rem .9rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text); vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+
+    /* ─── CODE BLOCKS ─── */
+    /* ─── CODE BLOCKS ─── */
+    pre {
+      background: #282c34;
+      border-radius: 6px; padding: 1.2rem 1.5rem;
+      margin: 1.6rem 0; overflow-x: auto;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .82rem; line-height: 1.65;
+      color: #abb2bf;
+    }
+    pre code, pre code.hljs {
+      background: none !important; border: none; padding: 0 !important;
+      font-size: inherit; color: inherit;
+    }
+
+    /* ─── IMAGES ─── */
+    .post-content img {
+      max-width: 100%; height: auto;
+      display: block; margin: 2rem auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule-lt);
+    }
+    .post-content figure { margin: 2rem 0; text-align: center; }
+    .post-content figure.fig-sm { max-width: 52%; margin: 2rem auto; }
+    .post-content figure.fig-sm img { max-width: 100%; }
+    .post-content figcaption {
+      font-size: .78rem; color: var(--muted); margin-top: .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ─── HIGHLIGHT (형광팬) ─── */
+    .post-content mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+    .summary-highlight {
+      background: #fef9c3;
+      border-left: 3px solid #eab308;
+      padding: .6rem 1rem;
+      margin: .6rem 0 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ─── TABLE CAPTION ─── */
+    .table-caption {
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Research Blog</span>
+  <ul class="nav-links">
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">웹 에이전트 직접 만들어보기: v1→v5 삽질 기록</h1>
+  <p class="post-dek">다나와 PC 견적 에이전트를 flat ReAct에서 Planner-Executor + Pure Vision + WALT Tools 구조로 5번 뒤집은 과정.</p>
+
+  <div class="post-meta">
+    <span class="cat">Agent</span>
+    <span class="dot">·</span>
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span>Mar 2026</span>
+    <span class="dot">·</span>
+    <span>18 min read</span>
+  </div>
+
+  <div class="post-content">
+<h2>왜 만들었나</h2>
+<p>웹 에이전트 논문은 많이 읽었는데, 실제로 돌아가는 코드를 직접 써본 적은 없었다. WebVoyager, Mind2Web, Go-Browse, WALT 방법론들을 정리하면서 계속 드는 생각이 있었다 — <em>저게 실제로 어떻게 작동하는 거지?</em> 이론으로 아는 것과 구현이 돌아가는 것 사이에는 항상 간극이 있다.</p>
+<p>그래서 만들어봤다. 목표는 단순하다: <strong>다나와에서 예산 내 PC 견적을 자동으로 찾아주는 에이전트.</strong> 예산과 사용 목적을 주면 에이전트가 직접 다나와를 탐색해 부품을 골라 담는다.</p>
+<p>결론부터 말하면, 처음 만든 구조는 5번 전면 수정됐다. 이 글은 그 5번의 과정과, 매번 왜 깨졌고 어떻게 고쳤는지에 대한 기록이다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>v1→v5: 뭐가 어떻게 바뀌었나</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>v1</th>
+<th>v2</th>
+<th>v3</th>
+<th>v4</th>
+<th>v5 (현재)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>구조</strong></td>
+<td>단일 flat ReAct</td>
+<td>Planner-Executor</td>
+<td>+ WALT Tools</td>
+<td>+ Knowledge + Filter</td>
+<td>+ sort 분리 + 중고 제외</td>
+</tr>
+<tr>
+<td><strong>인식</strong></td>
+<td>SoM (DOM+오버레이)</td>
+<td>Adaptive SoM</td>
+<td>Pure Vision</td>
+<td>Pure Vision</td>
+<td>Pure Vision</td>
+</tr>
+<tr>
+<td><strong>액션</strong></td>
+<td><code>CLICK [N]</code> DOM ID</td>
+<td><code>CLICK [N]</code> DOM ID</td>
+<td><code>TOOL</code> + <code>CLICK (x,y)</code></td>
+<td>+ <code>TOOL filter</code></td>
+<td>+ <code>--no-step-budget</code></td>
+</tr>
+<tr>
+<td><strong>담기</strong></td>
+<td>실패</td>
+<td>실패</td>
+<td>DOM <code>.click()</code> 해결</td>
+<td>동일</td>
+<td>중고 자동 제외</td>
+</tr>
+<tr>
+<td><strong>광고 스킵</strong></td>
+<td>없음</td>
+<td>없음</td>
+<td><code>recom_area</code> 필터</td>
+<td>동일</td>
+<td>동일</td>
+</tr>
+<tr>
+<td><strong>LLM 출력</strong></td>
+<td><code>Thought/Action</code></td>
+<td><code>Eval/Memory/Goal/Action</code></td>
+<td>+ <code>Predict:</code></td>
+<td>동일</td>
+<td>+ 빈 Action DONE 힌트</td>
+</tr>
+</tbody></table>
+<p>가장 큰 변화는 두 가지다. <strong>구조</strong>: flat ReAct → Planner-Executor. <strong>인식</strong>: DOM+오버레이 SoM → 순수 스크린샷. 나머지는 모두 이 두 가지 변화의 결과로 따라왔다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>현재 구조 (v5)</h2>
+<div style="margin: 2rem 0;">
+<div><svg viewBox="0 0 740 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:740px;display:block;margin:0 auto;font-family:'Source Serif 4',serif;">
+  <defs>
+    <marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#555"/>
+    </marker>
+  </defs>
+  <!-- Task input -->
+  <rect x="10" y="60" width="120" height="54" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="70" y="83" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">사용자 태스크</text>
+  <text x="70" y="100" text-anchor="middle" font-size="11" fill="#78350f">예산 + 목적</text>
+  <!-- arrow to planner -->
+  <line x1="130" y1="87" x2="162" y2="87" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- Planner -->
+  <rect x="162" y="60" width="110" height="54" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="217" y="83" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">Planner</text>
+  <text x="217" y="99" text-anchor="middle" font-size="10" fill="#047857">PlanStep 리스트</text>
+  <!-- arrow to executor -->
+  <line x1="272" y1="87" x2="304" y2="87" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- Executor box -->
+  <rect x="304" y="30" width="280" height="170" rx="10" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="444" y="52" text-anchor="middle" font-size="11" fill="#6b7280">Executor (미니 ReAct × N단계)</text>
+  <!-- Pure Vision -->
+  <rect x="318" y="62" width="88" height="44" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="362" y="80" text-anchor="middle" font-size="10" fill="#1d4ed8" font-weight="bold">Pure Vision</text>
+  <text x="362" y="94" text-anchor="middle" font-size="9" fill="#1e40af">스크린샷만 캡처</text>
+  <!-- AgentBrain -->
+  <rect x="420" y="62" width="88" height="44" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="464" y="78" text-anchor="middle" font-size="10" fill="#065f46" font-weight="bold">AgentBrain</text>
+  <text x="464" y="90" text-anchor="middle" font-size="9" fill="#047857">5-field 출력</text>
+  <text x="464" y="102" text-anchor="middle" font-size="9" fill="#047857">Eval/Memory/Predict/Goal/Action</text>
+  <!-- TOOL/ACT -->
+  <rect x="522" y="62" width="52" height="44" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="548" y="80" text-anchor="middle" font-size="10" fill="#9d174d" font-weight="bold">TOOL</text>
+  <text x="548" y="93" text-anchor="middle" font-size="9" fill="#be185d">DOM 직접</text>
+  <text x="548" y="105" text-anchor="middle" font-size="9" fill="#be185d">실행</text>
+  <!-- arrows between executor stages -->
+  <line x1="406" y1="84" x2="420" y2="84" stroke="#555" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="508" y1="84" x2="522" y2="84" stroke="#555" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <!-- loop back in executor -->
+  <path d="M 548 106 Q 548 155 444 155 Q 340 155 340 106" fill="none" stroke="#9ca3af" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+  <text x="444" y="172" text-anchor="middle" font-size="9" fill="#9ca3af">Observation → 다음 스텝</text>
+  <!-- Memory -->
+  <rect x="162" y="170" width="110" height="54" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="217" y="193" text-anchor="middle" font-size="12" fill="#4c1d95" font-weight="bold">WorkingMemory</text>
+  <text x="217" y="209" text-anchor="middle" font-size="10" fill="#5b21b6">선택 부품 + 잔여예산</text>
+  <!-- arrow executor to memory -->
+  <line x1="444" y1="200" x2="272" y2="200" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- replan -->
+  <line x1="217" y1="224" x2="217" y2="262" stroke="#555" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+  <text x="230" y="248" font-size="9" fill="#9ca3af">실패 시 replan()</text>
+  <line x1="217" y1="262" x2="217" y2="224" stroke="none"/>
+  <!-- arrow memory back to planner -->
+  <path d="M 217 170 Q 217 130 217 114" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr2)"/>
+  <!-- Eval -->
+  <rect x="620" y="60" width="110" height="54" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="675" y="83" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">LLM-as-Judge</text>
+  <text x="675" y="99" text-anchor="middle" font-size="10" fill="#78350f">results/*.json 저장</text>
+  <line x1="584" y1="87" x2="620" y2="87" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- Knowledge -->
+  <rect x="304" y="250" width="280" height="52" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+  <text x="444" y="272" text-anchor="middle" font-size="11" fill="#374151" font-weight="bold">Knowledge Base</text>
+  <text x="444" y="289" text-anchor="middle" font-size="10" fill="#6b7280">카테고리 ID·셀렉터·상태전이·워크플로우 quirks</text>
+  <line x1="444" y1="200" x2="444" y2="250" stroke="#9ca3af" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr2)"/>
+</svg></div>
+</div>
+
+<p>v1과 지금의 차이를 한 줄로 요약하면: <strong>&quot;매 스텝 화면 보고 결정&quot;에서 &quot;계획 세우고 → 단계별로 실행하고 → 메모리에 기록하고 → 실패하면 재계획&quot;으로 바뀌었다.</strong></p>
+<div class="ornament">· · ·</div>
+
+<h2>v1→v2: 왜 flat ReAct를 버렸나</h2>
+<p>첫 버전은 단일 ReAct 루프였다. 에이전트가 매 스텝 화면을 보고 다음 액션을 결정한다. 구조가 단순하다는 장점이 있었는데, 문제는 <strong>20스텝 안에 CPU → 메인보드 → RAM → SSD → 케이스 → 파워 6가지를 전부 골라야 한다</strong>는 것이었다.</p>
+<p>실험해보니 평균 스텝 분포가 이랬다:</p>
+<ul>
+<li>카테고리 탐색: 2~3스텝</li>
+<li>필터/정렬: 1~2스텝</li>
+<li>부품 확인 후 담기: 2~3스텝</li>
+</ul>
+<p>부품당 최소 5<del>8스텝, 6개 부품이면 30</del>48스텝이 필요하다. 20스텝에서는 4개 정도 담고 스텝이 끝난다.</p>
+<p>더 큰 문제는 <strong>고수준 계획이 없다</strong>는 것이다. 에이전트가 CPU를 담고 나서 &quot;다음은 메인보드다&quot;라는 인식이 없다. 히스토리에서 스스로 추론해야 하는데, 스텝이 길어지면 이전 결정을 잊거나 이미 담은 부품을 다시 찾는다.</p>
+<p><strong>해결</strong>: Planner-Executor 분리. Planner가 태스크를 PlanStep 리스트로 1회 변환하고, Executor가 각 단계를 독립된 미니 ReAct로 실행한다.</p>
+<pre><code class="language-python"># Planner 출력 예시 (50만원 사무용)
+[
+    {&quot;name&quot;: &quot;CPU&quot;,   &quot;budget&quot;: 80000,  &quot;hint&quot;: &quot;Pentium Gold G7400&quot;},
+    {&quot;name&quot;: &quot;메인보드&quot;, &quot;budget&quot;: 85000,  &quot;hint&quot;: &quot;H610M&quot;},
+    {&quot;name&quot;: &quot;메모리&quot;,  &quot;budget&quot;: 30000,  &quot;hint&quot;: &quot;DDR4 8GB&quot;},
+    {&quot;name&quot;: &quot;SSD&quot;,   &quot;budget&quot;: 50000,  &quot;hint&quot;: &quot;256GB&quot;},
+    {&quot;name&quot;: &quot;케이스&quot;,  &quot;budget&quot;: 40000,  &quot;hint&quot;: &quot;미들 타워&quot;},
+    {&quot;name&quot;: &quot;파워&quot;,   &quot;budget&quot;: 50000,  &quot;hint&quot;: &quot;500W 80+&quot;}
+]
+</code></pre>
+<p>각 단계가 독립적이므로 한 단계가 실패해도 다른 단계에 영향이 없다. 실패 시 <code>replan()</code>이 남은 단계만 재수립한다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>v2→v3: SoM을 버리고 Pure Vision으로</h2>
+<p>v2까지는 Set-of-Mark(SoM) 방식을 썼다. DOM에서 인터랙티브 요소를 수집하고, 스크린샷에 번호 뱃지를 오버레이해서 LLM이 번호로 요소를 지정하게 하는 방식이다.</p>
+<p>문제는 <strong>다나와처럼 복잡한 DOM에서 &quot;담기&quot; 버튼을 제대로 집어내지 못했다</strong>는 것이다.</p>
+<div class="callout">
+  <strong>에러 #1: 담기 버튼 좌표 클릭 실패</strong><br>
+  증상: <code>CLICK (x, y)</code>로 담기 버튼을 눌러도 아무 반응 없음. 같은 좌표 3~5회 반복.<br><br>
+  원인: <code>&lt;a class="btn_choice2 wishAction"&gt;</code>는 jQuery <code>.on('click', ...)</code>이 걸린 앵커 태그. Playwright의 합성 마우스 이벤트가 jQuery 리스너를 트리거하지 못하는 케이스가 있다.<br>
+  또한 SoM의 <code>filter_for_goal</code>이 "담기" 버튼을 goal 키워드와 무관하다고 점수 0으로 제외 → LLM이 엉뚱한 ID로 hallucination.<br><br>
+  <strong>해결: <code>TOOL add_product N</code> — JS <code>element.click()</code>으로 jQuery 리스너 직접 트리거.</strong>
+</div>
+
+<p>SoM의 더 근본적인 문제는 DOM 수집 자체가 불안정하다는 거였다. 다나와 페이지는 동적 렌더링이 많아서 수집 시점마다 요소 목록이 달라진다. 결국 v3에서 결정을 내렸다: <strong>DOM 수집을 완전히 제거하고 순수 스크린샷만 사용한다.</strong></p>
+<p><code>som.py</code>는 이제 <code>perceive(page)</code> 한 가지 함수만 한다:</p>
+<pre><code class="language-python">async def perceive(page) -&gt; ScreenState:
+    screenshot_bytes = await page.screenshot(type=&quot;png&quot;, full_page=False)
+    screenshot_b64 = base64.b64encode(screenshot_bytes).decode()
+    url = page.url
+    size = page.viewport_size
+    return ScreenState(screenshot_b64=screenshot_b64, url=url,
+                       width=size[&quot;width&quot;], height=size[&quot;height&quot;])
+</code></pre>
+<p>스크린샷만 찍고, DOM은 건드리지 않는다. LLM이 좌표 기반으로 클릭하거나(<code>CLICK (x,y)</code>), 아니면 <strong>TOOL 명령으로 DOM을 직접 조작</strong>하는 두 방식으로 나뉜다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>v3: WALT 스타일 Tool 추상화</h2>
+<p>순수 Vision으로 바꾸면서 좌표 예측 실패 문제가 더 도드라졌다. 좌표는 viewport 크기, 스크롤 위치, 렌더링 타이밍에 모두 민감하다.</p>
+<p>이걸 해결하기 위해 WALT(Salesforce AI, 2024)에서 영감을 받아 <strong>사이트 전용 TOOL 추상화</strong>를 도입했다. LLM이 좌표를 추론하는 대신 고수준 명령을 쓰면, TOOL이 실제 DOM 조작을 담당한다:</p>
+<pre><code>TOOL select_category &quot;CPU&quot;       → JS: category(873, 2) 전역 함수 호출
+TOOL filter &quot;인텔(소켓1700)&quot;      → JS: 체크박스 텍스트 매칭 → .click()
+TOOL sort_cheapest               → JS: onclick=&quot;...CASH_PRICE_ASC&quot; 요소 클릭
+TOOL get_products                → JS: 비광고 + 비중고 목록 수집
+TOOL add_product N               → JS: N번째 담기 버튼 .click()
+TOOL search &quot;H610M&quot;              → JS: 검색창 입력 → btn_search 클릭
+TOOL get_cart                    → JS: 오른쪽 패널 선택 부품 반환
+</code></pre>
+<p>DOM 클릭의 핵심 이점:</p>
+<pre><code class="language-javascript">// 나쁜 방법 (좌표 추론)
+await page.mouse.click(934, 521)  // 픽셀 1개 차이로 실패
+
+// 좋은 방법 (DOM 직접)
+document.querySelector(&#39;.btn_choice2.wishAction&#39;).click()
+// → viewport 무관, 스크롤 위치 무관, jQuery 이벤트 모두 트리거
+</code></pre>
+<div class="ornament">· · ·</div>
+
+<h2>AgentBrain: 5-field 출력</h2>
+<p>v2에서 도입한 Eval/Memory/Goal/Action 4-field에, v3에서 <strong>Predict</strong> 필드를 추가했다. Browser Use에서 영감받은 구조다.</p>
+<pre><code>Eval:    Success
+Memory:  Pentium Gold G7400 검색 완료, 85,000원
+Predict: sort 후 최저가 G7400이 1번에 표시될 것
+Goal:    낮은가격순 정렬 후 담기
+Action:  TOOL sort_cheapest
+</code></pre>
+<p><strong>Predict 필드의 효과</strong>: 액션 전에 예상 결과를 명시하면, LLM이 이상한 예측을 쓰다가 스스로 수정하는 경우가 생긴다. &quot;예측: 버튼을 클릭하면 로그인 페이지로 이동할 것&quot;처럼 이상한 예측이 나오면 Goal도 자동으로 재검토된다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>실제로 만나 해결한 버그들</h2>
+<p>구조 설계보다 구현 디테일에서 더 많이 막혔다. 기억나는 것들을 정리한다.</p>
+<h3>광고 제품이 1번으로 잡힘</h3>
+<p><code>TOOL sort_cheapest</code> 후 <code>TOOL add_product 1</code> → 69만원짜리 CPU가 담겼다.</p>
+<p>원인: 다나와 PC견적 목록 상단 2~3개는 <code>tr.recom_area</code> 클래스의 광고/추천 제품. 가격순 정렬 후에도 광고 행은 고정 위치를 유지한다.</p>
+<pre><code class="language-javascript">// 해결: recom_area 필터 추가
+const rows = Array.from(document.querySelectorAll(&#39;tr&#39;))
+    .filter(tr =&gt; !tr.classList.contains(&#39;recom_area&#39;));
+// 1번 = 비광고 최저가 보장
+</code></pre>
+<h3>카테고리 셀렉터가 작동 안 함</h3>
+<p><code>TOOL select_category &quot;CPU&quot;</code> → &quot;카테고리 &#39;CPU&#39; 못 찾음&quot;.</p>
+<p>실제 DOM을 DevTools로 확인하니:</p>
+<pre><code class="language-html">&lt;dd class=&quot;category_873 select pd_item&quot;&gt;
+  &lt;a class=&quot;pd_item_title&quot; onclick=&quot;category(873,2);return false;&quot;&gt;CPU&lt;/a&gt;
+&lt;/dd&gt;
+</code></pre>
+<p>카테고리는 <code>category(ID, 2)</code> JS 전역 함수 호출 방식이었다. 초기 셀렉터가 완전히 틀렸던 것.</p>
+<pre><code class="language-javascript">const NAME_TO_ID = { &#39;CPU&#39;: 873, &#39;메인보드&#39;: 875, &#39;SSD&#39;: 32617, &#39;메모리&#39;: 874, ... }
+if (typeof category === &#39;function&#39;) category(NAME_TO_ID[name], 2);
+</code></pre>
+<h3>검색이 전체 사이트 검색으로 이탈</h3>
+<p><code>TOOL search &quot;H410M&quot;</code> → 결과: 전체(114) / 메인보드(1) / 케이스(113).</p>
+<p>원인: <code>page.keyboard.press(&quot;Enter&quot;)</code>가 상단 글로벌 검색창(<code>#gnbSearchKeyword</code>)을 트리거해서 전체 사이트 검색을 수행했다.</p>
+<pre><code class="language-python"># Before: Enter 키 → 글로벌 검색창 트리거
+# After: btn_search DOM 직접 클릭 → 카테고리 내 검색
+await page.evaluate(&quot;&quot;&quot;
+    document.querySelector(&#39;button.btn_search&#39;).click()
+&quot;&quot;&quot;)
+# 탭 분리 시 현재 카테고리 라디오 버튼 자동 선택
+</code></pre>
+<h3>sort_cheapest가 검색 결과 뷰에서 작동 안 함</h3>
+<p><code>TOOL search &quot;DDR4&quot;</code> 후 <code>TOOL sort_cheapest</code> → 검색 필터가 초기화되고 제품 목록이 사라짐.</p>
+<p>원인: 다나와의 sort 버튼은 <strong>카테고리 뷰 전용</strong>이었다. 검색 결과 탭 뷰에서 sort 클릭 → 카테고리 뷰로 리셋 → 검색 필터 소멸.</p>
+<pre><code>⚠️ TOOL search 이후에는 절대 sort_cheapest 사용 금지
+→ 검색 후에는 바로 get_products → add_product
+
+sort_cheapest는 TOOL select_category 이후 카테고리 뷰에서만 사용
+</code></pre>
+<p>시스템 프롬프트에 명시하고, 워크플로우를 검색 방식 대신 카테고리+필터 방식 우선으로 재설계했다.</p>
+<h3>sort_cheapest 실행 후 페이지 crash</h3>
+<p><code>estimateMainProduct.sort(&#39;GOODSINFO_CASH_PRICE_ASC&#39;)</code> JS를 <code>page.evaluate()</code>로 직접 호출 시 30초 타임아웃 → <code>TargetClosedError</code>.</p>
+<p>원인: sort JS 함수 내부에서 <code>window.location.reload()</code>가 트리거되면서 Playwright 컨텍스트가 닫혔다.</p>
+<pre><code class="language-javascript">// 제거: estimateMainProduct.sort(&#39;GOODSINFO_CASH_PRICE_ASC&#39;)
+// 안전: onclick 속성 포함 요소 직접 클릭
+const sortEl = Array.from(document.querySelectorAll(&#39;[onclick]&#39;))
+    .find(el =&gt; (el.getAttribute(&#39;onclick&#39;) || &#39;&#39;).includes(&#39;CASH_PRICE_ASC&#39;));
+if (sortEl) sortEl.click();
+</code></pre>
+<h3>Action 필드 비어있는 무한 루프</h3>
+<pre><code>[4] Success |  → CPU가 담겼으므로 목표 달성
+[5] Success |  → CPU가 성공적으로 담겼으므로 목표 달성
+⚠ 동일 액션 3회 반복
+</code></pre>
+<p>원인: LLM이 Predict 필드에 결론을 써버리고 <code>Action:</code> 줄을 출력하지 않음. <code>action_raw.strip() == &quot;&quot;</code>이면 <code>action_error = True</code>지만 <code>eval_prev = &quot;Success&quot;</code> 상태라 실패 카운터가 올라가지 않았다.</p>
+<pre><code class="language-python">if not action_raw.strip():
+    observation = &quot;Action: 필드가 비어있습니다. 목표 달성 시 반드시 DONE \&quot;...\&quot; 을 출력하세요.&quot;
+</code></pre>
+<p>add_product 성공 후 DONE 포맷을 몰라서 비우는 경우도 있었다. 마지막 <code>add_product</code> 관측값을 추적해서 힌트에 포함했다:</p>
+<pre><code class="language-python">if not action_raw.strip() and last_add_product_obs:
+    observation = (
+        f&quot;제품을 이미 담았습니다: {last_add_product_obs}. &quot;
+        f&quot;반드시 DONE \&quot;목표완료 | 부품:카테고리명 | 이름:제품명 | 가격:숫자\&quot; 형식으로 출력하세요.&quot;
+    )
+</code></pre>
+<h3>플래너가 예산 초과 모델 추천</h3>
+<p>50만원 사무용 빌드에서 CPU 예산 95,000원 → 플래너가 <code>hint: &quot;i3-12100&quot;</code> 생성. i3-12100 실제 시세 ~150,000원. 에이전트가 담으려다 예산 초과 확인 → 스스로 G6900으로 재검색 → 워크플로우 꼬임.</p>
+<p>원인: 플래너 프롬프트에 가격 정보가 없어서 LLM이 &quot;더 좋은 CPU&quot;를 추천.</p>
+<pre><code># 플래너 프롬프트에 실제 시세표 추가
+| CPU | Celeron G6900       | 60,000~75,000원  | LGA1700, 내장그래픽 |
+| CPU | Pentium Gold G7400  | 75,000~90,000원  | LGA1700, 내장그래픽 |
+| CPU | i3-12100            | 140,000~160,000원 | → 70만원 미만 예산 초과 |
+</code></pre>
+<p>50만원 빌드 CPU 예산 ~80,000원이면 LLM이 자동으로 G7400/G6900을 선택한다.</p>
+<h3>중고 제품이 담기</h3>
+<p>메모리 검색 후 <code>TOOL add_product 2</code> → &quot;삼성전자 DDR4-2133 <strong>중고</strong> (8GB) / 79,120원&quot;. 신품 DDR4 8GB 시세 15,000~30,000원의 3배.</p>
+<pre><code class="language-javascript">const realBtns = allBtns.filter(btn =&gt; {
+    const row = btn.closest(&#39;tr&#39;);
+    if (!row || row.classList.contains(&#39;recom_area&#39;)) return false;
+    const rowText = row.textContent || &#39;&#39;;
+    if (rowText.includes(&#39;중고&#39;) || rowText.includes(&#39;리퍼&#39;) || rowText.includes(&#39;재생&#39;)) return false;
+    return true;
+});
+// 중고 제외 후 제품 없으면 fallback으로 중고 포함 목록 사용
+</code></pre>
+<div class="ornament">· · ·</div>
+
+<h2>Knowledge Base: 사이트 지식 분리</h2>
+<p>v4에서 도입한 개념이다. Web-CogReasoner(ICLR 2026)의 &quot;사실적·절차적 지식 분리&quot;에서 영감받았다.</p>
+<p>에이전트가 매번 UI 구조를 추론하는 대신, 사전에 파악한 지식을 <code>knowledge.py</code>에 분리해서 저장한다:</p>
+<pre><code class="language-python">BASE_KNOWLEDGE = DanawaKnowledge(
+    url=&quot;https://shop.danawa.com/virtualestimate/&quot;,
+    regions=[
+        UIRegion(name=&quot;카테고리 패널&quot;, selector=&quot;dd[class*=&#39;category_&#39;].pd_item &gt; a.pd_item_title&quot;),
+        UIRegion(name=&quot;검색창&quot;, selector=&quot;#searchProduct&quot;),
+        UIRegion(name=&quot;담기 버튼&quot;, selector=&quot;.btn_choice2.wishAction&quot;),
+    ],
+    category_ids={&quot;CPU&quot;: 873, &quot;메인보드&quot;: 875, &quot;메모리&quot;: 874, &quot;SSD&quot;: 32617, ...},
+    quirks=[
+        &quot;담기 버튼은 jQuery 이벤트 → JS .click() 필수, 좌표 클릭 불가&quot;,
+        &quot;sort_cheapest는 카테고리 뷰 전용, search 후 사용 금지&quot;,
+        &quot;recom_area 행은 광고, 번호 카운트에서 제외&quot;,
+    ]
+)
+</code></pre>
+<p><code>ui_explorer.py</code>가 있으면 이 지식을 자동으로 탐색·업데이트한다. Phase 1(초기 DOM), Phase 2(카테고리 클릭 상태전이), Phase 3(스크롤 탐색), Phase 4(검색 실험) 순서로 탐색하고 <code>knowledge/danawa_ui.json</code>에 캐싱한다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>타 사이트에 적용하려면</h2>
+<p>구조를 계층별로 분리했기 때문에 새 사이트 적용 시 교체가 필요한 부분이 명확하다:</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">계층</th>
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">컴포넌트</th>
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">이식성</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">오케스트레이션</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><code>agent.py</code>, <code>planner.py</code>, <code>memory.py</code></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">✅ 그대로</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">인식</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><code>som.py</code></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">✅ 그대로 (순수 스크린샷)</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">지식</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><code>knowledge.py</code></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">🔄 사이트별 신규 작성</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">도구</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><code>tools.py</code></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">🔄 사이트별 신규 작성</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">탐색</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><code>ui_explorer.py</code></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">🔄 URL만 변경</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>어느 쇼핑몰이든 공통으로 적용되는 원칙들:</p>
+<ol>
+<li><strong>클릭 가능한 것은 모두 DOM으로</strong> — 좌표 클릭은 viewport 크기와 스크롤에 민감하다. <code>element.click()</code>은 그렇지 않다.</li>
+<li><strong>광고 필터링은 필수</strong> — 어느 사이트든 결과 상단에 광고가 있다. (<code>recom_area</code>, <code>data-ad-info</code>, <code>[class*=&quot;sponsored&quot;]</code>)</li>
+<li><strong>전체 검색창과 카테고리 내 검색창을 구분</strong> — 혼용하면 페이지가 이탈한다.</li>
+<li><strong>플래너에게 실제 시세를 주라</strong> — LLM은 &quot;더 좋은 것&quot;을 선택하려는 편향이 있다. 가격 정보 없이 예산 제약만 주면 예산 초과 모델을 추천한다.</li>
+</ol>
+<div class="ornament">· · ·</div>
+
+<h2>배운 것들</h2>
+<p>직접 구현해보니 논문에서 당연하게 쓰인 표현들이 실제로 어떤 문제를 해결하는지 체감됐다.</p>
+<p><strong>Planner-Executor 분리</strong>는 단순히 구조가 예쁜 게 아니다. flat ReAct는 컨텍스트 낭비가 크다 — 이미 담은 부품 정보가 히스토리에 묻혀서 LLM이 &quot;CPU 아직 안 골랐나?&quot; 하며 다시 찾는다. 각 Executor가 독립된 미니 컨텍스트로 실행되면 이 문제가 사라진다.</p>
+<p><strong>Pure Vision으로 단순화</strong>가 예상보다 잘 작동했다. DOM 수집의 불안정성이 생각보다 컸고, 현대 LLM의 Vision 능력이 스크린샷만으로도 충분히 페이지를 파악한다. SoM 오버레이 없이도 좌표 기반 클릭이 가능하다.</p>
+<p><strong>TOOL 추상화</strong>는 신뢰성을 크게 높였다. LLM이 <code>CLICK (934, 521)</code> 같은 좌표를 예측하는 대신 <code>TOOL select_category &quot;CPU&quot;</code> 같은 의도를 표현하면 된다. 좌표 예측 실패는 거의 사라졌다.</p>
+<p>그리고 가장 중요한 교훈: <strong>LLM이 예상 밖으로 행동하는 이유의 절반은 프롬프트 정보 부족이다.</strong> <code>sort_cheapest</code> 후 검색이 안 되는 건 코드 버그가 아니었다 — LLM에게 &quot;search 후 sort 금지&quot; 규칙을 알려주지 않았던 것이다. 중고 제품을 담는 것도, 예산 초과 CPU를 추천하는 것도 마찬가지다. 에이전트 디버깅의 상당 부분은 결국 프롬프트 엔지니어링이다.</p>
+<div class="footnote">
+  코드: <a href="https://github.com/jung0228/weg-agent">github.com/jung0228/weg-agent</a>
+</div>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>

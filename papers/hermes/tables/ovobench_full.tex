@@ -1,0 +1,75 @@
+\begin{table*}[t]
+    \small
+    \centering
+    \caption{\textbf{Accuracy comparison (\%) on OVO-Bench focusing on \textit{Real-Time Visual Perception} and \textit{Backward Tracing} tasks}. Real-Time Visual Perception tasks consist of Optical Character Recognition (OCR), Action Recognition (ACR), Attribute Recognition (ATR), Spatial Understanding (STU), Future Prediction (FPD), Object Recognition (OJR). Backward Tracing tasks consists of Episodic Memory (EPM), Action Sequence Identification (ASI), Hallucination Detection (HLD).}
+    \label{tab:ovobench_full}
+
+    \begin{adjustbox}{max width=\linewidth}
+    % 修改了列定义，去掉了第三组 cccc|
+    \begin{tabular}{l@{}c@{\hspace{3pt}}|cccccc|c|ccc|c|c}
+    \toprule
+    \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{\#Frames}} & 
+    \multicolumn{7}{c|}{\textbf{Real-Time Visual Perception}} & 
+    \multicolumn{4}{c|}{\textbf{Backward Tracing}} & 
+    \multirow{2}{*}{\textbf{Overall}} \\
+    \addlinespace[2pt]
+    % 去掉了 \cmidrule[0.5pt](lr){14-17}
+    \cmidrule[0.5pt](lr){3-9} \cmidrule[0.5pt](lr){10-13} 
+    \addlinespace[2pt]
+    % 去掉了 REC & SSR & CRR & Avg.
+    & & OCR & ACR & ATR & STU & FPD & OJR & Avg. & 
+    EPM & ASI & HLD & Avg. & Avg. \\
+    \midrule
+    \midrule
+    Human & - & 93.96 & 92.57 & 94.83 & 92.70 & 91.09 & 94.02 & 93.20 & 92.59 & 93.02 & 91.37 & 92.33 & 92.77 \\
+    \midrule
+    \multicolumn{14}{c}{\textbf{Proprietary MLLMs}} \\
+    \midrule
+    Gemini 1.5 Pro~\cite{gemini25} & 1fps & 85.91 & 66.97 & 79.31 & 58.43 & 63.37 & 61.96 & 69.32 & 58.59 & 76.35 & 52.64 & 62.54 & 65.93 \\
+    GPT-4o~\cite{openai2024gpt4ocard} & 64 & 69.80 & 64.22 & 71.55 & 51.12 & 70.30 & 59.78 & 64.46 & 57.91 & 75.68 & 48.66 & 60.75 & 62.61 \\
+    \midrule
+    \multicolumn{14}{c}{\textbf{Open-source Offline MLLMs}} \\
+    \midrule
+    % Qwen2-VL-72B & 64 & 72.5 & 56.9 & 77.6 & 52.3 & 74.3 & 61.4 & 65.8 & 51.5 & 73.7 & 63.4 & 62.9 & 58.8 \\
+    LLaVA-Video-7B~\cite{zhang2025llavavideovideoinstructiontuning} & 64 & 69.80 & 59.63 & 66.38 & 50.56 & 72.28 & 61.41 & 63.34 & 51.18 & 64.19 & 9.68 & 41.68 & 52.51 \\
+    Qwen2-VL-7B~\cite{wang2024qwen2vlenhancingvisionlanguagemodels} & 64 & 69.13 & 53.21 & 63.79 & 50.56 & 66.34 & 60.87 & 60.65 & 44.44 & 66.89 & 34.41 & 48.58 & 54.62 \\
+    InternVL2-8B~\cite{internvl2} & 64 & 68.46 & 58.72 & 68.97 & 44.94 & 67.33 & 55.98 & 60.73 & 43.10 & 61.49 & 27.41 & 44.00 & 52.37 \\
+    LongVU-7B~\cite{shen2024longvuspatiotemporaladaptivecompression} & 1fps & 55.70 & 49.54 & 59.48 & 48.31 & 68.32 & 63.04 & 57.40 & 43.10 & 66.22 & 9.14 & 39.49 & 48.45 \\
+    \midrule
+    \multicolumn{14}{c}{\textbf{Open-source Online MLLMs}} \\
+    \midrule
+    VideoLLM-online-8B~\cite{videollmonline} & 2fps & 8.05 & 23.85 & 12.07 & 14.04 & 45.54 & 21.20 & 20.79 & 22.22 & 18.80 & 12.18 & 17.73 & 19.26 \\
+    Flash-VStream-7B~\cite{flashvstream} & 1fps & 25.50 & 32.11 & 29.31 & 33.71 & 29.70 & 28.80 & 29.86 & 36.36 & 33.78 & 5.91 & 25.35 & 27.61 \\
+    Dispider-7B~\cite{dispider} & 1fps & 57.72 & 49.54 & 62.07 & 44.94 & 61.39 & 51.63 & 54.55 & 48.48 & 55.41 & 4.30 & 36.06 & 45.31 \\
+    TimeChat-Online-7B~\cite{timechatonline} & 1fps & 75.20 & 46.80 & 70.70 & 47.80 & 69.30 & 61.40 & 61.90 & 55.90 & 59.50 & 9.70 & 41.70 & 51.80 \\
+    StreamForest-7B~\cite{zeng2025streamforestefficientonlinevideo} & 1fps & 68.46 & 53.21 & 71.55 & 47.75 & 65.35 & 60.87 & 61.20 & 58.92 & 64.86 & 32.26 & 52.02 & 56.61 \\
+    \midrule
+    \multicolumn{14}{c}{\textbf{Training-free Offline-to-Online Methods}} \\
+    \midrule
+    LLaVA-OV-7B~\cite{li2024llavaonevisioneasyvisualtask} & 32 & 67.79 & 55.05 & 72.41 & 48.31 & 72.28 & 62.50 & 63.06 & 57.24 & 55.41 & 18.28 & 43.64 & 53.35 \\
+    \hspace{3pt} + ReKV~\cite{di2025streamingvideoquestionansweringincontext} & 0.5 fps &  52.35 & 54.13 & 69.83 & 43.26 & 67.33 & 57.07 & 57.33 & 57.58&  56.08 & 18.82 & 44.16 & 50.75\\
+     \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & \textbf{72.48} & \textbf{62.39} & 69.83 & 47.75 & \textbf{73.27} & 64.67 & 65.07 & \textbf{61.28} & 58.78 & 26.34 & 48.80 & 56.94 \\
+    
+     \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & \textbf{72.48} & \textbf{62.39} & \textbf{74.14} & \textbf{50.56} & \textbf{73.27} & \textbf{65.22} & \textbf{66.34} & 60.61 & \textbf{61.49} & \textbf{28.49} & \textbf{50.20} & \textbf{58.27} \\
+     
+    \midrule
+    LLaVA-OV-0.5B~\cite{li2024llavaonevisioneasyvisualtask} & 32 & 53.69 & 53.21 & 48.28 & \textbf{33.71} & \textbf{60.40} & \textbf{48.91} & 49.70 & 46.13 & 45.27 & \textbf{12.37} & 34.59 & 42.15 \\
+    \hspace{3pt} + ReKV~\cite{di2025streamingvideoquestionansweringincontext} & 0.5 fps &  41.61 & 44.95 & 50.00 & 29.78 & \textbf{60.40} & 35.87 & 43.77 & 46.13&  43.92 & 9.14 & 33.06 & 38.42 \\
+     \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & \textbf{57.05} & \textbf{49.54} & 55.17 & 32.58 & \textbf{60.40} & 47.28 & 50.34 & \textbf{47.81} & 47.30 & 9.14 & 34.75 & 42.55 \\
+     \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & 56.38 & 47.71 & \textbf{56.90} & 32.02 & 62.38 & \textbf{48.91} & \textbf{50.72} & \textbf{47.81} & \textbf{47.97} & 8.60 & \textbf{34.80} & \textbf{42.76} \\
+     
+    \midrule
+    Qwen2.5-VL-7B~\cite{bai2025qwen25vltechnicalreport} & 1fps & 67.79 & 55.05 & 67.24 & 42.13 & 66.34 & 60.87 & 59.90 & \textbf{51.52} & 58.78 & 23.66 & 44.65 & 52.28 \\
+    \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & \textbf{85.91} & 60.55 & \textbf{74.14} & 52.81 & 70.30 & \textbf{66.85} & 68.42 & 49.49 & 61.49 & 33.33 & 48.10 & 58.26 \\
+     \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & 85.23 & \textbf{64.22} & 71.55 & \textbf{53.37} & \textbf{74.26} & 65.22 & \textbf{68.98} & 48.48 & \textbf{62.16} & \textbf{37.63} & \textbf{49.43} & \textbf{59.21} \\
+      
+    \midrule
+    Qwen2.5-VL-32B~\cite{bai2025qwen25vltechnicalreport} & 1fps & 77.18 & 58.72 & 68.10 & 50.56 & \textbf{74.26} & 57.61 & 64.40 & \textbf{58.59} & 62.84 & 29.57 & 50.33 & 57.37 \\  
+     \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & 87.25 & \textbf{66.06} & \textbf{74.14} & 57.30 & 71.29 & 75.54 & 71.93 & 55.56 & \textbf{70.27} & 47.31 & \textbf{57.71} & \textbf{64.82} \\
+     \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & \textbf{88.59} & 65.14 & \textbf{74.14} & \textbf{58.99} & 71.29 & \textbf{76.09} & \textbf{72.37} & 52.19 & 66.22 & \textbf{47.85} & 55.42 & 63.90 \\
+     
+    
+    \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table*}

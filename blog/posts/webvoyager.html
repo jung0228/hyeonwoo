@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebVoyager: 진짜 웹에서 동작하는 멀티모달 에이전트 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .55rem .9rem;
+      border-bottom: 2px solid var(--text);
+      color: var(--text); letter-spacing: .04em;
+    }
+    .post-content td {
+      padding: .5rem .9rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text); vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+
+    /* ─── CODE BLOCKS ─── */
+    /* ─── CODE BLOCKS ─── */
+    pre {
+      background: #282c34;
+      border-radius: 6px; padding: 1.2rem 1.5rem;
+      margin: 1.6rem 0; overflow-x: auto;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .82rem; line-height: 1.65;
+      color: #abb2bf;
+    }
+    pre code, pre code.hljs {
+      background: none !important; border: none; padding: 0 !important;
+      font-size: inherit; color: inherit;
+    }
+
+    /* ─── IMAGES ─── */
+    .post-content img {
+      max-width: 100%; height: auto;
+      display: block; margin: 2rem auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule-lt);
+    }
+    .post-content figure { margin: 2rem 0; text-align: center; }
+    .post-content figure.fig-sm { max-width: 52%; margin: 2rem auto; }
+    .post-content figure.fig-sm img { max-width: 100%; }
+    .post-content figcaption {
+      font-size: .78rem; color: var(--muted); margin-top: .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ─── HIGHLIGHT (형광팬) ─── */
+    .post-content mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+    .summary-highlight {
+      background: #fef9c3;
+      border-left: 3px solid #eab308;
+      padding: .6rem 1rem;
+      margin: .6rem 0 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ─── TABLE CAPTION ─── */
+    .table-caption {
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Research Blog</span>
+  <ul class="nav-links">
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">WebVoyager: 진짜 웹에서 동작하는 멀티모달 에이전트</h1>
+  <p class="post-dek">GPT-4V로 스크린샷을 직접 보고, 실제 웹사이트를 탐색하다.</p>
+
+  <div class="post-meta">
+    <span class="cat">Agent</span>
+    <span class="dot">·</span>
+    <span class="cat">Multimodal</span>
+    <span class="dot">·</span>
+    <span class="cat">LLM</span>
+    <span class="dot">·</span>
+    <span>Mar 2026</span>
+    <span class="dot">·</span>
+    <span>18 min read</span>
+  </div>
+
+  <div class="post-content">
+<h2>웹을 탐색하는 에이전트, 무엇이 어려운가</h2>
+<p>웹을 자동으로 탐색하는 에이전트를 만드는 건 생각보다 복잡하다. 사람은 웹페이지를 눈으로 보고 직관적으로 이해하지만, 컴퓨터에게 웹페이지는 수천 줄의 HTML 코드 덩어리다. &quot;항공편 검색하고 최저가 찾아줘&quot; 같은 태스크를 자동화하려면 에이전트가 버튼을 인식하고, 달력을 읽고, 검색 결과를 이해하고, 여러 페이지를 넘나들어야 한다.</p>
+<p>2024년 발표된 <strong>WebVoyager</strong> (ACL 2024)는 이 문제에 멀티모달 LLM을 직접 투입한 첫 번째 end-to-end 시스템 중 하나다. 논문의 핵심 관찰은 이렇다:</p>
+<div class="pullquote">
+  <strong>"Rendering HTML into visual webpages is critical because rendered web pages are inherently designed with user experience (UX), emphasizing intuitive information and structured presentation."</strong>
+</div>
+
+<p>HTML을 텍스트로 읽는 것과, 실제로 렌더링된 화면을 보는 것은 근본적으로 다르다는 이야기다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>이전 방법들: 뭐가 문제였나</h2>
+<p>WebVoyager 이전에도 웹 에이전트 연구는 많았다. 2021년 WebGPT부터 2023년 Mind2Web까지.</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">시스템</th>
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">연도</th>
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">접근 방식</th>
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">한계</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><strong>WebGPT</strong></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">2021</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">텍스트 기반 + fine-tuned GPT-3</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">시각 정보 없음, 검색에 특화</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><strong>WebAgent</strong></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">2023</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">T5로 HTML 압축 + Flan-U-PaLM</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">텍스트만, 파인튜닝 필요</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><strong>WebGUM</strong></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">2023</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">T5 + ViT (스크린샷 + HTML 함께)</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">시뮬레이션 환경, 파인튜닝 필요</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><strong>PIX2ACT</strong></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">2023</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">스크린샷 전용</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">MiniWoB++ 한정, 파인튜닝 필요</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;"><strong>Mind2Web</strong></td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">2023</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">DeBERTa 필터 + Flan-T5</td>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">오프라인 스냅샷, 고정 경로 평가</td>
+    </tr>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.55rem 0.9rem;"><strong>WebVoyager</strong></td>
+      <td style="padding:0.55rem 0.9rem;">2024</td>
+      <td style="padding:0.55rem 0.9rem;">GPT-4V + 실제 웹 + 스크린샷</td>
+      <td style="padding:0.55rem 0.9rem;"><strong style="background:#d4f7d4;padding:1px 5px;border-radius:3px;">파인튜닝 불필요, 실시간 웹</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>두 가지 문제가 반복됐다.</p>
+<h3>문제 1 — 에이전트가 보는 것과 사람이 보는 것이 달랐다</h3>
+<p>기존 에이전트들은 HTML/DOM 텍스트만 입력으로 받았다. 문제는:</p>
+<blockquote>
+<p><em>&quot;Existing approaches overlook a critical functionality of browsing: rendering HTML into visual webpages.&quot;</em></p>
+</blockquote>
+<p>달력이 몇 월인지, 바 차트의 높이가 뭘 의미하는지, 어느 버튼이 실제로 클릭 가능한지 — 이런 정보들은 HTML 텍스트에서 읽어내기 매우 어렵거나 불가능하다.</p>
+<div><svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:1.8rem 0;border-radius:6px;border:1px solid #d8d8d2;">
+  <rect width="720" height="300" fill="#f9f8f4"/>
+  <rect x="0" y="0" width="340" height="300" fill="#efede6"/>
+  <rect x="0" y="0" width="340" height="36" fill="#d8d5cc"/>
+  <text x="170" y="23" text-anchor="middle" font-size="11" font-weight="700" fill="#6b6b6b" font-family="sans-serif" letter-spacing="1">이전 에이전트가 보는 것</text>
+  <text x="16" y="58"  font-size="9" fill="#333" font-family="monospace">&lt;div class="page-wrapper" id="main"&gt;</text>
+  <text x="16" y="72"  font-size="9" fill="#444" font-family="monospace">  &lt;nav role="navigation" aria-label="..."&gt;</text>
+  <text x="16" y="86"  font-size="9" fill="#555" font-family="monospace">    &lt;ul class="nav-list nav-primary"&gt;</text>
+  <text x="16" y="100" font-size="9" fill="#666" font-family="monospace">      &lt;li class="nav-item active"&gt;&lt;a href=...&gt;</text>
+  <text x="16" y="114" font-size="9" fill="#777" font-family="monospace">      &lt;li data-id="32" class="dropdown"&gt;</text>
+  <text x="16" y="128" font-size="9" fill="#888" font-family="monospace">    &lt;/ul&gt;&lt;div class="search-wrap"&gt;</text>
+  <text x="16" y="142" font-size="9" fill="#999" font-family="monospace">      &lt;input type="text" placeholder="검색..."&gt;</text>
+  <text x="16" y="156" font-size="9" fill="#aaa" font-family="monospace">  &lt;section class="calendar-widget"&gt;</text>
+  <text x="16" y="170" font-size="9" fill="#bbb" font-family="monospace">    &lt;table class="cal" data-month="3"&gt;</text>
+  <text x="16" y="184" font-size="9" fill="#ccc" font-family="monospace">      &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td class="sel"&gt;2&lt;/td&gt;...</text>
+  <text x="16" y="198" font-size="9" fill="#ddd" font-family="monospace">    &lt;/table&gt;&lt;div class="chart-container"&gt;</text>
+  <text x="16" y="212" font-size="9" fill="#e0e0e0" font-family="monospace">      &lt;canvas id="chart1" width="400"&gt;...</text>
+  <text x="16" y="226" font-size="9" fill="#e8e8e8" font-family="monospace">    &lt;/div&gt;&lt;/section&gt;&lt;/div&gt;&lt;/nav&gt;</text>
+  <rect x="16" y="244" width="308" height="42" fill="#fde8e8" rx="4" stroke="#e08080" stroke-width="1"/>
+  <text x="170" y="260" text-anchor="middle" font-size="10" font-weight="700" fill="#c03030" font-family="sans-serif">달력이 몇 월인지? ❌ 모름</text>
+  <text x="170" y="278" text-anchor="middle" font-size="9" fill="#c03030" font-family="sans-serif">차트 수치? ❌ 모름  ·  레이아웃 구조? ❌ 모름</text>
+  <text x="360" y="158" text-anchor="middle" font-size="28" fill="#1a56c4" font-family="sans-serif">→</text>
+  <rect x="380" y="0" width="340" height="300" fill="white"/>
+  <rect x="380" y="0" width="340" height="36" fill="#1a56c4"/>
+  <text x="550" y="23" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif" letter-spacing="1">WebVoyager가 보는 것</text>
+  <rect x="390" y="44" width="320" height="16" fill="#e8e8e8" rx="2"/>
+  <circle cx="400" cy="52" r="4" fill="#ff5f57"/>
+  <circle cx="413" cy="52" r="4" fill="#febc2e"/>
+  <circle cx="426" cy="52" r="4" fill="#28c840"/>
+  <rect x="436" y="46" width="200" height="12" fill="white" rx="3"/>
+  <text x="536" y="55" text-anchor="middle" font-size="7" fill="#999" font-family="sans-serif">booking.com/flights</text>
+  <rect x="390" y="60" width="320" height="24" fill="#003580"/>
+  <text x="410" y="76" font-size="10" fill="white" font-weight="700" font-family="sans-serif">Booking.com</text>
+  <rect x="398" y="90" width="148" height="110" fill="white" rx="3" stroke="#d8d8d2" stroke-width="1"/>
+  <rect x="398" y="90" width="148" height="20" fill="#efede6" rx="3"/>
+  <text x="472" y="104" text-anchor="middle" font-size="9" font-weight="700" fill="#0f0f0f" font-family="sans-serif">◀  March 2026  ▶</text>
+  <text x="408" y="120" font-size="7.5" fill="#999" font-family="sans-serif">Su Mo Tu We Th Fr Sa</text>
+  <text x="408" y="133" font-size="7.5" fill="#333" font-family="sans-serif"> 1   2   3   4   5   6   7</text>
+  <text x="408" y="146" font-size="7.5" fill="#333" font-family="sans-serif"> 8   9  10  11  12  13  14</text>
+  <rect x="438" y="150" width="16" height="13" fill="#1a56c4" rx="2"/>
+  <text x="408" y="160" font-size="7.5" fill="#333" font-family="sans-serif">15  </text>
+  <text x="446" y="160" font-size="7.5" fill="white" font-weight="700" font-family="sans-serif">16</text>
+  <text x="463" y="160" font-size="7.5" fill="#333" font-family="sans-serif">  17  18  19  20  21</text>
+  <text x="408" y="173" font-size="7.5" fill="#333" font-family="sans-serif">22  23  24  25  26  27  28</text>
+  <text x="408" y="186" font-size="7.5" fill="#333" font-family="sans-serif">29  30  31</text>
+  <rect x="554" y="90" width="148" height="30" fill="white" rx="3" stroke="#d8d8d2" stroke-width="1"/>
+  <text x="562" y="109" font-size="8.5" fill="#999" font-family="sans-serif">어디로 가세요?</text>
+  <rect x="554" y="128" width="148" height="28" fill="#1a56c4" rx="3"/>
+  <text x="628" y="146" text-anchor="middle" font-size="9" fill="white" font-weight="700" font-family="sans-serif">검색</text>
+  <rect x="398" y="208" width="304" height="50" fill="#f8f8f8" rx="3" stroke="#d8d8d2" stroke-width="1"/>
+  <text x="404" y="220" font-size="7" fill="#999" font-family="sans-serif">최저가 달력</text>
+  <rect x="408" y="228" width="12" height="22" fill="#1a56c4" opacity="0.4"/>
+  <rect x="426" y="234" width="12" height="16" fill="#1a56c4" opacity="0.5"/>
+  <rect x="444" y="220" width="12" height="30" fill="#1a56c4" opacity="0.3"/>
+  <rect x="462" y="232" width="12" height="18" fill="#1a56c4" opacity="0.5"/>
+  <rect x="480" y="225" width="12" height="25" fill="#1a56c4" opacity="0.6"/>
+  <rect x="498" y="236" width="12" height="14" fill="#1a56c4" opacity="0.4"/>
+  <rect x="516" y="228" width="12" height="22" fill="#1a56c4" opacity="0.7"/>
+  <text x="410" y="256" font-size="6.5" fill="#666" font-family="sans-serif">₩82k  ₩71k  ₩95k  ₩75k  ₩88k  ₩68k  ₩79k</text>
+  <rect x="397" y="89" width="150" height="112" fill="none" stroke="#1a56c4" stroke-width="1.5" rx="3" stroke-dasharray="3,2"/>
+  <rect x="397" y="89" width="15" height="15" fill="#1a56c4" rx="3"/>
+  <text x="405" y="101" text-anchor="middle" font-size="9" fill="white" font-weight="700" font-family="sans-serif">1</text>
+  <rect x="553" y="89" width="150" height="32" fill="none" stroke="#1a56c4" stroke-width="1.5" rx="3" stroke-dasharray="3,2"/>
+  <rect x="553" y="89" width="15" height="15" fill="#1a56c4" rx="3"/>
+  <text x="561" y="101" text-anchor="middle" font-size="9" fill="white" font-weight="700" font-family="sans-serif">2</text>
+  <rect x="553" y="127" width="150" height="30" fill="none" stroke="#1a56c4" stroke-width="1.5" rx="3" stroke-dasharray="3,2"/>
+  <rect x="553" y="127" width="15" height="15" fill="#1a56c4" rx="3"/>
+  <text x="561" y="139" text-anchor="middle" font-size="9" fill="white" font-weight="700" font-family="sans-serif">3</text>
+  <rect x="397" y="207" width="306" height="52" fill="none" stroke="#1a56c4" stroke-width="1.5" rx="3" stroke-dasharray="3,2"/>
+  <rect x="397" y="207" width="15" height="15" fill="#1a56c4" rx="3"/>
+  <text x="405" y="219" text-anchor="middle" font-size="9" fill="white" font-weight="700" font-family="sans-serif">4</text>
+  <rect x="390" y="266" width="320" height="26" fill="#e8f4e8" rx="3" stroke="#60a860" stroke-width="1"/>
+  <text x="550" y="283" text-anchor="middle" font-size="9" font-weight="700" fill="#2a7a2a" font-family="sans-serif">달력 구조 ✓  ·  차트 수치 ✓  ·  번호로 클릭 ✓</text>
+</svg></div>
+
+<h3>문제 2 — 평가 자체가 현실과 달랐다</h3>
+<p>Mind2Web 같은 기존 벤치마크는 두 가지 구조적 문제를 안고 있었다:</p>
+<blockquote>
+<p><em>&quot;Existing benchmarks only focus on stepwise and offline evaluation...This approach may not fully account for the variety of viable strategies to accomplish a task.&quot;</em></p>
+</blockquote>
+<p><strong>오프라인 스냅샷</strong> — 실시간 웹이 아니라 캐시된 정적 페이지에서 평가. <strong>고정 경로 비교</strong> — 정해진 정답 경로와 step 단위로 비교하기 때문에, 다른 경로로 같은 결과에 도달해도 실패로 처리된다.</p>
+<div><svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:1.8rem 0;border-radius:6px;border:1px solid #d8d8d2;">
+  <rect width="720" height="320" fill="#f9f8f4"/>
+  <rect x="0" y="0" width="340" height="320" fill="#efede6"/>
+  <rect x="0" y="0" width="340" height="36" fill="#d8d5cc"/>
+  <text x="170" y="23" text-anchor="middle" font-size="11" font-weight="700" fill="#6b6b6b" font-family="sans-serif" letter-spacing="1">기존 평가 방식 (Mind2Web 류)</text>
+  <rect x="100" y="48" width="140" height="72" fill="white" rx="4" stroke="#bbb" stroke-width="1.5"/>
+  <rect x="100" y="48" width="140" height="18" fill="#ccc" rx="4"/>
+  <text x="170" y="61" text-anchor="middle" font-size="8" fill="#666" font-family="sans-serif">webpage_snapshot.html</text>
+  <rect x="110" y="72" width="120" height="7" fill="#ddd" rx="2"/>
+  <rect x="110" y="83" width="80" height="7" fill="#ddd" rx="2"/>
+  <rect x="110" y="94" width="100" height="7" fill="#ddd" rx="2"/>
+  <text x="222" y="110" font-size="18" fill="#aaa" font-family="sans-serif">❄</text>
+  <text x="170" y="134" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">정적 스냅샷 (실시간 웹 ❌)</text>
+  <text x="16" y="160" font-size="10" font-weight="700" fill="#444" font-family="sans-serif">정해진 정답 경로:</text>
+  <rect x="16"  y="168" width="52" height="22" fill="#d4edda" rx="4" stroke="#28a745" stroke-width="1"/>
+  <text x="42"  y="183" text-anchor="middle" font-size="8" fill="#155724" font-family="sans-serif">Step 1</text>
+  <text x="74"  y="182" font-size="11" fill="#28a745" font-family="sans-serif">→</text>
+  <rect x="90"  y="168" width="52" height="22" fill="#d4edda" rx="4" stroke="#28a745" stroke-width="1"/>
+  <text x="116" y="183" text-anchor="middle" font-size="8" fill="#155724" font-family="sans-serif">Step 2</text>
+  <text x="148" y="182" font-size="11" fill="#28a745" font-family="sans-serif">→</text>
+  <rect x="164" y="168" width="52" height="22" fill="#d4edda" rx="4" stroke="#28a745" stroke-width="1"/>
+  <text x="190" y="183" text-anchor="middle" font-size="8" fill="#155724" font-family="sans-serif">Step 3</text>
+  <text x="222" y="182" font-size="11" fill="#28a745" font-family="sans-serif">→</text>
+  <text x="252" y="183" font-size="13" fill="#28a745" font-family="sans-serif">✓</text>
+  <text x="16" y="210" font-size="10" font-weight="700" fill="#444" font-family="sans-serif">다른 경로 (결과는 동일):</text>
+  <rect x="16"  y="218" width="52" height="22" fill="#d4edda" rx="4" stroke="#28a745" stroke-width="1"/>
+  <text x="42"  y="233" text-anchor="middle" font-size="8" fill="#155724" font-family="sans-serif">Step 1</text>
+  <text x="74"  y="232" font-size="11" fill="#999" font-family="sans-serif">→</text>
+  <rect x="90"  y="218" width="52" height="22" fill="#f8d7da" rx="4" stroke="#dc3545" stroke-width="1"/>
+  <text x="116" y="233" text-anchor="middle" font-size="8" fill="#721c24" font-family="sans-serif">Step 2'</text>
+  <text x="148" y="232" font-size="11" fill="#999" font-family="sans-serif">→</text>
+  <rect x="164" y="218" width="52" height="22" fill="#d4edda" rx="4" stroke="#28a745" stroke-width="1"/>
+  <text x="190" y="233" text-anchor="middle" font-size="8" fill="#155724" font-family="sans-serif">Step 3</text>
+  <text x="222" y="232" font-size="11" fill="#999" font-family="sans-serif">→</text>
+  <text x="252" y="233" font-size="13" fill="#dc3545" font-family="sans-serif">✗</text>
+  <text x="170" y="260" text-anchor="middle" font-size="8.5" fill="#dc3545" font-family="sans-serif">결과는 같아도 경로가 다르면 실패 처리</text>
+  <rect x="16" y="274" width="308" height="38" fill="#fde8e8" rx="4" stroke="#e08080" stroke-width="1"/>
+  <text x="170" y="289" text-anchor="middle" font-size="9" font-weight="700" fill="#c03030" font-family="sans-serif">실시간 웹이 아닌 스냅샷 ❌</text>
+  <text x="170" y="304" text-anchor="middle" font-size="9" fill="#c03030" font-family="sans-serif">정해진 경로만 정답으로 인정 ❌</text>
+  <text x="360" y="168" text-anchor="middle" font-size="28" fill="#1a56c4" font-family="sans-serif">→</text>
+  <rect x="380" y="0" width="340" height="320" fill="white"/>
+  <rect x="380" y="0" width="340" height="36" fill="#1a56c4"/>
+  <text x="550" y="23" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif" letter-spacing="1">WebVoyager 평가</text>
+  <rect x="460" y="48" width="140" height="72" fill="white" rx="4" stroke="#1a56c4" stroke-width="1.5"/>
+  <rect x="460" y="48" width="140" height="18" fill="#1a56c4" rx="4"/>
+  <text x="530" y="61" text-anchor="middle" font-size="8" fill="white" font-family="sans-serif">실제 웹사이트 (실시간)</text>
+  <rect x="470" y="72" width="120" height="7" fill="#1a56c4" rx="2" opacity="0.3"/>
+  <rect x="470" y="83" width="80" height="7" fill="#1a56c4" rx="2" opacity="0.5"/>
+  <rect x="470" y="94" width="100" height="7" fill="#1a56c4" rx="2" opacity="0.4"/>
+  <circle cx="683" cy="57" r="5" fill="#28c840"/>
+  <text x="692" y="61" font-size="7" fill="#28c840" font-weight="700" font-family="sans-serif">LIVE</text>
+  <text x="530" y="134" text-anchor="middle" font-size="9" fill="#1a56c4" font-family="sans-serif">실시간 웹사이트 ✓</text>
+  <text x="390" y="160" font-size="10" font-weight="700" fill="#444" font-family="sans-serif">어떤 경로로도 성공 가능:</text>
+  <text x="393" y="180" font-size="8.5" fill="#888" font-family="sans-serif">경로 A</text>
+  <rect x="430" y="168" width="38" height="18" fill="#efede6" rx="3" stroke="#999" stroke-width="1"/>
+  <text x="449" y="181" text-anchor="middle" font-size="7.5" fill="#333" font-family="sans-serif">검색</text>
+  <text x="473" y="180" font-size="9" fill="#999" font-family="sans-serif">→</text>
+  <rect x="484" y="168" width="38" height="18" fill="#efede6" rx="3" stroke="#999" stroke-width="1"/>
+  <text x="503" y="181" text-anchor="middle" font-size="7.5" fill="#333" font-family="sans-serif">필터</text>
+  <text x="527" y="180" font-size="9" fill="#999" font-family="sans-serif">→</text>
+  <text x="546" y="181" font-size="12" fill="#28a745" font-family="sans-serif">✓</text>
+  <text x="393" y="208" font-size="8.5" fill="#888" font-family="sans-serif">경로 B</text>
+  <rect x="430" y="196" width="38" height="18" fill="#efede6" rx="3" stroke="#999" stroke-width="1"/>
+  <text x="449" y="209" text-anchor="middle" font-size="7.5" fill="#333" font-family="sans-serif">카테고리</text>
+  <text x="473" y="208" font-size="9" fill="#999" font-family="sans-serif">→</text>
+  <rect x="484" y="196" width="38" height="18" fill="#efede6" rx="3" stroke="#999" stroke-width="1"/>
+  <text x="503" y="209" text-anchor="middle" font-size="7.5" fill="#333" font-family="sans-serif">정렬</text>
+  <text x="527" y="208" font-size="9" fill="#999" font-family="sans-serif">→</text>
+  <text x="546" y="209" font-size="12" fill="#28a745" font-family="sans-serif">✓</text>
+  <text x="393" y="236" font-size="8.5" fill="#888" font-family="sans-serif">경로 C</text>
+  <rect x="430" y="224" width="80" height="18" fill="#efede6" rx="3" stroke="#999" stroke-width="1"/>
+  <text x="470" y="237" text-anchor="middle" font-size="7.5" fill="#333" font-family="sans-serif">검색 → 바로 선택</text>
+  <text x="515" y="236" font-size="9" fill="#999" font-family="sans-serif">→</text>
+  <text x="534" y="237" font-size="12" fill="#28a745" font-family="sans-serif">✓</text>
+  <rect x="578" y="162" width="122" height="82" fill="#e8f0fe" rx="6" stroke="#1a56c4" stroke-width="1.5"/>
+  <text x="639" y="180" text-anchor="middle" font-size="9" font-weight="700" fill="#1a56c4" font-family="sans-serif">GPT-4V 판정</text>
+  <text x="639" y="196" text-anchor="middle" font-size="8" fill="#444" font-family="sans-serif">"최종 결과가</text>
+  <text x="639" y="208" text-anchor="middle" font-size="8" fill="#444" font-family="sans-serif">맞았는가?"</text>
+  <line x1="546" y1="177" x2="578" y2="185" stroke="#1a56c4" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="546" y1="205" x2="578" y2="204" stroke="#1a56c4" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="534" y1="233" x2="578" y2="224" stroke="#1a56c4" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="639" y="228" text-anchor="middle" font-size="18" fill="#28a745" font-family="sans-serif">✓</text>
+  <text x="639" y="242" text-anchor="middle" font-size="7.5" fill="#888" font-family="sans-serif">인간 일치율 85.3%</text>
+  <rect x="390" y="276" width="320" height="38" fill="#e8f4e8" rx="4" stroke="#60a860" stroke-width="1"/>
+  <text x="550" y="291" text-anchor="middle" font-size="9" font-weight="700" fill="#2a7a2a" font-family="sans-serif">실제 웹에서 테스트 ✓</text>
+  <text x="550" y="306" text-anchor="middle" font-size="9" fill="#2a7a2a" font-family="sans-serif">경로 무관, 최종 결과로만 판단 ✓</text>
+</svg></div>
+
+<div class="ornament">· · ·</div>
+
+<h2>WebVoyager 시스템 설계</h2>
+<h3>Set-Label: 번호를 붙여 클릭하게 하다</h3>
+<p>스크린샷을 그냥 통째로 넣으면 모델이 &quot;어디를 클릭해야 하지?&quot;를 정확히 지시하기 어렵다. 좌표를 직접 출력하게 할 수도 있지만, 그러면 픽셀 정밀도 문제가 생긴다.</p>
+<p>WebVoyager의 해결책은 <strong>Set-Label 방법</strong>이다. <strong>GPT-4V-ACT</strong>라는 JavaScript 기반 툴을 써서, 페이지에서 인터랙티브 요소(버튼, 링크, 입력창 등)를 자동으로 감지해 <strong>번호가 붙은 박스</strong>를 오버레이한다.</p>
+<div class="callout">
+  <strong>Set-Label이 각 요소에서 추출하는 정보</strong>
+  <ul>
+    <li><strong>숫자 레이블</strong> — 1, 2, 3... (모델이 "Click [3]" 식으로 참조)</li>
+    <li><strong>텍스트 콘텐츠</strong> — 요소 내 텍스트</li>
+    <li><strong>요소 타입</strong> — button, link, input 등</li>
+    <li><strong>aria-label 속성</strong> — 접근성 레이블 (있는 경우)</li>
+  </ul>
+  박스 색깔은 <strong>검정색</strong>으로 고정. 실험해보니 여러 색 쓰는 것보다 단일 검정색이 성공률이 더 높았다고.
+</div>
+
+<p>덕분에 모델 출력이 명확해진다:</p>
+<pre><code>Click [3]
+Type [1]; New York to London
+Scroll [WINDOW]; down
+</code></pre>
+<p>Object detection 없이 JS 룰 기반으로 추출하기 때문에 가볍고 빠르다.</p>
+<h3>액션 스페이스: 딱 7가지</h3>
+<div class="callout">
+  <strong>7가지 액션</strong><br><br>
+  <code>Click [N]</code> — N번 요소 클릭 (링크, 버튼 등)<br><br>
+  <code>Type [N]; [텍스트]</code> — N번 입력창 선택 후 기존 내용 지우고 입력, 자동으로 Enter까지 누름<br><br>
+  <code>Scroll [N 또는 WINDOW]; [up/down]</code> — 특정 요소 or 전체 페이지 스크롤<br><br>
+  <code>Wait</code> — 페이지 로딩 대기<br><br>
+  <code>GoBack</code> — 이전 페이지로 이동<br><br>
+  <code>Google</code> — 구글 검색으로 새로 시작 (막혔을 때 탈출용)<br><br>
+  <code>ANSWER; [내용]</code> — 최종 답변 제출, 태스크 종료
+</div>
+
+<p><code>Google</code> 액션이 흥미롭다. 길을 잃었을 때 구글로 돌아가서 다시 시작하는 탈출구다. 사람도 웹에서 막히면 구글로 돌아가잖아.</p>
+<h3>ReAct 스타일 루프: 생각하고 행동하기</h3>
+<p>매 step마다 GPT-4V는 <strong>Thought</strong> (현재 상황 분석) → <strong>Action</strong> (실행할 액션 코드) 순서로 출력한다. 최대 <strong>15 step</strong> 까지 반복하고, 목표를 달성하면 <code>ANSWER</code>로 종료.</p>
+<div><svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:1.8rem 0;border-radius:6px;border:1px solid #d8d8d2;">
+  <rect width="720" height="220" fill="#f9f8f4"/>
+  <rect x="20" y="88" width="100" height="44" fill="#efede6" rx="6" stroke="#999" stroke-width="1.2"/>
+  <text x="70" y="106" text-anchor="middle" font-size="9" font-weight="700" fill="#444" font-family="sans-serif">태스크 입력</text>
+  <text x="70" y="120" text-anchor="middle" font-size="8" fill="#666" font-family="sans-serif">"최저가 항공권</text>
+  <text x="70" y="131" text-anchor="middle" font-size="8" fill="#666" font-family="sans-serif">찾아줘"</text>
+  <line x1="122" y1="110" x2="140" y2="110" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="142" y="72" width="110" height="76" fill="white" rx="6" stroke="#1a56c4" stroke-width="1.5"/>
+  <rect x="142" y="72" width="110" height="20" fill="#1a56c4" rx="6"/>
+  <text x="197" y="86" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="sans-serif">관측 (Observation)</text>
+  <rect x="152" y="98" width="90" height="36" fill="#efede6" rx="3"/>
+  <text x="197" y="111" text-anchor="middle" font-size="7.5" fill="#666" font-family="sans-serif">스크린샷</text>
+  <text x="197" y="123" text-anchor="middle" font-size="7.5" fill="#1a56c4" font-family="sans-serif">+ 번호 레이블</text>
+  <text x="197" y="158" text-anchor="middle" font-size="7.5" fill="#999" font-family="sans-serif">1024×768px</text>
+  <line x1="254" y1="110" x2="272" y2="110" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="274" y="72" width="110" height="76" fill="white" rx="6" stroke="#1a56c4" stroke-width="1.5"/>
+  <rect x="274" y="72" width="110" height="20" fill="#1a56c4" rx="6"/>
+  <text x="329" y="86" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="sans-serif">GPT-4V 추론</text>
+  <text x="329" y="106" text-anchor="middle" font-size="8" fill="#333" font-family="sans-serif">Thought:</text>
+  <text x="329" y="118" text-anchor="middle" font-size="7.5" fill="#666" font-family="sans-serif">"검색창이 [1]번에</text>
+  <text x="329" y="129" text-anchor="middle" font-size="7.5" fill="#666" font-family="sans-serif">있으니 입력하자"</text>
+  <text x="329" y="143" text-anchor="middle" font-size="8" fill="#333" font-family="sans-serif">Action:</text>
+  <text x="329" y="155" text-anchor="middle" font-size="7.5" fill="#1a56c4" font-family="sans-serif">Type [1]; Seoul</text>
+  <line x1="386" y1="110" x2="404" y2="110" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="406" y="72" width="110" height="76" fill="white" rx="6" stroke="#1a56c4" stroke-width="1.5"/>
+  <rect x="406" y="72" width="110" height="20" fill="#1a56c4" rx="6"/>
+  <text x="461" y="86" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="sans-serif">Selenium 실행</text>
+  <text x="461" y="106" text-anchor="middle" font-size="8" fill="#444" font-family="sans-serif">브라우저에서</text>
+  <text x="461" y="118" text-anchor="middle" font-size="8" fill="#444" font-family="sans-serif">실제 실행</text>
+  <text x="461" y="138" text-anchor="middle" font-size="18" fill="#1a56c4" font-family="sans-serif">🌐</text>
+  <line x1="518" y1="110" x2="536" y2="110" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="538" y="72" width="110" height="76" fill="white" rx="6" stroke="#999" stroke-width="1.2" stroke-dasharray="4,2"/>
+  <text x="593" y="95" text-anchor="middle" font-size="8" font-weight="700" fill="#444" font-family="sans-serif">다음 step</text>
+  <text x="593" y="109" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">새 스크린샷</text>
+  <text x="593" y="121" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">→ 반복</text>
+  <text x="593" y="139" text-anchor="middle" font-size="7.5" fill="#999" font-family="sans-serif">(최대 15회)</text>
+  <path d="M 593 150 L 593 190 L 197 190 L 197 150" stroke="#1a56c4" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arr-blue)"/>
+  <rect x="538" y="20" width="110" height="30" fill="#e8f4e8" rx="6" stroke="#28a745" stroke-width="1.2"/>
+  <text x="593" y="39" text-anchor="middle" font-size="9" font-weight="700" fill="#155724" font-family="sans-serif">ANSWER 출력 → 종료</text>
+  <line x1="593" y1="72" x2="593" y2="52" stroke="#28a745" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="600" y="66" font-size="7.5" fill="#28a745" font-family="sans-serif">완료</text>
+  <defs>
+    <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#999"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#1a56c4"/>
+    </marker>
+    <marker id="arr-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#28a745"/>
+    </marker>
+  </defs>
+</svg></div>
+
+<p>GPT-4V에 들어가는 입력 형식은 수식으로 표현하면:</p>
+<p><code>ct = (o₁, a₁, ..., ot₋₁, at₋₁, ot, I)</code></p>
+<ul>
+<li><code>oi</code> = 각 step의 스크린샷 (observation)</li>
+<li><code>ai</code> = 이전 Thought + Action 텍스트</li>
+<li><code>I</code> = 유저의 태스크 지시문</li>
+</ul>
+<h3>Context Clipping: 15장을 다 넣을 순 없다</h3>
+<p>15 step을 돌면 스크린샷 15장이 쌓인다. 각 스크린샷이 1024×768px이고, 15 step 풀 트레젝토리를 처리하려면 <strong>7,000+ 토큰</strong>이 필요하다. GPT-4V의 context window에 쑤셔 넣으면 비용 폭탄이고, 오픈소스 모델(LLaVA의 4096 토큰 한계)로는 애초에 불가능하다.</p>
+<p>해결책: <strong>Context Clipping</strong> — 스크린샷은 최근 3장만, Thought+Action 텍스트는 전부 유지.</p>
+<div><svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:1.8rem 0;border-radius:6px;border:1px solid #d8d8d2;">
+  <rect width="720" height="190" fill="#f9f8f4"/>
+  <text x="360" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="sans-serif">Context Clipping</text>
+  <text x="16" y="60" font-size="9" font-weight="700" fill="#444" font-family="sans-serif">스크린샷</text>
+  <text x="16" y="73" font-size="8" fill="#888" font-family="sans-serif">(관측값)</text>
+  <rect x="90"  y="45" width="32" height="36" fill="#e0e0e0" rx="3" stroke="#ccc" stroke-width="1"/>
+  <text x="106" y="67" text-anchor="middle" font-size="7" fill="#bbb" font-family="sans-serif">1</text>
+  <rect x="128" y="45" width="32" height="36" fill="#e0e0e0" rx="3" stroke="#ccc" stroke-width="1"/>
+  <text x="144" y="67" text-anchor="middle" font-size="7" fill="#bbb" font-family="sans-serif">2</text>
+  <rect x="166" y="45" width="32" height="36" fill="#e0e0e0" rx="3" stroke="#ccc" stroke-width="1"/>
+  <text x="182" y="67" text-anchor="middle" font-size="7" fill="#bbb" font-family="sans-serif">3</text>
+  <text x="220" y="67" text-anchor="middle" font-size="10" fill="#ccc" font-family="sans-serif">···</text>
+  <rect x="244" y="45" width="32" height="36" fill="#e0e0e0" rx="3" stroke="#ccc" stroke-width="1"/>
+  <text x="260" y="67" text-anchor="middle" font-size="7" fill="#bbb" font-family="sans-serif">11</text>
+  <rect x="282" y="45" width="32" height="36" fill="#e0e0e0" rx="3" stroke="#ccc" stroke-width="1"/>
+  <text x="298" y="67" text-anchor="middle" font-size="7" fill="#bbb" font-family="sans-serif">12</text>
+  <rect x="88" y="43" width="228" height="40" fill="none" stroke="#dc3545" stroke-width="1" rx="4" stroke-dasharray="4,2"/>
+  <text x="202" y="96" text-anchor="middle" font-size="8" fill="#dc3545" font-family="sans-serif">삭제 (메모리 절약)</text>
+  <rect x="330" y="45" width="32" height="36" fill="#dbeafe" rx="3" stroke="#1a56c4" stroke-width="1.5"/>
+  <text x="346" y="61" text-anchor="middle" font-size="7" fill="#1a56c4" font-weight="700" font-family="sans-serif">13</text>
+  <text x="346" y="72" text-anchor="middle" font-size="6" fill="#1a56c4" font-family="sans-serif">유지</text>
+  <rect x="368" y="45" width="32" height="36" fill="#dbeafe" rx="3" stroke="#1a56c4" stroke-width="1.5"/>
+  <text x="384" y="61" text-anchor="middle" font-size="7" fill="#1a56c4" font-weight="700" font-family="sans-serif">14</text>
+  <text x="384" y="72" text-anchor="middle" font-size="6" fill="#1a56c4" font-family="sans-serif">유지</text>
+  <rect x="406" y="45" width="32" height="36" fill="#dbeafe" rx="3" stroke="#1a56c4" stroke-width="1.5"/>
+  <text x="422" y="61" text-anchor="middle" font-size="7" fill="#1a56c4" font-weight="700" font-family="sans-serif">15</text>
+  <text x="422" y="72" text-anchor="middle" font-size="6" fill="#1a56c4" font-family="sans-serif">유지</text>
+  <text x="376" y="96" text-anchor="middle" font-size="8" fill="#1a56c4" font-family="sans-serif">최근 3개만 유지</text>
+  <text x="16" y="130" font-size="9" font-weight="700" fill="#444" font-family="sans-serif">Thought</text>
+  <text x="16" y="143" font-size="9" font-weight="700" fill="#444" font-family="sans-serif">+ Action</text>
+  <rect x="90"  y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="106" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">1</text>
+  <rect x="128" y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="144" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">2</text>
+  <rect x="166" y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="182" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">3</text>
+  <text x="220" y="134" text-anchor="middle" font-size="10" fill="#28a745" font-family="sans-serif">···</text>
+  <rect x="244" y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="260" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">11</text>
+  <rect x="282" y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="298" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">12</text>
+  <rect x="330" y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="346" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">13</text>
+  <rect x="368" y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="384" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">14</text>
+  <rect x="406" y="115" width="32" height="28" fill="#d1fae5" rx="3" stroke="#28a745" stroke-width="1"/>
+  <text x="422" y="133" text-anchor="middle" font-size="7" fill="#155724" font-family="sans-serif">15</text>
+  <text x="260" y="157" text-anchor="middle" font-size="8" fill="#28a745" font-family="sans-serif">전체 15개 모두 유지</text>
+  <text x="580" y="72" text-anchor="middle" font-size="9" fill="#444" font-family="sans-serif">"뭘 했는지"는</text>
+  <text x="580" y="85" text-anchor="middle" font-size="9" fill="#444" font-family="sans-serif">전부 기억</text>
+  <text x="580" y="105" text-anchor="middle" font-size="9" fill="#444" font-family="sans-serif">"화면이 어떻게</text>
+  <text x="580" y="118" text-anchor="middle" font-size="9" fill="#444" font-family="sans-serif">생겼는지"는</text>
+  <text x="580" y="131" text-anchor="middle" font-size="9" fill="#444" font-family="sans-serif">최근 3개만</text>
+</svg></div>
+
+<p>왜 이게 합리적인가? <strong>&quot;뭘 했는지&quot; (행동 이력)는 전부 기억해야 루프를 안 돈다.</strong> 하지만 화면 스크린샷은 최근 것만 있어도 지금 어디 있는지 파악하는 데 충분하다. 오래된 스크린샷은 이미 지나간 페이지니까.</p>
+<p>단, 이로 인한 부작용도 있다. 논문이 직접 인정하는 내용: <em>&quot;agent tends to repeat its previous mistakes due to the input clipping&quot;</em> — 너무 오래전에 했던 실수는 기억 못 해서 같은 실수를 반복하는 경우가 생긴다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>벤치마크: 어떻게 643개 태스크를 만들었나</h2>
+<p>WebVoyager는 자체 벤치마크를 함께 제안한다. <strong>15개 실제 웹사이트, 643개 태스크</strong>. 로그인이나 CAPTCHA가 필요 없는 사이트들만 선택했다.</p>
+<p><strong>15개 사이트:</strong> Allrecipes, Amazon, Apple, ArXiv, BBC News, Booking, Cambridge Dictionary, Coursera, ESPN, GitHub, Google Flights, Google Maps, Google Search, Huggingface, Wolfram Alpha</p>
+<p>태스크를 만든 방법이 흥미롭다. <strong>3단계 Self-Instruct 방식:</strong></p>
+<p><strong>Stage 1 — 시드 태스크 수집:</strong> Google Flights, Google Maps, Google Search, Booking, Wolfram Alpha 5개 사이트에 대해 Mind2Web에서 태스크를 샘플링하고 수동으로 편집해 시드 태스크 풀을 만든다.</p>
+<p><strong>Stage 2 — 사람 검증 생성:</strong> 시드 태스크를 in-context 예시로 주고 GPT-4 Turbo에게 사이트당 약 100개 태스크를 생성하게 한다 (20번 반복). 사람이 직접 검토하고 수정해서 Task Pool에 추가.</p>
+<p><strong>Stage 3 — 다양성 확보 생성:</strong> Stage 2 풀에서 다양한 예시를 샘플링해 GPT-4 Turbo에게 추가 생성. 직접 검증 후 추가. 결과: <strong>사이트당 40개 이상 = 총 643개</strong>.</p>
+<p>태스크 다양성은 임베딩으로 검증했다. <code>all-mpnet-base-v2</code> 모델로 643개 태스크를 임베딩해 유사도를 계산하면:</p>
+<div class="callout">
+  <strong>다양성 검증 결과 (전체 206,403 쌍)</strong>
+  <ul>
+    <li>유사도 &gt; 0.8인 쌍: <strong>49쌍</strong></li>
+    <li>유사도 0.7~0.8인 쌍: <strong>140쌍</strong></li>
+    <li>유사도 &lt; 0.6인 쌍: <strong style="background:#d4f7d4;padding:2px 6px;border-radius:3px;">99.68%</strong></li>
+  </ul>
+  거의 모든 태스크가 서로 충분히 다르다.
+</div>
+
+<p>정답 주석도 두 가지 유형으로 나눈다:</p>
+<ul>
+<li><strong>&quot;Golden&quot; Answers (22.3%)</strong> — 안정적이고 짧은 정답이 있는 경우 (예: &quot;파이썬 공식 문서 URL은?&quot;)</li>
+<li><strong>&quot;Possible&quot; Answers (77.7%)</strong> — 실시간 데이터, 열린 질문, 여러 정답이 가능한 경우 (예: &quot;내일 서울 날씨는?&quot;)</li>
+</ul>
+<div class="ornament">· · ·</div>
+
+<h2>자동 평가: GPT-4V를 심사위원으로</h2>
+<p>643개 태스크를 매번 사람이 채점하는 건 비현실적이다. WebVoyager의 혁신 중 하나는 <strong>GPT-4V를 자동 평가자</strong>로 활용한 것이다.</p>
+<p>GPT-4V 심사위원에게 주는 입력:</p>
+<ol>
+<li><strong>태스크 지시문</strong></li>
+<li><strong>에이전트 최종 응답 텍스트</strong></li>
+<li><strong>마지막 k장의 스크린샷</strong> (트레젝토리 끝부분)</li>
+</ol>
+<p>k를 얼마로 설정하냐에 따라 성능이 달라진다:</p>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">k (스크린샷 수)</th>
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">성공률</th>
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">일관성</th>
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">인간 일치율</th>
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">Kappa (κ)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">k=1</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">47.7%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">75.3%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">51%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">0.51</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">k=2</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">55.3%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">79.7%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">59%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">0.59</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">k=3</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">54.3%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">81.3%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">62%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">0.62</td>
+    </tr>
+    <tr style="background:#fffbf0;">
+      <td style="padding:0.55rem 0.9rem;text-align:center;"><strong>전체 트레젝토리</strong></td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;"><strong style="background:#fef3c7;padding:2px 5px;border-radius:3px;">58.3%</strong></td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;"><strong style="background:#fef3c7;padding:2px 5px;border-radius:3px;">85.3%</strong></td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;"><strong style="background:#fef3c7;padding:2px 5px;border-radius:3px;">70%</strong></td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;"><strong style="background:#fef3c7;padding:2px 5px;border-radius:3px;">0.70</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>전체 트레젝토리를 줬을 때 κ=0.70으로 가장 높다. 사람끼리의 inter-annotator agreement도 κ=0.70이었다 — 즉 <strong>GPT-4V 평가자가 사람 수준의 판단력</strong>을 보였다는 것이다.</p>
+<p>평가 온도는 0으로 설정해 결정론적 판정을 유도했다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>실험 결과: 웹사이트별 전체 수치</h2>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.55rem 0.8rem;text-align:left;border-bottom:2px solid #ddd;">웹사이트</th>
+      <th style="padding:0.55rem 0.8rem;text-align:center;border-bottom:2px solid #ddd;">GPT-4 All Tools</th>
+      <th style="padding:0.55rem 0.8rem;text-align:center;border-bottom:2px solid #ddd;">텍스트만 (WebVoyager)</th>
+      <th style="padding:0.55rem 0.8rem;text-align:center;border-bottom:2px solid #ddd;">WebVoyager (멀티모달)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Allrecipes</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">11.1%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#fef3c7;padding:1px 4px;border-radius:3px;">55.6%</strong></td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">53.3%</td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Amazon</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">17.1%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">31.7%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">58.5%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Apple</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">44.2%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">34.9%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">65.1%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">ArXiv</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">14.0%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">32.6%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">51.2%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">BBC News</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">9.5%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">45.2%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">61.9%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Booking</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">22.7%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:1px 4px;border-radius:3px;">2.3%</strong></td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">43.2%</td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Cambridge Dictionary</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">25.6%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">62.8%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">65.1%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Coursera</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">31.0%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">23.8%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">73.8%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">ESPN</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">31.8%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">36.4%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">38.6%</td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">GitHub</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">48.8%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">61.0%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">63.4%</td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Google Flights</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">53.7%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">61.0%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">70.7%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Google Maps</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:1px 4px;border-radius:3px;">2.4%</strong></td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#ffd6d6;padding:1px 4px;border-radius:3px;">7.1%</strong></td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">59.5%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Google Search</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">60.5%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">67.4%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">76.7%</strong></td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Huggingface</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">37.2%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">20.9%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">44.2%</td></tr>
+    <tr><td style="padding:0.5rem 0.8rem;border-bottom:1px solid #eee;">Wolfram Alpha</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">52.2%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">58.7%</td><td style="padding:0.5rem 0.8rem;text-align:center;border-bottom:1px solid #eee;">63.0%</td></tr>
+    <tr style="background:#fffbf0;font-weight:bold;">
+      <td style="padding:0.55rem 0.8rem;"><strong>전체 평균</strong></td>
+      <td style="padding:0.55rem 0.8rem;text-align:center;">30.8%</td>
+      <td style="padding:0.55rem 0.8rem;text-align:center;">40.1%</td>
+      <td style="padding:0.55rem 0.8rem;text-align:center;"><strong style="background:#fef3c7;padding:2px 6px;border-radius:3px;">59.1%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>테이블에서 눈에 띄는 것들:</p>
+<p><strong>Google Maps가 압도적.</strong> GPT-4 All Tools 2.4%, 텍스트만 7.1% → WebVoyager 59.5%. 지도는 시각 정보가 핵심인 UI라 텍스트 기반 에이전트가 완전히 무력화되는 대표 사례다.</p>
+<p><strong>Booking.com의 텍스트 전용 2.3%.</strong> 날짜 선택, 필터, 가격 달력 — 전부 시각적 인터페이스다. 텍스트만으로는 거의 불가능.</p>
+<p><strong>Allrecipes는 텍스트가 오히려 앞선다 (55.6% vs 53.3%).</strong> 레시피 사이트는 텍스트가 풍부하고 구조가 단순해서, 스크린샷이 없어도 HTML 텍스트만으로 잘 작동한다. <em>&quot;Since WebVoyager mostly relies on web screenshots for decision-making, dense text might not be easily recognizable from the image.&quot;</em></p>
+<h3>다른 LLM 백본으로 돌리면?</h3>
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.87rem;">
+  <thead>
+    <tr style="background:#f5f5f0;">
+      <th style="padding:0.6rem 0.9rem;text-align:left;border-bottom:2px solid #ddd;">백본 모델</th>
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">GPT-4V 평가</th>
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">Claude-3-Opus 평가</th>
+      <th style="padding:0.6rem 0.9rem;text-align:center;border-bottom:2px solid #ddd;">GPT-4o 평가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">GPT-4V</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">57.1%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">55.1%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">63.0%</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;border-bottom:1px solid #eee;">Claude-3-Opus</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">52.8%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">61.6%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;border-bottom:1px solid #eee;">55.4%</td>
+    </tr>
+    <tr>
+      <td style="padding:0.55rem 0.9rem;">GPT-4o</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;">55.5%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;">54.9%</td>
+      <td style="padding:0.55rem 0.9rem;text-align:center;"><strong style="background:#d4f7d4;padding:1px 4px;border-radius:3px;">64.1%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>평가자 편향도 발견됐다:</p>
+<blockquote>
+<p><em>&quot;GPT-4o exhibits a more lenient attitude towards task performance results, while GPT-4V tends to be relatively strict...Claude-3-Opus demonstrates a clear preference for its own results.&quot;</em></p>
+</blockquote>
+<p>GPT-4o는 후하게 채점하고, Claude-3-Opus는 자기가 한 태스크를 더 좋게 평가하는 경향이 있다. AI를 심사위원으로 쓸 때 생기는 흥미로운 편향 문제다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>오류 분석: 실패 300개를 뜯어보면</h2>
+<p>실패한 태스크 300개를 수동으로 분류한 결과:</p>
+<div class="callout">
+  <strong>오류 유형 분포</strong><br><br>
+  <strong style="background:#ffd6d6;padding:2px 6px;border-radius:3px;">44.4% — Navigation Stuck</strong><br>
+  길을 잃고 같은 행동을 반복하는 케이스. 세 가지 세부 패턴이 있다:<br>
+  ① 부정확한 검색어 → 무관한 결과에 압도 → 다른 결과를 계속 탐색하거나 그냥 기다림<br>
+  ② 작은 스크롤 영역 → 올바른 스크롤 위치를 못 찾아 쓸모없는 스크롤 반복<br>
+  ③ 스크롤 방향 혼동 → 위/아래 결정 못 하고 이전 실수 반복 (context clipping 부작용)<br><br>
+  <strong style="background:#ffe8cc;padding:2px 6px;border-radius:3px;">24.8% — Visual Grounding 오류</strong><br>
+  화면을 잘못 읽는 케이스:<br>
+  ① 인식 실패 — 발음 기호, 수식 기호 등 비표준 패턴 못 읽음<br>
+  ② 미세한 변화 감지 실패 — 실행은 됐는데 화면이 조금만 바뀌어서 "실패했다"고 착각<br>
+  ③ 인접 요소 혼동 — 달력 숫자를 Set-Label 번호로 착각하는 등 근처 요소를 헷갈림<br><br>
+  <strong style="background:#fef3c7;padding:2px 6px;border-radius:3px;">21.8% — Hallucination</strong><br>
+  없는 정보를 만들어내거나 태스크를 대충 완료하는 케이스:<br>
+  ① 태스크 일부 누락 — "가장 싼" 걸 찾아야 하는데 "싼 것"으로 만족, 정렬 단계 스킵<br>
+  ② 유효하지만 잘못된 액션 — 엉뚱한 입력창에 텍스트 입력 (에러는 안 뜨지만 결과가 틀림)<br><br>
+  <strong style="background:#f0f0f0;padding:2px 6px;border-radius:3px;">9.0% — Prompt Misalignment</strong><br>
+  출력 형식 문제:<br>
+  ① 액션 없이 Thought만 출력<br>
+  ② `ANSWER`를 너무 일찍 써서 조기 종료 (심지어 태스크가 미완성임을 스스로 인정하면서도 종료)
+</div>
+
+<p>가장 많은 실패(44.4%)가 &quot;Navigation Stuck&quot;이라는 게 의미심장하다. 사람은 막히면 전략을 바꾼다 — 검색어를 수정하거나, 뒤로 가거나, <code>Google</code> 액션으로 새로 시작하는 등. 에이전트는 이 <strong>메타인지적 탈출 전략</strong>이 아직 부족하다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>오픈소스 모델로는 왜 어려운가</h2>
+<p>논문이 GPT-4V만 쓴 이유를 명확히 밝힌다:</p>
+<p><strong>이미지 해상도 문제:</strong> LLaVA 같은 오픈소스 LMM들은 입력 이미지를 224×224 또는 336×336으로 축소한다. WebVoyager는 1024×768 스크린샷을 쓰는데, 축소하면 <strong>작은 글씨를 읽을 수 없다</strong>.</p>
+<p><strong>컨텍스트 길이 문제:</strong> LLaVA의 최대 컨텍스트가 4096 토큰인데, 15 step 트레젝토리를 처리하려면 <strong>7,000+ 토큰</strong>이 필요하다. 처음부터 불가능하다.</p>
+<p>이게 2024년 초 기준 웹 에이전트가 GPT-4V에 강하게 묶여 있던 이유였다.</p>
+<div class="ornament">· · ·</div>
+
+<h2>의의: 두 가지 기여</h2>
+<p>WebVoyager가 남긴 것은 크게 두 가지다.</p>
+<p><strong>첫째, 시각 정보가 결정적이라는 실증.</strong> 텍스트만 쓴 WebVoyager 40.1% → 멀티모달 WebVoyager 59.1%. <strong>+19%p</strong>. 특히 Google Maps처럼 지도·시각 UI가 핵심인 사이트에서는 텍스트 에이전트와의 격차가 압도적이다(7.1% vs 59.5%).</p>
+<p><strong>둘째, 실제 웹 + 결과 기반 평가의 표준 제시.</strong> 정적 스냅샷과 step 단위 비교 대신, 실시간 웹에서 최종 결과만으로 판단하는 방식. GPT-4V를 심사위원으로 활용하는 자동 평가 프로토콜은 이후 웹 에이전트 연구의 평가 기준에 직접적인 영향을 줬다.</p>
+<p>남은 한계들:</p>
+<ul>
+<li>드래그, 파일 업로드 같은 복잡한 인터랙션 미지원</li>
+<li>로그인, CAPTCHA 처리 불가</li>
+<li>Navigation Stuck이 가장 큰 실패 원인 — 막혔을 때 전략 전환 능력 부족</li>
+<li>오픈소스 모델로 재현 불가 (해상도 + 컨텍스트 한계)</li>
+</ul>
+<blockquote>
+<p><em>&quot;There is still substantial room for further improvement towards generalist agents for the web.&quot;</em></p>
+</blockquote>
+<p>이 한계들을 하나씩 해결해 나간 것이 이후 SeeAct, Computer-Use, Operator로 이어진다.</p>
+<div class="footnote">
+  논문: <a href="https://arxiv.org/abs/2401.13919">WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models</a> (ACL 2024) · Hongliang He et al.
+</div>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>

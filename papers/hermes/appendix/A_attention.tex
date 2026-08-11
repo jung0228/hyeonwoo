@@ -1,0 +1,62 @@
+% \section{More Attention Visualization}
+% \label{app:attn_vis}
+
+% \begin{figure*}[htbp]
+% \centering
+% \includegraphics[width=0.95\textwidth]{figures/vis/sampled_layers_summary_4k.pdf}
+% \captionof{figure}{
+% Visualization of the average attention weights of video tokens in \llava within the sliding window of 4,000 video tokens.
+% }
+% \end{figure*}
+
+% \begin{figure*}[htbp]
+% \centering
+% \includegraphics[width=0.95\textwidth]{figures/vis/sampled_layers_summary_6k.pdf}
+% \captionof{figure}{
+% Visualization of the average attention weights of video tokens in \llava within the sliding window of 6,000 video tokens.
+% }
+% \end{figure*}
+
+% \begin{figure*}[htbp]
+% \centering
+% \includegraphics[width=0.95\textwidth]{figures/vis/sampled_layers_summary_1w.pdf}
+% \captionof{figure}{
+% Visualization of the average attention weights of video tokens in \llava within the sliding window of 10,000 video tokens.
+% }
+% \end{figure*}
+
+\section{More Attention Visualization}
+We provide more detailed attention visualization in~\cref{fig:more_vis} under different sliding window sizes, showing that the observed attention patterns consistently hold across varying window lengths, thus confirming the generality of the findings in~\cref{sec: investigation}.
+
+\label{app:attn_vis}
+
+\begin{figure*}[htbp]
+\centering
+
+\begin{subfigure}{0.95\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/vis/sampled_layers_summary_4k.pdf}
+    \caption{Sliding window of 4,000 video tokens}
+\end{subfigure}
+
+\vspace{0.8em}
+
+\begin{subfigure}{0.95\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/vis/sampled_layers_summary_6k.pdf}
+    \caption{Sliding window of 6,000 video tokens}
+\end{subfigure}
+
+\vspace{0.8em}
+
+\begin{subfigure}{0.95\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/vis/sampled_layers_summary_1w.pdf}
+    \caption{Sliding window of 10,000 video tokens}
+\end{subfigure}
+
+\caption{
+Visualization of the average attention weights of video tokens in \llava under different sliding window sizes.
+}
+\label{fig:more_vis}
+\end{figure*}

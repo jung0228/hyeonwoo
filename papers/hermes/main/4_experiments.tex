@@ -1,0 +1,69 @@
+\section{Experiments}
+\label{sec:experiments}
+
+\subsection{Experimental Setup}
+\paragraph{Benchmarks.}
+We evaluate \hermes on diverse streaming and offline benchmarks. For streaming understanding, we use StreamingBench~\cite{lin2024streamingbenchassessinggapmllms}, OVO-Bench~\cite{li2025ovobenchfarvideollmsrealworld} and RVS (including RVS-Ego and EVS-Movie)~\cite{zhang2024flashvstreammemorybasedrealtimeunderstanding}.
+%These benchmarks follow the streaming video QA paradigm, limiting the available visual context to only the video content before the current timestamp. Additionally, unpredictable user questions occur at any time.
+For offline video evaluation, we adopt one short video dataset MVBench~\cite{li2024mvbenchcomprehensivemultimodalvideo}, along with two long video datasets, VideoMME~\cite{fu2025videommefirstevercomprehensiveevaluation} and Egoschema~\cite{mangalam2023egoschemadiagnosticbenchmarklongform}. We conduct evaluation on the official dev split of Egoschema and report VideoMME results without subtitles. Our benchmark selection covers both multiple-choice and open-ended questions as QA form. The details of utilized benchmarks are demonstrated in~\cref{app:details_of_benchmarks}.
+
+\paragraph{Models.}
+To further verify the broad applicability of our method, we select two popular open-source MLLM series, LLaVA-OneVision (LLaVA-OV)~\cite{li2024llavaonevisioneasyvisualtask} and Qwen2.5-VL~\cite{bai2025qwen25vltechnicalreport}. Each is tested across two different parameter scales, covering a large range from 0.5B to 32B. For Qwen2.5-VL, we maintain its native dynamic resolution on video input, ensuring a fair comparison with the base model.
+
+\paragraph{Implementation Details.}
+For evaluating \hermes across all benchmarks, each video is encoded and processed chunk by chunk, with 16 frames per chunk, and sequentially prefilling the backbone LLM. Then, token compression is triggered once the predefined memory budget is exceeded.
+
+For the layer partition, we follow the mechanistic investigations presented in ~\cref{sec: investigation}: 10\% shallow, 60\% middle and 30\% deep layers. A more comprehensive analysis of attention behaviors as supportive evidence can be found in~\cref{fig:more_vis}. The cross-layer memory smoothing hyperparameter $\lambda$ proposed in~\cref{sec: smoothing} is layer-dependent, with detailed configurations reported in~\cref{app:smooth_config}.
+
+
+All evaluations are conducted using FP16 mixed precision and efficiency tests are conducted on a single A800 GPU, consistent with prior works~\cite{di2025streamingvideoquestionansweringincontext, chen2025streamingtomstreamingtokencompression}. Greedy decoding is used to generate deterministic outputs. Accuracy evaluations can be completed on one H200 GPU.
+
+\subsection{Main Results}
+\paragraph{Streaming Video Understanding}
+\input{tables/streaming_main}
+\input{tables/rvs_efficiency}
+
+Extensive experiments on streaming benchmarks reveal the key findings: 
+
+\noindent
+(1) \textit{\hermes outperforms on multiple-choice streaming datasets, showing exceptional real-time understanding and backward tracing capabilities}.
+As shown in~\cref{tab:streaming_main}, it achieves state-of-the-art performance on StreamingBench and OVO-Bench, significantly surpassing base models and training-free baselines. Built on \qwen, \hermes reaches 79.44\% and 59.21\% accuracy using only 4K video tokens, improving over \qwen by 6.13\% and 6.93\%, while outperforming all 7B-scale open-source online and offline models. Full results on StreamingBench and OVO-Bench are shown in~\cref{tab:streamingbench_full} and~\cref{tab:ovobench_full} respectively.
+
+
+\noindent
+(2) \textit{\hermes excels on open-ended streaming tasks, showing fine-grained temporal and spatial comprehension}. On RVS-Ego and RVS-Movie (\cref{tab:rvs}), we evaluate the model answer by GPT-3.5-turbo-0125 on accuracy and score (1–5 scale), consistent with compared baselines.
+\hermes consistently surpasses all prior training-free methods and improves accuracy by up to 11.4\% over the base model with uniformly sampled 64 frames. These extensive experiments demonstrate \hermes's strong abilities in various streaming tasks, as well as its general applicability across foundation models. Moreover, we provide case studies from RVS benchmark, showing finer-grained temporal (shown in~\cref{fig:case_temporal}) and spatial understanding (shown in ~\cref{fig:case_spatial}) abilities of \hermes than its base model.
+
+\paragraph{Offline Video Understanding}
+\input{tables/offline_main}
+The results presented in~\cref{tab:offline_main} demonstrate the \textit{competitive performance of \hermes across multiple temporal scales on offline benchmarks}, compared to the base model and other training-free methods. Under a limited budget of video tokens, \hermes achieves performance that is better than or comparable to the corresponding base models. \hermes based on \llava surpasses the base model on long video datasets Egoschema and VideoMME, achieving 60.29\% and 58.85\%, respectively, and attains 56.92\% accuracy on the short video dataset MVBench, which is comparable to the base model's 57.02\%.
+
+
+\subsection{Efficiency Analysis}
+\input{figures_tex/efficency_comapre}
+To evaluate the efficiency of \hermes, we utilize three metrics: peak GPU memory usage, Time to First Token (TTFT), defined as the latency measured from the moment a user inputs a query to the decoding of the first output token, and Time Per Output Token (TPOT) across varying numbers of input frames. All experiments are conducted using \llava as the base model with a 4K-token memory budget. ~\cref{fig:efficency_compare} shows the comparison of memory usage and TTFT among \hermes and representative streaming methods. Unlike Dispider and LiveVLM, \hermes consistently maintains stable memory usage and TTFT as frames increase. Notably, under the 256-frame setting, \hermes achieves 1.04$\times$ reduction in peak memory compared to the prior SOTA LiveVLM, while achieving an impressive 10$\times$ speedup in TTFT over the prior SOTA StreamingTOM.
+
+We further examine the efficiency of \hermes under varying encoded video chunk sizes, with the results shown in~\cref{tab:efficiency_chunk}. GPU memory usage does not increase with longer video lengths due to the fixed memory budget. TTFT and TPOT remain consistently low across varying video lengths and encoding chunk sizes, confirming real-time responsiveness in practical streaming scenarios.
+
+
+\subsection{Ablation Study}
+
+We conduct ablation studies to evaluate the contributions of \hermes's components and hyperparameter choices, covering: (1) KV cache memory budget, (2) cross-layer memory smoothing and its hyperparameters, (3) position re-indexing strategies for streaming and offline datasets, and (4) summary tokens for long-term memory retention.
+
+\paragraph{Memory Budget}
+\label{sec:memory_ablation}
+\input{figures_tex/memory_budget}
+To investigate the impact of  memory budget on understanding performance, we conduct ablations by varying the memory budget $|M|$ from 1K to 10K. As shown in~\cref{fig:memory_budget_llava}, for \hermes built upon LLaVA-OV-7B, the performance on both streaming and offline datasets stabilizes once memory budget reaches 4K. Notably, streaming datasets can tolerate a smaller memory budget. In contrast, the performance on long offline datasets degrades significantly when the memory budget is below 4K. The ablation on \qwen is provided in~\cref{fig:memory_budget_qwen}, yielding conclusions consistent with those on \llava.%Therefore, to balance the performance and efficiency, we choose to report the performance with a memory budget of 4K and 6K in main results.
+
+\input{tables/lambda_summary_token_ablation}
+\paragraph{Cross-Layer Memory Smoothing}
+In~\cref{tab:lambda_ablation}, we evaluate variants without the proposed cross-layer memory smoothing mechanism, as well as alternative hyperparameter configurations. All these variants exhibit degraded performance on the VideoMME benchmark, demonstrating both the critical role of memory smoothing and the effectiveness of our chosen hyperparameter settings.
+
+
+\input{tables/pos_ablation}
+\paragraph{Position Re-Indexing Strategies}
+For all streaming evaluations, we adopt the lazy position re-indexing strategy, while we use the eager re-indexing strategy for offline evaluations. Ablation studies in~\cref{tab:pos_ablation_streaming} and~\cref{tab:pos_ablation_offline} show the effectiveness of these strategies in their respective scenarios.
+
+\paragraph{Summary Tokens in Deep Layers}
+%\input{tables/summary_token_ablation}
+In~\cref{sec: smoothing}, we aggregate the evicted tokens in each deep layer into one summary token at each compression step. The results in~\cref{tab:summary_token_ablation} indicate that these summary tokens effectively preserve long-term memory, leading to improved performance on VideoMME.

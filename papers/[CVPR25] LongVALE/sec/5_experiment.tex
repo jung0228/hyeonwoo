@@ -1,0 +1,159 @@
+\section{Experiments}
+
+
+\subsection{Experiment Setup}
+\noindent\textbf{Implementation details.}
+We use CLIP VIT-L/14~\cite{radford2021learning} as the visual encoder. We uniformly sample 100 frames and encode each frame individually, representing each by the feature of the CLS token for efficiency. BEATs~\cite{chen2022beats} is employed as the audio encoder, and Whisper-Large-v2~\cite{radford2023robust} is used for speech encoding. Both audio and speech are processed from the waveforms of 5.12-second clips, with the number of tokens varying according to the video's duration. 
+The audio and speech adapters are just randomly initialized. Furthermore, Vicuna-v1.5-7b~\cite{chiang2023vicuna} is adopted as the large language model. {\color{black} More details are in Appendix}.
+
+
+\noindent\textbf{Evaluation metrics.}
+Using our LongVALE test set, we evaluate models on three omni-modal fine-grained understanding tasks.
+For omni-modal temporal video grounding, we report Recall@1 at IoU thresholds of \{0.3,0.5,0.7\} and mean IoU (mIoU).
+For omni-modal dense video captioning, we assess caption quality using CIDEr~\cite{vedantam2015cider} and METEOR~\cite{banerjee2005meteor}, and employ SODA\_c~\cite{fujita2020soda} for overall story-level evaluation.
+For omni-modal segment captioning, we use BLEU-4~\cite{papineni2002bleu}, ROGUE-L~\cite{lin2004automatic}, METEOR~\cite{banerjee2005meteor} and CIDEr~\cite{vedantam2015cider} for standard caption quality evaluation. 
+
+
+\subsection{Main Results}
+Table~\ref{tab:SOTA} presents the comparison results of our model with existing open-sourced video LLMs on the three omni-modal fine-grained tasks on our LongVALE test set, where we ensure optimal evaluation of the existing models.
+Our LongVALE-LLM (7B) supports video, audio and speech input with fine-grained temporal understanding ability, and outperforms other video LLMs by a significant margin across all three tasks.
+Despite VideoLLaMA~\cite{zhang2023video}, PandaGPT~\cite{su2023pandagpt} and NExT-GPT~\cite{wu2023next} also support audio-visual input, they are limited to processing a few video frames (\eg, 8 frames), resulting in poor performances on fine-grained, time-sensitive tasks. 
+Besides, VTimeLLM~\cite{huang2024vtimellm} and TimeChat~\cite{ren2024timechat} can understand specific temporal events in videos, but they focus solely on visual events and fail to incorporate crucial audio information for a complete video understanding. 
+Therefore, it is essential to integrate both audio and visual information with boundary-aware training on rich omni-modality data, \ie, LongVALE, to achieve precise video comprehension.
+
+  
+\begin{table}
+  \centering
+  \resizebox{0.9\linewidth}{!}{ 
+  \begin{tabular}{l|c|cc}
+    \toprule
+    Method & \#Pairs & AVSD & Music-AVQA \\
+    \midrule
+    PandaGPT (13B)~\cite{su2023pandagpt} & 128M & 26.1 & 33.7 \\
+    Macaw-LLM (7B)~\cite{lyu2023macaw} & 0.3M & 34.3 & 31.8 \\
+    VideoLLaMA (7B)~\cite{zhang2023video} & 2.8M & 36.7 & 36.6 \\
+    X-InstructBLIP (13B)~\cite{panagopoulou2023x} & 32M & - & 44.5 \\
+    AV-LLM (13B)~\cite{shu2023audio} & 1.6M & 52.6 & 45.2 \\
+    OneLLM (7B)~\cite{han2024onellm} & 1007M & - & 47.6 \\
+    AVicuna (7B)~\cite{tang2024avicuna} & 1.1M & \underline{53.1} & \textbf{49.6} \\
+    \midrule
+    \rowcolor{gray!20} LongVALE-LLM (7B) (ours) & 0.7M & \textbf{54.8} & \underline{49.4}\\
+    \bottomrule
+  \end{tabular}}
+  \vspace{-1.5mm}
+  \caption{Comparison with existing LLM-based methods on open-ended audio-visual question answering benchmarks on a zero-shot setting. \# Pairs: the adopted instruction-response pairs.}
+  \label{tab:AVQA}
+  \vspace{-5mm}
+\end{table}
+
+\subsection{Zero-Shot Performance on General AVQA}
+Besides the ability for fine-grained omni-modality video understanding tasks, we also explore whether our model trained on LongVALE can address a broader range of audio-visual questions in a zero-shot setting. 
+We employ the AVSD~\cite{alamri2019audio} and Music-AVQA~\cite{li2022learning} benchmarks and conduct a GPT-assisted evaluation to assess the accuracy of the generated answers as same as the protocol~\cite{maaz2023video} used by other LLM-based methods shown in Tab.~\ref{tab:AVQA}.
+We can observe that, despite using significantly less data, our model surprisingly achieves state-of-the-art performance on AVSD and highly competitive results on Music-AVQA.  
+Notably, existing multi-modal LLMs all rely on large amounts of audio-related training data. 
+For example, OneLLM~\cite{han2024onellm} and AVicuna~\cite{tang2024avicuna} use 460K and 350K audio/audio-visual instruction-response pairs for training, respectively. 
+In contrast, we achieve even better results using only total 32.7K audio-visual samples from our LongVALE dataset, accounting for less than 10\% of the data they use. 
+This clearly validates the robustness and generalization of our LongVALE-trained model, demonstrating that the comprehensive omni-modality captions in our dataset can effectively enhance the model's general cross-modal reasoning capability.
+
+
+\begin{table}
+  \centering
+  \resizebox{\linewidth}{!}{ 
+  \begin{tabular}{c|c|c|c|c}
+    \toprule
+    BP & IT &Omni-TVG$_{mIoU}$ & Omni-DVC$_{CIDEr}$ & Omni-SC$_{CIDEr}$  \\
+     \midrule
+     V~\cite{huang2024vtimellm} & \ding{55} &12.6 / 3.1 & 0.1 / 0.1 & 0.4 / 0.3  \\
+     V~\cite{huang2024vtimellm} + Ours & \ding{55} & 25.6 / 7.0 & 7.3 / 7.0  & 21.1 / 17.5 \\
+     % \midrule
+     V~\cite{huang2024vtimellm} + Ours & V~\cite{huang2024vtimellm} & 11.7 / 3.8& 0.2 / 0.2 & 3.1 / 2.4  \\
+     \rowcolor{gray!20} V~\cite{huang2024vtimellm} + Ours & V~\cite{huang2024vtimellm} + Ours & 26.0 / 7.3 &  7.8 / 7.7 & 25.1 / 19.4 \\
+    \bottomrule
+  \end{tabular}}
+  \vspace{-1.5mm}
+  \caption{Ablation study of the data used in different training stages. BP: boundary perception. IT: instruction tuning. V~\cite{huang2024vtimellm}: the visual-only data used in VTimeLLM~\cite{huang2024vtimellm}. 
+  }
+  \label{tab:ablation_stage}
+  \vspace{-2mm}
+\end{table}
+
+\begin{table}
+  \centering
+  \resizebox{\linewidth}{!}{ 
+  \begin{tabular}{c|c|c|c}
+    \toprule
+     Audio-Visual Correlation &Omni-TVG$_{mIoU}$ & Omni-DVC$_{CIDEr}$ & Omni-SC$_{CIDEr}$  \\
+     \midrule
+    \ding{55} & 23.7 / 6.5 & 3.5 / 3.4 & 10.4 / 10.2 \\
+    \rowcolor{gray!20} \checkmark & 25.6 / 7.0 & 7.3 / 7.0  & 21.1 / 17.5 \\
+    \bottomrule
+  \end{tabular}}
+  \vspace{-1.5mm}
+  \caption{Ablation study of audio-visual correlation reasoning in captioning for the boundary perception training stage.}
+  \label{tab:ablation_avc}
+  \vspace{-2mm}
+\end{table}
+
+\begin{table}
+  \centering
+  \resizebox{0.9\linewidth}{!}{ 
+  \begin{tabular}{c|c|c|c}
+    \toprule
+     Modality &Omni-TVG$_{mIoU}$ & Omni-DVC$_{CIDEr}$ & Omni-SC$_{CIDEr}$ \\
+    \midrule
+     V & 12.6 / 2.2 & 5.9 / 3.6 &14.6 / 11.7 \\
+     V+A & 15.6 / 3.1 & 7.2 / 5.0 & 17.6 / 14.7 \\
+     V+S & 15.2 / 2.9 & 6.7 / 5.2 & 17.3 / 14.6  \\
+     \rowcolor{gray!20} V+A+S & 17.1 / 3.0 & 7.8 / 5.6 & 18.9 / 15.4 \\
+    \bottomrule
+  \end{tabular}}
+  \vspace{-1.5mm}
+  \caption{Ablation study of models trained on LongVALE with different modalities. V: vision. A: audio. S: speech. }
+  \label{tab:ablation_modality}
+  \vspace{-5mm}
+\end{table}
+
+\subsection{Ablation Study and Qualitative Results}
+We provide detailed ablation studies about our training data, training stages, and modalities as follows.
+Since LongVALE is a challenging benchmark, we split the test set into easy and hard subsets based on the ratio of average event duration to video length for more in-depth analysis. 
+The easy subset ratios from 100\% to 9.3\% (585 videos), and the hard subset ratios from 9.3\% to 0.95\% (586 videos). 
+Note that in Tab.~\ref{tab:ablation_stage}-\ref{tab:ablation_modality}, easy/hard subset results are on the left/right.
+
+\noindent\textbf{Impact of LongVALE in different training stages.}
+In Tab.~\ref{tab:ablation_stage}, we observe significant performance boosts across all tasks by adding our data in both boundary perception and instruction tuning stages. 
+It demonstrates the essential role of our data in promoting omni-modality fine-grained video understanding.
+Besides, the necessity of instruction tuning is evident when comparing the second and last rows. 
+It shows consistent improvements across all three tasks, especially in segment captioning, indicating instruction tuning on high-quality dialog data further enhances comprehension and reasoning abilities for omni-modal events.
+
+\noindent\textbf{Importance of audio-visual correlation (AVC).}
+We simply concatenate the generated single-modality captions in Sec.~\ref{sec:3.3} as a naive caption for each omni-modal event boundary without AVC reasoning.
+Then, we convert them into template-based dialogues for boundary perception tuning. 
+The results in Tab.~\ref{tab:ablation_avc} show that the model trained with our omni-modality captions with AVC reasoning achieves significantly better performance, especially for captioning tasks, demonstrating the effectiveness of AVC to facilitate the model's capability of cross-modal reasoning.
+
+\noindent\textbf{Impact of using different modalities.}
+In Tab.~\ref{tab:ablation_modality}, we can see that adding audio or speech modality significantly improves the performances across all three tasks, with the best results achieved when all three modalities are used. 
+This highlights the strength of omni-modality input for multi-modal video understanding.
+Note that we use only our dataset during both training stages to provide a clearer comparison. 
+
+\noindent\textbf{Qualitative results.}
+In Fig.~\ref{fig:visualization}, VTimeLLM~\cite{huang2024vtimellm} with only visual data, misidentifies singing as raising hands. In contrast, our model integrates audio signals (\ie, man singing, crowd cheers) and performs cross-modal reasoning to accurately and comprehensively describe the event in the specific moment. Besides, our model effectively associates audio-visual information to provide correct answers for general AVQA. {\color{black}More examples can be found in Appendix.}
+
+
+
+\begin{figure}[t]
+  \centering
+  \setlength{\abovecaptionskip}{1.0mm}
+   \includegraphics[width=1.0\linewidth]{figures/new/fig5.jpg}
+   \caption{Qualitative results. The orange text highlights audio-visual correlation for accurate and complete video understanding. Samples are from LongVALE and Music-AVQA test sets. 
+   }
+   \label{fig:visualization}
+     \vspace{-5mm}
+\end{figure}
+
+
+
+\section{Conclusion}
+We present a scalable pipeline to build LongVALE, the first benchmark for omni-modality fine-grained video understanding, featuring 105K omni-modal events with temporal boundaries and relation-aware captions. 
+Benefiting from the dataset, our model exhibits distinct capabilities of both cross-modal reasoning and fine-grained temporal understanding that are absent in existing video LLMs, making a crucial step toward an intelligent video assistant.
+In the future, we will expand our LongVALE with more high-quality data and advance the model's architecture to improve video semantic density and cross-modal interaction. 
+

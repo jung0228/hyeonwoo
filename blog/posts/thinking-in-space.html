@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thinking in Space (VSI-Bench) — Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+  <style>
+    :root {
+      --bg:#f9f8f4; --text:#0f0f0f; --muted:#6b6b6b; --accent:#1a56c4;
+      --rule:#999; --rule-lt:#d8d8d2; --bg2:#efede6; --accent-lt:#dbe5f7;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',Georgia,serif; line-height:1.55; overflow:hidden; }
+    .deck { height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; scrollbar-width:none; }
+    .deck::-webkit-scrollbar { display:none; }
+    .slide { height:100vh; scroll-snap-align:start; scroll-snap-stop:always; display:flex; flex-direction:column; overflow:hidden;
+      padding:6.4vh 4.5vw 4.4vh; position:relative; max-width:1680px; margin:0 auto; }
+    .s-head { border-bottom:2px solid var(--text); padding-bottom:1.1vh; margin-bottom:2.2vh; }
+    .slide h2 { font-family:'Playfair Display',Georgia,serif; font-weight:800; letter-spacing:-.02em; line-height:1.04; font-size:clamp(2rem,3.5vw,3.2rem); }
+    .desc { font-size:clamp(1rem,1.3vw,1.28rem); color:#333; max-width:none; margin-top:1vh; }
+    .body { flex:1; min-height:0; display:grid; grid-template-columns:1.05fr 1fr; gap:3vw; align-items:stretch; }
+    .body.solo { display:flex; flex-direction:column; }
+    .body.solo > * { flex:1; min-height:0; }
+    .body.stack { display:flex; flex-direction:column; gap:1.6vh; }
+    .body.stack .col { flex:1 1 auto; min-height:0; justify-content:center; }
+    .body.stack .eqs { height:100%; display:flex; flex-direction:column; justify-content:space-evenly; gap:1.2vh; align-content:start; }
+    .body.stack .eqs .step { align-items:center; }
+    .body.stack .fig { flex:0 1 auto; min-height:0; max-height:50vh; }
+    .body.stack .fig img { flex:0 1 auto; height:auto; max-height:40vh; }
+    .col { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:1.4vh; }
+    ul.pts { list-style:none; height:100%; display:flex; flex-direction:column; justify-content:space-evenly; }
+    ul.pts li { font-size:clamp(1.02rem,1.45vw,1.42rem); padding:0 0 0 1.8rem; position:relative; display:flex; align-items:center; flex:1; border-bottom:1px solid var(--rule-lt); }
+    ul.pts li:last-child { border-bottom:none; }
+    ul.pts li::before { content:"→"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+    ul.pts li b { font-weight:600; }
+    .eqs { display:flex; flex-direction:column; justify-content:center; height:100%; gap:1.6vh; }
+    .eqs .step { display:flex; gap:1rem; align-items:baseline; }
+    .eqs .lab { font-family:var(--sans); font-size:.74rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); min-width:8.5ch; padding-top:.2em; }
+    .eqs .ex { font-size:clamp(1rem,1.25vw,1.2rem); }
+    .kw  { background:#fef3c7; padding:0 .2em; border-radius:2px; }
+    .kw2 { background:#d4f7d4; padding:0 .2em; border-radius:2px; }
+    .kw3 { background:#ffd6d6; padding:0 .2em; border-radius:2px; }
+    .fig { background:transparent; border:none; padding:0; display:flex; flex-direction:column; min-height:0; overflow:visible; }
+    .fig img { width:100%; flex:1; min-height:0; max-height:100%; object-fit:contain; display:block; background:#fff; border:1px solid var(--rule-lt); border-radius:6px; padding:1.4rem; box-shadow:0 1px 0 rgba(0,0,0,.04); }
+    .fig figcaption { font-family:var(--sans); font-size:.78rem; color:var(--muted); margin-top:.8rem; line-height:1.4; }
+    .fig figcaption b { color:var(--text); }
+    table { width:100%; height:100%; border-collapse:collapse; font-family:var(--sans); }
+    th,td { text-align:left; padding:0 1.1rem; vertical-align:middle; border-bottom:1px solid var(--rule-lt); font-size:clamp(.98rem,1.3vw,1.3rem); }
+    thead th { font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--text); padding-bottom:1.1vh; }
+    tbody td { height:1px; }
+    td.hl { font-weight:700; color:var(--accent); }
+    td.no { color:var(--muted); }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:2vw; height:100%; }
+    .stat { border:1px solid var(--rule-lt); border-top:4px solid var(--accent); border-radius:6px; background:#fff; padding:2.2rem 2rem; display:flex; flex-direction:column; justify-content:center; }
+    .stat .num { font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(2.4rem,5vw,4.2rem); line-height:1; color:var(--accent); }
+    .stat .cap { font-family:var(--sans); font-size:clamp(.92rem,1.1vw,1.1rem); color:var(--muted); margin-top:1.4rem; line-height:1.5; }
+    .title-slide { justify-content:center; }
+    .title-slide .masthead-mini { font-family:var(--sans); font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); border-top:1px solid var(--text); border-bottom:1px solid var(--text); padding:.5rem 0; display:inline-block; margin-bottom:2.5vh; }
+    .title-slide h1 { font-family:'Playfair Display',serif; font-weight:800; letter-spacing:-.02em; line-height:1.02; font-size:clamp(2.4rem,5.2vw,4.4rem); }
+    .title-slide .lead { font-family:'Playfair Display',serif; font-style:italic; color:var(--muted); font-size:clamp(1.05rem,1.7vw,1.5rem); max-width:none; margin-top:2.2vh; }
+    .title-slide .by { font-family:var(--sans); font-size:.95rem; color:var(--muted); margin-top:3.5vh; }
+    ol.agenda { list-style:none; counter-reset:ag; display:grid; grid-template-columns:1fr; grid-auto-rows:minmax(0,1fr); gap:0; height:100%; }
+    ol.agenda li { counter-increment:ag; display:flex; gap:1.3rem; align-items:center; border-bottom:1px solid var(--rule-lt); }
+    ol.agenda li::before { content:counter(ag,decimal-leading-zero); font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(1.5rem,2.4vw,2.2rem); color:var(--accent); min-width:2.4ch; }
+    ol.agenda .t { font-size:clamp(1.05rem,1.5vw,1.5rem); font-weight:600; }
+    ol.agenda .d { font-family:var(--sans); font-size:clamp(.82rem,1vw,1rem); color:var(--muted); display:block; margin-top:.2rem; font-weight:400; }
+    ol.refs { list-style:none; counter-reset:rf; display:flex; flex-direction:column; height:100%; }
+    ol.refs li { counter-increment:rf; position:relative; padding-left:2.8rem; flex:1; display:flex; align-items:center; border-bottom:1px solid var(--rule-lt); font-family:var(--sans); font-size:clamp(.98rem,1.25vw,1.25rem); }
+    ol.refs li:last-child { border-bottom:none; }
+    ol.refs li::before { content:"["counter(rf)"]"; position:absolute; left:0; color:var(--accent); font-weight:700; font-family:'Playfair Display',serif; font-size:1.1em; }
+    ol.refs a { color:var(--accent); text-decoration:none; }
+    ol.refs a:hover { text-decoration:underline; }
+    ol.refs .src { color:var(--muted); }
+    .s-foot { position:absolute; left:4.5vw; right:4.5vw; bottom:1.6vh; display:flex; justify-content:space-between; font-family:var(--sans); font-size:.76rem; color:var(--muted); letter-spacing:.04em; }
+    .s-foot b { color:var(--text); }
+    .progress { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--accent); z-index:200; transition:width .15s; }
+    .dots { position:fixed; right:1.4rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.7rem; z-index:200; }
+    .dots button { width:9px; height:9px; border-radius:50%; border:1.5px solid var(--rule); background:transparent; cursor:pointer; padding:0; transition:.2s; }
+    .dots button.active { background:var(--accent); border-color:var(--accent); transform:scale(1.3); }
+    .back-link { position:fixed; left:1rem; top:.7rem; z-index:200; font-family:var(--sans); font-size:.78rem; color:var(--muted); text-decoration:none; }
+    .back-link:hover { color:var(--accent); }
+    @media (max-width:780px){
+      .slide{ overflow-y:auto; }
+      .body{ grid-template-columns:1fr; gap:1.4rem; }
+      .body.solo > * { flex:none; }
+      .body.stack .eqs{ grid-template-columns:1fr; }
+      .dots{ display:none; }
+      ul.pts li{ flex:none; padding:.7rem 0 .7rem 1.8rem; }
+      ol.agenda{ grid-template-columns:1fr; grid-auto-rows:auto; }
+      ol.agenda li{ padding:1rem 0; }
+      ol.refs li{ flex:none; padding:.8rem 0 .8rem 2.8rem; }
+      table,.stats{ height:auto; }
+      .stats{ grid-template-columns:1fr; }
+      .fig img{ max-height:42vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <a href="../index.html" class="back-link">← Index</a>
+  <nav class="dots" id="dots"></nav>
+
+  <main class="deck" id="deck">
+
+    <!-- 1 · TITLE -->
+    <section class="slide title-slide">
+      <span class="masthead-mini">Hyeonwoo Jung · Paper Deck · CVPR 2025</span>
+      <h1>Thinking in Space</h1>
+      <p class="lead">MLLM이 영상만 보고 공간을 기억·회상하며 "공간 안에서 사고"할 수 있는가 — VSI-Bench로 시각-공간 지능(visual-spatial intelligence)을 정량화한다.</p>
+      <p class="by">Yang, Yang, Gupta, Han, Fei-Fei, Xie · NYU & Stanford · 10 min read</p>
+    </section>
+
+    <!-- 2 · AGENDA -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>오늘 다룰 흐름</h2>
+        <p class="desc">문제 정의 → 벤치마크(VSI-Bench) → 평가 결과 → <b>dual-coding theory</b>로 모델 사고를 언어적·시각적 두 갈래로 해부 → 시사점.</p>
+      </div>
+      <div class="body solo">
+        <ol class="agenda">
+          <li><div><span class="t">동기: 영상으로 공간을 사고하기</span><span class="d">See · Remember · Recall</span></div></li>
+          <li><div><span class="t">Visual-Spatial Intelligence 분류</span><span class="d">perception · language · temporal · spatial reasoning</span></div></li>
+          <li><div><span class="t">VSI-Bench: 8 task / 3 type</span><span class="d">5,000+ QA · 288 indoor videos · MRA 지표</span></div></li>
+          <li><div><span class="t">평가: 인간 vs MLLM</span><span class="d">79.2 vs ~48.8 — 공간추론이 병목</span></div></li>
+          <li><div><span class="t">분석틀: dual-coding theory</span><span class="d">언어 probe(self-explanation) + 시각 probe(cognitive map)</span></div></li>
+          <li><div><span class="t">언어적 사고: 사례·error·CoT</span><span class="d">71% spatial error · prompting 역효과</span></div></li>
+          <li><div><span class="t">시각적 사고: cognitive map</span><span class="d">local은 강, global은 약 · +10%p</span></div></li>
+          <li><div><span class="t">시사점 & References</span><span class="d">cognitive map으로 거리추론 개선</span></div></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>02</b> / 15</span></div>
+    </section>
+
+    <!-- 3 · MOTIVATION (teaser) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>영상을 보고 공간을 기억하고 회상할 수 있는가</h2>
+        <p class="desc">인간은 방을 한 번 둘러보면 물체의 위치·크기를 머릿속에 재구성한다. 백만 단위 video로 학습한 MLLM도 같은 일을 할 수 있을까? — 모델에게 영상을 <b>보게(See)</b> 하고, 공간을 <b>기억(Remember)</b>·<b>회상(Recall)</b>하게 한다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">일상 직관</span><span class="ex">가구를 살 때 우리는 거실을 머릿속에 떠올려 cabinet이 들어갈지 가늠한다 — 한 번의 관찰만으로 공간을 <b>mental하게 재구성</b>한다</span></div>
+            <div class="step"><span class="lab">질문</span><span class="ex">million-scale video로 학습한 MLLM도 video 입력만으로 <b>"공간 안에서 사고(think in space)"</b>할 수 있는가</span></div>
+            <div class="step"><span class="lab">접근</span><span class="ex">영상을 <b>See</b> → 공간 배치를 <b>Remember</b> → 거리·개수·크기 질문에 <b>Recall</b>, 세 단계로 능력을 측정</span></div>
+            <div class="step"><span class="lab">관건</span><span class="ex">정확한 implicit <span class="kw">cognitive map</span>을 세울 수 있는가 — 이 논문의 출발 질문</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/teaser.png" alt="See, Remember, Recall teaser">
+          <figcaption><b>Fig 1.</b> apartment·lab·factory 영상을 본 뒤(See), 공간의 물체 배치를 cognitive map으로 기억(Remember)하고, 거리·개수·크기 질문에 회상(Recall)한다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Yang et al., Thinking in Space (CVPR 2025), Fig 1</span><span><b>03</b> / 15</span></div>
+    </section>
+
+    <!-- 4 · TAXONOMY -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>시각-공간 지능의 구성 요소</h2>
+        <p class="desc">인지심리학에 기반해, VSI-Bench가 요구하는 능력을 네 축으로 나눈다. 그중 <b>spatial reasoning</b>이 핵심이며 두 갈래로 갈린다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">4 areas</span><span class="ex">visual perception · linguistic intelligence · temporal processing · <b>spatial reasoning</b></span></div>
+            <div class="step"><span class="lab">relational</span><span class="ex">물체 간 <b>거리·방향</b> 관계 추론 (크기 상식으로 거리 추정)</span></div>
+            <div class="step"><span class="lab">ego↔allo</span><span class="ex"><b>egocentric-allocentric transformation</b> — 1인칭 view ↔ 환경 중심 지도 변환</span></div>
+            <div class="step"><span class="lab">근거</span><span class="ex">visual object 처리와 spatial 처리는 신경학적으로 분리됨</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/vsi_taxonomy.png" alt="Taxonomy of visual-spatial intelligence">
+          <figcaption><b>Fig 2.</b> visual-spatial intelligence의 capability taxonomy. spatial reasoning = relational reasoning + egocentric-allocentric transformation.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 2</span><span><b>04</b> / 15</span></div>
+    </section>
+
+    <!-- 5 · TASKS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>VSI-Bench: 8개 task, 3개 type</h2>
+        <p class="desc"><b>configurational</b>(object count·relative distance·relative direction·route plan), <b>measurement estimation</b>(object size·room size·absolute distance), <b>spatiotemporal</b>(appearance order). 답 형식에 따라 MCA 또는 NA(수치).</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">configurational</span><span class="ex">object count · relative distance · relative direction · route plan — 공간의 <b>구성</b>을 이해 (인간에게 직관적, 94~100%)</span></div>
+            <div class="step"><span class="lab">measurement</span><span class="ex">object size · room size · absolute distance — 정량 <b>추정</b>, embodied agent의 상호작용·navigation에 필수</span></div>
+            <div class="step"><span class="lab">spatiotemporal</span><span class="ex">appearance order — 영상에서 본 공간의 <b>등장 순서</b>를 기억 (visual working memory)</span></div>
+            <div class="step"><span class="lab">답 형식</span><span class="ex">객관식이면 <b>MCA</b>→Accuracy, 수치면 <b>NA</b>→MRA로 채점</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/task_demo.png" alt="VSI-Bench tasks demonstration">
+          <figcaption><b>Fig 3.</b> 8개 task 예시. 가운데는 한 영상의 camera trajectory와 물체 배치. 수치 답(object size 등)과 객관식 답(relative direction 등)이 섞여 있다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 3</span><span><b>05</b> / 15</span></div>
+    </section>
+
+    <!-- 6 · CONSTRUCTION -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>벤치마크 구성 파이프라인</h2>
+        <p class="desc">3D 실내 reconstruction 데이터셋(ScanNet·ScanNet++·ARKitScenes)을 <b>통일된 meta 포맷</b>으로 변환 → object 3D annotation으로 QA 자동 생성(+route plan은 사람) → 모든 단계에 <b>human-in-the-loop 검수</b>로 모호/오류 제거.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">① unify</span><span class="ex">ScanNet·ScanNet++·ARKitScenes를 <b>dataset-agnostic한 unified meta-info</b>(object category·3D bbox·해상도·fps)로 표준화</span></div>
+            <div class="step"><span class="lab">② generate</span><span class="ex">meta-info + task별 question template로 QA를 <b>자동 생성</b> (route plan만 사람이 직접 annotation)</span></div>
+            <div class="step"><span class="lab">③ verify</span><span class="ex"><b>human-in-the-loop</b> 검수 — 모호/오류 문항을 발견하면 오류 소스를 역추적해 동일 원인의 문항을 일괄 수정 (bidirectional·iterative)</span></div>
+            <div class="step"><span class="lab">효과</span><span class="ex">기존 3D dataset의 정확한 object-level annotation을 재활용 → <span class="kw">영상만으로 답 가능한</span> 고품질 QA를 scale로 확보</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/benchmark_construction.png" alt="Benchmark curation pipeline">
+          <figcaption><b>Fig 4.</b> 데이터 통합 → QA 생성(template + 사람) → 품질 검증. 기존 3D 데이터셋의 정확한 object-level annotation을 재활용해 영상만으로 답 가능한 질문을 만든다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 4</span><span><b>06</b> / 15</span></div>
+    </section>
+
+    <!-- 7 · RESULTS (2-col: numbers + radar) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>평가 결과: 경쟁력 있으나 인간 이하</h2>
+        <p class="desc">15개 video MLLM을 zero-shot·greedy decoding으로 평가. 답이 객관식(MCA)이면 Accuracy, 수치(NA)면 새 지표 <b>MRA</b>(Mean Relative Accuracy)로 채점. 인간과의 격차는 크지만, 모델에서 <b>새로운 시각-공간 지능이 emerge</b>한다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">metric (NA)</span><span class="ex">$\mathcal{MRA}=\frac{1}{10}\sum_{\theta\in\mathcal{C}}\mathbb{1}\!\left(\frac{|\hat{y}-y|}{y}\lt 1-\theta\right),\ \mathcal{C}=\{0.5,\dots,0.95\}$ — 상대오차 기반 부분점수</span></div>
+            <div class="step"><span class="lab">human</span><span class="ex"><b>79.2</b> avg — config·spatiotemporal task는 94~100%로 직관적</span></div>
+            <div class="step"><span class="lab">best mllm</span><span class="ex">Gemini-1.5 Pro <b>~48.8</b> — 인간과 <span class="kw3">약 33%p 격차</span> (open top: LLaVA-Video-72B 40.9, 단 12개 중 7개는 chance 이하)</span></div>
+            <div class="step"><span class="lab">반전</span><span class="ex">측정 task는 <b>인간 정확도 자체가 47~60%로 낮아</b> 격차가 좁음 — 모델의 상대적 강점</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/radar_compare.png" alt="Radar comparison human vs models">
+          <figcaption><b>Fig 5.</b> 8개 task별 인간(회색) vs 상위 모델. 인간이 전 task에서 우위지만, 측정 task에서는 격차가 작다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Tab 1 · Fig 5</span><span><b>07</b> / 15</span></div>
+    </section>
+
+    <!-- 8 · DUAL-CODING (analysis hinge) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>모델의 공간 사고를 어떻게 들여다보나</h2>
+        <p class="desc"><b>dual-coding theory</b>(Clark, 1991)는 인간 인지를 언어·시각 두 채널로 본다 — 분리돼 있으나 상보적. 이를 차용해 최고 모델(Gemini-1.5 Pro)을 <b>언어적·시각적 두 방식으로 probe</b>한다. 두 probe는 같은 결론으로 수렴한다: <span class="kw3">spatial reasoning이 병목</span>, 그러나 <span class="kw2">local world model은 emerge</span>한다.</p>
+      </div>
+      <div class="body solo">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3vw;flex:1;min-height:0;">
+          <div style="border:1px solid var(--rule-lt);border-top:4px solid var(--accent);border-radius:6px;background:#fff;padding:2.2rem 2rem;display:flex;flex-direction:column;gap:1.1rem;justify-content:center;">
+            <div style="font-family:var(--sans);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700;">① Linguistic probe — §5</div>
+            <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(1.4rem,2vw,2rem);">Self-Explanation</div>
+            <p style="color:#333;font-size:clamp(1rem,1.25vw,1.22rem);line-height:1.5;">모델이 답을 낸 근거를 <b>언어로 해명</b>하게 한다. 오답 163개를 사람이 직접 읽고 error를 <b>4가지 type</b>으로 분류 → 어떤 능력에서 무너지는지 규명한다.</p>
+          </div>
+          <div style="border:1px solid var(--rule-lt);border-top:4px solid var(--accent);border-radius:6px;background:#fff;padding:2.2rem 2rem;display:flex;flex-direction:column;gap:1.1rem;justify-content:center;">
+            <div style="font-family:var(--sans);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700;">② Visual probe — §6</div>
+            <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(1.4rem,2vw,2rem);">Cognitive Map</div>
+            <p style="color:#333;font-size:clamp(1rem,1.25vw,1.22rem);line-height:1.5;">영상을 본 뒤 <b>10×10 grid</b>에 물체 중심을 찍게 한다. 모델 내부의 implicit 공간 표현을 시각화 → local·global 구조와 거리 정확도를 측정한다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="s-foot"><span></span><span><b>08</b> / 15</span></div>
+    </section>
+
+    <!-- 9 · CASE STUDY (linguistic probe) -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>언어적 사고 ① 모델은 이렇게 사고한다</h2>
+        <p class="desc">self-explanation을 읽으면 모델의 강점과 결함이 동시에 드러난다. <b>성공</b> 사례엔 정확한 timestamp 묘사·단계적 추론·global 좌표계 구성(=implicit world model)이 보이고, <b>실패</b> 사례엔 egocentric view에 갇힌 transformation 오류가 나타난다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">성공 (좌)</span><span class="ex">relative direction 정답 — <span class="kw2">"orient yourself → locate the dishwasher → visualize the quadrants"</span> 단계적 추론 + 강한 video understanding</span></div>
+            <div class="step"><span class="lab">실패 (우)</span><span class="ex">route plan 오답 — 카메라가 우측 pan하자 <b>egocentric view에 갇혀 "turn right"</b>로 답 (allocentric 기준 정답은 <span class="kw3">turn left</span>) → ego-allo transformation 실패</span></div>
+            <div class="step"><span class="lab">공통점</span><span class="ex">두 사례 모두 timestamp 묘사·video 이해는 정확 — 무너지는 지점은 언제나 <b>spatial transformation</b>이다 (probing 방법: 오답 163개를 사람이 직접 검토)</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/case_study.png" alt="Self-explanation success and failure case">
+          <figcaption><b>Fig 6.</b> 자기설명(self-explanation) 성공/실패 예시. 초록 태그(video understanding·world model)는 살아 있는 능력, 빨강 태그(ego-allo transformation·relational reasoning)는 결함을 가리킨다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 6</span><span><b>09</b> / 15</span></div>
+    </section>
+
+    <!-- 10 · ERROR ANALYSIS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>언어적 사고 ② 무엇이 틀리는가</h2>
+        <p class="desc">최고 모델(Gemini-1.5 Pro)의 오답을 사람이 4가지 error type으로 분류. <b>visual·linguistic·temporal 능력은 강한데</b>, 발목을 잡는 건 spatial reasoning이다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">4 error type</span><span class="ex">① visual perception(물체 미인식) ② linguistic(논리·수리) ③ relational reasoning ④ ego-allo transformation</span></div>
+            <div class="step"><span class="lab">finding</span><span class="ex"><span class="kw3">③+④ spatial reasoning이 전체 error의 약 71%</span> — ①②(시각·언어)는 소수</span></div>
+            <div class="step"><span class="lab">시사점</span><span class="ex">visual·linguistic·temporal 능력은 충분 → spatial reasoning이 <b>VSI-Bench 성능의 1차 병목</b></span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/error_breakdown.png" alt="Error breakdown by type">
+          <figcaption><b>Fig 7.</b> task별·전체 error 분포. 노랑(relational)+초록(ego-allo) = spatial reasoning이 대다수. 파랑(linguistic)·빨강(visual)은 적다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 7</span><span><b>10</b> / 15</span></div>
+    </section>
+
+    <!-- 9 · COT FAILS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>언어적 사고 ③ CoT가 오히려 해롭다</h2>
+        <p class="desc">언어 추론을 끌어올리는 대표 기법 3종(Zero-Shot <b>CoT</b>, <b>Self-Consistency</b>, <b>Tree-of-Thoughts</b>)을 적용 — 일반 video 벤치(VideoMME)에선 +1.6%인데, VSI-Bench에선 평균 <b>성능이 떨어진다</b>.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">기법</span><span class="ex">Zero-Shot <b>CoT</b>("Let's think step by step") · <b>Self-Consistency</b>(temp 1.0, 5회 다수결) · <b>ToT</b>(plan 생성→후보 답 선택)</span></div>
+            <div class="step"><span class="lab">결과</span><span class="ex">CoT·ToT 약 <span class="kw3">−4%</span>, self-consistency −1.1% (baseline 대비). room/object size는 <span class="kw3">−8~21%</span></span></div>
+            <div class="step"><span class="lab">대조</span><span class="ex">같은 CoT가 일반 video 벤치 <b>VideoMME에선 +1.6%</b>(77.2→79.8) → 언어 능력만으론 VSI-Bench가 안 풀린다</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/zero_shot.png" alt="CoT methods relative improvement (mostly negative)">
+          <figcaption><b>Fig 8.</b> 세 prompting 기법의 baseline 대비 상대 변화. 대부분 음수 — VSI-Bench는 언어 능력만 키워서는 풀리지 않는다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 8</span><span><b>11</b> / 15</span></div>
+    </section>
+
+    <!-- 10 · COGNITIVE MAPS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>시각적 사고 ① cognitive map으로 들여다보기</h2>
+        <p class="desc">모델에게 영상 속 물체 중심을 <b>10×10 grid</b>에 찍어 cognitive map(내부 공간 표현)을 그리게 한다 — 모델이 공간을 어떻게 "기억"하는지 시각화.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">방법</span><span class="ex">Gemini-1.5 Pro에게 영상을 보고 <b>10×10 grid</b>에 각 물체 중심 좌표를 찍게 함 (grid size는 ablation으로 검증)</span></div>
+            <div class="step"><span class="lab">측정</span><span class="ex">map 내 모든 물체 <b>쌍의 grid Euclidean distance</b>를 GT cognitive map과 비교 — ±1 grid 이내면 correct</span></div>
+            <div class="step"><span class="lab">관찰</span><span class="ex">인접 물체 배치는 잘 맞히나 <span class="kw3">거리가 멀어질수록 급감</span> → 다음 슬라이드의 locality 분석으로 이어짐</span></div>
+            <div class="step"><span class="lab">의미</span><span class="ex">discrete video frame에서 <b>global 공간 표현</b>을 통합하는 것은 본질적으로 어렵다</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/cog_map.png" alt="Cognitive maps GT vs prediction">
+          <figcaption><b>Fig 9.</b> Ground Truth vs MLLM 예측 cognitive map. 인접한 물체의 상대 배치는 곧잘 맞히지만, 멀리 떨어진 물체끼리의 전역 배치는 어긋난다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 9</span><span><b>12</b> / 15</span></div>
+    </section>
+
+    <!-- 11 · LOCAL WORLD MODEL -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>시각적 사고 ② local은 강, global은 약</h2>
+        <p class="desc">cognitive map에서 물체 쌍의 거리 정확도를 거리 구간별로 측정 — 가까운 물체는 잘 기억하지만 멀어질수록 급격히 무너진다. 그리고 이 map을 <b>명시적으로 생성</b>시키면 거리 추론이 개선된다.</p>
+      </div>
+      <div class="body stack">
+        <div class="col">
+          <div class="eqs">
+            <div class="step"><span class="lab">locality</span><span class="ex">인접 물체 거리 정확도 <span class="kw2">0.64</span> → 가장 먼 구간 <span class="kw3">0.00</span></span></div>
+            <div class="step"><span class="lab">finding</span><span class="ex">통합된 global model이 아니라 <b>여러 개의 local world model</b>을 형성</span></div>
+            <div class="step"><span class="lab">활용</span><span class="ex">cognitive map 생성 후 답 → relative distance 46.0 → <span class="kw2">56.0 (+10)</span></span></div>
+            <div class="step"><span class="lab">상한</span><span class="ex">GT map 제공 시 66~78 — 정확한 mental map이 핵심 열쇠</span></div>
+          </div>
+        </div>
+        <figure class="fig">
+          <img src="img/thinking-in-space/local_world_model.png" alt="Locality: accuracy decays with object distance">
+          <figcaption><b>Fig 10.</b> base object 기준 거리 구간별 map-distance 정확도. 0.64(close) → 0.00(far)로 감쇠 — 국소적 공간 인식은 emerge하나 전역 표현은 약하다.</figcaption>
+        </figure>
+      </div>
+      <div class="s-foot"><span>출처: Thinking in Space, Fig 10 · Tab 3</span><span><b>13</b> / 15</span></div>
+    </section>
+
+    <!-- 12 · FINDINGS -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>핵심 발견 4가지</h2>
+        <p class="desc">모델이 공간을 어떻게 see·remember·recall 하는지에 대한 결론.</p>
+      </div>
+      <div class="body solo">
+        <ul class="pts">
+          <li><b>① 병목은 spatial reasoning.</b> visual·linguistic·temporal 능력은 충분하지만, error의 ~71%가 공간추론에서 나온다.</li>
+          <li><b>② 언어 prompting은 공간추론에 해롭다.</b> CoT·self-consistency·ToT가 일반 task에선 도움돼도 VSI-Bench에선 성능을 떨어뜨린다.</li>
+          <li><b>③ 모델은 local world model을 만든다.</b> 인접 배치는 정확(0.64)하나 전역 지도는 약함 — 통합된 global model 부재.</li>
+          <li><b>④ cognitive map이 해법의 실마리.</b> 명시적으로 mental map을 생성·사용하면 거리 추론이 +10%p 향상된다.</li>
+        </ul>
+      </div>
+      <div class="s-foot"><span></span><span><b>14</b> / 15</span></div>
+    </section>
+
+    <!-- 13 · REFERENCES -->
+    <section class="slide">
+      <div class="s-head">
+        <h2>참고 문헌</h2>
+        <p class="desc">원문과 데이터 출처.</p>
+      </div>
+      <div class="body solo">
+        <ol class="refs">
+          <li><span>Yang, Yang, Gupta, Han, Fei-Fei, Xie. <b>Thinking in Space: How Multimodal LLMs See, Remember, and Recall Spaces.</b> <span class="src">CVPR 2025.</span> <a href="https://arxiv.org/abs/2412.14171">arxiv.org/abs/2412.14171</a></span></li>
+          <li><span>Dai et al. <b>ScanNet.</b> <span class="src">CVPR 2017</span> · Yeshwanth et al. <b>ScanNet++.</b> <span class="src">ICCV 2023</span> · Dehghan et al. <b>ARKitScenes.</b> <span class="src">NeurIPS 2021</span> — VSI-Bench의 영상·3D annotation 출처.</span></li>
+          <li><span>Fu et al. <b>Video-MME.</b> <span class="src">2024</span> — 일반 video 이해 비교 벤치마크.</span></li>
+          <li><span>Tolman. <b>Cognitive maps in rats and men.</b> <span class="src">1948</span> — cognitive map 개념의 기원.</span></li>
+          <li><span>모든 figure 출처 — <span class="src">Thinking in Space (CVPR 2025), Fig 1–9. 본 자료는 학습 정리용.</span></span></li>
+        </ol>
+      </div>
+      <div class="s-foot"><span></span><span><b>15</b> / 15</span></div>
+    </section>
+
+  </main>
+
+  <script>
+    const deck=document.getElementById('deck');
+    const slides=[...deck.querySelectorAll('.slide')];
+    const dotsWrap=document.getElementById('dots');
+    const progress=document.getElementById('progress');
+    slides.forEach((s,i)=>{ const b=document.createElement('button'); b.addEventListener('click',()=>slides[i].scrollIntoView()); dotsWrap.appendChild(b); });
+    const dots=[...dotsWrap.children];
+    let current=0;
+    function setActive(i){ current=i; dots.forEach((d,k)=>d.classList.toggle('active',k===i)); progress.style.width=(i/(slides.length-1)*100)+'%'; }
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) setActive(slides.indexOf(e.target)); }),{threshold:0.6});
+    slides.forEach(s=>io.observe(s));
+    window.addEventListener('keydown',e=>{
+      if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); slides[Math.min(current+1,slides.length-1)].scrollIntoView(); }
+      else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); slides[Math.max(current-1,0)].scrollIntoView(); }
+    });
+    setActive(0);
+  </script>
+</body>
+</html>

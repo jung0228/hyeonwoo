@@ -1,0 +1,20 @@
+\section{Related Work}
+\label{sec:related_work}
+\vspace{-2mm}
+\noindent \textbf{Multi-modal video benchmarks.}
+Current research mainly focuses on building large-scale video/audio-language benchmarks. For instance, InternVid~\cite{wang2023internvid} and WavCaps~\cite{mei2024wavcaps} are web-scarped video-text and audio-text datasets composed of short clips. Moving forward, VALOR~\cite{liu2024valor} provides audio-visual captions and VAST~\cite{chen2023vast} further includes subtitles, but they just simply concatenate captions from different modalities, ignoring the cross-modal correlation reasoning.
+These benchmarks offer only coarse-grained captions for short clips, which are unsuitable for fine-grained long video understanding.
+{\color{black}Besides, some large-scale long video datasets~\cite{miech2019howto100m,zellers2021merlot,xue2022advancing} only use rough subtitles as annotations, failing to directly align with video content.} 
+Moreover, fine-grained video benchmarks like ActivityNet Caps~\cite{krishna2017dense} and Charades-STA~\cite{gao2017tall} focus only on visual modality, while other audio-visual benchmarks like AVEL~\cite{tian2018audio} and UnAV-100~\cite{geng2023dense} provide temporal boundaries but lack rich captions. 
+These limitations restrict models' abilities in both cross-modal reasoning and fine-grained temporal understanding for real-world videos. 
+A detailed comparison with our LongVALE is shown in Tab.~\ref{tab:dataset_compar}.
+
+
+\noindent \textbf{Fine-grained video understanding.}
+To precisely locate and comprehend specific events in videos is crucial for video analysis, especially for untrimmed long videos.
+Various fine-grained video tasks have been proposed, such as temporal video grounding~\cite{gao2017tall,luo2023towards} to identify temporal boundaries for a given text query, and dense video captioning~\cite{krishna2017dense,wang2021end,yang2023vid2seq}, demanding both temporal localization and captioning for all visual events.
+Prior studies~\cite{gao2017tall,luo2023towards,yang2023vid2seq} handle each task separately on specialized datasets and some~\cite{lei2021detecting,liu2022umt,lin2023univtg} attempt to bridge several tasks in a unified model. 
+Furthermore, recent video large language models (video LLMs) have shown promise in visual-only fine-grained video understanding ~\cite{ren2024timechat,huang2024vtimellm}.
+In contrast, we aim to pioneer omni-modality fine-grained video understanding for a more holistic video comprehension.
+
+

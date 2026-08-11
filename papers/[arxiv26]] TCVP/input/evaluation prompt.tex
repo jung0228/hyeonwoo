@@ -1,0 +1,80 @@
+\begin{tcolorbox}[
+  colback=blue!3!white,
+  colframe=blue!70!black,
+  width=\linewidth,
+  arc=1mm,
+  boxrule=0.45pt,
+  boxsep=0.8mm,
+  left=1.6mm,
+  right=1.6mm,
+  top=1.2mm,
+  bottom=1.2mm,
+  title=\textbf{Segment Captioning Prompt},
+  colbacktitle=blue!70!black,
+  coltitle=white,
+  fonttitle=\scriptsize\bfseries\sffamily,
+  halign title=center
+]
+\setlength{\parindent}{0pt}
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  breakatwhitespace=true,
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,
+  showstringspaces=false,
+  aboveskip=0pt,
+  belowskip=0pt
+]
+You are given a video segment #{segment_idx} from {start:.2f}s to {end:.2f}s.
+{len(frame_timestamps)} frames are uniformly sampled at these timestamps (sec): [{ts_str}].
+
+Provide a concise caption summarizing what happens in this segment.
+Use both visual frames and the accompanying audio.
+Be specific to the segment content and keep it short in one or two sentences.
+\end{lstlisting}
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+  colback=blue!3!white,
+  colframe=blue!70!black,
+  width=\linewidth,
+  arc=1mm,
+  boxrule=0.45pt,
+  boxsep=0.8mm,
+  left=1.6mm,
+  right=1.6mm,
+  top=1.2mm,
+  bottom=1.2mm,
+  title=\textbf{Timestamp Prediction Prompt},
+  colbacktitle=blue!70!black,
+  coltitle=white,
+  fonttitle=\scriptsize\bfseries\sffamily,
+  halign title=center
+]
+\setlength{\parindent}{0pt}
+\begin{lstlisting}[
+  frame=none,
+  breaklines=true,
+  breakatwhitespace=true,
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,
+  showstringspaces=false,
+  aboveskip=0pt,
+  belowskip=0pt
+]
+Video 1 lasts for {duration_text}, and {num_frames} frames are uniformly sampled from it.
+{timestamp_block}
+
+Identify the single most relevant moment as one timestamp in seconds that matches the query.
+
+Strict output format:
+Return only one timestamp in seconds as a float.
+Preferred: a bare JSON number such as 12.345.
+Also acceptable: {"timestamp":12.345} or [12.345] with only one value.
+Do not return ranges or natural language.
+Keep the timestamp within [0, video_duration].
+
+Textual query: {query}
+\end{lstlisting}
+\end{tcolorbox}

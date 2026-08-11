@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정보이론 심화 문제 – Hyeonwoo Jung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, {
+        delimiters: [
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false}
+        ]
+      });"></script>  <style>
+    :root {
+      --bg:     #f9f8f4;
+      --text:   #0f0f0f;
+      --muted:  #6b6b6b;
+      --accent: #1a56c4;
+      --rule:   #999;
+      --rule-lt:#d8d8d2;
+      --bg2:    #efede6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(249,248,244,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule-lt);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem; height: 50px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-logo { font-weight: 700; font-size: .88rem; color: var(--text); text-decoration: none; letter-spacing: .03em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links .active { color: var(--accent); font-weight: 600; }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 3rem 0;
+    }
+    .masthead-bar { height: 3px; background: var(--text); }
+    .masthead-inner {
+      border-top: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      padding: 1.1rem 0 1rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1; color: var(--text);
+    }
+    .masthead-sub {
+      margin-top: .45rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── FILTER ─── */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+      background: var(--bg);
+    }
+    .filter-bar-inner-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 3rem;
+    }
+    .filter-inner {
+      display: flex;
+      border-bottom: 3px double var(--text);
+    }
+    .tag-btn {
+      background: none; border: none;
+      flex: 1; text-align: center;
+      padding: .6rem .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); cursor: pointer;
+      border-right: 1px solid var(--rule-lt);
+      transition: color .15s;
+    }
+    .tag-btn:last-child { border-right: none; }
+    .tag-btn:hover { color: var(--accent); }
+    .tag-btn.active { color: var(--accent); }
+
+    /* ─── ARTICLE ─── */
+    .article-wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2rem 3rem 7rem;
+    }
+
+    /* ─── HEADER ─── */
+    h1.post-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700; line-height: 1.3;
+      color: var(--text); margin-bottom: .95rem;
+    }
+
+    .post-dek {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-style: italic;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 1.3rem;
+    }
+
+    .post-meta {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted);
+      display: flex; gap: .55rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .post-meta .dot { color: var(--rule-lt); }
+    .post-meta .cat { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── BODY ─── */
+    .post-content h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 .9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-lt);
+    }
+    .post-content h2.no-rule {
+      border-top: none;
+      padding-top: 0;
+    }
+    .post-content h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem; font-weight: 700; font-style: italic;
+      color: var(--text); margin: 2rem 0 .55rem;
+    }
+    .post-content p {
+      font-size: 1.02rem; line-height: 1.88;
+      color: var(--text); margin-bottom: 1.35rem;
+    }
+    .post-content ul, .post-content ol {
+      padding-left: 1.6rem; margin-bottom: 1.35rem;
+    }
+    .post-content li {
+      font-size: 1.02rem; line-height: 1.8;
+      color: var(--text); margin-bottom: .4rem;
+    }
+    .post-content strong { color: var(--text); font-weight: 600; }
+    .post-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .post-content a:hover { text-decoration: none; }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-bottom: 1px solid var(--rule-lt);
+      margin: 2.6rem 0;
+      padding: 1.4rem 0 1.3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); line-height: 1.65;
+    }
+    .pullquote strong { font-style: normal; font-weight: 700; }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      background: var(--bg2);
+      border-left: 3px solid var(--accent);
+      padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .9rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    /* ─── CODE ─── */
+    code {
+      background: var(--bg2); border: 1px solid var(--rule-lt);
+      border-radius: 3px; padding: .1rem .4rem;
+      font-size: .85em; font-family: 'SF Mono','Fira Code',monospace;
+    }
+
+    /* ─── ORNAMENT DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--rule);
+      font-size: 1.1rem; letter-spacing: .6em;
+      margin: 2.8rem 0;
+    }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .78rem; color: var(--muted);
+      border-top: 1px solid var(--rule-lt);
+      padding-top: 1rem; margin-top: 1rem;
+    }
+    .footnote a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--text);
+      text-align: center; padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .7rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @media (max-width: 768px) {
+      .masthead-title { font-size: 2.4rem; }
+      .tag-btn { font-size: .62rem; padding: .55rem .3rem; letter-spacing: .06em; }
+      .article-wrap { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.4rem; }
+      nav .nav-links { display: none; }
+      .masthead { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .filter-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .article-wrap { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .masthead-title { font-size: 1.9rem; }
+      .tag-btn { font-size: .58rem; letter-spacing: .04em; padding: .5rem .2rem; }
+      h1.post-title { font-size: 1.35rem; }
+      .post-dek { font-size: 1rem; }
+      .post-content h2 { font-size: 1.2rem; }
+    }
+  
+    /* ─── TABLE ─── */
+    .post-content table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .88rem;
+    }
+    .post-content th {
+      background: var(--bg2); font-weight: 700;
+      text-align: left; padding: .55rem .9rem;
+      border-bottom: 2px solid var(--text);
+      color: var(--text); letter-spacing: .04em;
+    }
+    .post-content td {
+      padding: .5rem .9rem;
+      border-bottom: 1px solid var(--rule-lt);
+      color: var(--text); vertical-align: top;
+    }
+    .post-content tr:last-child td { border-bottom: none; }
+
+    /* ─── CODE BLOCKS ─── */
+    /* ─── CODE BLOCKS ─── */
+    pre {
+      background: #282c34;
+      border-radius: 6px; padding: 1.2rem 1.5rem;
+      margin: 1.6rem 0; overflow-x: auto;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: .82rem; line-height: 1.65;
+      color: #abb2bf;
+    }
+    pre code, pre code.hljs {
+      background: none !important; border: none; padding: 0 !important;
+      font-size: inherit; color: inherit;
+    }
+
+    /* ─── IMAGES ─── */
+    .post-content img {
+      max-width: 100%; height: auto;
+      display: block; margin: 2rem auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule-lt);
+    }
+    .post-content figure { margin: 2rem 0; text-align: center; }
+    .post-content figure.fig-sm { max-width: 52%; margin: 2rem auto; }
+    .post-content figure.fig-sm img { max-width: 100%; }
+    .post-content figcaption {
+      font-size: .78rem; color: var(--muted); margin-top: .5rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ─── HIGHLIGHT (형광팬) ─── */
+    .post-content mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+    .summary-highlight {
+      background: #fef9c3;
+      border-left: 3px solid #eab308;
+      padding: .6rem 1rem;
+      margin: .6rem 0 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ─── TABLE CAPTION ─── */
+    .table-caption {
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: .4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Research Blog</span>
+  <ul class="nav-links">
+    <li><a href="../index.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div class="masthead-bar"></div>
+  <div class="masthead-inner">
+    <h1 class="masthead-title">Research Blog</h1>
+    <p class="masthead-sub">Paper Reviews &nbsp;·&nbsp; Ideas &nbsp;·&nbsp; Notes on AI</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner-wrap">
+  <div class="filter-inner">
+    <button class="tag-btn" onclick="location.href='../index.html'">All</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Multimodal'">Multimodal</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=LLM'">LLM</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Computer Vision'">Vision</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Video'">Video</button>
+    <button class="tag-btn active" onclick="location.href='../index.html?tag=Math'">Math</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Agent'">Agent</button>
+    <button class="tag-btn" onclick="location.href='../index.html?tag=Speech'">Speech</button>
+  </div>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <h1 class="post-title">정보이론 심화 문제</h1>
+  <p class="post-dek">VAE의 ELBO, Forward/Reverse KL, 정보 병목 이론 — 대학원 수준 서술형 문제 5선.</p>
+
+  <div class="post-meta">
+    <span class="cat">Math</span>
+    <span class="dot">·</span>
+    <span>Mar 2026</span>
+    <span class="dot">·</span>
+    <span>20 min read</span>
+  </div>
+
+  <div class="post-content">
+<p>이 포스트는 <a href="information-theory.html">정보이론 기초: 엔트로피, 교차 엔트로피, KL Divergence</a>의 심화 문제집이다. 현대 딥러닝 이론의 핵심 개념들 — VAE, GAN, SSL, 정보 병목 — 이 모두 정보이론의 언어로 쓰여있다. 각 문제를 충분히 고민한 후 답안을 확인하자.</p>
+<style>
+.prob-block{background:#fff;border:1px solid #d8d8d2;border-radius:10px;padding:1.5rem 1.7rem;margin-bottom:1.3rem}
+.prob-meta{display:flex;align-items:center;gap:.6rem;margin-bottom:.65rem;flex-wrap:wrap}
+.prob-num{font-family:-apple-system,sans-serif;font-size:.72rem;font-weight:700;color:#fff;background:#1a56c4;padding:.18em .75em;border-radius:20px;letter-spacing:.04em}
+.prob-tag{font-family:-apple-system,sans-serif;font-size:.72rem;color:#666;border:1px solid #ccc;padding:.15em .65em;border-radius:20px}
+.prob-q{font-size:1.04rem;font-weight:600;line-height:1.65;margin-bottom:1rem}
+.prob-toggle{border:1px solid #bbb;background:none;padding:.38rem 1.1rem;border-radius:5px;font-family:-apple-system,sans-serif;font-size:.82rem;cursor:pointer;color:#555}
+.prob-toggle:hover{background:#f0eeea}
+.prob-ans{margin-top:0;padding:0 1.4rem;background:#f4f2ec;border-radius:7px;font-size:.96rem;line-height:1.8;visibility:hidden;max-height:0;overflow:hidden}
+.prob-ans.open{visibility:visible;max-height:9999px;margin-top:1rem;padding:1.2rem 1.4rem}.prob-lv{font-family:-apple-system,sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;margin:2rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid #d8d8d2}
+.prob-ans p{margin-bottom:.8rem}
+.prob-ans p:last-child{margin-bottom:0}
+.kw{background:#fef3c7;padding:.05em .35em;border-radius:3px;font-weight:600}
+.kw2{background:#d4f7d4;padding:.05em .35em;border-radius:3px;font-weight:600}
+.kw3{background:#ffd6d6;padding:.05em .35em;border-radius:3px;font-weight:600}
+.prob-formula{background:#e8e5de;padding:.65rem 1rem;border-radius:5px;margin:.6rem 0;font-size:.94rem;overflow-x:auto}
+</style>
+<script>
+function tp(btn){var a=btn.nextElementSibling;var o=a.classList.toggle('open');btn.textContent=o?'답안 닫기 ▲':'모범 답안 보기 ▾';if(o&&window.renderMathInElement){renderMathInElement(a,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});}}
+</script>
+
+<div class="prob-lv">학부 기초 문제 — 개념과 직관</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 1</span><span class="prob-tag">엔트로피 · 불확실성</span></div>
+<div class="prob-q">공정한 동전($p=0.5$)과 편향된 동전($p=0.9$)의 엔트로피를 각각 계산하라. 계산 결과를 바탕으로 "엔트로피는 불확실성의 척도"라는 말의 의미를 직관적으로 설명하고, 날씨 예보에서 "맑을 확률 99%"와 "맑을 확률 50%"의 엔트로피 차이가 일상적으로 어떤 의미를 갖는지 논하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>엔트로피 공식.</strong> 이진 확률 변수에서 $H = -p\log_2 p - (1-p)\log_2(1-p)$. 단위: bit. 각 항 $-p_i \log_2 p_i$는 사건 $i$가 일어날 때의 <span class="kw">"놀람 정도 = $\log_2(1/p_i)$"에 확률을 가중한 기댓값</span>이다.</p>
+<div class="prob-formula">$$H(0.5) = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 0.5 \times 1 + 0.5 \times 1 = 1 \text{ bit}$$
+$$H(0.9) = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.9(0.152) + 0.1(3.322) \approx 0.469 \text{ bit}$$</div>
+<p><span class="kw2">공정한 동전의 엔트로피(1 bit)가 편향된 동전(0.469 bit)의 약 2.1배</span>다.</p>
+
+<p><strong>직관 — 왜 편향된 동전의 엔트로피가 낮은가.</strong> $p=0.9$ 동전을 던지기 전, 이미 "앞면이 나올 것 같다"고 꽤 확신한다. 결과를 알아도 새로 얻는 정보의 양이 적다. 반면 공정한 동전은 완전히 예측 불가능 — 결과를 알았을 때 최대의 정보를 얻는다. <span class="kw">엔트로피 = "결과를 알기 전 평균적으로 얼마나 놀랄 것인가" = 평균 정보량</span>.</p>
+
+<p><strong>날씨 예보의 함의.</strong> "맑을 확률 99%"는 $H \approx 0.08$ bit — 거의 확신이 있으므로 우산 결정이 쉽다. "맑을 확률 50%"는 <span class="kw3">$H = 1$ bit — 완전히 불확실하므로 예보 자체가 의사결정에 도움이 안 된다.</span> 기상 예보 품질은 사전 불확실성에서 엔트로피를 얼마나 줄이는지(정보 이득)로 수치화할 수 있다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 2</span><span class="prob-tag">교차 엔트로피 · 손실 계산</span></div>
+<div class="prob-q">이진 분류 모델이 두 가지 전략을 쓴다: (A) 항상 $[0.5, 0.5]$ 출력, (B) 정답을 맞추는 완벽한 모델. 레이블 분포가 균등(50/50)일 때 각 전략의 기대 교차 엔트로피 손실을 계산하고 비교하라. 전략 (B)에서 손실이 정확히 0이 아닌 이유를 설명하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>전략 (A) 손실.</strong> 레이블이 0이든 1이든 항상 $\hat{y}_\text{정답} = 0.5$. 기대 교차 엔트로피 손실:</p>
+<div class="prob-formula">$$\mathcal{L}_A = -\log(0.5) = 1 \text{ bit} \quad (\text{또는 } \ln 2 \approx 0.693 \text{ nats})$$</div>
+<p><span class="kw">이것이 레이블 엔트로피 $H(Y) = 1$ bit와 정확히 같다 — 우연이 아니다.</span></p>
+
+<p><strong>전략 (B) 손실.</strong> 완벽한 모델이라면 정답 클래스에 확률 1을 부여 → $-\log(1) = 0$. 기대 손실 = $0$. 단, 소프트맥스 출력은 지수 함수이므로 <span class="kw3">실제로 확률이 정확히 1.0에 도달할 수 없다</span> — 교차 엔트로피 손실 = 0은 이론적 극한이다.</p>
+
+<p><strong>핵심 통찰 — 무엇을 줄일 수 있는가.</strong> 교차 엔트로피는 다음과 같이 분해된다:</p>
+<div class="prob-formula">$$H(p, q) = H(p) + D_{KL}(p\|q)$$</div>
+<ul style="margin:.4rem 0 .6rem 1.2rem;line-height:1.7">
+  <li><span class="kw3">$H(p)$ = 레이블 자체의 불확실성</span> → 데이터가 고정되어 있으므로 어떤 모델로도 줄일 수 없다</li>
+  <li><span class="kw2">$D_{KL}(p\|q)$ = 모델이 레이블 분포에서 얼마나 벗어나 있는지</span> → 학습으로 줄일 수 있다</li>
+</ul>
+<p>전략 (A)의 손실 = $H(Y) + D_{KL}$ (최악). 전략 (B)의 손실 = $H(Y)$ (이론적 하한). 딥러닝 학습이 실제로 하는 일은 $D_{KL}$ 부분을 줄이는 것이다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 3</span><span class="prob-tag">KL Divergence · 비대칭성</span></div>
+<div class="prob-q">분포 $P = [0.9, 0.1]$, $Q = [0.5, 0.5]$에 대해 $D_{KL}(P \| Q)$와 $D_{KL}(Q \| P)$를 각각 계산하라. 두 값이 다른 이유를 이 수치를 이용해 직관적으로 설명하고, "P를 Q로 근사할 때의 비효율성"이라는 해석과 연결하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>KL Divergence 공식.</strong> $D_{KL}(P\|Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}$. "실제 분포 $P$로 생성된 데이터에 $Q$ 기반 코드를 썼을 때의 평균 추가 비트 수". 0이면 두 분포가 같다는 뜻.</p>
+
+<p><strong>계산.</strong></p>
+<div class="prob-formula">$$D_{KL}(P\|Q) = 0.9\ln\frac{0.9}{0.5} + 0.1\ln\frac{0.1}{0.5} \approx 0.9(0.588) + 0.1(-1.609) \approx 0.368 \text{ nats}$$
+$$D_{KL}(Q\|P) = 0.5\ln\frac{0.5}{0.9} + 0.5\ln\frac{0.5}{0.1} \approx 0.5(-0.588) + 0.5(1.609) \approx 0.511 \text{ nats}$$</div>
+<p><span class="kw3">두 값이 다르다 — KL Divergence는 비대칭이다. ($D_{KL}(P\|Q) \neq D_{KL}(Q\|P)$)</span></p>
+
+<p><strong>비대칭성의 직관.</strong></p>
+<ul style="margin:.4rem 0 .6rem 1.2rem;line-height:1.7">
+  <li>$D_{KL}(P\|Q)$: 실제 분포 $P$ (90% 확신)로 샘플을 생성하는데, $Q$ (50-50 가정)로 코딩하면 비효율. $P$가 90%를 할당하는 클래스 0에 $Q$는 겨우 50% — 이 차이가 비효율을 만든다.</li>
+  <li>$D_{KL}(Q\|P)$: 균등 분포 $Q$의 관점에서 $P$를 쓸 때의 비효율. $Q$는 클래스 1에 50%를 기대하는데 $P$는 10%만 준다 — 클래스 1에 대한 큰 페널티.</li>
+</ul>
+
+<p><strong>"근사 비효율성" 해석과 실용적 함의.</strong> $D_{KL}(P\|Q) = 0.368$ nats는 실제 분포가 $P$인데 $Q$ 기반 코드를 쓰면 샘플당 0.368 nats의 추가 정보가 필요하다는 의미다. <span class="kw">이 비대칭성이 KL이 진정한 "거리"가 아닌 이유</span>이고, <span class="kw2">VAE에서 어느 방향 KL을 쓰는지가 모델 행동에 큰 차이를 만드는 이유</span>다 (forward KL → mean-seeking, reverse KL → mode-seeking).</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 4</span><span class="prob-tag">정보 이득 · 결정 트리</span></div>
+<div class="prob-q">결정 트리에서 "정보 이득(information gain)"은 어떤 특성으로 분기했을 때 레이블의 불확실성이 얼마나 줄어드는지를 측정한다. 이것을 조건부 엔트로피 $H(Y|X)$와 상호 정보량 $I(X;Y) = H(Y) - H(Y|X)$로 표현하고, 구체적인 수치 예시로 어떤 특성이 더 좋은 분기 기준인지 계산하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>개념 정의.</strong></p>
+<ul style="margin:.4rem 0 .6rem 1.2rem;line-height:1.7">
+  <li><span class="kw">조건부 엔트로피 $H(Y|X)$</span> = 특성 $X$를 알고 난 뒤 레이블 $Y$의 잔여 불확실성. $H(Y|X) = \sum_x p(x) H(Y|X=x)$</li>
+  <li><span class="kw2">상호 정보량 $I(X;Y) = H(Y) - H(Y|X)$</span> = 특성 $X$를 알았을 때 $Y$의 불확실성이 얼마나 줄어드는가</li>
+</ul>
+<p>$I(X;Y)$가 클수록 $X$가 $Y$에 대한 정보를 많이 담고 있다. 결정 트리는 매 분기에서 $I(X;Y)$ 최대 특성을 선택한다.</p>
+
+<p><strong>수치 예시 — 특성 A.</strong> 10개 샘플, 레이블 50/50. $H(Y) = 1$ bit. 특성 A: $X=0$이면 4양성/1음성(각 5개씩), $X=1$이면 1양성/4음성.</p>
+<div class="prob-formula">$$H(Y|A=0) = -\frac{4}{5}\log_2\frac{4}{5} - \frac{1}{5}\log_2\frac{1}{5} \approx 0.722 \text{ bit}$$
+$$H(Y|A) = \frac{5}{10}(0.722) + \frac{5}{10}(0.722) = 0.722 \text{ bit}$$
+$$I(A;Y) = 1 - 0.722 = 0.278 \text{ bit}$$</div>
+
+<p><strong>수치 예시 — 특성 B.</strong> $X=0$이면 5양성/0음성, $X=1$이면 0양성/5음성. 완벽한 분리.</p>
+<div class="prob-formula">$$H(Y|B=0) = H(Y|B=1) = 0, \quad I(B;Y) = 1 - 0 = 1 \text{ bit}$$</div>
+<p><span class="kw2">특성 B가 레이블을 완벽히 분리 → 정보 이득 최대(= $H(Y)$)</span>. 반면 레이블과 전혀 무관한 특성은 $H(Y|X) = H(Y)$이므로 $I = 0$이 된다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">기초 5</span><span class="prob-tag">교차 엔트로피 분해 · 하한</span></div>
+<div class="prob-q">교차 엔트로피가 $H(p, q) = H(p) + D_{KL}(p \| q)$로 분해됨을 보여라. 이 분해를 통해 (1) 교차 엔트로피의 최솟값이 엔트로피 $H(p)$임을 증명하고, (2) 딥러닝 모델을 학습할 때 우리가 실제로 줄이고 있는 것이 무엇인지 설명하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>분해 유도 — 한 줄씩 풀어서.</strong></p>
+<div class="prob-formula">$$H(p,q) = -\sum_x p(x)\log q(x)$$
+$$= -\sum_x p(x)\log p(x) + \sum_x p(x)\log p(x) - \sum_x p(x)\log q(x)$$
+$$= H(p) + \sum_x p(x)\log\frac{p(x)}{q(x)} = H(p) + D_{KL}(p\|q)$$</div>
+<p>두 번째 줄에서 $-\sum p(x)\log p(x) = H(p)$를 더하고 빼는 트릭을 썼다. ∎</p>
+
+<p><strong>(1) 최솟값 증명.</strong> <span class="kw">깁스 부등식: $D_{KL}(p\|q) \geq 0$</span>, 등호는 $p = q$일 때만 성립. (증명: 로그의 볼록성으로 Jensen 부등식 적용.) 따라서:</p>
+<div class="prob-formula">$$H(p, q) = H(p) + D_{KL}(p\|q) \geq H(p)$$</div>
+<p><span class="kw2">교차 엔트로피의 최솟값 = 레이블 엔트로피 $H(p)$, 등호는 $q = p$일 때</span>. 즉 모델이 완벽히 데이터 분포를 학습했을 때 달성된다. ∎</p>
+
+<p><strong>(2) 딥러닝 학습이 실제로 하는 일.</strong> 훈련 중 레이블 분포 $p$ (데이터)는 고정 → $H(p)$는 상수. 바뀌는 것은 모델 $q_\theta$뿐. 따라서:</p>
+<div class="prob-formula">$$\min_\theta H(p, q_\theta) = \min_\theta \bigl[H(p) + D_{KL}(p \| q_\theta)\bigr] = \min_\theta D_{KL}(p \| q_\theta)$$</div>
+<p><span class="kw2">교차 엔트로피 손실 최소화 = $D_{KL}(p \| q_\theta)$ 최소화 = 모델 분포를 데이터 분포에 가깝게 만들기.</span> 이것이 딥러닝 학습의 정보이론적 본질이다.</p>
+
+</div>
+</div>
+
+<div class="prob-lv">대학원 심화 문제 — 엄밀한 논증</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">문제 1</span><span class="prob-tag">VAE · ELBO · Jensen 부등식</span></div>
+<div class="prob-q">VAE(Variational Autoencoder)의 목적 함수인 ELBO가 아래와 같이 분해됨을 Jensen 부등식을 이용하여 유도하라. 각 항의 정보이론적 의미를 설명하고, KL 항이 왜 잠재 공간(latent space)의 정규화 역할을 하는지 논하라.
+$$\log p(x) \;\geq\; \underbrace{\mathbb{E}_{q(z|x)}[\log p(x|z)]}_{\text{재구성 항}} - \underbrace{D_{KL}(q(z|x)\,\|\,p(z))}_{\text{정규화 항}}$$</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>유도.</strong> 변분 분포 $q(z|x)$를 도입하여 로그 우도를 전개한다:</p>
+<div class="prob-formula">$$\log p(x) = \log \int p(x,z)\,dz = \log \int q(z|x)\frac{p(x,z)}{q(z|x)}\,dz = \log\,\mathbb{E}_{q(z|x)}\!\left[\frac{p(x,z)}{q(z|x)}\right]$$</div>
+<p>로그 함수의 오목성에 <span class="kw">Jensen 부등식</span> $\log \mathbb{E}[f] \geq \mathbb{E}[\log f]$을 적용하면:</p>
+<div class="prob-formula">$$\log p(x) \;\geq\; \mathbb{E}_{q(z|x)}\!\left[\log\frac{p(x,z)}{q(z|x)}\right] = \mathbb{E}_{q}\!\left[\log p(x|z)\right] + \mathbb{E}_{q}\!\left[\log\frac{p(z)}{q(z|x)}\right]$$</div>
+<p>두 번째 항이 $-D_{KL}(q(z|x)\|p(z))$이므로 ELBO 분해가 완성된다. 등호는 $q(z|x) = p(z|x)$, 즉 변분 사후 분포가 참 사후 분포와 일치할 때 성립한다.</p>
+
+<p><strong>재구성 항의 의미.</strong> $\mathbb{E}_{q(z|x)}[\log p(x|z)]$는 인코더 $q(z|x)$가 샘플링한 잠재 코드 $z$로부터 디코더 $p(x|z)$가 원본 $x$를 얼마나 잘 복원하는지를 측정한다. 픽셀 단위 교차 엔트로피 혹은 MSE로 구현되며, <span class="kw">최대화 방향이 재구성 품질 향상</span>이다.</p>
+
+<p><strong>KL 항의 정규화 역할.</strong> $D_{KL}(q(z|x)\|p(z))$를 최소화하는 것은 인코더가 생성하는 사후 분포 $q(z|x)$를 사전 분포 $p(z) = \mathcal{N}(0,I)$에 가깝게 만든다는 뜻이다. 이 제약이 없으면 인코더는 각 입력 $x$를 잠재 공간의 고립된 점으로 매핑하여 디코더의 학습을 쉽게 만들 수 있지만, <span class="kw3">잠재 공간이 연속적이지 않아 새로운 샘플 생성이 불가능</span>해진다. KL 항은 잠재 공간을 정규 분포 주변에 체계적으로 배치시켜 생성 모델로서의 기능을 보장한다. KL 항 앞에 $\beta > 1$ 계수를 붙인 $\beta$-VAE는 표현의 disentanglement를 강화한다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">문제 2</span><span class="prob-tag">Forward KL · Reverse KL · Mode Averaging vs Seeking</span></div>
+<div class="prob-q">분포 $p$를 $q$로 근사할 때 $D_{KL}(p \| q)$ (Forward KL)를 최소화하는 것과 $D_{KL}(q \| p)$ (Reverse KL)를 최소화하는 것은 매우 다른 $q$를 유도한다. $p$가 다봉(multimodal) 분포일 때 각각의 경우 $q$가 어떻게 행동하는지 수식과 직관으로 설명하라. 이 차이가 VAE와 GAN의 학습 방식 차이와 어떻게 연결되는지 논하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>Forward KL: $\min_q D_{KL}(p \| q)$.</strong> 전개하면 $D_{KL}(p\|q) = \mathbb{E}_p[\log p] - \mathbb{E}_p[\log q]$이므로 최소화는 $\mathbb{E}_p[\log q(x)]$를 최대화, 즉 $p(x) > 0$인 모든 $x$에서 $q(x)$도 커야 한다. $p(x) > 0$인데 $q(x) \approx 0$이면 $\log q \to -\infty$이므로 무한한 패널티가 발생한다. 따라서 <span class="kw">$q$는 $p$의 support 전체를 커버</span>해야 하고, $p$가 두 개의 봉우리를 가지면 $q$는 두 봉우리 사이 어딘가를 포괄하는 "평균적" 분포가 된다. 이를 <span class="kw">zero-avoiding 또는 mean-seeking</span>이라 한다.</p>
+
+<p><strong>Reverse KL: $\min_q D_{KL}(q \| p)$.</strong> $D_{KL}(q\|p) = \mathbb{E}_q[\log q] - \mathbb{E}_q[\log p]$이므로 $q(x) > 0$인 영역에서만 페널티가 발생한다. $p(x) \approx 0$인 곳에 $q$를 배치하면 $-\mathbb{E}_q[\log p]$가 커지므로, $q$는 자연스럽게 $p$의 <span class="kw">확률 질량이 높은 봉우리 하나에만 집중</span>하려 한다. $p$가 다봉 분포라면 $q$는 봉우리 하나를 선택하고 나머지를 무시한다. 이를 <span class="kw3">zero-forcing 또는 mode-seeking</span>이라 한다.</p>
+
+<p><strong>VAE vs GAN 연결.</strong> VAE의 학습은 ELBO 최대화 = $D_{KL}(q(z|x)\|p(z))$ 최소화이므로 Reverse KL을 따르지만, 재구성 항에 의해 데이터 분포를 커버하려는 압력도 동시에 존재한다. 결과적으로 VAE는 <span class="kw2">평균적이고 흐릿한(blurry) 이미지</span>를 생성하는 경향이 있다 — mode-covering의 흔적이다. GAN의 판별자(discriminator)는 실제 분포 $p_\text{data}$와 생성 분포 $p_G$ 사이의 거리를 최소화하는데, 기본 GAN의 손실은 Jensen-Shannon Divergence, WGAN은 Wasserstein 거리와 연결된다. GAN 생성자는 판별자를 속일 수 있는 <span class="kw">하나의 그럴듯한 mode에 집중</span>하므로 mode-seeking 경향을 보이며, mode collapse 문제가 발생한다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">문제 3</span><span class="prob-tag">정보 병목 이론 · Mutual Information</span></div>
+<div class="prob-q">Tishby et al.의 정보 병목(Information Bottleneck) 원리 $\min_{p(t|x)}\; I(X;T) - \beta\, I(T;Y)$를 설명하라. 이것이 딥러닝의 중간 표현(representation) 학습을 어떻게 설명하는지 논하고, 이 이론에 대한 비판적 관점(Saxe et al., 2019)도 함께 제시하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>정보 병목 원리.</strong> 입력 $X$, 레이블 $Y$, 중간 표현 $T$가 마르코프 체인 $Y - X - T$를 형성한다고 가정한다. 목표는 $T$가 <span class="kw">$Y$에 관한 정보 $I(T;Y)$는 최대한 보존</span>하면서, 동시에 <span class="kw">$X$의 불필요한 정보 $I(X;T)$는 최소한으로 압축</span>하는 표현을 찾는 것이다. $\beta$는 두 목표 사이의 trade-off를 조절한다. $\beta \to 0$이면 완전 압축(모든 정보 버림), $\beta \to \infty$이면 완전 보존이다.</p>
+
+<p><strong>딥러닝 해석.</strong> Tishby & Schwartz-Ziv(2017)는 딥러닝 훈련을 두 단계로 해석했다: 초반의 <span class="kw">fitting 단계</span>(레이블 정보 $I(T;Y)$ 빠르게 증가)와 후반의 <span class="kw2">compression 단계</span>($I(X;T)$ 감소, 과제와 무관한 입력 정보 제거). 이 관점에서 딥러닝의 일반화는 표현이 충분 통계량(sufficient statistic)에 가까워지는 과정으로 이해된다. 또한 네트워크 깊이에 따라 정보 병목이 연속적으로 정제된다는 직관을 제공한다.</p>
+
+<p><strong>비판적 관점.</strong> Saxe et al.(2019)은 두 가지 핵심 반론을 제시했다. 첫째, compression 단계는 <span class="kw3">비선형 활성화 함수(tanh 등)에서는 관찰되지만 ReLU에서는 나타나지 않는다</span> — 즉 활성화 함수에 따라 결론이 달라지므로 보편적 원리가 아니다. 둘째, 연속 분포에서의 mutual information 추정은 추정 방법에 따라 매우 달라지며, 관찰된 compression이 실제 표현 변화가 아닌 추정 편향일 수 있다. 따라서 정보 병목 이론은 딥러닝을 해석하는 하나의 관점은 제공하지만, 보편적 학습 원리로 받아들이기엔 실험적 지지가 부족하다는 것이 현재 학계의 합의에 가까운 평가다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">문제 4</span><span class="prob-tag">Rényi 엔트로피 · Shannon 엔트로피 극한</span></div>
+<div class="prob-q">Rényi 엔트로피 $H_\alpha(X) = \frac{1}{1-\alpha}\log\sum_i p_i^\alpha$에서 $\alpha \to 1$일 때 Shannon 엔트로피로 수렴함을 L'Hôpital 법칙을 이용하여 증명하라. $\alpha = 2$ (Collision entropy)와 $\alpha \to \infty$ (Min-entropy)의 수식과 의미를 설명하고, 이 두 특수 케이스가 암호학에서 각각 어떤 역할을 하는지 서술하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>$\alpha \to 1$ 수렴 증명.</strong> $f(\alpha) = \log\sum_i p_i^\alpha$, $g(\alpha) = 1-\alpha$로 놓으면 $H_\alpha = f(\alpha)/g(\alpha)$이고, $\alpha = 1$에서 $f(1) = \log\sum_i p_i = \log 1 = 0$, $g(1) = 0$. L'Hôpital을 적용한다:</p>
+<div class="prob-formula">$$\lim_{\alpha\to 1} H_\alpha = \lim_{\alpha\to 1} \frac{f'(\alpha)}{g'(\alpha)} = \frac{\dfrac{d}{d\alpha}\log\sum_i p_i^\alpha\Big|_{\alpha=1}}{-1}$$</div>
+<p>$\frac{d}{d\alpha}\log\sum_i p_i^\alpha = \frac{\sum_i p_i^\alpha \log p_i}{\sum_i p_i^\alpha}$이고, $\alpha=1$에서 $= \sum_i p_i \log p_i$. 따라서:</p>
+<div class="prob-formula">$$\lim_{\alpha\to 1} H_\alpha = -\sum_i p_i \log p_i = H(X)$$</div>
+
+<p><strong>$\alpha = 2$: Collision Entropy.</strong> $H_2(X) = -\log\sum_i p_i^2 = -\log P(\text{collision})$. 두 독립 샘플이 같은 값을 가질 확률(충돌 확률)의 로그다. <span class="kw">암호학적 의미</span>: 공격자가 두 번의 시도로 같은 값을 맞출 확률과 직결된다. 해시 함수의 충돌 저항성(collision resistance)을 분석할 때 핵심 지표로, $H_2$가 크면 충돌을 찾기 어렵다.</p>
+
+<p><strong>$\alpha \to \infty$: Min-Entropy.</strong> $H_\infty(X) = -\log\max_i p_i$. 가장 큰 확률을 가진 사건 하나만 고려한다. <span class="kw2">암호학적 의미</span>: 공격자가 최적 전략(가장 높은 확률의 값을 추측)으로 단 한 번에 맞출 확률을 정량화한다. 난수 생성기(RNG)의 품질, 특히 <span class="kw">추측 가능성(guessability)</span>을 평가하는 데 쓰인다. NIST의 난수 표준(SP 800-90B)에서 Min-entropy가 핵심 지표로 사용된다. Min-entropy가 클수록 어떤 전략으로도 단번에 맞추기 어렵다는 의미다.</p>
+
+</div>
+</div>
+
+<div class="prob-block">
+<div class="prob-meta"><span class="prob-num">문제 5</span><span class="prob-tag">Data Processing Inequality · 충분 통계량 · 대조 학습</span></div>
+<div class="prob-q">Data Processing Inequality(DPI)는 어떤 확률적 처리 $f$를 거쳐도 상호 정보량이 감소함을 말한다: $I(X;Y) \geq I(f(X);Y)$. 이것이 딥러닝에서 충분 통계량(sufficient statistic)과 어떻게 연결되는지 설명하라. 또한 대조 학습(contrastive learning)의 InfoNCE 손실이 Mutual Information의 하한(lower bound)을 최대화하는 것임을 논하라.</div>
+<button class="prob-toggle" onclick="tp(this)">모범 답안 보기 ▾</button>
+<div class="prob-ans">
+
+<p><strong>DPI와 충분 통계량.</strong> DPI에 따르면 어떤 함수 $f$를 적용해도 $I(f(X);Y) \leq I(X;Y)$이다. 등호가 성립하는 — 즉 정보 손실 없이 $Y$에 대한 모든 정보를 보존하는 — 함수 $f(X)$를 <span class="kw">충분 통계량(sufficient statistic)</span>이라 한다. 이 개념은 표현 학습의 궁극적 목표를 수학적으로 정의한다: 레이블 $Y$에 대한 정보를 전혀 잃지 않으면서 입력 $X$를 최대한 압축한 표현. 딥러닝의 중간 표현이 충분 통계량에 가까울수록 불필요한 정보(배경, 텍스처 등)를 제거하고 레이블과 관련된 구조만 포착한다. 최소 충분 통계량(minimal sufficient statistic)은 레이블 정보를 보존하는 가장 압축된 표현이며, 정보 병목 이론의 이상적 목표이기도 하다.</p>
+
+<p><strong>InfoNCE와 Mutual Information 하한.</strong> InfoNCE 손실(Oord et al., 2018)은 대조 학습에서 positive pair $(x, y)$와 $N-1$개의 negative sample로 구성된다:</p>
+<div class="prob-formula">$$\mathcal{L}_\text{InfoNCE} = -\mathbb{E}\!\left[\log\frac{e^{f(x)^T g(y)/\tau}}{\frac{1}{N}\sum_{j=1}^N e^{f(x)^T g(y_j)/\tau}}\right]$$</div>
+<p>van den Oord et al.은 이 손실을 최소화하는 것이 $I(X;Y) \geq \log N - \mathcal{L}_\text{InfoNCE}$를 통해 Mutual Information의 <span class="kw2">하한을 최대화</span>하는 것과 동치임을 보였다. 직관적으로, 모델이 $N$개의 후보 중 올바른 positive pair를 잘 구분할수록 두 표현 사이에 공유된 정보(Mutual Information)가 크다는 뜻이다. 배치 크기 $N$이 클수록 하한이 타이트해지며, 대규모 배치가 대조 학습에서 성능을 향상시키는 이유가 여기 있다. DPI는 인코더를 거쳐도 Mutual Information이 감소하지 않도록 — 즉 <span class="kw">충분 통계량에 가까운 표현을 학습</span>하도록 — InfoNCE가 암묵적으로 압박한다고 해석할 수 있다.</p>
+
+</div>
+</div>
+
+<div class="footnote">
+  이전 포스트: <a href="information-theory.html">정보이론 기초</a> · 관련: <a href="mle-map-problems.html">MLE & MAP 심화 문제</a>
+</div>
+
+  </div>
+
+</div>
+
+<footer>© 2026 Hyeonwoo Jung &nbsp;·&nbsp; Research Blog</footer>
+
+</body>
+</html>

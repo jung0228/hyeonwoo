@@ -1,0 +1,11 @@
+\begin{figure}[t]
+\centerline{\includegraphics[width=.85\linewidth]{figures/src/framework.pdf}}
+\caption{
+\textbf{Overview of~\ourmethod.}
+We modify the attention mechanism in Decoder-based Video-LLMs:
+(a) The video stream is encoded with sliding-window attention (Equation~\ref{equ:video_encoding}), with out-of-window Video KV-Caches offloaded to RAM or disk.
+(b) Upon receiving a question, relevant key-value vectors are retrieved based on cosine similarity, with compressed vectors to accelerate retrieval (Equation~\ref{equ:retrieval}).
+(c) The retrieved key-value vectors are reloaded onto the GPU and utilized for autoregressive answer generation (Equation~\ref{equ:answer_generation}).
+}
+\label{fig:framework} 
+\end{figure}

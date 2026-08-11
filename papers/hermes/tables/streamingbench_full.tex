@@ -1,0 +1,109 @@
+\begin{table*}[t]
+    \centering
+    \caption{\textbf{Accuracy comparison (\%) on StreamingBench focusing on \textit{Real-Time Visual Understanding} tasks}. Real-Time Visual Understanding tasks consists of Object Perception (OP), Causal Reasoning (CR), Clips Summarization (CS), Attribute Perception (ATP), Event Understanding (EU), Text-Rich Understanding (TR), Prospective Reasoning (PR), Spatial Understanding (SU), Action Perception (ACP), and Counting (CT).}
+    \label{tab:streamingbench_full}
+    \small
+    % 14 columns: Model, Frames, Drop., OP, CR, CS, ATP, EU, TR, PR, SU, ACP, CT, All
+    \begin{adjustbox}{max width=\linewidth}
+    \begin{tabular}{l c | c c c c c c c c c c | c}
+    \toprule
+    \multirow{1}{*}{\textbf{Model}} & \multirow{1}{*}{\textbf{\#Frames}} & \textbf{OP} & \textbf{CR} & \textbf{CS} & \textbf{ATP} & \textbf{EU} & \textbf{TR} & \textbf{PR} & \textbf{SU} & \textbf{ACP} & \textbf{CT} & \textbf{Avg.} \\
+    \midrule
+    \midrule
+    Human & - & 89.47 & 92.00 & 93.60 & 91.47 & 95.65 & 92.52 & 88.00 & 88.75 & 89.74 & 91.30 & 91.46 \\
+    \midrule
+    \multicolumn{13}{c}{\textbf{Proprietary MLLMs}} \\
+    \midrule
+    Gemini 1.5 pro~\cite{gemini25} & 1 fps & 79.02 & 80.47 & 83.54 & 79.67 & 80.00 & 84.74 & 77.78 & 64.23 & 71.95 & 48.70 & 75.69 \\
+    GPT-4o~\cite{openai2024gpt4ocard} & 64 
+        & 77.11 & 80.47 & 83.91 & 76.47 & 70.19 & 83.80 & 66.67 & 62.19 & 69.12 & 49.22 & 73.28 \\
+    Claude 3.5 Sonnet~\cite{claude3_5} & 20 
+        & 73.33 & 80.47 & 84.09 & 82.02 & 75.39 & 79.53 & 61.11 & 61.79 & 69.32 & 43.09 & 72.44 \\
+    \midrule
+    \multicolumn{13}{c}{\textbf{Open-source Offline MLLMs}} \\
+    \midrule
+    Video-LLaMA2-7B~\cite{videollama2} & 32 & 
+            55.86 & 55.47 & 57.41 & 58.17 & 52.80 & 43.61 & 39.81 & 42.68 & 45.61 & 35.23 & 49.52 \\
+    VILA-1.5-8B~\cite{vila} & 14 &  
+        53.68 & 49.22 & 70.98 & 56.86 & 53.42 & 53.89 & 54.63 & 48.78 & 50.14 & 17.62 & 52.32 \\
+    Video-CCAM-14B~\cite{videoccam} & 96 & 
+        56.40 & 57.81 & 65.30 & 62.75 & 64.60 & 51.40 & 42.59 & 47.97 & 49.58 & 31.61 & 53.96 \\
+    LongVA-7B~\cite{longva} & 128 & 
+        70.03 & 63.28 & 61.20 & 70.92 & 62.73 & 59.50 & 61.11 & 53.66 & 54.67 & 34.72 & 59.96 \\
+    InternVL-V2-8B~\cite{internvl2} & 16 & 
+        68.12 & 60.94 & 69.40 & 77.12 & 67.70 & 62.93 & 59.26 & 53.25&  54.96 & 56.48 & 63.72 \\
+    Kangaroo-7B~\cite{kangaroo} & 64 & 
+        71.12 & 84.38 & 70.66 & 73.20 & 67.08 & 61.68 & 56.48 & 55.69 & 62.04 & 38.86 & 64.60 \\
+    LLaVA-NeXT-Video-32B~\cite{llava-next} & 64 & 
+        78.20 & 70.31 & 73.82 & 76.80 & 63.35 & 69.78 & 57.41 & 56.10&  64.31 & 38.86 & 66.96 \\
+    MiniCPM-V-2.6-8B~\cite{minicpm} & 32 &  
+        71.93 & 71.09 & 77.92 & 75.82 & 64.60 & 65.73 & 70.37 & 56.10 & 62.32 & 53.37 & 67.44 \\
+    \addlinespace[1pt]
+    
+    \midrule
+    \multicolumn{13}{c}{\textbf{Open-source  Online MLLMs}} \\
+    \midrule
+    Flash-VStream-7B~\cite{flashvstream} & - 
+        & 25.89 & 43.57 & 24.91 & 23.87 & 27.33 & 13.08 & 18.52 & 25.20 & 23.87 & 48.70 & 23.23 \\
+    VideoLLM-online-8B~\cite{videollmonline} & 2 fps 
+        & 39.07 & 40.06 & 34.49 & 31.05 & 45.96 & 32.40 & 31.48 & 34.16 & 42.49 & 27.89 & 35.99 \\
+    Dispider-7B~\cite{dispider} & 1 fps 
+        & 74.92 & 75.53 & 74.10 & 73.08 & 74.44 & 59.92 & 76.14 & 62.91 & 62.16 & 45.80 & 67.63 \\
+    TimeChat-Online-7B~\cite{timechatonline} &1 fps
+        & 80.22 & 82.03 & 79.50 & 83.33 & 76.10 & 78.50 & 78.70 & 64.63 & 69.60 & 57.98 & 75.36 \\
+    StreamForest-7B~\cite{zeng2025streamforestefficientonlinevideo} &1 fps
+        & 83.11 & 82.81 & 82.65 & 84.26 & 77.50 & 78.19 & 76.85 & 69.11 & 75.64 & 54.40 & 77.26 \\
+
+    \midrule
+    \multicolumn{13}{c}{\textbf{Training-free Offline-to-Online Methods}} \\
+    \midrule
+    LLaVA-OV-7B~\cite{li2024llavaonevisioneasyvisualtask} & 32  &  78.75 & 78.12 & 80.76 & \textbf{81.19} & 71.70 & 72.59 & 72.22 & 63.82&  66.01 & 38.34 & 71.34 \\
+
+    \hspace{3pt} + ReKV~\cite{di2025streamingvideoquestionansweringincontext} & 0.5 fps &  76.02 & 81.25 & 77.92 & 76.90 & 66.04 & 66.04 & 69.44 & 60.98& 64.31 & 49.22 & 69.22 \\
+
+    \hspace{3pt} + LiveVLM~\cite{ning2025livevlmefficientonlinevideo} & 0.5 fps & \textbf{81.47} & 78.13 & 83.28 & 79.08 & 69.57 & \textbf{74.14} & \textbf{75.00} & \textbf{69.11} &  67.71 & 40.41 & 72.92 \\
+
+    \hspace{3pt} + StreamKV~\cite{chen2025streamkvstreamingvideoquestionanswering} & 0.5 fps & 73.80 & 77.30 & 85.90 & 77.50 & \textbf{73.30} & 63.90 & 69.40 & 61.40 &  63.20 & 35.80 & 68.80 \\
+
+    \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & 77.93 & \textbf{82.03} & 86.12 & \textbf{81.19} & 66.04 & 73.52 & 74.07 & 63.01 &  67.71 & \textbf{45.08} & 72.63 \\
+
+     \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & 79.02 & 81.25 & \textbf{87.70} & 80.20 & 69.18 & 71.96 & 73.15 & 66.26 &  \textbf{69.41} & 43.52 & \textbf{73.23} \\
+
+      
+    
+    \midrule
+
+    LLaVA-OV-0.5B~\cite{li2024llavaonevisioneasyvisualtask} & 32  &  71.39 & 57.81 & 65.93 & 69.64 & 69.18 & 55.76 & 57.41 & \textbf{52.85} & 62.04 & 16.58 & 59.64 \\
+
+    \hspace{3pt} + ReKV~\cite{di2025streamingvideoquestionansweringincontext} & 0.5 fps &  65.12 & 60.16 & 66.56 & 66.01 & 66.67 & 52.96 & 57.41 & 48.37&  60.34 & 18.13 & 57.39 \\
+
+    \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & 71.93 & 60.16 & 69.09 & 71.29 & 68.55 & 57.32 & \textbf{60.19} & 51.22 &  \textbf{63.74} & \textbf{19,69} & 61.04 \\
+
+     \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & \textbf{72.21} & \textbf{61.72} & \textbf{70.98} & \textbf{72.94} & \textbf{72.33} & \textbf{57.94} & \textbf{60.19} & \textbf{52.85} &  \textbf{63.74}& 19.17 & \textbf{62.04} \\
+
+      
+    
+    \midrule    
+    Qwen2.5-VL-7B~\cite{bai2025qwen25vltechnicalreport} & 1 fps & 
+        77.93 & 76.56 & 78.55 & 80.86 & 76.73 & 76.95 & 80.56 & 65.45 & 65.72 & \textbf{52.85} & 73.31 \\
+    \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & 83.38 & 78.91 & 86.12 & 87.13 & \textbf{78.62} & \textbf{86.60} & \textbf{84.26} & 74.80 &  71.39 & 46.63 & 78.72 \\
+        
+    \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & \textbf{83.65} & \textbf{81.25} & \textbf{88.01} & \textbf{87.46} & 76.73 & \textbf{86.60} & 82.41 & \textbf{76.02} &  \textbf{73.94} & 46.63 & \textbf{79.44} \\
+    
+    
+    \midrule
+    
+    Qwen2.5-VL-32B~\cite{bai2025qwen25vltechnicalreport} & 1 fps & 
+        76.29 & 79.69 & 78.55 & \textbf{83.50} & 76.10 & 79.44 & 80.56 & 61.38 & 68.27 & \textbf{59.07} & 74.27 \\
+    \rowcolor{gray!20} \hspace{3pt} + HERMES (6K tokens) & 0.5 fps & \textbf{84.47} & 79.69 & \textbf{87.70} & 83.17 & \textbf{81.76} & \textbf{88.16} & 86.11 & 74.80 &  \textbf{77.62} & 49.22 & \textbf{80.20} \\
+        
+    \rowcolor{gray!40} \hspace{3pt} + HERMES (4K tokens) & 0.5 fps & 83.92 & \textbf{80.47} & \textbf{87.70} & \textbf{83.50} & 80.50 & \textbf{88.16} & \textbf{87.04} & \textbf{75.20} &  77.34 & 48.19 & 80.08 \\
+    
+
+    
+    \bottomrule
+    \end{tabular}
+\end{adjustbox}
+\end{table*}
+
+
