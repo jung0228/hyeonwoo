@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initGraph();
   initHeatmap();
   initProgress();
+  initResearch();
   updateStatsBadge();
 });
 
@@ -838,4 +839,203 @@ function buildStrongList() {
       <div class="spot-category" style="color:${color}">${n.category}</div>
     </div>`;
   }).join('');
+}
+
+/* ============================================================
+   RESEARCH VIEW
+   ============================================================ */
+const RESEARCH_STORAGE_KEY = 'hyeonwoo_research_v1';
+const STATUS_CYCLE = ['idea', 'exploring', 'active', 'done'];
+const STATUS_LABELS = { idea: '💭 아이디어', exploring: '🔍 탐색 중', active: '🔥 진행 중', done: '✅ 완료' };
+let researchData = null;
+let saveTimer = null;
+
+async function initResearch() {
+  // Load from localStorage first, fall back to research.json
+  const stored = localStorage.getItem(RESEARCH_STORAGE_KEY);
+  if (stored) {
+    try { researchData = JSON.parse(stored); }
+    catch { researchData = null; }
+  }
+  if (!researchData) {
+    try {
+      const res = await fetch('data/research.json');
+      researchData = await res.json();
+    } catch {
+      researchData = { tagline: '', sections: {}, agenda: [], keywords: [] };
+    }
+  }
+
+  renderResearch();
+  bindResearchEditors();
+}
+
+function renderResearch() {
+  // Tagline
+  const tl = document.getElementById('research-tagline');
+  if (tl) tl.textContent = researchData.tagline || '';
+
+  // Flow card sections
+  const keys = ['worldview', 'need', 'value', 'research'];
+  keys.forEach(key => {
+    const el = document.getElementById(`section-${key}`);
+    if (el) el.textContent = researchData.sections?.[key] || '';
+  });
+
+  // Agenda
+  renderAgendaList();
+
+  // Keywords
+  renderKeywords();
+}
+
+function bindResearchEditors() {
+  // Tagline
+  const tl = document.getElementById('research-tagline');
+  if (tl) tl.addEventListener('input', () => {
+    researchData.tagline = tl.textContent.trim();
+    scheduleResearchSave();
+  });
+
+  // Flow sections
+  ['worldview', 'need', 'value', 'research'].forEach(key => {
+    const el = document.getElementById(`section-${key}`);
+    if (!el) return;
+    el.addEventListener('input', () => {
+      if (!researchData.sections) researchData.sections = {};
+      researchData.sections[key] = el.textContent;
+      scheduleResearchSave();
+    });
+  });
+}
+
+function scheduleResearchSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    researchData.lastSaved = new Date().toISOString();
+    localStorage.setItem(RESEARCH_STORAGE_KEY, JSON.stringify(researchData));
+    const ind = document.getElementById('research-save-indicator');
+    if (ind) {
+      ind.classList.add('visible');
+      setTimeout(() => ind.classList.remove('visible'), 1800);
+    }
+  }, 600);
+}
+
+/* ---- Agenda ---- */
+function renderAgendaList() {
+  const list = document.getElementById('agenda-list');
+  if (!list) return;
+  list.innerHTML = '';
+  (researchData.agenda || []).forEach(item => {
+    list.appendChild(createAgendaItem(item));
+  });
+}
+
+function createAgendaItem(item) {
+  const el = document.createElement('div');
+  el.className = 'agenda-item';
+  el.dataset.id = item.id;
+
+  const tagsHtml = (item.tags || []).map(t =>
+    `<span class="agenda-tag">${t}</span>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="agenda-priority priority-${item.priority || 'medium'}"></div>
+    <div class="agenda-content">
+      <div class="agenda-item-title" contenteditable="true" spellcheck="false">${item.title || ''}</div>
+      <div class="agenda-item-note"  contenteditable="true" spellcheck="false">${item.note  || ''}</div>
+      <div class="agenda-item-tags">${tagsHtml}</div>
+    </div>
+    <div class="agenda-item-meta">
+      <span class="agenda-status status-${item.status || 'idea'}" title="클릭해서 상태 변경">${STATUS_LABELS[item.status] || STATUS_LABELS.idea}</span>
+      <button class="agenda-delete-btn" title="삭제">✕</button>
+    </div>
+  `;
+
+  // Title edit
+  el.querySelector('.agenda-item-title').addEventListener('input', e => {
+    item.title = e.target.textContent;
+    scheduleResearchSave();
+  });
+  // Note edit
+  el.querySelector('.agenda-item-note').addEventListener('input', e => {
+    item.note = e.target.textContent;
+    scheduleResearchSave();
+  });
+  // Status cycle
+  el.querySelector('.agenda-status').addEventListener('click', () => {
+    const cur = STATUS_CYCLE.indexOf(item.status || 'idea');
+    item.status = STATUS_CYCLE[(cur + 1) % STATUS_CYCLE.length];
+    const btn = el.querySelector('.agenda-status');
+    btn.className = `agenda-status status-${item.status}`;
+    btn.textContent = STATUS_LABELS[item.status];
+    // Sync priority dot color based on status
+    scheduleResearchSave();
+  });
+  // Delete
+  el.querySelector('.agenda-delete-btn').addEventListener('click', () => {
+    researchData.agenda = researchData.agenda.filter(a => a.id !== item.id);
+    el.style.transition = 'opacity 0.2s, transform 0.2s';
+    el.style.opacity = '0'; el.style.transform = 'translateX(12px)';
+    setTimeout(() => el.remove(), 200);
+    scheduleResearchSave();
+  });
+
+  return el;
+}
+
+function addAgendaItem() {
+  const newItem = {
+    id: Date.now(),
+    title: '',
+    priority: 'medium',
+    status: 'idea',
+    tags: [],
+    note: ''
+  };
+  if (!researchData.agenda) researchData.agenda = [];
+  researchData.agenda.push(newItem);
+  const list = document.getElementById('agenda-list');
+  const el = createAgendaItem(newItem);
+  list.appendChild(el);
+  el.querySelector('.agenda-item-title').focus();
+  scheduleResearchSave();
+}
+
+/* ---- Keywords ---- */
+function renderKeywords() {
+  const cloud = document.getElementById('keywords-cloud');
+  if (!cloud) return;
+  cloud.innerHTML = '';
+  (researchData.keywords || []).forEach(kw => {
+    cloud.appendChild(createKeywordChip(kw));
+  });
+}
+
+function createKeywordChip(kw) {
+  const chip = document.createElement('div');
+  chip.className = 'keyword-chip';
+  chip.innerHTML = `<span>${kw}</span><button class="keyword-delete" title="삭제">×</button>`;
+  chip.querySelector('.keyword-delete').addEventListener('click', () => {
+    researchData.keywords = researchData.keywords.filter(k => k !== kw);
+    chip.style.transition = 'opacity 0.15s, transform 0.15s';
+    chip.style.opacity = '0'; chip.style.transform = 'scale(0.8)';
+    setTimeout(() => chip.remove(), 150);
+    scheduleResearchSave();
+  });
+  return chip;
+}
+
+function addKeyword() {
+  const kw = prompt('추가할 키워드를 입력하세요:');
+  if (!kw || !kw.trim()) return;
+  const trimmed = kw.trim();
+  if (!researchData.keywords) researchData.keywords = [];
+  if (researchData.keywords.includes(trimmed)) return;
+  researchData.keywords.push(trimmed);
+  const cloud = document.getElementById('keywords-cloud');
+  cloud.appendChild(createKeywordChip(trimmed));
+  scheduleResearchSave();
 }

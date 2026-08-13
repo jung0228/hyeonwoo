@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v4 -->
+<!DOCTYPE html><!-- v5 -->
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -26,7 +26,7 @@
       ]
     })"></script>
 
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
   <!-- Header -->
@@ -45,6 +45,9 @@
         </button>
         <button class="nav-btn" id="btn-progress" data-view="progress">
           <span class="nav-icon">📊</span> Progress
+        </button>
+        <button class="nav-btn" id="btn-research" data-view="research">
+          <span class="nav-icon">🔭</span> Research
         </button>
       </nav>
     </div>
@@ -189,11 +192,104 @@
       </div>
     </div>
 
+    <!-- ===== VIEW: RESEARCH ===== -->
+    <div class="view" id="view-research">
+      <div class="research-page">
+
+        <!-- Hero -->
+        <div class="research-hero">
+          <div class="research-hero-inner">
+            <div class="research-hero-label">🔭 연구 비전</div>
+            <div class="research-tagline" id="research-tagline"
+              contenteditable="true" spellcheck="false"
+              data-placeholder="나는 어떤 세상을 만들고 싶은가"></div>
+            <div class="research-save-indicator" id="research-save-indicator">저장됨 ✓</div>
+          </div>
+        </div>
+
+        <!-- Flow Cards -->
+        <div class="research-flow-section">
+          <div class="research-flow">
+
+            <div class="flow-card" data-key="worldview">
+              <div class="flow-card-header">
+                <span class="flow-card-icon">🌍</span>
+                <span class="flow-card-title">세계관</span>
+                <span class="flow-card-hint">내가 바라보는 세상</span>
+              </div>
+              <div class="flow-card-body" id="section-worldview"
+                contenteditable="true" spellcheck="false"
+                data-placeholder="내가 바라보는 세상을 적어보세요..."></div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-card" data-key="need">
+              <div class="flow-card-header">
+                <span class="flow-card-icon">❗</span>
+                <span class="flow-card-title">사회적 필요</span>
+                <span class="flow-card-hint">왜 사람들에게 필요한가</span>
+              </div>
+              <div class="flow-card-body" id="section-need"
+                contenteditable="true" spellcheck="false"
+                data-placeholder="사람들이 겪는 문제와 필요를 적어보세요..."></div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-card" data-key="value">
+              <div class="flow-card-header">
+                <span class="flow-card-icon">💡</span>
+                <span class="flow-card-title">가치 창출</span>
+                <span class="flow-card-hint">어떻게 자본이 생기는가</span>
+              </div>
+              <div class="flow-card-body" id="section-value"
+                contenteditable="true" spellcheck="false"
+                data-placeholder="경제적·사회적 가치가 어떻게 만들어지는지 적어보세요..."></div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-card" data-key="research">
+              <div class="flow-card-header">
+                <span class="flow-card-icon">🔬</span>
+                <span class="flow-card-title">연구 과제</span>
+                <span class="flow-card-hint">어떤 연구가 필요한가</span>
+              </div>
+              <div class="flow-card-body" id="section-research"
+                contenteditable="true" spellcheck="false"
+                data-placeholder="필요한 연구 질문들을 적어보세요..."></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Research Agenda -->
+        <div class="research-agenda-section">
+          <div class="agenda-header">
+            <h2 class="agenda-title">🗒️ 연구 아젠다</h2>
+            <button class="agenda-add-btn" id="agenda-add-btn" onclick="addAgendaItem()">+ 추가</button>
+          </div>
+          <div class="agenda-list" id="agenda-list"></div>
+        </div>
+
+        <!-- Keywords -->
+        <div class="research-keywords-section">
+          <div class="keywords-header">
+            <h2 class="keywords-title">🏷️ 핵심 키워드</h2>
+            <button class="keyword-add-btn" onclick="addKeyword()">+ 추가</button>
+          </div>
+          <div class="keywords-cloud" id="keywords-cloud"></div>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 
   <!-- Search Results Dropdown -->
   <div class="search-results" id="search-results"></div>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
