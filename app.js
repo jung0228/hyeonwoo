@@ -38,6 +38,7 @@ const CLUSTER_MAP = {
   'Training':       'AI',       // 딥러닝
   'RL':             'ML',       // 기본 RL은 머신러닝
   'Math & Stats':   'ML',       // 확률/통계/선형대수
+  'Math':           'ML',       // 선형대수 및 기본 수학
   'Systems':        '시스템',
   'Algorithm':      '알고리즘'
 };
@@ -86,6 +87,51 @@ document.addEventListener('DOMContentLoaded', async () => {
       knowledgeData = { nodes: [], edges: [], categories: {}, sessions: [] };
     }
   }
+
+  // Schema Backwards Compatibility: concepts -> nodes / edges / categories
+  if (knowledgeData.concepts && !knowledgeData.nodes) {
+    knowledgeData.nodes = knowledgeData.concepts.map(c => ({
+      id: c.id,
+      label: c.title || c.label || c.id,
+      category: c.category || 'Math & Stats',
+      confidence: typeof c.confidence === 'number' ? c.confidence : 0,
+      studyCount: c.review_count || c.studyCount || 0,
+      note: c.note || `data/notes/${c.id}.md`,
+      definition: c.definition,
+      purpose: c.purpose,
+      tradeoff_insight: c.tradeoff_insight,
+      ai_connection: c.ai_connection
+    }));
+  }
+
+  if (!knowledgeData.nodes) knowledgeData.nodes = [];
+  if (!knowledgeData.edges) {
+    // Generate sequential basis_of links for linear algebra or Math concepts so graph has connections
+    knowledgeData.edges = [];
+    for (let i = 0; i < knowledgeData.nodes.length - 1; i++) {
+      knowledgeData.edges.push({
+        source: knowledgeData.nodes[i].id,
+        target: knowledgeData.nodes[i+1].id,
+        relation: 'basis_of',
+        weight: 3
+      });
+    }
+  }
+  if (!knowledgeData.categories || Object.keys(knowledgeData.categories).length === 0) {
+    knowledgeData.categories = {
+      'Generative':     { color: '#a78bfa', icon: '🎨' },
+      'Architecture':   { color: '#a78bfa', icon: '🏗️' },
+      'Language Model': { color: '#a78bfa', icon: '📝' },
+      'Multimodal':     { color: '#a78bfa', icon: '👁️' },
+      'Training':       { color: '#a78bfa', icon: '⚙️' },
+      'RL':             { color: '#34d399', icon: '🤖' },
+      'Math & Stats':   { color: '#34d399', icon: '📊' },
+      'Math':           { color: '#34d399', icon: '📐' },
+      'Systems':        { color: '#ef4444', icon: '💻' },
+      'Algorithm':      { color: '#06b6d4', icon: '🔢' }
+    };
+  }
+  if (!knowledgeData.sessions) knowledgeData.sessions = [];
 
   initNav();
   initSearch();
