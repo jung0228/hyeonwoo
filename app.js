@@ -170,6 +170,9 @@ function switchView(view) {
   if (view === 'progress') {
     initProgress(); // Re-render lists with the latest localStorage/json data
   }
+  if (view === 'column') {
+    initColumn();
+  }
 }
 
 /* ============================================================
