@@ -64,12 +64,24 @@ const CLUSTER_CONFIG = {
    BOOT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const res = await fetch('data/knowledge.json');
-    knowledgeData = await res.json();
-  } catch (e) {
-    console.error('Failed to load knowledge.json:', e);
-    knowledgeData = { nodes: [], edges: [], categories: {}, sessions: [] };
+  // Load from localStorage first, then fallback to fetch
+  const stored = localStorage.getItem('hyeonwoo_knowledge_v1');
+  if (stored) {
+    try {
+      knowledgeData = JSON.parse(stored);
+    } catch (e) {
+      knowledgeData = null;
+    }
+  }
+
+  if (!knowledgeData) {
+    try {
+      const res = await fetch('data/knowledge.json');
+      knowledgeData = await res.json();
+    } catch (e) {
+      console.error('Failed to load knowledge.json:', e);
+      knowledgeData = { nodes: [], edges: [], categories: {}, sessions: [] };
+    }
   }
 
   initNav();
@@ -78,6 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initHeatmap();
   initProgress();
   initResearch();
+  initReview();
   updateStatsBadge();
 });
 
@@ -411,6 +424,18 @@ function initGraph() {
 
   svg.on('click', () => closeNotePanel());
   document.getElementById('note-close').addEventListener('click', closeNotePanel);
+
+  // Legend toggle logic
+  const legendToggle = document.getElementById('legend-toggle-btn');
+  const legendEl = document.getElementById('legend');
+  if (legendToggle && legendEl) {
+    legendToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isHidden = legendEl.style.display === 'none';
+      legendEl.style.display = isHidden ? 'block' : 'none';
+      legendToggle.classList.toggle('active', isHidden);
+    });
+  }
 }
 
 /* ---- Custom Cluster Force ---- */
@@ -533,6 +558,8 @@ async function openNotePanel(nodeData) {
   `;
 
   panel.classList.add('open');
+  const backdrop = document.getElementById('note-panel-backdrop');
+  if (backdrop) backdrop.classList.add('visible');
 
   let content = '';
   try {
@@ -591,6 +618,8 @@ async function openNotePanel(nodeData) {
 
 function closeNotePanel() {
   document.getElementById('note-panel').classList.remove('open');
+  const backdrop = document.getElementById('note-panel-backdrop');
+  if (backdrop) backdrop.classList.remove('visible');
   currentNodeId = null;
 }
 
@@ -1039,3 +1068,184 @@ function addKeyword() {
   cloud.appendChild(createKeywordChip(trimmed));
   scheduleResearchSave();
 }
+
+/* ============================================================
+   REVIEW VIEW (플래시카드 복습 시스템)
+   ============================================================ */
+let reviewQueue = [];
+let currentReviewIndex = 0;
+let currentFilter = 'all'; // 'all', 'weak', 'random'
+
+function initReview() {
+  // Bind filters
+  const filterBtns = document.querySelectorAll('.review-filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      restartReview();
+    });
+  });
+
+  // Bind Card Flip
+  const card = document.getElementById('review-card');
+  if (card) {
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+      const rating = document.getElementById('review-rating');
+      if (card.classList.contains('flipped')) {
+        rating.classList.add('visible');
+      } else {
+        rating.classList.remove('visible');
+      }
+    });
+  }
+
+  // Bind score buttons
+  const scoreBtns = document.querySelectorAll('.rrb');
+  scoreBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); // prevent card flip when clicking buttons
+      const score = parseInt(btn.dataset.score);
+      handleReviewRating(score);
+    });
+  });
+
+  restartReview();
+}
+
+function restartReview() {
+  document.getElementById('review-done').classList.remove('visible');
+  document.getElementById('review-card').style.display = 'block';
+  document.getElementById('review-rating').style.display = 'flex';
+  document.getElementById('review-card').classList.remove('flipped');
+  document.getElementById('review-rating').classList.remove('visible');
+
+  // Prepare queue
+  let list = [...knowledgeData.nodes];
+
+  if (currentFilter === 'weak') {
+    // Only nodes with confidence <= 1
+    list = list.filter(n => n.confidence <= 1);
+  }
+
+  if (currentFilter === 'random') {
+    // Shuffle
+    list.sort(() => Math.random() - 0.5);
+  } else {
+    // Priority: Low confidence first, then low study count
+    list.sort((a, b) => (a.confidence - b.confidence) || (a.studyCount - b.studyCount));
+  }
+
+  reviewQueue = list;
+  currentReviewIndex = 0;
+  showNextReviewCard();
+}
+
+function showNextReviewCard() {
+  updateReviewProgress();
+
+  if (currentReviewIndex >= reviewQueue.length || reviewQueue.length === 0) {
+    showReviewFinished();
+    return;
+  }
+
+  const node = reviewQueue[currentReviewIndex];
+  const catColor = knowledgeData.categories[node.category]?.color || '#888';
+  const catIcon  = knowledgeData.categories[node.category]?.icon  || '';
+
+  // Set card contents
+  const catBadge = document.getElementById('review-card-cat');
+  const cardName = document.getElementById('review-card-name');
+  const cardContent = document.getElementById('review-card-content');
+
+  catBadge.style.background = `${catColor}22`;
+  catBadge.style.color = catColor;
+  catBadge.style.border = `1px solid ${catColor}44`;
+  catBadge.textContent = `${catIcon} ${node.category}`;
+
+  cardName.textContent = node.label;
+  
+  // Set note placeholder or content
+  cardContent.innerHTML = `<div class="note-placeholder">로드 중...</div>`;
+  
+  fetch(`data/notes/${node.id}.md`)
+    .then(res => {
+      if (res.ok) return res.text();
+      return `### ${node.label}\n\n개념 정보가 없습니다. 지식 지도 탭에서 정보를 추가해주세요.`;
+    })
+    .then(md => {
+      cardContent.innerHTML = marked.parse(md);
+      // MathJax/KaTeX render if active
+      if (window.renderMathInElement) {
+        renderMathInElement(cardContent, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$',  right: '$',  display: false }
+          ]
+        });
+      }
+    })
+    .catch(() => {
+      cardContent.innerHTML = `<p>노트를 가져오지 못했습니다.</p>`;
+    });
+}
+
+function handleReviewRating(score) {
+  const node = reviewQueue[currentReviewIndex];
+  
+  // Update node metrics local state
+  node.confidence = score;
+  if (!node.studyCount) node.studyCount = 0;
+  node.studyCount++;
+
+  // Save progress dynamically
+  saveKnowledgeData();
+  
+  // Flip card back first
+  const card = document.getElementById('review-card');
+  card.classList.remove('flipped');
+  document.getElementById('review-rating').classList.remove('visible');
+
+  // Short delay for flipping animation before loading next card
+  setTimeout(() => {
+    currentReviewIndex++;
+    showNextReviewCard();
+  }, 350);
+}
+
+function updateReviewProgress() {
+  const total = reviewQueue.length;
+  const current = currentReviewIndex;
+  
+  const percent = total > 0 ? (current / total) * 100 : 0;
+  document.getElementById('review-progress-bar').style.width = `${percent}%`;
+  document.getElementById('review-progress-label').textContent = `${current} / ${total}`;
+}
+
+function showReviewFinished() {
+  document.getElementById('review-card').style.display = 'none';
+  document.getElementById('review-rating').style.display = 'none';
+  
+  const doneEl = document.getElementById('review-done');
+  doneEl.classList.add('visible');
+  
+  const statsEl = document.getElementById('review-done-stats');
+  statsEl.innerHTML = `
+    오늘 총 <strong>${reviewQueue.length}개</strong>의 지식을 복습했습니다!<br>
+    복습 결과는 지식 데이터베이스에 안전하게 자동 저장되었습니다.
+  `;
+}
+
+function saveKnowledgeData() {
+  // Update local storage to keep state across sessions
+  localStorage.setItem('hyeonwoo_knowledge_v1', JSON.stringify(knowledgeData));
+  
+  // Trigger general stats updates in progress tab
+  if (typeof buildOverviewStats === 'function') buildOverviewStats();
+  if (typeof buildWeakSpotsList === 'function') buildWeakSpotsList();
+  if (typeof buildStrongList === 'function') buildStrongList();
+  if (typeof updateStatsBadge === 'function') updateStatsBadge();
+}
+
