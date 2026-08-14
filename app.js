@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initProgress();
   initResearch();
   initReview();
+  initColumn();
   updateStatsBadge();
 });
 
@@ -1279,4 +1280,117 @@ function saveKnowledgeData() {
   if (typeof buildStrongList === 'function') buildStrongList();
   if (typeof updateStatsBadge === 'function') updateStatsBadge();
 }
+
+/* ============================================================
+   COLUMN VIEW (신문 아카이브 및 가판대 기능)
+   ============================================================ */
+let columnsData = [];
+
+async function initColumn() {
+  // Load columns metadata
+  try {
+    const res = await fetch('data/columns.json');
+    const data = await res.json();
+    columnsData = data.columns || [];
+  } catch (e) {
+    console.error('Failed to load columns.json:', e);
+    columnsData = [];
+  }
+
+  // Set today's date in newspaper brand style
+  const dateEl = document.getElementById('newspaper-date');
+  if (dateEl) {
+    const d = new Date();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' };
+    dateEl.textContent = d.toLocaleDateString('ko-KR', options).toUpperCase();
+  }
+
+  // Render newspaper shelf cards
+  renderColumnRack();
+
+  // Close button overlay bind
+  const closeBtn = document.getElementById('reader-close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeColumnReader);
+  }
+  
+  // Close reader on background click
+  const overlay = document.getElementById('column-reader-overlay');
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeColumnReader();
+    });
+  }
+}
+
+function renderColumnRack() {
+  const grid = document.getElementById('newspaper-grid');
+  if (!grid) return;
+  
+  if (columnsData.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center">아직 발행된 칼럼이 없습니다.</p>';
+    return;
+  }
+
+  grid.innerHTML = columnsData.map(col => {
+    return `
+      <div class="newspaper-card" onclick="openColumnReader('${col.id}')">
+        <span class="npc-category">${col.category}</span>
+        <h2 class="npc-title">${col.title}</h2>
+        <p class="npc-summary">${col.summary}</p>
+        <div class="npc-meta">
+          <span>✍️ ${col.author}</span>
+          <span>📅 ${col.date} • ${col.readTime}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function openColumnReader(columnId) {
+  const col = columnsData.find(c => c.id === columnId);
+  if (!col) return;
+
+  const overlay = document.getElementById('column-reader-overlay');
+  const titleEl = document.getElementById('reader-title');
+  const authorEl = document.getElementById('reader-author');
+  const metaEl = document.getElementById('reader-meta');
+  const bodyEl = document.getElementById('reader-body');
+
+  titleEl.textContent = col.title;
+  authorEl.textContent = `BY ${col.author}`;
+  metaEl.textContent = `PUBLISHED ON ${col.date.replace(/-/g, '. ')} • ${col.category.toUpperCase()}`;
+  
+  bodyEl.innerHTML = `<p style="text-align:center;color:var(--text-muted)">신문을 인쇄 중입니다...</p>`;
+  overlay.classList.add('open');
+
+  try {
+    const res = await fetch(col.file);
+    if (!res.ok) throw new Error('File not found');
+    const md = await res.text();
+    
+    // Parse markdown (exclude the main title since it is already rendered in header)
+    // We strip the first '# Title' if present in md file
+    const cleanMd = md.replace(/^#\s+.+$/m, '');
+    bodyEl.innerHTML = marked.parse(cleanMd);
+
+    // Apply KaTeX math rendering if equations exist
+    if (window.renderMathInElement) {
+      renderMathInElement(bodyEl, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$',  right: '$',  display: false }
+        ]
+      });
+    }
+  } catch (e) {
+    bodyEl.innerHTML = `<p style="text-align:center;color:#ef4444">칼럼을 불러오지 못했습니다. 파일 경로를 확인해 주세요. (${col.file})</p>`;
+  }
+}
+
+function closeColumnReader() {
+  const overlay = document.getElementById('column-reader-overlay');
+  if (overlay) overlay.classList.remove('open');
+}
+
 

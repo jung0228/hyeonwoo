@@ -11,11 +11,15 @@ hyeonwoo/
 ├── data/
 │   ├── knowledge.json   ← 지식 그래프 (개념 추가, 연결, 학습 기록)
 │   ├── research.json    ← 연구 비전 페이지
+│   ├── columns.json     ← 칼럼 글 아카이브 목록
+│   ├── columns/
+│   │   └── *.md         ← 칼럼 본문 마크다운 파일
 │   └── notes/
 │       └── *.md         ← 개념별 상세 노트
 ```
 
 ---
+
 
 ## 1. 새 개념 추가 → `knowledge.json`
 
@@ -109,6 +113,26 @@ HBM ↔ SRAM 데이터 이동을 최소화하여 메모리 병목 해결.
 > 반영하려면 브라우저 콘솔에서: `localStorage.removeItem('hyeonwoo_research_v1')` 후 새로고침
 
 ---
+
+## 6. 새 칼럼 작성 → `data/columns.json` 및 `data/columns/`
+
+1. `data/columns.json`에 메타데이터를 추가합니다:
+```json
+{
+  "id": "new_column_id",
+  "title": "칼럼 제목",
+  "date": "2026-08-14",
+  "author": "정현우",
+  "summary": "한 줄 요약",
+  "file": "data/columns/new_column_id.md",
+  "category": "Technology",
+  "readTime": "4 min read"
+}
+```
+2. `data/columns/new_column_id.md` 마크다운 파일을 생성하여 수식 및 본문을 작성합니다.
+
+---
+
 
 ## AI한테 부탁하는 방법
 

@@ -1,0 +1,14 @@
+{
+  "columns": [
+    {
+      "id": "ai_data_center_necessity",
+      "title": "이 시대의 인프라, AI 데이터 센터는 왜 필요한가",
+      "date": "2026-08-14",
+      "author": "정현우",
+      "summary": "단순한 저장소를 넘어 거대한 연산 파이프라인으로 진화하는 현대 데이터 센터. 초거대 인공지능 모델과 가속 연산이 불러온 물리적 인프라의 패러다임 변화를 짚어봅니다.",
+      "file": "data/columns/ai_data_center_necessity.md",
+      "category": "Infrastructure",
+      "readTime": "5 min read"
+    }
+  ]
+}

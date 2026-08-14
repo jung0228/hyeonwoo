@@ -49,6 +49,9 @@
         <button class="nav-btn" id="btn-review" data-view="review">
           <span class="nav-icon">🔁</span><span class="nav-label"> 복습</span>
         </button>
+        <button class="nav-btn" id="btn-column" data-view="column">
+          <span class="nav-icon">📰</span><span class="nav-label"> 칼럼</span>
+        </button>
       </nav>
     </div>
     <div class="header-right">
@@ -298,6 +301,48 @@
 
       </div>
     </div>
+
+    <!-- ===== VIEW: COLUMN ===== -->
+    <div class="view" id="view-column">
+      <div class="column-page">
+        <div class="column-page-header">
+          <div class="newspaper-brand">THE HYEONWOO POST</div>
+          <div class="newspaper-tagline">“시대의 본질적 질문을 던지고 해답을 추적하다”</div>
+          <div class="newspaper-meta-row">
+            <span>VOL. I NO. 1</span>
+            <span>SEOUL, KOREA</span>
+            <span id="newspaper-date">2026. 08. 14</span>
+          </div>
+        </div>
+
+        <!-- Newspaper Rack 가판대 구역 -->
+        <div class="newspaper-rack-section">
+          <div class="rack-shelf-label">📰 신문 가판대 (Newspaper Rack)</div>
+          <div class="newspaper-grid" id="newspaper-grid">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen Column Reader Overlay -->
+    <div class="column-reader-overlay" id="column-reader-overlay">
+      <div class="column-reader-paper">
+        <button class="reader-close-btn" id="reader-close-btn">✕ CLOSE PAPER</button>
+        <div class="reader-header">
+          <div class="reader-brand">THE HYEONWOO POST OPINION</div>
+          <div class="reader-meta" id="reader-meta">PUBLISHED ON AUGUST 14, 2026</div>
+        </div>
+        <div class="reader-title-area">
+          <h1 class="reader-title" id="reader-title">칼럼 제목</h1>
+          <div class="reader-author" id="reader-author">BY 정현우</div>
+        </div>
+        <div class="reader-body-columns" id="reader-body">
+          <!-- Multi-column markdown content populated by JS -->
+        </div>
+      </div>
+    </div>
+
 
   <!-- Search Results Dropdown -->
   <div class="search-results" id="search-results"></div>

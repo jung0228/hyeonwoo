@@ -1529,3 +1529,299 @@ body {
   background: rgba(167,139,250,0.2);
   transform: translateY(-1px);
 }
+
+/* ============================================================
+   COLUMN VIEW (Newspaper layout)
+   ============================================================ */
+#view-column {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.column-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 32px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* Newspaper Header */
+.column-page-header {
+  border-top: 4px double var(--text-primary);
+  border-bottom: 4px double var(--text-primary);
+  padding: 24px 0 16px;
+  text-align: center;
+}
+.newspaper-brand {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+.newspaper-tagline {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  letter-spacing: 0.02em;
+}
+.newspaper-meta-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  padding-top: 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Newspaper Rack 가판대 */
+.newspaper-rack-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.rack-shelf-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-purple);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Newspaper Grid */
+.newspaper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+/* Newspaper Card */
+.newspaper-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 꽂혀있는 신문 특유의 올라오는 호버 효과 */
+.newspaper-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--accent-purple);
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+.newspaper-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), var(--glow-purple);
+  border-color: rgba(167, 139, 250, 0.3);
+}
+.newspaper-card:hover::after {
+  transform: scaleX(1);
+}
+
+.npc-category {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.npc-title {
+  font-family: 'Georgia', serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.npc-summary {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.npc-meta {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+}
+
+/* ============================================================
+   COLUMN READER OVERLAY (Fullscreen)
+   ============================================================ */
+.column-reader-overlay {
+  display: none; /* Show dynamically via active class */
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 10, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 40px 16px;
+  animation: fadeIn 0.3s ease;
+}
+.column-reader-overlay.open {
+  display: block;
+}
+
+.column-reader-paper {
+  background: #0f131a; /* 더 차분한 다크 신문 배경 */
+  border: 1px solid var(--border);
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+  position: relative;
+}
+
+.reader-close-btn {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.reader-close-btn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.reader-header {
+  border-bottom: 2px solid var(--text-primary);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.reader-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+}
+.reader-meta {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.reader-title-area {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.reader-title {
+  font-family: 'Georgia', serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.reader-author {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* 다단 신문 레이아웃 */
+.reader-body-columns {
+  column-count: 2;
+  column-gap: 40px;
+  column-rule: 1px solid var(--border);
+  font-family: 'Georgia', 'Pretendard', serif;
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+/* 신문 가독성 세부 스타일링 */
+.reader-body-columns h2 {
+  font-family: 'Georgia', serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 18px 0 10px;
+  column-break-inside: avoid;
+  page-break-inside: avoid;
+  border-left: 3px solid var(--accent-purple);
+  padding-left: 8px;
+}
+.reader-body-columns p {
+  margin-bottom: 14px;
+  text-indent: 12px; /* 문단 들여쓰기 */
+  text-align: justify;
+}
+.reader-body-columns p:first-of-type {
+  text-indent: 0; /* 첫 문단은 들여쓰기 없음 */
+}
+
+/* 첫글자 낙자(Drop Cap) */
+.reader-body-columns p:first-of-type::first-letter {
+  font-family: 'Playfair Display', serif;
+  float: left;
+  font-size: 52px;
+  line-height: 40px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 2px;
+  font-weight: 900;
+  color: var(--accent-purple);
+}
+
+.reader-body-columns hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+  column-span: all; /* 가로 가르는 선 */
+}
+
+/* 반응형: 모바일은 다단 1개로 축소 */
+@media (max-width: 768px) {
+  .reader-body-columns {
+    column-count: 1;
+  }
+  .column-reader-paper {
+    padding: 24px;
+  }
+  .reader-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+

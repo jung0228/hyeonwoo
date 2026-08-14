@@ -192,6 +192,31 @@ $P(A|B) = \frac{P(B|A)P(A)}{P(B)}$
 
 ---
 
+## 4. 칼럼 관리 (`data/columns.json` 및 `data/columns/*.md`)
+
+정현우의 깊은 지적 질문을 아카이브로 남기는 공간입니다.
+
+### 칼럼 정보 추가 (`data/columns.json`)
+```json
+{
+  "id": "ai_data_center_necessity",
+  "title": "이 시대의 인프라, AI 데이터 센터는 왜 필요한가",
+  "date": "YYYY-MM-DD",
+  "author": "정현우",
+  "summary": "한 줄 요약 헤드라인 내용",
+  "file": "data/columns/파일명.md",
+  "category": "분야명(예: Infrastructure, AI, Society 등)",
+  "readTime": "5 min read"
+}
+```
+
+### 칼럼 본문 작성 (`data/columns/파일명.md`)
+* 마크다운 형식으로 작성하며 첫 줄의 제목(H1)은 신문 헤더와 중복되므로 렌더링 시 자동으로 제외됩니다.
+* 수식 연산(KaTeX) 및 다단 그리드가 완벽 지원됩니다.
+
+---
+
+
 ## ✅ 작업 완료 후 반드시
 
 ```bash
