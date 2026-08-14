@@ -89,6 +89,45 @@
       "tradeoff_insight": "3단계 비판적 맹점: 1열이 0이 되어 상수항 정보가 Kernel 공간으로 날아감 (det(M)=0).",
       "ai_connection": "4단계 AI 연결: Neural ODE (미분방정식 신경망) 및 PINN 물리 규칙 이산화."
     },
+    {
+      "id": "linear_algebra_06_change_of_basis",
+      "label": "기저변환 & 대각화",
+      "category": "Math",
+      "confidence": 3,
+      "studyCount": 3,
+      "note": "linear_algebra/06_change_of_basis_diagonalization.md",
+      "tags": ["Change of Basis", "Diagonalization", "P^-1AP"],
+      "definition": "1단계 개념: 좌표축을 고유벡터 기저로 변환하여 얽혀 있는 축을 완벽히 독립된 대각행렬(P^-1AP)로 만드는 연산.",
+      "purpose": "2단계 존재 이유: 행렬 거듭제곱 연산 복잡도를 O(n^3)에서 O(n)으로 파격 절감하기 위함.",
+      "tradeoff_insight": "3단계 비판적 맹점: 변환행렬 P, P^-1을 구하는 1회성 초기 변환 연산이 O(n^3)으로 비쌈.",
+      "ai_connection": "4단계 AI 연결: Transformer Multi-Head Attention의 Subspace 기저변환."
+    },
+    {
+      "id": "linear_algebra_07_affine_subspaces",
+      "label": "어파인 공간 (Affine)",
+      "category": "Math",
+      "confidence": 3,
+      "studyCount": 3,
+      "note": "linear_algebra/07_affine_subspaces.md",
+      "tags": ["Affine Subspace", "Non-Homogeneous", "xp+U"],
+      "definition": "1단계 개념: 원점을 지나지 않는, 부분공간 U가 특수해 xp 만큼 평행이동(Translation)된 공간.",
+      "purpose": "2단계 존재 이유: Ax=b (b!=0) 처럼 원점을 지나지 않는 비동차 위치 데이터 표현.",
+      "tradeoff_insight": "3단계 비판적 맹점: 원점을 지나지 않아 덧셈/스칼라배 닫힘 벡터 공리가 파탄 남.",
+      "ai_connection": "4단계 AI 연결: 신경망 Layer y=Wx+b 에서 Bias b 추가로 인한 표현력 확장."
+    },
+    {
+      "id": "linear_algebra_08_schur_complement",
+      "label": "블록 행렬 & 슈르 보간",
+      "category": "Math",
+      "confidence": 3,
+      "studyCount": 3,
+      "note": "linear_algebra/08_schur_complement_block_matrix.md",
+      "tags": ["Schur Complement", "Block Matrix", "Conditional"],
+      "definition": "1단계 개념: 거대 블록 행렬 M=[A B; C D] 에서 A를 소거하여 얻는 조건부 공간 행렬 S=D-CA^-1B.",
+      "purpose": "2단계 존재 이유: 거대 행렬 역행렬 계산을 블록으로 쪼개어 가우시안 조건부 확률 연산.",
+      "tradeoff_insight": "3단계 비판적 맹점: 서브 블록 A의 역행렬 A^-1 이 반드시 존재해야만 연산 가능함.",
+      "ai_connection": "4단계 AI 연결: Gaussian Process 및 VAE 조건부 확률 P(X|Y) 공분산 연산."
+    },
 
     { "id": "pipeline", "label": "CPU Pipeline & Hazard", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["IF/ID/EX/MEM/WB", "RAW", "Forwarding", "OoO"] },
     { "id": "cache", "label": "Cache 구조", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["Set Associative", "Tag/Index/Offset", "False Sharing"] },
@@ -144,6 +183,10 @@
     { "source": "linear_algebra_02_determinant_inverse", "target": "linear_algebra_03_subspaces_kernel_image", "relation": "basis_of", "weight": 3 },
     { "source": "linear_algebra_03_subspaces_kernel_image", "target": "linear_algebra_04_decompositions_svd_eigen", "relation": "basis_of", "weight": 3 },
     { "source": "linear_algebra_04_decompositions_svd_eigen", "target": "linear_algebra_05_mapping_matrix", "relation": "derived", "weight": 3 },
+    { "source": "linear_algebra_05_mapping_matrix", "target": "linear_algebra_06_change_of_basis", "relation": "extended_to", "weight": 3 },
+    { "source": "linear_algebra_01_systems_rank", "target": "linear_algebra_07_affine_subspaces", "relation": "extended_to", "weight": 3 },
+    { "source": "linear_algebra_02_determinant_inverse", "target": "linear_algebra_08_schur_complement", "relation": "key_component", "weight": 3 },
+
     { "source": "linear_algebra_04_decompositions_svd_eigen", "target": "lora", "relation": "applied_to", "weight": 4, "insight": "SVD의 Truncated SVD 원리가 LoRA의 근간" },
     { "source": "linear_algebra_04_decompositions_svd_eigen", "target": "pca", "relation": "basis_of", "weight": 4, "insight": "SVD = PCA 주성분 분석" },
 
@@ -188,6 +231,6 @@
     "Math & Stats":   { "color": "#4ade80", "icon": "📐" }
   },
   "sessions": [
-    { "date": "2026-08-14", "topics": ["linear_algebra_01_systems_rank", "linear_algebra_04_decompositions_svd_eigen"], "note": "선형대수학 5대 마스터 노드 정복" }
+    { "date": "2026-08-14", "topics": ["linear_algebra_01_systems_rank", "linear_algebra_06_change_of_basis", "linear_algebra_07_affine_subspaces", "linear_algebra_08_schur_complement"], "note": "선형대수학 8대 마스터 노드 정복 완결" }
   ]
 }
