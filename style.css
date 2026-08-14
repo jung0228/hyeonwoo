@@ -214,8 +214,8 @@ body {
   opacity: 1;
   pointer-events: all;
 }
-/* Research 뷰만 세로 스크롤 허용 */
-#view-research {
+/* Research 및 Column 뷰만 세로 스크롤 허용 */
+#view-research, #view-column {
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -1792,15 +1792,15 @@ body {
 
 /* 첫글자 낙자(Drop Cap) */
 .reader-body-columns p:first-of-type::first-letter {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
   float: left;
-  font-size: 52px;
-  line-height: 40px;
-  padding-top: 4px;
-  padding-right: 8px;
-  padding-left: 2px;
+  font-size: 3.4em;
+  line-height: 0.85em;
+  margin-top: 0.1em;
+  margin-right: 0.15em;
   font-weight: 900;
   color: var(--accent-purple);
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.25);
 }
 
 .reader-body-columns hr {
