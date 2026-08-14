@@ -167,6 +167,9 @@ function switchView(view) {
   if (view === 'graph' && simulation) {
     setTimeout(() => { simulation.alpha(0.1).restart(); }, 100);
   }
+  if (view === 'progress') {
+    initProgress(); // Re-render lists with the latest localStorage/json data
+  }
 }
 
 /* ============================================================
