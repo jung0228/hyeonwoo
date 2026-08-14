@@ -1762,37 +1762,29 @@ body {
   color: var(--text-muted);
 }
 
-/* 신문 2열 다단 레이아웃 (세로 흐름 스크롤) */
+/* 신문 본문 레이아웃 (세로 흐름 단일 스트림) */
 .reader-body-columns {
-  column-count: 2;
-  column-gap: 40px;
-  column-rule: 1px solid var(--border);
+  max-width: 760px;
+  margin: 0 auto;
   font-family: 'Georgia', 'Pretendard', serif;
-  font-size: 15px;
-  line-height: 1.85;
+  font-size: 15.5px;
+  line-height: 1.9;
   color: var(--text-secondary);
 }
 
 /* 신문 가독성 세부 스타일링 */
 .reader-body-columns h2 {
   font-family: 'Georgia', serif;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--text-primary);
-  margin: 24px 0 12px;
-  break-inside: avoid;
-  column-break-inside: avoid;
-  page-break-inside: avoid;
+  margin: 32px 0 14px;
   border-left: 3px solid var(--accent-purple);
-  padding-left: 8px;
+  padding-left: 10px;
 }
 .reader-body-columns p {
-  margin-bottom: 16px;
-  text-indent: 12px; /* 문단 들여쓰기 */
+  margin-bottom: 18px;
   text-align: justify;
-  break-inside: avoid;
-  column-break-inside: avoid;
-  page-break-inside: avoid;
 }
 .reader-body-columns p:first-of-type {
   text-indent: 0; /* 첫 문단은 들여쓰기 없음 */
