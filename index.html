@@ -47,7 +47,10 @@
           <span class="nav-icon">📊</span> Progress
         </button>
         <button class="nav-btn" id="btn-research" data-view="research">
-          <span class="nav-icon">🔭</span> Research
+          <span class="nav-icon">🔭</span><span class="nav-label"> Research</span>
+        </button>
+        <button class="nav-btn" id="btn-review" data-view="review">
+          <span class="nav-icon">🔁</span><span class="nav-label"> 복습</span>
         </button>
       </nav>
     </div>
@@ -68,9 +71,10 @@
     <!-- ===== VIEW: GRAPH ===== -->
     <div class="view active" id="view-graph">
       <div class="graph-container" id="graph-container">
-        <!-- Graph Legend -->
-        <div class="legend" id="legend">
-          <div class="legend-title">카테고리</div>
+        <!-- Graph Legend (토글) -->
+        <button class="legend-toggle-btn" id="legend-toggle-btn" title="카테고리 보기/숨기기">🏷️</button>
+        <div class="legend" id="legend" style="display:none">
+          <div class="legend-title">카테고리 <button class="legend-close-btn" onclick="document.getElementById('legend').style.display='none';document.getElementById('legend-toggle-btn').classList.remove('active')">×</button></div>
           <!-- populated by JS -->
         </div>
 
@@ -98,6 +102,9 @@
         <!-- Tooltip -->
         <div class="node-tooltip" id="node-tooltip"></div>
       </div>
+
+      <!-- Note Panel Backdrop (모바일) -->
+      <div class="note-panel-backdrop" id="note-panel-backdrop" onclick="closeNotePanel()"></div>
 
       <!-- Note Panel -->
       <div class="note-panel" id="note-panel">
@@ -280,6 +287,64 @@
     </div>
 
   </main>
+
+  <!-- ===== VIEW: REVIEW ===== -->
+    <div class="view" id="view-review">
+      <div class="review-page">
+
+        <div class="review-header">
+          <div class="review-header-left">
+            <h1 class="review-title">🔁 복습 카드</h1>
+            <div class="review-subtitle">탭해서 개념 확인 · 자신감 평가로 다음 순서 결정</div>
+          </div>
+          <div class="review-filter-group">
+            <button class="review-filter-btn active" data-filter="all">전체</button>
+            <button class="review-filter-btn" data-filter="weak">😰 약점</button>
+            <button class="review-filter-btn" data-filter="random">🎲 랜덤</button>
+          </div>
+        </div>
+
+        <div class="review-progress-wrap">
+          <div class="review-progress-track">
+            <div class="review-progress-bar" id="review-progress-bar"></div>
+          </div>
+          <span class="review-progress-label" id="review-progress-label">0 / 0</span>
+        </div>
+
+        <div class="review-card-area">
+          <div class="review-card" id="review-card">
+            <div class="review-card-inner" id="review-card-inner">
+              <div class="review-card-face review-card-front">
+                <div class="review-card-category-badge" id="review-card-cat"></div>
+                <div class="review-card-name" id="review-card-name">—</div>
+                <div class="review-card-hint">탭해서 내용 보기 👇</div>
+              </div>
+              <div class="review-card-face review-card-back">
+                <div class="review-card-back-content" id="review-card-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-rating" id="review-rating">
+          <div class="review-rating-label">얼마나 알고 있나요?</div>
+          <div class="review-rating-btns">
+            <button class="rrb" data-score="0"><span class="rrb-e">😰</span><span class="rrb-l">몰라요</span></button>
+            <button class="rrb" data-score="1"><span class="rrb-e">🤔</span><span class="rrb-l">아직요</span></button>
+            <button class="rrb" data-score="2"><span class="rrb-e">😊</span><span class="rrb-l">알아요</span></button>
+            <button class="rrb" data-score="3"><span class="rrb-e">💪</span><span class="rrb-l">완벽해요</span></button>
+          </div>
+        </div>
+
+        <div class="review-done" id="review-done">
+          <div class="review-done-icon">🎉</div>
+          <div class="review-done-title">오늘의 복습 완료!</div>
+          <div class="review-done-stats" id="review-done-stats"></div>
+          <button class="review-restart-btn" onclick="restartReview()">다시 복습하기 🔁</button>
+        </div>
+
+      </div>
+    </div>
 
   <!-- Search Results Dropdown -->
   <div class="search-results" id="search-results"></div>
