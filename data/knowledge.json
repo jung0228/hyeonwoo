@@ -128,6 +128,19 @@
       "tradeoff_insight": "3단계 비판적 맹점: 서브 블록 A의 역행렬 A^-1 이 반드시 존재해야만 연산 가능함.",
       "ai_connection": "4단계 AI 연결: Gaussian Process 및 VAE 조건부 확률 P(X|Y) 공분산 연산."
     },
+    {
+      "id": "linear_algebra_09_kmeans_clustering",
+      "label": "K-Means 클러스터링",
+      "category": "Math",
+      "confidence": 3,
+      "studyCount": 3,
+      "note": "linear_algebra/09_kmeans_clustering.md",
+      "tags": ["Centroid", "L2 Norm", "VQ-VAE", "Quantization"],
+      "definition": "1단계 개념: 고차원 데이터 N개를 K개의 대표 기저 벡터(Centroid) 공간으로 정사영하여 이산 사상하는 비지도 군집화.",
+      "purpose": "2단계 존재 이유: 고차원 무구조 데이터를 대표 중심점으로 단순화하여 이산 코드북(Codebook) 토큰화.",
+      "tradeoff_insight": "3단계 비판적 맹점: L2 Euclidean 거리 기반이라 구형(Spherical) 군집만 가정하며, 초기 점 위치에 수렴이 좌우됨.",
+      "ai_connection": "4단계 AI 연결: VQ-VAE의 이산 토큰(Discrete Token) 코드북 생성 및 LLM 4-bit 가중치 양자화."
+    },
 
     { "id": "pipeline", "label": "CPU Pipeline & Hazard", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["IF/ID/EX/MEM/WB", "RAW", "Forwarding", "OoO"] },
     { "id": "cache", "label": "Cache 구조", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["Set Associative", "Tag/Index/Offset", "False Sharing"] },
@@ -186,6 +199,7 @@
     { "source": "linear_algebra_05_mapping_matrix", "target": "linear_algebra_06_change_of_basis", "relation": "extended_to", "weight": 3 },
     { "source": "linear_algebra_01_systems_rank", "target": "linear_algebra_07_affine_subspaces", "relation": "extended_to", "weight": 3 },
     { "source": "linear_algebra_02_determinant_inverse", "target": "linear_algebra_08_schur_complement", "relation": "key_component", "weight": 3 },
+    { "source": "linear_algebra_03_subspaces_kernel_image", "target": "linear_algebra_09_kmeans_clustering", "relation": "applied_to", "weight": 4, "insight": "K-Means는 고차원 데이터를 K개 Centroid 공간으로 정사영 이산화" },
 
     { "source": "linear_algebra_04_decompositions_svd_eigen", "target": "lora", "relation": "applied_to", "weight": 4, "insight": "SVD의 Truncated SVD 원리가 LoRA의 근간" },
     { "source": "linear_algebra_04_decompositions_svd_eigen", "target": "pca", "relation": "basis_of", "weight": 4, "insight": "SVD = PCA 주성분 분석" },
@@ -231,6 +245,6 @@
     "Math & Stats":   { "color": "#4ade80", "icon": "📐" }
   },
   "sessions": [
-    { "date": "2026-08-14", "topics": ["linear_algebra_01_systems_rank", "linear_algebra_06_change_of_basis", "linear_algebra_07_affine_subspaces", "linear_algebra_08_schur_complement"], "note": "선형대수학 8대 마스터 노드 정복 완결" }
+    { "date": "2026-08-14", "topics": ["linear_algebra_01_systems_rank", "linear_algebra_09_kmeans_clustering"], "note": "K-Means 선형대수학 정사영 및 기저변환 관점 완파" }
   ]
 }
