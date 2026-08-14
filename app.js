@@ -40,6 +40,7 @@ const CLUSTER_MAP = {
   'Math & Stats':   'ML',       // 확률/통계
   'Math':           '선형대수', // 선형대수학 독립 클러스터!
   'LinearAlgebra':  '선형대수', // 선형대수학 독립 클러스터!
+  'Math Problems':  '선형대수', // 선형대수학 연습문제
   'Systems':        '시스템',
   'Algorithm':      '알고리즘'
 };
