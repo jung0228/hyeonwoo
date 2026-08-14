@@ -24,11 +24,11 @@
     { "id": "kv_cache", "label": "KV Cache / Inference Opt.", "category": "Architecture", "confidence": 2, "studyCount": 2, "tags": ["Inference Speed", "Memory", "Quantization"] },
     { "id": "clip", "label": "CLIP", "category": "Multimodal", "confidence": 3, "studyCount": 3, "tags": ["Contrastive", "Zero-shot", "Image-Text"] },
 
-    { "id": "linear_algebra_01_systems_rank", "label": "01. 선형방정식계 & Rank", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/01_linear_systems_and_rank.md", "tags": ["Pivot", "Rank", "Rouche-Capelli"] },
-    { "id": "linear_algebra_02_determinant_inverse", "label": "02. 행렬식 & 역행렬", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/02_determinant_and_inverse.md", "tags": ["Determinant", "Inverse", "Ill-conditioned"] },
-    { "id": "linear_algebra_03_subspaces_kernel_image", "label": "03. 부분공간 & Kernel/Image", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/03_subspaces_kernel_image.md", "tags": ["Kernel", "Image", "Rank-Nullity"] },
-    { "id": "linear_algebra_04_decompositions_svd_eigen", "label": "04. 행렬 분해 & SVD", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/04_matrix_decompositions_svd_eigen.md", "tags": ["Spectral Theorem", "SVD", "LoRA"] },
-    { "id": "linear_algebra_05_mapping_matrix", "label": "05. 미분변환 행렬 표현", "category": "Math", "confidence": 2, "studyCount": 2, "note": "linear_algebra/05_linear_mapping_matrix_representation.md", "tags": ["Linear Mapping", "Basis", "Discrete Matrix"] },
+    { "id": "linear_algebra_01_systems_rank", "label": "선형방정식계 & Rank", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/01_linear_systems_and_rank.md", "tags": ["Pivot", "Rank", "Rouche-Capelli"] },
+    { "id": "linear_algebra_02_determinant_inverse", "label": "행렬식 & 역행렬", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/02_determinant_and_inverse.md", "tags": ["Determinant", "Inverse", "Ill-conditioned"] },
+    { "id": "linear_algebra_03_subspaces_kernel_image", "label": "부분공간 & Kernel/Image", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/03_subspaces_kernel_image.md", "tags": ["Kernel", "Image", "Rank-Nullity"] },
+    { "id": "linear_algebra_04_decompositions_svd_eigen", "label": "행렬 분해 & SVD", "category": "Math", "confidence": 3, "studyCount": 3, "note": "linear_algebra/04_matrix_decompositions_svd_eigen.md", "tags": ["Spectral Theorem", "SVD", "LoRA"] },
+    { "id": "linear_algebra_05_mapping_matrix", "label": "미분변환 행렬 표현", "category": "Math", "confidence": 2, "studyCount": 2, "note": "linear_algebra/05_linear_mapping_matrix_representation.md", "tags": ["Linear Mapping", "Basis", "Discrete Matrix"] },
 
     { "id": "pipeline", "label": "CPU Pipeline & Hazard", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["IF/ID/EX/MEM/WB", "RAW", "Forwarding", "OoO"] },
     { "id": "cache", "label": "Cache 구조", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["Set Associative", "Tag/Index/Offset", "False Sharing"] },
