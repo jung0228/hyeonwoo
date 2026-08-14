@@ -1806,6 +1806,14 @@ body {
   text-shadow: none;
 }
 
+.reader-body-columns strong, .reader-body-columns b {
+  font-weight: 900;
+  color: #000000;
+  background: rgba(124, 58, 237, 0.08);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
 .reader-body-columns hr {
   border: none;
   border-top: 1px solid var(--border);
