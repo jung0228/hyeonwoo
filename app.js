@@ -37,8 +37,9 @@ const CLUSTER_MAP = {
   'Multimodal':     'AI',       // 딥러닝
   'Training':       'AI',       // 딥러닝
   'RL':             'ML',       // 기본 RL은 머신러닝
-  'Math & Stats':   'ML',       // 확률/통계/선형대수
-  'Math':           'ML',       // 선형대수 및 기본 수학
+  'Math & Stats':   'ML',       // 확률/통계
+  'Math':           '선형대수', // 선형대수학 독립 클러스터!
+  'LinearAlgebra':  '선형대수', // 선형대수학 독립 클러스터!
   'Systems':        '시스템',
   'Algorithm':      '알고리즘'
 };
@@ -50,15 +51,17 @@ const NODE_CLUSTER_OVERRIDE = {
 
 // 헬퍼: 노드의 최종 클러스터 반환
 function getNodeCluster(node) {
+  if (node.id && node.id.startsWith('linear_algebra')) return '선형대수';
   return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || 'AI';
 }
 
-// 4개 클러스터, 왼쪽→오른쪽: 시스템 / ML / AI / 알고리즘
+// 5개 클러스터, 왼쪽→오른쪽: 시스템 / 선형대수 / ML / AI / 알고리즘
 const CLUSTER_CONFIG = {
-  '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.10, cy: 0.48 },
-  'ML':       { color: '#34d399', label: '📐  머신러닝',      cx: 0.36, cy: 0.48 },
-  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.63, cy: 0.48 },
-  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.89, cy: 0.48 }
+  '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.08, cy: 0.48 },
+  '선형대수': { color: '#f59e0b', label: '📐  선형대수학',    cx: 0.28, cy: 0.48 },
+  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.48, cy: 0.48 },
+  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.70, cy: 0.48 },
+  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.90, cy: 0.48 }
 };
 
 /* ============================================================
