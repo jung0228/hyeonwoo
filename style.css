@@ -35,7 +35,7 @@
   --radius-xl: 24px;
 
   --header-h: 60px;
-  --panel-w: 620px;
+  --panel-w: 850px;
 
   --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -527,11 +527,11 @@ body {
 .note-panel-body {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 28px 36px;
 }
 
 /* Markdown content */
-.note-content { line-height: 1.7; font-size: 14px; }
+.note-content { line-height: 1.8; font-size: 15px; }
 .note-content h1 { font-size: 22px; margin-bottom: 8px; color: var(--text-primary); }
 .note-content h2 {
   font-size: 16px;
