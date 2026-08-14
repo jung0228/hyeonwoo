@@ -40,9 +40,6 @@
         <button class="nav-btn active" id="btn-graph" data-view="graph">
           <span class="nav-icon">🌐</span> Knowledge Graph
         </button>
-        <button class="nav-btn" id="btn-heatmap" data-view="heatmap">
-          <span class="nav-icon">🗓️</span> Activity
-        </button>
         <button class="nav-btn" id="btn-progress" data-view="progress">
           <span class="nav-icon">📊</span> Progress
         </button>
@@ -123,77 +120,33 @@
       </div>
     </div>
 
-    <!-- ===== VIEW: HEATMAP ===== -->
-    <div class="view" id="view-heatmap">
-      <div class="heatmap-page">
-        <div class="page-header">
-          <h1 class="page-title">학습 활동 기록</h1>
-          <p class="page-subtitle">언제 어떤 주제를 공부했는지 시각화</p>
-        </div>
 
-        <!-- Heatmap Grid -->
-        <div class="heatmap-wrapper">
-          <div class="heatmap-months" id="heatmap-months"></div>
-          <div class="heatmap-grid-area">
-            <div class="heatmap-days">
-              <span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span>Sun</span>
-            </div>
-            <div class="heatmap-grid" id="heatmap-grid"></div>
-          </div>
-          <div class="heatmap-legend-row">
-            <span class="heatmap-legend-label">적음</span>
-            <div class="heatmap-legend-cells">
-              <div class="heatmap-cell" style="--intensity: 0"></div>
-              <div class="heatmap-cell" style="--intensity: 1"></div>
-              <div class="heatmap-cell" style="--intensity: 2"></div>
-              <div class="heatmap-cell" style="--intensity: 3"></div>
-              <div class="heatmap-cell" style="--intensity: 4"></div>
-            </div>
-            <span class="heatmap-legend-label">많음</span>
-          </div>
-        </div>
-
-        <!-- Recent Sessions -->
-        <div class="sessions-section">
-          <h2 class="section-title">최근 학습 세션</h2>
-          <div class="sessions-list" id="sessions-list"></div>
-        </div>
-
-        <!-- Category Heatmap -->
-        <div class="category-activity-section">
-          <h2 class="section-title">주제별 학습 빈도</h2>
-          <div class="category-bars" id="category-bars"></div>
-        </div>
-      </div>
-    </div>
 
     <!-- ===== VIEW: PROGRESS ===== -->
     <div class="view" id="view-progress">
       <div class="progress-page">
         <div class="page-header">
-          <h1 class="page-title">학습 진도</h1>
-          <p class="page-subtitle">주제별 자신감 레벨과 학습 완료율</p>
+          <h1 class="page-title">개념 현황판</h1>
+          <p class="page-subtitle">클러스터별 학습 진도 및 보완/강점 개념 한눈에 보기</p>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="summary-cards" id="summary-cards"></div>
-
-        <!-- Category Progress -->
-        <div class="category-progress-section">
-          <h2 class="section-title">카테고리별 진도</h2>
-          <div class="category-progress-list" id="category-progress-list"></div>
+        <!-- 클러스터별 구분 리스트 -->
+        <div class="cluster-groups-section">
+          <h2 class="section-title">📦 클러스터별 개념 목록</h2>
+          <div class="cluster-groups-container" id="cluster-groups-container">
+            <!-- populated dynamically by JS: 시스템 / 머신러닝 / 딥러닝 / 알고리즘 -->
+          </div>
         </div>
 
         <!-- Weak Spots -->
         <div class="weak-spots-section">
-          <h2 class="section-title">🔴 보완이 필요한 개념</h2>
-          <p class="section-desc">자신감 레벨이 낮은 개념들 — 집중 복습 추천!</p>
+          <h2 class="section-title">🔴 보완이 필요한 개념 (자신감 낮음)</h2>
           <div class="weak-spots-list" id="weak-spots-list"></div>
         </div>
 
         <!-- Strong Concepts -->
         <div class="strong-section">
-          <h2 class="section-title">🟢 강점 개념</h2>
+          <h2 class="section-title">🟢 강점 개념 (자신감 높음)</h2>
           <div class="strong-list" id="strong-list"></div>
         </div>
       </div>

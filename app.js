@@ -819,81 +819,60 @@ function formatDate(date) {
    PROGRESS VIEW
    ============================================================ */
 function initProgress() {
-  buildSummaryCards();
-  buildCategoryProgress();
+  buildClusterGroups();
   buildWeakSpots();
   buildStrongList();
 }
 
-function buildSummaryCards() {
-  const nodes    = knowledgeData.nodes;
-  const avgConf  = nodes.reduce((s, n) => s + (n.confidence || 0), 0) / nodes.length;
-  const highConf = nodes.filter(n => n.confidence >= 3).length;
-  const lowConf  = nodes.filter(n => n.confidence <= 1).length;
-  const cards = [
-    { icon: '🧠', value: nodes.length, label: '총 개념 수' },
-    { icon: '📚', value: knowledgeData.sessions.length, label: '학습 세션' },
-    { icon: '⭐', value: highConf, label: '숙련 개념 (중급↑)' },
-    { icon: '🔴', value: lowConf,  label: '보완 필요 개념' },
-    { icon: '📈', value: (avgConf / 4 * 100).toFixed(0) + '%', label: '평균 자신감' },
-    { icon: '🔗', value: knowledgeData.edges.length, label: '개념 연결' }
-  ];
-  const grads = [
-    'linear-gradient(135deg,#8b5cf6,#6366f1)',
-    'linear-gradient(135deg,#38bdf8,#0ea5e9)',
-    'linear-gradient(135deg,#34d399,#10b981)',
-    'linear-gradient(135deg,#f472b6,#ec4899)',
-    'linear-gradient(135deg,#fbbf24,#f59e0b)',
-    'linear-gradient(135deg,#fb923c,#f97316)'
-  ];
-  document.getElementById('summary-cards').innerHTML = cards.map((c, i) => `
-    <div class="summary-card animate-in" style="animation-delay:${i * 0.08}s">
-      <div class="card-icon">${c.icon}</div>
-      <div class="card-value" style="background:${grads[i]};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${c.value}</div>
-      <div class="card-label">${c.label}</div>
-    </div>`).join('');
-}
+function buildClusterGroups() {
+  const container = document.getElementById('cluster-groups-container');
+  if (!container) return;
 
-function buildCategoryProgress() {
-  const el = document.getElementById('category-progress-list');
-  const grouped = {};
+  // Group nodes by their clusters
+  const grouped = {
+    '시스템': [],
+    'ML': [],
+    'AI': [],
+    '알고리즘': []
+  };
+
   knowledgeData.nodes.forEach(n => {
-    if (!grouped[n.category]) grouped[n.category] = [];
-    grouped[n.category].push(n);
+    const cluster = getNodeCluster(n);
+    if (grouped[cluster]) {
+      grouped[cluster].push(n);
+    }
   });
-  el.innerHTML = Object.entries(grouped)
-    .sort((a, b) => {
-      const avgA = a[1].reduce((s, n) => s + n.confidence, 0) / a[1].length;
-      const avgB = b[1].reduce((s, n) => s + n.confidence, 0) / b[1].length;
-      return avgB - avgA;
-    })
-    .map(([cat, nodes]) => {
-      const color = knowledgeData.categories[cat]?.color || '#888';
-      const icon  = knowledgeData.categories[cat]?.icon  || '';
-      const avg   = nodes.reduce((s, n) => s + (n.confidence || 0), 0) / nodes.length;
-      const pct   = Math.round((avg / 4) * 100);
-      const chips = nodes.map(n => {
-        const stars = '★'.repeat(n.confidence) + '☆'.repeat(4 - n.confidence);
-        return `<span class="cat-concept-chip"
-          style="color:${color};border-color:${color}44;background:${color}12;cursor:pointer"
-          onclick="focusNode('${n.id}');switchView('graph');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-graph').classList.add('active')">
-          ${n.label} <span class="confidence-star" style="color:${color}">${stars}</span>
-        </span>`;
-      }).join('');
-      return `<div class="cat-progress-item">
-        <div class="cat-progress-header">
-          <div class="cat-progress-name">
-            <span class="cat-progress-icon">${icon}</span>${cat}
-            <span style="font-size:11px;color:var(--text-muted);font-weight:400">(${nodes.length}개)</span>
-          </div>
-          <div class="cat-progress-pct">${pct}%</div>
-        </div>
-        <div class="cat-progress-bar-track">
-          <div class="cat-progress-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${color}88,${color})"></div>
-        </div>
-        <div class="cat-concepts">${chips}</div>
-      </div>`;
+
+  container.innerHTML = Object.entries(CLUSTER_CONFIG).map(([key, cfg]) => {
+    const nodes = grouped[key] || [];
+    const avgConf = nodes.length > 0 ? (nodes.reduce((s, n) => s + n.confidence, 0) / nodes.length) : 0;
+    const progressPct = Math.round((avgConf / 4) * 100);
+
+    const chips = nodes.map(n => {
+      const catColor = knowledgeData.categories[n.category]?.color || cfg.color;
+      const stars = '★'.repeat(n.confidence) + '☆'.repeat(4 - n.confidence);
+      return `<span class="cat-concept-chip"
+        style="color:${catColor};border-color:${catColor}44;background:${catColor}12;cursor:pointer"
+        onclick="focusNode('${n.id}');switchView('graph');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-graph').classList.add('active')">
+        ${n.label} <span class="confidence-star" style="color:${catColor}">${stars}</span>
+      </span>`;
     }).join('');
+
+    return `
+      <div class="cluster-progress-item animate-in">
+        <div class="cluster-progress-header">
+          <div class="cluster-progress-name" style="color:${cfg.color}">
+            ${cfg.label} <span style="font-size:12px;color:var(--text-muted);font-weight:400">(${nodes.length}개)</span>
+          </div>
+          <div class="cluster-progress-pct" style="color:${cfg.color}">${progressPct}%</div>
+        </div>
+        <div class="cluster-progress-bar-track">
+          <div class="cluster-progress-bar-fill" style="width:${progressPct}%;background:linear-gradient(90deg,${cfg.color}88,${cfg.color})"></div>
+        </div>
+        <div class="cluster-concepts">${chips || '<p style="color:var(--text-muted);font-size:12px;margin:8px 0 0 4px">아직 개념이 등록되지 않았습니다.</p>'}</div>
+      </div>
+    `;
+  }).join('');
 }
 
 function buildWeakSpots() {
@@ -906,7 +885,7 @@ function buildWeakSpots() {
       <div class="spot-confidence" style="color:#f472b6">${CONFIDENCE_STARS[n.confidence]}</div>
       <div class="spot-category" style="color:${color}">${n.category}</div>
     </div>`;
-  }).join('') || '<p style="color:var(--text-muted);font-size:13px">모든 개념이 기초 이상이에요! 👍</p>';
+  }).join('') || '<p style="color:var(--text-muted);font-size:13px;padding: 10px 0;">모든 개념이 기초 이상이에요! 👍</p>';
 }
 
 function buildStrongList() {
@@ -919,7 +898,7 @@ function buildStrongList() {
       <div class="spot-confidence" style="color:#34d399">${CONFIDENCE_STARS[n.confidence]}</div>
       <div class="spot-category" style="color:${color}">${n.category}</div>
     </div>`;
-  }).join('');
+  }).join('') || '<p style="color:var(--text-muted);font-size:13px;padding: 10px 0;">아직 심화 자신감 개념이 등록되지 않았습니다.</p>';
 }
 
 /* ============================================================
