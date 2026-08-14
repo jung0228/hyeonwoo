@@ -1767,7 +1767,6 @@ body {
   column-count: 2;
   column-gap: 40px;
   column-rule: 1px solid var(--border);
-  column-fill: balance;
   font-family: 'Georgia', 'Pretendard', serif;
   font-size: 15px;
   line-height: 1.85;
@@ -1780,16 +1779,20 @@ body {
   font-size: 17px;
   font-weight: 800;
   color: var(--text-primary);
-  margin: 18px 0 10px;
+  margin: 24px 0 12px;
+  break-inside: avoid;
   column-break-inside: avoid;
   page-break-inside: avoid;
   border-left: 3px solid var(--accent-purple);
   padding-left: 8px;
 }
 .reader-body-columns p {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   text-indent: 12px; /* 문단 들여쓰기 */
   text-align: justify;
+  break-inside: avoid;
+  column-break-inside: avoid;
+  page-break-inside: avoid;
 }
 .reader-body-columns p:first-of-type {
   text-indent: 0; /* 첫 문단은 들여쓰기 없음 */
