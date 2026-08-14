@@ -218,6 +218,8 @@ body {
 #view-research, #view-column {
   overflow-y: auto;
   overflow-x: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 /* ============================================================
@@ -1541,10 +1543,12 @@ body {
 .column-page {
   max-width: 900px;
   margin: 0 auto;
-  padding: 48px 32px 100px;
+  padding: 40px 32px 100px;
   display: flex;
   flex-direction: column;
   gap: 36px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Newspaper Header */
