@@ -23,7 +23,19 @@
     { "id": "lora", "label": "LoRA / PEFT", "category": "Training", "confidence": 2, "studyCount": 2, "tags": ["Low-Rank", "Adapter", "Parameter Efficient"] },
     { "id": "kv_cache", "label": "KV Cache / Inference Opt.", "category": "Architecture", "confidence": 2, "studyCount": 2, "tags": ["Inference Speed", "Memory", "Quantization"] },
     { "id": "clip", "label": "CLIP", "category": "Multimodal", "confidence": 3, "studyCount": 3, "tags": ["Contrastive", "Zero-shot", "Image-Text"] },
-
+    {
+      "id": "linear_algebra_problems",
+      "label": "📝 선형대수 MML 문제 모음",
+      "category": "Math Problems",
+      "confidence": 4,
+      "studyCount": 5,
+      "note": "linear_algebra_problems.md",
+      "tags": ["MML Problems", "Proofs", "AI Connections"],
+      "definition": "1단계 문제 모음: MML (Mathematics for Machine Learning) Ch 2~4 10대 핵심 문제 전수 풀이집.",
+      "purpose": "2단계 존재 이유: 수식 증명 및 알고리즘 구현/수치적 맹점 파악을 위한 실전 문제 모음.",
+      "tradeoff_insight": "3단계 비판적 맹점: 단순 수식 증명을 넘어 부동소수점 오차, Ill-conditioned, Rank-Nullity의 한계를 파악.",
+      "ai_connection": "4단계 AI 연결: 최소제곱법, SVD, LoRA, ResNet, Normalizing Flow 등 실전 AI 모델 수식 완벽 매핑."
+    },
     {
       "id": "linear_algebra_01_systems_rank",
       "label": "선형방정식계 & Rank",
@@ -128,14 +140,12 @@
       "tradeoff_insight": "3단계 비판적 맹점: 서브 블록 A의 역행렬 A^-1 이 반드시 존재해야만 연산 가능함.",
       "ai_connection": "4단계 AI 연결: Gaussian Process 및 VAE 조건부 확률 P(X|Y) 공분산 연산."
     },
-
     { "id": "pipeline", "label": "CPU Pipeline & Hazard", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["IF/ID/EX/MEM/WB", "RAW", "Forwarding", "OoO"] },
     { "id": "cache", "label": "Cache 구조", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["Set Associative", "Tag/Index/Offset", "False Sharing"] },
     { "id": "virtual_memory", "label": "Virtual Memory & Paging", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["TLB", "Page Fault", "Page Table"] },
     { "id": "os_io", "label": "OS / I/O / 인터럽트", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["System Call", "DMA", "IRQ Handler"] },
     { "id": "file_system", "label": "File System", "category": "Systems", "confidence": 2, "studyCount": 3, "tags": ["inode", "Journaling", "CoW", "Crash Consistency"] },
     { "id": "concurrency", "label": "동시성 / 동기화", "category": "Systems", "confidence": 2, "studyCount": 2, "tags": ["Mutex", "Deadlock", "Race Condition", "Lock-free"] },
-
     { "id": "sliding_window", "label": "Sliding Window", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["Two Pointer", "연속 구간", "Hash Map"] },
     { "id": "prefix_sum", "label": "Prefix Sum + Hash", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["누적합", "부분배열", "O(n)"] },
     { "id": "heap_interval", "label": "Heap + Interval", "category": "Algorithm", "confidence": 3, "studyCount": 2, "tags": ["Min-Heap", "구간 스케줄링", "최소 자원"] },
@@ -145,7 +155,6 @@
     { "id": "dp", "label": "Dynamic Programming", "category": "Algorithm", "confidence": 3, "studyCount": 4, "tags": ["Memoization", "Bottom-up", "lru_cache"] },
     { "id": "astar", "label": "A* / 휴리스틱 탐색", "category": "Algorithm", "confidence": 2, "studyCount": 2, "tags": ["f(n)=g(n)+h(n)", "Admissible", "Consistent"] },
     { "id": "graph_algo", "label": "그래프 알고리즘", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["Dijkstra", "Union-Find", "MST"] },
-
     { "id": "mle_map", "label": "MLE / MAP / Bayesian", "category": "Math & Stats", "confidence": 3, "studyCount": 5, "tags": ["Maximum Likelihood", "Prior/Posterior", "Consistency"] },
     { "id": "cross_entropy", "label": "Cross-Entropy & KL Div.", "category": "Math & Stats", "confidence": 4, "studyCount": 5, "tags": ["NLL", "KL Divergence", "Information Theory"] },
     { "id": "pca", "label": "PCA / 선형대수", "category": "Math & Stats", "confidence": 3, "studyCount": 3, "tags": ["Eigenvalue", "Covariance Matrix", "Dimensionality Reduction"] },
@@ -178,7 +187,14 @@
     { "source": "clip", "target": "multimodal", "weight": 3, "relation": "enables" },
     { "source": "lora", "target": "sft", "weight": 2, "relation": "enables_efficient" },
     { "source": "sft", "target": "hcx_omni", "weight": 3, "relation": "used_in" },
-
+    { "source": "linear_algebra_problems", "target": "linear_algebra_01_systems_rank", "relation": "solves", "weight": 4 },
+    { "source": "linear_algebra_problems", "target": "linear_algebra_02_determinant_inverse", "relation": "solves", "weight": 4 },
+    { "source": "linear_algebra_problems", "target": "linear_algebra_03_subspaces_kernel_image", "relation": "solves", "weight": 4 },
+    { "source": "linear_algebra_problems", "target": "linear_algebra_04_decompositions_svd_eigen", "relation": "solves", "weight": 4 },
+    { "source": "linear_algebra_problems", "target": "linear_algebra_05_mapping_matrix", "relation": "solves", "weight": 4 },
+    { "source": "linear_algebra_problems", "target": "linear_algebra_06_change_of_basis", "relation": "solves", "weight": 4 },
+    { "source": "linear_algebra_problems", "target": "linear_algebra_07_affine_subspaces", "relation": "solves", "weight": 4 },
+    { "source": "linear_algebra_problems", "target": "linear_algebra_08_schur_complement", "relation": "solves", "weight": 4 },
     { "source": "linear_algebra_01_systems_rank", "target": "linear_algebra_02_determinant_inverse", "relation": "basis_of", "weight": 3 },
     { "source": "linear_algebra_02_determinant_inverse", "target": "linear_algebra_03_subspaces_kernel_image", "relation": "basis_of", "weight": 3 },
     { "source": "linear_algebra_03_subspaces_kernel_image", "target": "linear_algebra_04_decompositions_svd_eigen", "relation": "basis_of", "weight": 3 },
@@ -186,17 +202,14 @@
     { "source": "linear_algebra_05_mapping_matrix", "target": "linear_algebra_06_change_of_basis", "relation": "extended_to", "weight": 3 },
     { "source": "linear_algebra_01_systems_rank", "target": "linear_algebra_07_affine_subspaces", "relation": "extended_to", "weight": 3 },
     { "source": "linear_algebra_02_determinant_inverse", "target": "linear_algebra_08_schur_complement", "relation": "key_component", "weight": 3 },
-
     { "source": "linear_algebra_04_decompositions_svd_eigen", "target": "lora", "relation": "applied_to", "weight": 4, "insight": "SVD의 Truncated SVD 원리가 LoRA의 근간" },
     { "source": "linear_algebra_04_decompositions_svd_eigen", "target": "pca", "relation": "basis_of", "weight": 4, "insight": "SVD = PCA 주성분 분석" },
-
     { "source": "pipeline", "target": "cache", "relation": "interacts_with", "weight": 3 },
     { "source": "cache", "target": "virtual_memory", "relation": "interacts_with", "weight": 3 },
     { "source": "virtual_memory", "target": "os_io", "relation": "managed_by", "weight": 3 },
     { "source": "os_io", "target": "file_system", "relation": "implements", "weight": 3 },
     { "source": "os_io", "target": "concurrency", "relation": "enables", "weight": 2 },
     { "source": "file_system", "target": "virtual_memory", "relation": "uses", "weight": 2 },
-
     { "source": "bfs_grid", "target": "astar", "relation": "generalized_to", "weight": 3 },
     { "source": "bfs_grid", "target": "topo_sort", "relation": "uses", "weight": 2 },
     { "source": "dp", "target": "astar", "relation": "related_to", "weight": 2 },
@@ -204,7 +217,6 @@
     { "source": "heap_interval", "target": "graph_algo", "relation": "used_in", "weight": 2 },
     { "source": "graph_algo", "target": "topo_sort", "relation": "contains", "weight": 2 },
     { "source": "binary_search", "target": "dp", "relation": "combined_with", "weight": 2 },
-
     { "source": "mle_map", "target": "cross_entropy", "relation": "derives", "weight": 4 },
     { "source": "mle_map", "target": "bias_variance", "relation": "related_to", "weight": 3 },
     { "source": "mle_map", "target": "vae", "relation": "used_in", "weight": 3 },
@@ -228,9 +240,10 @@
     "Training":       { "color": "#e879f9", "icon": "⚙️" },
     "Systems":        { "color": "#ef4444", "icon": "💻" },
     "Algorithm":      { "color": "#06b6d4", "icon": "🔢" },
-    "Math & Stats":   { "color": "#4ade80", "icon": "📐" }
+    "Math & Stats":   { "color": "#4ade80", "icon": "📐" },
+    "Math Problems":  { "color": "#facc15", "icon": "📝" }
   },
   "sessions": [
-    { "date": "2026-08-14", "topics": ["linear_algebra_01_systems_rank", "linear_algebra_06_change_of_basis", "linear_algebra_07_affine_subspaces", "linear_algebra_08_schur_complement"], "note": "선형대수학 8대 마스터 노드 정복 완결" }
+    { "date": "2026-08-14", "topics": ["linear_algebra_01_systems_rank", "linear_algebra_06_change_of_basis", "linear_algebra_07_affine_subspaces", "linear_algebra_08_schur_complement", "linear_algebra_problems"], "note": "선형대수학 8대 마스터 노드 및 10대 문제 풀이집 정복 완료" }
   ]
 }
