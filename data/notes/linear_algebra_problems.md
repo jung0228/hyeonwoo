@@ -6,42 +6,67 @@
 
 ---
 
-## 📌 목차 (Table of Contents)
-
-1. [[Problem 1] Ex 2.1 - 선형계 가우스 소거법 및 유일해 유도](#problem-1-ex-21---선형계-가우스-소거법-및-유일해-유도)
-2. [[Problem 2] Ex 2.2 - Inconsistent System 및 수식적/기하학적 맹점 분석](#problem-2-ex-22---inconsistent-system-및-수식적기하학적-맹점-분석)
-3. [[Problem 3] Ex 2.3 - 행렬식 det(A) 부피 팽창율 및 3x3 Sarrus 증명](#problem-3-ex-23---행렬식-deta-부피-팽창율-및-3x3-sarrus-증명)
-4. [[Problem 4] Ex 2.4 - Inverse & Ill-conditioned 행렬 수치 맹점](#problem-4-ex-24---inverse--ill-conditioned-행렬-수치-맹점)
-5. [[Problem 5] Ex 3.1 - Rank-Nullity 정리 및 Kernel / Image 공간 분해 증명](#problem-5-ex-31---rank-nullity-정리-및-kernel--image-공간-분해-증명)
-6. [[Problem 6] Ex 4.1 - Spectral Theorem 대칭행렬 직교 분해 백지 증명](#problem-6-ex-41---spectral-theorem-대칭행렬-직교-분해-백지-증명)
-7. [[Problem 7] Ex 4.2 - SVD와 A^T A Eigendecomposition 대입 증명](#problem-7-ex-42---svd와-at-a-eigendecomposition-대입-증명)
-8. [[Problem 8] Ex 3.2 - 기저변환 (Change of Basis) 동형사상 P^(-1)AP 유도](#problem-8-ex-32---기저변환-change-of-basis-동형사상-p-1ap-유도)
-9. [[Problem 9] Ex 2.5 - 아핀 부분공간 (Affine Subspaces) & 아핀 변환 유도](#problem-9-ex-25---아핀-부분공간-affine-subspaces--아핀-변환-유도)
-10. [[Problem 10] Ex 4.3 - Schur Complement (슈어 보강) 및 블록 행렬식 증명](#problem-10-ex-43---schur-complement-슈어-보강-및-블록-행렬식-증명)
-
 ---
 
 ## 📝 1. 선형방정식계 & Rank (Ch 2.1 ~ 2.2)
 
-### [Problem 1] Ex 2.1 - 선형계 가우스 소거법 및 유일해 유도
-- **연립방정식**:
-  $$\begin{aligned} x_1 + 2x_2 + x_3 &= 1 \\ 2x_1 + 3x_2 + 4x_3 &= 3 \\ x_1 + 4x_2 - 2x_3 &= -1 \end{aligned}$$
-- **증대행렬 가우스 소거**:
-  $$[A | b] = \begin{bmatrix} 1 & 2 & 1 & | & 1 \\ 2 & 3 & 4 & | & 3 \\ 1 & 4 & -2 & | & -1 \end{bmatrix} \xrightarrow{\text{Row Operations}} \begin{bmatrix} 1 & 2 & 1 & | & 1 \\ 0 & -1 & 2 & | & 1 \\ 0 & 0 & 1 & | & 0 \end{bmatrix}$$
-- **해석**: 피벗이 3개이므로 $\text{Rank}(A) = \text{Rank}([A|b]) = 3 = n$. 유일해 존재!
-- **거꾸로 대입 (Back-substitution)**: $x_3 = 0 \implies x_2 = -1 \implies x_1 = 3$. **해: $[3, -1, 0]^T$**.
-- **실전 AI 연결고리**: 가우스 소거법은 수치 해석의 근본이며, AI에서는 $Ax=b$가 최소제곱법 정규방정식 $X^T X w = X^T y$의 최적 웨이퍼 구하는 데 쓰인다.
+### [Problem 1] Ex 2.1 - 선형계 가우스 소거법 단계별 전개 및 유일해 완전 유도
+
+#### 1. 문제 정의 (Problem Statement)
+다음 3차원 선형방정식계 $Ax = b$ 의 해 공간 구조를 구하고 유일해 존재 여부를 판별하라.
+$$\begin{aligned} 
+x_1 + 2x_2 + x_3 &= 1 \\ 
+2x_1 + 3x_2 + 4x_3 &= 3 \\ 
+x_1 + 4x_2 - 2x_3 &= -1 
+\end{aligned}$$
+
+#### 2. 상세 기본 행 연산 단계 (Step-by-Step Row Operations)
+- **초기 증대행렬 (Initial Augmented Matrix)**:
+  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 2 & 3 & 4 & \mid & 3 \\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
+
+- **Step 1**: 1열 피벗 아래 요소 소거 ($R_2 \leftarrow R_2 - 2R_1$, $R_3 \leftarrow R_3 - R_1$)
+  $$\begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$$
+
+- **Step 2**: 2열 피벗 아래 요소 소거 ($R_3 \leftarrow R_3 + 2R_2$)
+  $$\begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 0 & 1 & \mid & 0 \end{bmatrix} \quad \implies \text{상삼각 행렬 (REF) 완성!}$$
+
+#### 3. 4단계 구조적 분석 및 해 판별 (Rouché–Capelli Analysis)
+1. **[1단계 명확한 개념 정의]**: 피벗(Pivot)은 각 행에서 0이 아닌 첫 번째 요소이며, 계수 $\text{Rank}(A)$는 피벗의 개수와 같다.
+2. **[2단계 존재 이유]**: 라우셰-카펠리 정리에 의해 계수 행렬의 랭크 $\text{Rank}(A) = 3$ 이고 증대 행렬의 랭크 $\text{Rank}([A \mid b]) = 3$ 이며, 미지수의 개수 $n = 3$ 과 동일하므로 공간의 찌그러짐 없이 **유일해(Unique Solution)**가 존재한다.
+3. **[3단계 후방 대입법 (Back-Substitution)]**:
+   - $3\text{행}: x_3 = 0$
+   - $2\text{행}: -x_2 + 2(0) = 1 \implies x_2 = -1$
+   - $1\text{행}: x_1 + 2(-1) + (0) = 1 \implies x_1 = 3$
+   - **최종 해벡터**: $\mathbf{x = \begin{bmatrix} 3 \\ -1 \\ 0 \end{bmatrix}}$
+4. **[4단계 실전 AI 연결]**: AI 학습 시 $Ax=b$ 형태의 선형계는 최적화 가중치 구하기의 근본이며, 피벗이 3개로 꽉 찬 것은 모델의 특징(Feature) 컬럼 간 선형 독립성이 완벽함을 뜻한다.
 
 ---
 
-### [Problem 2] Ex 2.2 - Inconsistent System 및 수식적/기하학적 맹점 분석
-- **연립방정식**: $x_1 + x_2 = 2$, $2x_1 + 2x_2 = 5$
-- **증대행렬 소거**:
-  $$[A | b] = \begin{bmatrix} 1 & 1 & | & 2 \\ 2 & 2 & | & 5 \end{bmatrix} \xrightarrow{R_2 \leftarrow R_2 - 2R_1} \begin{bmatrix} 1 & 1 & | & 2 \\ 0 & 0 & | & 1 \end{bmatrix}$$
-- **비판적 서술 3단계**:
-  1. **대수적 모순**: 2행이 $0 \cdot x_1 + 0 \cdot x_2 = 1 \implies \mathbf{0 = 1}$ 이 되어 해 불가능.
-  2. **랭크 불일치**: $\text{Rank}(A) = 1 < \text{Rank}([A|b]) = 2$. 결과 $b$가 열공간 $\text{Col}(A)$ 밖으로 튕겨 나감 ($b \notin \text{Col}(A)$).
-  3. **기하학적 모순**: 기울기가 같고 절편이 다른 두 평행선이므로 교점이 존재하지 않음.
+### [Problem 2] Ex 2.2 - Inconsistent System (해 없는 선형계) 대수적/기하학적 맹점 심층 분석
+
+#### 1. 문제 정의 (Problem Statement)
+다음 2차원 연립방정식계의 해 공간을 분석하고, 해가 존재하지 않는 원인을 3단계 맹점으로 증명하라.
+$$\begin{aligned}
+x_1 + x_2 &= 2 \\
+2x_1 + 2x_2 &= 5
+\end{aligned}$$
+
+#### 2. 상세 기본 행 연산 단계 (Step-by-Step Row Operations)
+- **증대행렬 소거 ($R_2 \leftarrow R_2 - 2R_1$)**:
+  $$[A \mid b] = \begin{bmatrix} 1 & 1 & \mid & 2 \\ 2 & 2 & \mid & 5 \end{bmatrix} \xrightarrow{R_2 \leftarrow R_2 - 2R_1} \begin{bmatrix} 1 & 1 & \mid & 2 \\ 0 & 0 & \mid & 1 \end{bmatrix}$$
+
+#### 3. 3단계 비판적 모순 증명 (Critical Insight & Contradiction)
+1. **대수적 모순 (Algebraic Contradiction)**: 
+   - 2행을 수식으로 복원하면 $0 \cdot x_1 + 0 \cdot x_2 = 1 \implies \mathbf{0 = 1}$ 이라는 절대 불가능한 모순이 발생함.
+2. **열공간 랭크 불일치 (Rank Discrepancy & Column Space)**: 
+   - $\text{Rank}(A) = 1$ 이지만 $\text{Rank}([A \mid b]) = 2$ 이다.
+   - 이는 결과 벡터 $b = \begin{bmatrix} 2 \\ 5 \end{bmatrix}$ 가 행렬 $A$의 열공간 $\text{Col}(A) = \text{span}\left(\begin{bmatrix} 1 \\ 2 \end{bmatrix}\right)$ 선상에 존재하지 않고 **공간 밖으로 튕겨 나갔음($b \notin \text{Col}(A)$)**을 수학적으로 증명한다.
+3. **기하학적 모순 (Geometric Interpretation)**: 
+   - 2차원 평면상에서 $x_2 = -x_1 + 2$ 와 $x_2 = -x_1 + \frac{5}{2}$ 로 기울기가 동일하지만 $y$절편이 서로 다른 **두 평행 직선**이므로 교점이 존재할 수 없다.
+
+#### 4. 실전 AI 연결고리 (Least Squares Approximation)
+- 데이터 분류/회귀 문제에서 센서 노이즈나 타겟 데이터 $y$가 독립 특징 공간 $\text{Col}(X)$ 밖으로 나가면 완벽한 해 $Xw = y$ 는 존재하지 않는다.
+- 이때 AI는 **정사영(Projection)**을 통해 $\text{Col}(X)$ 공간 위로 가장 가까운 점 $\hat{y}$을 내려 최적 근사해 **최소제곱법 정규방정식 $w = (X^T X)^{-1} X^T y$** 를 추정한다.
 
 ---
 
