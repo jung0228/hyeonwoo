@@ -15,20 +15,20 @@
 #### 1. 문제 정의 (Problem Statement)
 다음 3차원 선형방정식계 $Ax = b$ 의 해 공간 구조를 구하고 유일해 존재 여부를 판별하라.
 $$\begin{aligned} 
-x_1 + 2x_2 + x_3 &= 1 \\ 
-2x_1 + 3x_2 + 4x_3 &= 3 \\ 
+x_1 + 2x_2 + x_3 &= 1 \\\\ 
+2x_1 + 3x_2 + 4x_3 &= 3 \\\\ 
 x_1 + 4x_2 - 2x_3 &= -1 
 \end{aligned}$$
 
 #### 2. 상세 기본 행 연산 단계 (Step-by-Step Row Operations)
 - **초기 증대행렬 (Initial Augmented Matrix)**:
-  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 2 & 3 & 4 & \mid & 3 \\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
+  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 2 & 3 & 4 & \mid & 3 \\\\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
 
 - **Step 1**: 1열 피벗 아래 요소 소거 ($R_2 \leftarrow R_2 - 2R_1$, $R_3 \leftarrow R_3 - R_1$)
-  $$\begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$$
+  $$\begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$$
 
 - **Step 2**: 2열 피벗 아래 요소 소거 ($R_3 \leftarrow R_3 + 2R_2$)
-  $$\begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 0 & 1 & \mid & 0 \end{bmatrix} \quad \implies \text{상삼각 행렬 (REF) 완성!}$$
+  $$\begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 0 & 1 & \mid & 0 \end{bmatrix} \quad \implies \text{상삼각 행렬 (REF) 완성!}$$
 
 #### 3. 4단계 구조적 분석 및 해 판별 (Rouché–Capelli Analysis)
 1. **[1단계 명확한 개념 정의]**: 피벗(Pivot)은 각 행에서 0이 아닌 첫 번째 요소이며, 계수 $\text{Rank}(A)$는 피벗의 개수와 같다.
@@ -53,7 +53,7 @@ x_1 + x_2 &= 2 \\
 
 #### 2. 상세 기본 행 연산 단계 (Step-by-Step Row Operations)
 - **증대행렬 소거 ($R_2 \leftarrow R_2 - 2R_1$)**:
-  $$[A \mid b] = \begin{bmatrix} 1 & 1 & \mid & 2 \\ 2 & 2 & \mid & 5 \end{bmatrix} \xrightarrow{R_2 \leftarrow R_2 - 2R_1} \begin{bmatrix} 1 & 1 & \mid & 2 \\ 0 & 0 & \mid & 1 \end{bmatrix}$$
+  $$[A \mid b] = \begin{bmatrix} 1 & 1 & \mid & 2 \\\\ 2 & 2 & \mid & 5 \end{bmatrix} \xrightarrow{R_2 \leftarrow R_2 - 2R_1} \begin{bmatrix} 1 & 1 & \mid & 2 \\\\ 0 & 0 & \mid & 1 \end{bmatrix}$$
 
 #### 3. 3단계 비판적 모순 증명 (Critical Insight & Contradiction)
 1. **대수적 모순 (Algebraic Contradiction)**: 
