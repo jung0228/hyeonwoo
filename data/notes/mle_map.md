@@ -1,25 +1,94 @@
-# 📊 MLE (Maximum Likelihood) vs MAP (Maximum A Posteriori)
+# MLE / MAP / Bayesian Inference
 
-## [1단계] 명확한 개념 정의
-- **MLE (최대유도추정)**: 관측 데이터 $D$의 우도 $P(D|\theta)$를 최대화하는 파라미터 $\theta$ 추정 방식.
-  $$\hat{\theta}_{MLE} = \arg\max_{\theta} P(D | \theta)$$
-- **MAP (최대사후확률추정)**: 데이터 $D$와 사전 지식 $P(\theta)$를 결합하여 사후 확률 $P(\theta|D)$를 최대화하는 추정 방식.
-  $$\hat{\theta}_{MAP} = \arg\max_{\theta} P(\theta | D) = \arg\max_{\theta} [P(D | \theta) \cdot P(\theta)]$$
+**카테고리**: Math & Stats  
+**자신감**: ⭐⭐⭐ (중급)  
+**마지막 복습**: 2026-08-11
 
-## [2단계] 왜 쓰는가?
-- **MLE**: 사전 정보가 없을 때 순수 데이터에 기반한 최적해 추정.
-- **MAP**: 데이터 개수가 적을 때 발생할 수 있는 과적합(Overfitting)을 Prior 사전 경험으로 억제하여 모델을 안정화하기 위함.
+---
 
-## [3단계] 상황별 차이점 & 직관 (Trade-off)
-- **데이터 부족 ($N \ll \infty$)**: MLE는 3번의 동전 던지기(모두 앞면)로 "앞면 확률 100%"라 단정짓지만, MAP는 $P(\theta)$ Prior가 0.5 근처로 확률을 억제하여 오버피팅을 방지함 (MAP 압승).
-- **데이터 풍부 ($N \rightarrow \infty$)**: $P(D|\theta)$ 우도가 Prior를 무력화하여 MAP가 MLE 결과로 자연스럽게 수렴함.
+## 한 문장 요약
 
-## [4단계] 실전 AI / 딥러닝과의 연결고리
-- **딥러닝 Weight Decay (L2 Regularization) = MAP의 가우시안 Prior!**
-  - $\theta \sim \mathcal{N}(0, \sigma^2)$ 가우시안 Prior를 적용하고 $-\log$를 취하면:
-    $$\min \left[ -\log P(D | \theta) + \frac{1}{2\sigma^2} \|\theta\|^2 \right]$$
-  - 딥러닝에서 사용하는 Weight Decay는 파라미터가 0 근처일 것이라는 Prior를 주입한 MAP 추정과 수식적으로 100% 일치함.
+MLE는 데이터만으로 최적 parameter를 추정하고, MAP는 prior도 반영하며, Bayesian은 uncertainty까지 분포로 표현한다.
 
-## 연결 개념
-- Cross-Entropy: Negative Log-Likelihood (MLE) 기반 손실함수
-- L2 Regularization: MAP의 Gaussian Prior 주입 효과
+---
+
+## MLE (Maximum Likelihood Estimation)
+
+$$\hat{\theta}_{MLE} = \arg\max_\theta p(D|\theta) = \arg\max_\theta \sum_i \log p(x_i|\theta)$$
+
+- **Gaussian noise 가정** → log-likelihood 최대화 = MSE 최소화 (OLS)
+- **Categorical 분포** → log-likelihood 최대화 = Cross-Entropy 최소화
+
+### Consistency
+
+실제 모수 $\theta_0$일 때, 표본 수 증가 → 추정량이 $\theta_0$으로 확률수렴:
+
+$$\hat{\theta}_n \xrightarrow{p} \theta_0$$
+
+> MLE가 항상 consistent하지는 않음 — 식별 가능성(identifiability) + 정규성 조건 필요
+
+---
+
+## MAP (Maximum A Posteriori)
+
+$$\hat{\theta}_{MAP} = \arg\max_\theta \underbrace{p(D|\theta)}_{\text{likelihood}} \cdot \underbrace{p(\theta)}_{\text{prior}}$$
+
+로그를 취하면:
+
+$$\hat{\theta}_{MAP} = \arg\max_\theta \left[\log p(D|\theta) + \log p(\theta)\right]$$
+
+→ **prior의 log = regularization 항**처럼 작용
+
+| Prior | Regularization |
+|---|---|
+| Gaussian prior $\mathcal{N}(0, \sigma^2)$ | $L_2$ (Ridge) |
+| Laplace prior | $L_1$ (Lasso) |
+
+---
+
+## Bayesian Inference
+
+$$p(\theta|D) = \frac{p(D|\theta)p(\theta)}{p(D)}$$
+
+- **Prior** $p(\theta)$: 데이터 전 parameter 믿음
+- **Likelihood** $p(D|\theta)$: parameter 주어졌을 때 data 가능성
+- **Posterior** $p(\theta|D)$: data 반영 후 parameter 분포
+- **Evidence** $p(D) = \int p(D|\theta)p(\theta)d\theta$: 정규화 상수
+
+### Sequential update
+
+$$p(\theta|D_1, D_2) \propto p(D_2|\theta) \cdot p(\theta|D_1)$$
+
+→ 이전 posterior를 다음 prior로 사용 가능
+
+### MLE vs MAP vs Bayesian
+
+| | MLE | MAP | Bayesian |
+|---|---|---|---|
+| Prior | 무시 | 반영 | 반영 |
+| 출력 | Point estimate | Point estimate | 분포 전체 |
+| Uncertainty | 표현 불가 | 표현 불가 | 표현 |
+| 데이터 적을 때 | 불안정 | Prior로 안정 | 안정 |
+
+---
+
+## Cross-Entropy와의 연결
+
+Categorical model에서 MLE = Cross-Entropy 최소화:
+
+$$\text{CE}(q, p) = -\sum_k q_k \log p_k = H(q) + D_{KL}(q \| p)$$
+
+$q$가 고정이면 CE 최소화 = KL Divergence 최소화
+
+---
+
+## 체크리스트
+
+- [x] MLE 수식 및 직관 설명
+- [x] MAP = MLE + regularization 연결
+- [x] Gaussian prior → L2 regularization 유도
+- [x] Bayesian posterior update 과정
+- [x] Cross-entropy와 MLE 연결
+- [x] Consistency 정의
+- [ ] EM 알고리즘과 MLE 연결 (hidden variable)
+- [ ] Variational Bayes 개요
