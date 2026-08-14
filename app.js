@@ -68,7 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const stored = localStorage.getItem('hyeonwoo_knowledge_v1');
   if (stored) {
     try {
-      knowledgeData = JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      if (parsed && Array.isArray(parsed.nodes) && parsed.nodes.length > 0) {
+        knowledgeData = parsed;
+      }
     } catch (e) {
       knowledgeData = null;
     }
