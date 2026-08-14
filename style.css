@@ -1695,24 +1695,25 @@ body {
 }
 
 .column-reader-paper {
-  background: #0f131a; /* 더 차분한 다크 신문 배경 */
-  border: 1px solid var(--border);
-  max-width: 1000px;
+  background: #f4ecd8; /* 빈티지 종이 색상 (Warm Newsprint Paper) */
+  border: 1px solid #dcd1b8;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 48px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+  padding: 56px 48px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.8);
   position: relative;
+  color: #1a1a1a; /* 진한 잉크 텍스트 */
 }
 
 .reader-close-btn {
   position: absolute;
-  top: 16px; right: 16px;
-  background: transparent;
-  border: 1px solid var(--border);
-  padding: 6px 12px;
+  top: 20px; right: 20px;
+  background: #e6dcbe;
+  border: 1px solid #c8bc9e;
+  padding: 6px 14px;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-muted);
+  color: #4a4235;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -1723,43 +1724,45 @@ body {
 }
 
 .reader-header {
-  border-bottom: 2px solid var(--text-primary);
+  border-bottom: 2px solid #1a1a1a;
   padding-bottom: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
 .reader-brand {
   font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 900;
   letter-spacing: 0.1em;
-  color: var(--text-primary);
+  color: #1a1a1a;
 }
 .reader-meta {
   font-size: 11px;
   font-family: var(--font-mono);
-  color: var(--text-muted);
+  color: #665c4d;
 }
 
 .reader-title-area {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
+  border-bottom: 1px solid #c8bc9e;
+  padding-bottom: 20px;
 }
 .reader-title {
   font-family: 'Georgia', serif;
   font-size: clamp(24px, 4vw, 36px);
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1.25;
-  color: var(--text-primary);
+  color: #111111;
   margin-bottom: 12px;
 }
 .reader-author {
   font-family: 'Georgia', serif;
   font-style: italic;
   font-size: 14px;
-  color: var(--text-muted);
+  color: #554d3f;
 }
 
 /* 신문 본문 레이아웃 (세로 흐름 단일 스트림) */
@@ -1767,40 +1770,40 @@ body {
   max-width: 760px;
   margin: 0 auto;
   font-family: 'Georgia', 'Pretendard', serif;
-  font-size: 15.5px;
-  line-height: 1.9;
-  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.95;
+  color: #2b251d; /* 가독성 명확한 신문 잉크색 */
 }
 
 /* 신문 가독성 세부 스타일링 */
 .reader-body-columns h2 {
   font-family: 'Georgia', serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin: 32px 0 14px;
-  border-left: 3px solid var(--accent-purple);
+  font-size: 19px;
+  font-weight: 900;
+  color: #111111;
+  margin: 36px 0 14px;
+  border-left: 4px solid #7c3aed;
   padding-left: 10px;
 }
 .reader-body-columns p {
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   text-align: justify;
 }
 .reader-body-columns p:first-of-type {
-  text-indent: 0; /* 첫 문단은 들여쓰기 없음 */
+  text-indent: 0;
 }
 
 /* 첫글자 낙자(Drop Cap) */
 .reader-body-columns p:first-of-type::first-letter {
   font-family: 'Playfair Display', 'Georgia', serif;
   float: left;
-  font-size: 3.4em;
-  line-height: 0.85em;
+  font-size: 3.6em;
+  line-height: 0.8em;
   margin-top: 0.1em;
   margin-right: 0.15em;
   font-weight: 900;
-  color: var(--accent-purple);
-  text-shadow: 0 0 10px rgba(167, 139, 250, 0.25);
+  color: #7c3aed;
+  text-shadow: none;
 }
 
 .reader-body-columns hr {
