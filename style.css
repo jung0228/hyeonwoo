@@ -1762,14 +1762,13 @@ body {
   color: var(--text-muted);
 }
 
-/* 다단 신문 레이아웃 */
+/* 신문 본문 레이아웃 (세로 단일 스트림) */
 .reader-body-columns {
-  column-count: 2;
-  column-gap: 40px;
-  column-rule: 1px solid var(--border);
+  max-width: 720px;
+  margin: 0 auto;
   font-family: 'Georgia', 'Pretendard', serif;
-  font-size: 15px;
-  line-height: 1.85;
+  font-size: 15.5px;
+  line-height: 1.9;
   color: var(--text-secondary);
 }
 
