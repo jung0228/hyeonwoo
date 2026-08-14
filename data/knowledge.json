@@ -8,6 +8,7 @@
       "purpose": "연립방정식의 유일해, 무수히 많은 해, 해 없음을 수학적으로 판별하고 구하기 위함.",
       "tradeoff_insight": "피벗이 0 근처일 때 부동소수점 오차가 폭발하므로 수치적 안정성을 위해 Partial Pivoting 조치 필수.",
       "ai_connection": "최소제곱법 근사해, 파라미터 최적 수렴성 판별",
+      "note": "linear_algebra/01_linear_systems_and_rank.md",
       "last_reviewed": "2026-08-14",
       "review_count": 1
     },
@@ -19,6 +20,7 @@
       "purpose": "공간의 가역성을 판별하고 차원 찌그러짐(Dimensionality Collapse)을 방지하기 위함.",
       "tradeoff_insight": "직접 역행렬 연산은 O(n^3) 연산과 부동소수점 오차 폭발(Ill-conditioned)을 유발하므로 LU 분해나 경사하강법으로 대치함.",
       "ai_connection": "Normalizing Flow 변수변환 (Jacobian Determinant), VAE 가우시안 엔트로피",
+      "note": "linear_algebra/02_determinant_and_inverse.md",
       "last_reviewed": "2026-08-14",
       "review_count": 1
     },
@@ -30,6 +32,7 @@
       "purpose": "차원 변환 과정에서 어떤 정보가 손실되고 보존되는지 수학적으로 추적하기 위함.",
       "tradeoff_insight": "Kernel로 들어간 정보는 영구 손실되므로 ResNet Skip-Connection(y=F(x)+x)으로 강제 차단함.",
       "ai_connection": "Autoencoder Latent 압축, ResNet 잔차 연결, 직합(Direct Sum) 유일 분해",
+      "note": "linear_algebra/03_subspaces_kernel_image.md",
       "last_reviewed": "2026-08-14",
       "review_count": 1
     },
@@ -41,6 +44,7 @@
       "purpose": "고차원 데이터의 가장 중요한 주성분 축을 추출하고 노이즈를 제거하며 압축하기 위함.",
       "tradeoff_insight": "SVD는 L2 오차 기반이라 Outlier 노이즈에 튀는 결함이 있어 L1 Norm의 Robust PCA(M=L+S)로 보완함.",
       "ai_connection": "LoRA(Low-Rank Adaptation), PCA 주성분 분석, Robust PCA 비디오 배경 분리",
+      "note": "linear_algebra/04_matrix_decompositions_svd_eigen.md",
       "last_reviewed": "2026-08-14",
       "review_count": 1
     }
