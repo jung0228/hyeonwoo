@@ -29,7 +29,7 @@ $$A \mathbf{x} = \mathbf{b} \iff \begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 &
 3. **일반해 집합 (General Solution: Eq 2.43)**:
    일반해는 특수해 $\mathbf{x}_p$에 동차해 기저들의 임의 스칼라배 선형 결합이 더해진 아핀 공간 형태를 이룹니다:
 
-   $$\text{General Solution: } \left\{ \mathbf{x} \in \mathbb{R}^4 : \mathbf{x} = \begin{bmatrix} 42 \\\\ 8 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 8 \\\\ 2 \\\\ -1 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} -4 \\\\ 12 \\\\ 0 \\\\ -1 \end{bmatrix}, \ \lambda_1, \lambda_2 \in \mathbb{R} \right\}$$
+   $$\text{General Solution: } \{ \mathbf{x} \in \mathbb{R}^4 : \mathbf{x} = \begin{bmatrix} 42 \\\\ 8 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 8 \\\\ 2 \\\\ -1 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} -4 \\\\ 12 \\\\ 0 \\\\ -1 \end{bmatrix}, \ \lambda_1, \lambda_2 \in \mathbb{R} \}$$
 
 - **Remark (일반해 구하기 3단계)**:
   - [1단계]: $Ax = b$ 의 특수해 $\mathbf{x}_p$ 하나를 구합니다.
@@ -57,7 +57,7 @@ $$\begin{bmatrix} -2 & 4 & -2 & -1 & 4 & \mid & -3 \\\\ 4 & -8 & 3 & -3 & 1 & \m
 - **해의 존재 조건**: 마지막 행 $0 = a + 1$ 에 의해 오직 $a = -1$ 일 때만 해가 존재합니다.
 - **특수해 (Eq 2.46)**: $\mathbf{x}_p = [2, 0, -1, 1, 0]^\top$
 - **일반해 집합 (Eq 2.47)**:
-  $$\left\{ \mathbf{x} \in \mathbb{R}^5 : \mathbf{x} = \begin{bmatrix} 2 \\\\ 0 \\\\ -1 \\\\ 1 \\\\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 2 \\\\ 1 \\\\ 0 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} 2 \\\\ 0 \\\\ -1 \\\\ 2 \\\\ 1 \end{bmatrix}, \ \lambda_1, \lambda_2 \in \mathbb{R} \right\}$$
+  $${ \mathbf{x} \in \mathbb{R}^5 : \mathbf{x} = \begin{bmatrix} 2 \\\\ 0 \\\\ -1 \\\\ 1 \\\\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 2 \\\\ 1 \\\\ 0 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} 2 \\\\ 0 \\\\ -1 \\\\ 2 \\\\ 1 \end{bmatrix}, \ \lambda_1, \lambda_2 \in \mathbb{R} }$$
 
 ---
 
