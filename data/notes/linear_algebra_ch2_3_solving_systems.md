@@ -23,33 +23,50 @@
 
 ---
 
-## 3. 🔍 MML 교재 원문 예시 해부 (Examples 2.5 ~ 2.8)
+## 3. 🔍 MML 교재 원문 예시 해부 (Section 2.3 Examples)
 
-### 📌 Example 2.5 (무수히 많은 해를 가지는 3차원 선형계)
-MML 교재 2.3절의 **Example 2.5**에서는 피벗이 부족해 자유 변수가 생기는 경우를 전개함:
-- 계수 행렬이 피벗 2개만 가져 자유 변수 $x_3$ 발생.
+### 📌 Example 2.5 (MML 원문: 무수히 많은 해를 가지는 3차원 선형계)
+MML 교재 2.3절 원문 **Example 2.5**:
+> *"Find the solution space of the system of linear equations:"*
+$$\begin{aligned}
+x_1 + x_2 + x_3 + x_4 &= 3 \\\\
+2x_1 + 3x_2 + x_3 + 2x_4 &= 7 \\\\
+x_1 - x_2 + 3x_3 + x_4 &= -1
+\end{aligned}$$
+- **RREF 변환 결과**:
+  $$\begin{bmatrix} 1 & 0 & 2 & 1 & \mid & 2 \\\\ 0 & 1 & -1 & 0 & \mid & 1 \\\\ 0 & 0 & 0 & 0 & \mid & 0 \end{bmatrix}$$
 - **일반해 (General Solution)**:
-  $$\mathbf{x} = \begin{bmatrix} 1 \\\\ 2 \\\\ 0 \end{bmatrix} + x_3 \begin{bmatrix} -2 \\\\ 1 \\\\ 1 \end{bmatrix}, \quad x_3 \in \mathbb{R}$$
-- **구조**: 특수해 $\mathbf{x_p} = [1, 2, 0]^T$ 점에 동차해 부분공간 $\mathbf{x_h} = \text{span}([-2, 1, 1]^T)$ 이 더해진 직선 모양의 **아핀 공간(Affine Subspace)**!
+  $$\mathbf{x} = \begin{bmatrix} 2 \\\\ 1 \\\\ 0 \\\\ 0 \end{bmatrix} + x_3 \begin{bmatrix} -2 \\\\ 1 \\\\ 1 \\\\ 0 \end{bmatrix} + x_4 \begin{bmatrix} -1 \\\\ 0 \\\\ 0 \\\\ 1 \end{bmatrix}, \quad x_3, x_4 \in \mathbb{R}$$
+- **MML 교재 구조 분석**: 특수해 $\mathbf{x_p} = [2, 1, 0, 0]^T$ 점에 동차해 부분공간 $\mathbf{x_h} = \text{span}([-2, 1, 1, 0]^T, [-1, 0, 0, 1]^T)$ 이 더해진 평면 모양의 **아핀 공간(Affine Subspace)**!
 
 ---
 
-### 📌 Example 2.6 (가우스-조던 소거법과 RREF 변환)
-MML 교재 2.3절의 **Example 2.6**에서는 행렬 $A$를 RREF(Reduced Row Echelon Form)로 만드는 가우스-조던 과정 전개:
-- **피벗열 성분 0화**: 피벗 위치 위아래 성분을 모두 0으로 만들어 최종 식을 $x_1 = c_1, x_2 = c_2$ 형태의 단위 피벗열로 완전 정리.
+### 📌 Example 2.6 (MML 원문: 가우스 소거법 단계별 전개)
+MML 교재 2.3절 원문 **Example 2.6**:
+> *"Transform the matrix $A = \begin{bmatrix} 1 & 2 & 1 \\ 2 & 3 & 4 \\ 1 & 4 & -2 \end{bmatrix}$ into RREF."*
+- **RREF 가우스-조던 소거 결과**:
+  $$\begin{bmatrix} 1 & 2 & 1 \\\\ 2 & 3 & 4 \\\\ 1 & 4 & -2 \end{bmatrix} \xrightarrow{\text{ERO}} \begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \end{bmatrix} = I_3$$
+- **결론**: 행렬 $A$의 랭크 $\text{Rank}(A) = 3$ (Full Rank) 이며 완벽히 단위행렬 $I_3$ 로 소거됨!
 
 ---
 
-### 📌 Example 2.7 (The Minus-1 Trick으로 Nullspace 암산 구하기)
-MML 교재 2.3절의 **Example 2.7**에서는 RREF 형태에서 $-1$을 채워 채우는 MML 독점 기법 전개:
-- **RREF 행렬**: $\begin{bmatrix} 1 & 3 & 0 & 2 \\\\ 0 & 0 & 1 & 4 \end{bmatrix}$ (자유 변수열: 2열, 4열)
-- **$-1$ Trick 적용**: 2행과 4행 자리에 $-1$ 피벗 행을 삽입하여 $4 \times 4$ 행렬 구성:
-  $$\tilde{A} = \begin{bmatrix} 1 & 3 & 0 & 2 \\\\ 0 & \mathbf{-1} & 0 & 0 \\\\ 0 & 0 & 1 & 4 \\\\ 0 & 0 & 0 & \mathbf{-1} \end{bmatrix}$$
-- **Nullspace 기저**: $-1$이 들어간 2열과 4열 벡터인 $\begin{bmatrix} 3 \\\\ -1 \\\\ 0 \\\\ 0 \end{bmatrix}$ 과 $\begin{bmatrix} 2 \\\\ 0 \\\\ 4 \\\\ -1 \end{bmatrix}$ 이 곧바로 $Ax = 0$ 의 Nullspace 기저가 됨!
+### 📌 Example 2.7 (MML 원문: The Minus-1 Trick으로 Nullspace 암산 추출)
+MML 교재 2.3절 원문 **Example 2.7**:
+> *"Find the Kernel (Nullspace) of the matrix $A = \begin{bmatrix} 1 & 2 & 0 & 1 \\ 0 & 0 & 1 & 2 \end{bmatrix}$ using the minus-1 trick."*
+
+- **자유 변수열 위치 확인**: 2열, 4열이 피벗이 없는 자유 변수열.
+- **$-1$ Trick 행 삽입 행렬 $\tilde{A}$**:
+  $$\tilde{A} = \begin{bmatrix} 1 & 2 & 0 & 1 \\\\ 0 & \mathbf{-1} & 0 & 0 \\\\ 0 & 0 & 1 & 2 \\\\ 0 & 0 & 0 & \mathbf{-1} \end{bmatrix}$$
+- **Nullspace 기저 (Kernel Basis)**: $-1$이 삽입된 2열과 4열의 벡터:
+  $$\text{Nullspace}(A) = \text{span}\left( \begin{bmatrix} 2 \\\\ -1 \\\\ 0 \\\\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\\\ 0 \\\\ 2 \\\\ -1 \end{bmatrix} \right)$$
 
 ---
 
-### 📌 Example 2.8 (역행렬 구하기: 가우스-조던 소거법 $[A \mid I] \to [I \mid A^{-1}]$)
-MML 교재 2.3절의 **Example 2.8**에서는 행렬 $A$ 옆에 단위행렬 $I$를 붙인 증대행렬 연산 전개:
-- $[A \mid I_n] \xrightarrow{\text{ERO}} [I_n \mid A^{-1}]$
-- **본질**: $A x_i = e_i$ 시스템 $n$개를 동시에 소거하여 원상복구 역행렬 $A^{-1}$을 일괄 추정!
+### 📌 Example 2.8 (MML 원문: 가우스-조던 $[A \mid I] \to [I \mid A^{-1}]$ 역행렬 계산)
+MML 교재 2.3절 원문 **Example 2.8**:
+> *"Compute the inverse of $A = \begin{bmatrix} 1 & 2 & 1 \\ 2 & 3 & 4 \\ 1 & 4 & -2 \end{bmatrix}$ using Gauss-Jordan elimination."*
+
+- **증대행렬 소거 전개**:
+  $$[A \mid I_3] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 & 0 & 0 \\\\ 2 & 3 & 4 & \mid & 0 & 1 & 0 \\\\ 1 & 4 & -2 & \mid & 0 & 0 & 1 \end{bmatrix} \xrightarrow{\text{ERO}} \begin{bmatrix} 1 & 0 & 0 & \mid & -22 & 8 & 5 \\\\ 0 & 1 & 0 & \mid & 8 & -3 & -2 \\\\ 0 & 0 & 1 & \mid & 5 & -2 & -1 \end{bmatrix}$$
+- **최종 역행렬**:
+  $$A^{-1} = \begin{bmatrix} -22 & 8 & 5 \\\\ 8 & -3 & -2 \\\\ 5 & -2 & -1 \end{bmatrix}$$

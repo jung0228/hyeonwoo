@@ -32,21 +32,42 @@
 
 ---
 
-## 🔍 2. ★ MML 교재 원문 예시 해부
+## 🔍 2. ★ MML 교재 원문 예시 해부 (Section 2.2 Examples)
 
-### 📌 Example 2.3 (행렬 곱셈과 선형 사상의 합성)
-MML 교재 2.2절의 **Example 2.3**에서는 행렬 곱셈 $C = AB$의 각 성분이 공간 변환의 합성이 됨을 직접 유도함:
-- 두 변환 $B \in \mathbb{R}^{2 \times 3}, A \in \mathbb{R}^{3 \times 2}$:
-  $$A = \begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\\\ 3 & 0 \end{bmatrix}, \quad B = \begin{bmatrix} 2 & 1 & 0 \\\\ 1 & 3 & 4 \end{bmatrix}$$
-- 곱행렬 $AB \in \mathbb{R}^{3 \times 3}$:
-  $$AB = \begin{bmatrix} 1(2)+2(1) & 1(1)+2(3) & 1(0)+2(4) \\\\ 0(2)+1(1) & 0(1)+1(3) & 0(0)+1(4) \\\\ 3(2)+0(1) & 3(1)+0(3) & 3(0)+0(4) \end{bmatrix} = \begin{bmatrix} 4 & 7 & 8 \\\\ 1 & 3 & 4 \\\\ 6 & 3 & 0 \end{bmatrix}$$
-- **직관**: 입력 3차원 벡터를 2차원으로 축소($B$)한 뒤 다시 3차원으로 팽창($A$)시키는 공간 연속 변환의 수식화!
+### 📌 Example 2.2 (MML 원문: 3차원 선형계 가우스 소거법)
+MML 교재 2.2절 원문 **Example 2.2**:
+> *"If we want to solve the system of linear equations:"*
+$$\begin{aligned}
+x_1 + 2x_2 + x_3 &= 1 \\\\
+2x_1 + 3x_2 + 4x_3 &= 3 \\\\
+x_1 + 4x_2 - 2x_3 &= -1
+\end{aligned}$$
+- **증대 행렬 (Augmented Matrix)**:
+  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 2 & 3 & 4 & \mid & 3 \\\\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
+- **가우스 소거법 (Gauss Elimination)**:
+  1. $R_2 \leftarrow R_2 - 2R_1, R_3 \leftarrow R_3 - R_1 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$
+  2. $R_3 \leftarrow R_3 + 2R_2 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 0 & 1 & \mid & 0 \end{bmatrix}$ (**REF 상삼각 행렬 완성**)
+- **후방 대입법 (Back-Substitution)**:
+  - $x_3 = 0, x_2 = -1, x_1 = 3 \implies \mathbf{x = [3, -1, 0]^T}$ (3개 초평면의 유일한 교점).
 
 ---
 
-### 📌 Example 2.4 (2x2 행렬의 역행렬과 가역성 판별)
-MML 교재 2.2절의 **Example 2.4**에서는 $2 \times 2$ 행렬 $A = \begin{bmatrix} a & b \\\\ c & d \end{bmatrix}$ 의 역행렬 공식을 유도함:
-- **역행렬 존재 조건**: $\det(A) = ad - bc \neq 0$
-- **역행렬 공식**:
+### 📌 Example 2.3 (MML 원문: 행렬 곱셈 연산 $A \in \mathbb{R}^{3 \times 2}, B \in \mathbb{R}^{2 \times 3}$)
+MML 교재 2.2절 원문 **Example 2.3**:
+> *"For the matrices $A = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 3 & 0 \end{bmatrix}$ and $B = \begin{bmatrix} 2 & 1 & 0 \\ 1 & 3 & 4 \end{bmatrix}$, calculate $AB$ and $BA$."*
+
+- **$AB \in \mathbb{R}^{3 \times 3}$ 계산**:
+  $$AB = \begin{bmatrix} 1(2)+2(1) & 1(1)+2(3) & 1(0)+2(4) \\\\ 0(2)+1(1) & 0(1)+1(3) & 0(0)+1(4) \\\\ 3(2)+0(1) & 3(1)+0(3) & 3(0)+0(4) \end{bmatrix} = \begin{bmatrix} 4 & 7 & 8 \\\\ 1 & 3 & 4 \\\\ 6 & 3 & 0 \end{bmatrix}$$
+- **$BA \in \mathbb{R}^{2 \times 2}$ 계산**:
+  $$BA = \begin{bmatrix} 2(1)+1(0)+0(3) & 2(2)+1(1)+0(0) \\\\ 1(1)+3(0)+4(3) & 1(2)+3(1)+4(0) \end{bmatrix} = \begin{bmatrix} 2 & 5 \\\\ 13 & 5 \end{bmatrix}$$
+- **MML 교재 인사이트**: $AB \neq BA$ 일 뿐만 아니라, 차원 자체가 $3 \times 3$ 과 $2 \times 2$ 로 완전히 다름! (행렬 곱셈 교환법칙 절대 불성립 증명).
+
+---
+
+### 📌 Example 2.4 (MML 원문: $2 \times 2$ 행렬의 역행렬 유도)
+MML 교재 2.2절 원문 **Example 2.4**:
+> *"For a matrix $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix} \in \mathbb{R}^{2 \times 2}$, find its inverse $A^{-1}$."*
+
+- **역행렬 수식 유도**:
   $$A^{-1} = \frac{1}{ad - bc} \begin{bmatrix} d & -b \\\\ -c & a \end{bmatrix}$$
-- 만약 $ad - bc = 0$ 이면 행렬 $A$는 **특이 행렬(Singular Matrix)**이 되어 공간이 1차원 선 이하로 찌그러져 원상복구 역변환이 불가능해짐!
+- $\det(A) = ad - bc = 0$ 이면 분모가 0이 되어 역행렬 존재 안 함 (특이 행렬).
