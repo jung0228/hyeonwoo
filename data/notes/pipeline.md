@@ -1,14 +1,14 @@
 # CPU Pipeline & Hazard
 
-**카테고리**: Systems  
-**자신감**: ⭐⭐⭐ (중급)  
-**마지막 복습**: 2026-08-10
+카테고리: Systems  
+자신감: ⭐⭐⭐ (중급)  
+마지막 복습: 2026-08-10
 
 ---
 
 ## 한 문장 요약
 
-CPU Pipeline은 IF→ID→EX→MEM→WB 5단계를 동시에 진행해 throughput을 높이지만, **Hazard(충돌)**가 발생하면 stall이나 forwarding으로 해결한다.
+CPU Pipeline은 IF→ID→EX→MEM→WB 5단계를 동시에 진행해 throughput을 높이지만, Hazard(충돌)가 발생하면 stall이나 forwarding으로 해결한다.
 
 ---
 
@@ -20,11 +20,11 @@ IF  → ID  → EX  → MEM → WB
           (다다음 명령어)
 ```
 
-- **IF**: Instruction Fetch
-- **ID**: Decode + Register Read
-- **EX**: ALU / Address 계산
-- **MEM**: Data Memory 접근
-- **WB**: Register Write-back
+- IF: Instruction Fetch
+- ID: Decode + Register Read
+- EX: ALU / Address 계산
+- MEM: Data Memory 접근
+- WB: Register Write-back
 
 > Cycle time = 가장 느린 stage가 결정
 
@@ -45,8 +45,8 @@ ADD R1, R2, R3   ← R1에 씀
 SUB R4, R1, R5   ← R1을 읽어야 함
 ```
 
-→ **Forwarding**: EX→EX, MEM→EX 경로로 결과 전달  
-→ **Load-use**: 메모리에서 읽는 경우 1 cycle stall 불가피
+→ Forwarding: EX→EX, MEM→EX 경로로 결과 전달  
+→ Load-use: 메모리에서 읽는 경우 1 cycle stall 불가피
 
 ### WAR / WAW — 이름 충돌 (Out-of-Order에서만 문제)
 
@@ -55,12 +55,12 @@ WAR :: 앞 read → 뒤 write (OoO에서 뒤가 먼저 쓰면 앞이 잘못된 �
 WAW :: 두 write가 같은 레지스터 (늦은 write가 먼저 반영될 수 있음)
 ```
 
-→ **Register Renaming**: 새 physical register에 매핑해서 해결  
+→ Register Renaming: 새 physical register에 매핑해서 해결  
 → RAW는 renaming으로 제거 불가 (진짜 dependency)
 
 ### Out-of-Order (OoO) Execution
 
-앞 instruction이 기다리는 동안 **독립적인 뒤 instruction을 먼저 실행**  
+앞 instruction이 기다리는 동안 독립적인 뒤 instruction을 먼저 실행  
 → Reorder Buffer(ROB)가 program order로 commit 보장
 
 ---

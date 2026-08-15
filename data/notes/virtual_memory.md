@@ -1,14 +1,14 @@
 # Virtual Memory & Paging
 
-**카테고리**: Systems  
-**자신감**: ⭐⭐⭐ (중급)  
-**마지막 복습**: 2026-08-09
+카테고리: Systems  
+자신감: ⭐⭐⭐ (중급)  
+마지막 복습: 2026-08-09
 
 ---
 
 ## 한 문장 요약
 
-Virtual Memory는 프로세스가 연속된 큰 메모리 공간을 가지는 것처럼 추상화하고, **MMU + Page Table + TLB**가 가상→물리 주소를 변환한다.
+Virtual Memory는 프로세스가 연속된 큰 메모리 공간을 가지는 것처럼 추상화하고, MMU + Page Table + TLB가 가상→물리 주소를 변환한다.
 
 ---
 
@@ -34,19 +34,19 @@ Virtual Address = VPN | Offset
 PTE: PPN | present | dirty | accessed | permission(r/w/x)
 ```
 
-- **TLB**: 최근 VPN→PPN mapping cache (miss 시 page table walk)
+- TLB: 최근 VPN→PPN mapping cache (miss 시 page table walk)
 
 ---
 
 ## Page Fault 처리
 
-**정상 주소, 하지만 page가 RAM에 없을 때:**
+정상 주소, 하지만 page가 RAM에 없을 때:
 
 1. OS가 SSD/swap에서 해당 page를 RAM frame으로 가져옴
 2. PTE + TLB 갱신
-3. **원래 instruction 하나만 재실행** (program 전체 재시작 ❌)
+3. 원래 instruction 하나만 재실행 (program 전체 재시작 ❌)
 
-**잘못된 주소 / 권한 위반 시:**
+잘못된 주소 / 권한 위반 시:
 → signal 발생 또는 프로세스 종료 (복구 불가)
 
 ---
@@ -89,7 +89,7 @@ Swapping  : page를 RAM ↔ disk swap area로 이동
 Thrashing : working set > RAM → page fault/swap만 반복
 ```
 
-> **Thrashing 해결**: working set 모니터링, 프로세스 줄이기, RAM 증설
+> Thrashing 해결: working set 모니터링, 프로세스 줄이기, RAM 증설
 
 ---
 

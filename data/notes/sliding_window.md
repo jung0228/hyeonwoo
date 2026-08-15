@@ -1,8 +1,8 @@
 # 알고리즘 핵심 패턴
 
-**카테고리**: Algorithm  
-**자신감**: ⭐⭐⭐ (중급)  
-**마지막 복습**: 2026-08-08
+카테고리: Algorithm  
+자신감: ⭐⭐⭐ (중급)  
+마지막 복습: 2026-08-08
 
 > 코테 90분 3문제 Python 기준. 아래 패턴 중 하나 이상 복합 적용.
 
@@ -10,7 +10,7 @@
 
 ## 1. Sliding Window
 
-**언제**: 연속 구간에서 조건을 만족하는 최장/최단 길이
+언제: 연속 구간에서 조건을 만족하는 최장/최단 길이
 
 ```python
 def longest_at_most_k(items, k):
@@ -39,7 +39,7 @@ def longest_at_most_k(items, k):
 
 ## 2. Prefix Sum + Dictionary
 
-**언제**: 합이 target인 연속 부분배열 개수
+언제: 합이 target인 연속 부분배열 개수
 
 ```python
 def count_target_subarrays(nums, target):
@@ -61,7 +61,7 @@ def count_target_subarrays(nums, target):
 
 ## 3. Heap + Interval
 
-**언제**: 동시에 필요한 최소 자원 수 (강의실, 서버 등)
+언제: 동시에 필요한 최소 자원 수 (강의실, 서버 등)
 
 ```python
 import heapq
@@ -83,7 +83,7 @@ def min_resources(intervals):
 
 ## 4. Binary Search on Answer (정답 이분탐색)
 
-**언제**: 정답 범위를 알고, 특정 값이 가능한지 O(n)으로 판정 가능할 때
+언제: 정답 범위를 알고, 특정 값이 가능한지 O(n)으로 판정 가능할 때
 
 ```python
 def minimum_capacity(files, days):
@@ -139,7 +139,7 @@ def shortest_path(grid, start, goal):
 
 ## 6. Topological Sort (Kahn's Algorithm)
 
-**언제**: 선후 관계가 있는 작업 순서, DAG 순서 정렬
+언제: 선후 관계가 있는 작업 순서, DAG 순서 정렬
 
 ```python
 from collections import deque
@@ -168,7 +168,7 @@ def topological_sort(n, edges):
 
 ## 7. Dynamic Programming
 
-**인접하지 않은 원소의 최대 합 예시:**
+인접하지 않은 원소의 최대 합 예시:
 
 ```python
 from functools import lru_cache
@@ -190,9 +190,9 @@ def max_non_adjacent_sum(values):
 
 ## 시험 직전 우선순위
 
-1. **중첩 dict/list + XML → DataFrame** 변환
-2. **pandas**: filtering, groupby, sort, fillna
-3. **PyTorch**: tensor dimension, `model.eval()`, `no_grad()`, `argmax(dim=1)`
+1. 중첩 dict/list + XML → DataFrame 변환
+2. pandas: filtering, groupby, sort, fillna
+3. PyTorch: tensor dimension, `model.eval()`, `no_grad()`, `argmax(dim=1)`
 4. 슬라이딩 윈도우, prefix sum, heap, binary search, BFS, topo sort
 5. 빈 입력, 중복, `None`, 매우 큰 입력 처리
 

@@ -1,14 +1,14 @@
 # Cache 구조
 
-**카테고리**: Systems  
-**자신감**: ⭐⭐⭐ (중급)  
-**마지막 복습**: 2026-08-10
+카테고리: Systems  
+자신감: ⭐⭐⭐ (중급)  
+마지막 복습: 2026-08-10
 
 ---
 
 ## 한 문장 요약
 
-Cache는 메모리 계층 구조에서 DRAM보다 빠른 임시 저장소로, **Tag | Set Index | Block Offset**으로 주소를 분해해서 데이터를 찾는다.
+Cache는 메모리 계층 구조에서 DRAM보다 빠른 임시 저장소로, Tag | Set Index | Block Offset으로 주소를 분해해서 데이터를 찾는다.
 
 ---
 
@@ -18,9 +18,9 @@ Cache는 메모리 계층 구조에서 DRAM보다 빠른 임시 저장소로, **
 Physical Address = Tag | Set Index | Block Offset
 ```
 
-- **Block Offset**: cache line 안의 byte 위치
-- **Set Index**: 어느 set을 확인할지 선택
-- **Tag**: 그 set 안의 여러 block 중 어떤 것인지 식별
+- Block Offset: cache line 안의 byte 위치
+- Set Index: 어느 set을 확인할지 선택
+- Tag: 그 set 안의 여러 block 중 어떤 것인지 식별
 
 ### Hit / Miss
 
@@ -70,20 +70,20 @@ Write buffer   : write-through에서 queue로 CPU 대기 줄임
 
 ## False Sharing
 
-서로 다른 core가 **다른 변수**를 수정해도,  
-두 변수가 **같은 cache line**에 있으면  
+서로 다른 core가 다른 변수를 수정해도,  
+두 변수가 같은 cache line에 있으면  
 → line 전체가 core 사이에서 invalidation·이동 발생  
 → 성능 급감 (실제로 공유 안 하는데도)
 
-**해결**: 변수 padding으로 cache line에 혼자 있게 하기
+해결: 변수 padding으로 cache line에 혼자 있게 하기
 
 ---
 
 ## Pipeline과의 관계
 
-- **Load-use hazard**: 메모리 접근 → cache miss → stall 길어짐
-- **L1 cache**: pipeline의 MEM stage와 직결
-- **TLB**: 가상 주소 → 물리 주소 translation의 cache
+- Load-use hazard: 메모리 접근 → cache miss → stall 길어짐
+- L1 cache: pipeline의 MEM stage와 직결
+- TLB: 가상 주소 → 물리 주소 translation의 cache
 
 ---
 

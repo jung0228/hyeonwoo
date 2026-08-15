@@ -1,14 +1,14 @@
 # Transformer
 
-**카테고리**: Architecture  
-**자신감**: ⭐⭐⭐⭐ (심화)  
-**마지막 복습**: 2026-08-09
+카테고리: Architecture  
+자신감: ⭐⭐⭐⭐ (심화)  
+마지막 복습: 2026-08-09
 
 ---
 
 ## 한 문장 요약
 
-"Attention Is All You Need" — RNN 없이 **Self-Attention**만으로 시퀀스를 처리하는 아키텍처.
+"Attention Is All You Need" — RNN 없이 Self-Attention만으로 시퀀스를 처리하는 아키텍처.
 
 ---
 
@@ -30,9 +30,9 @@ Input → [Embedding + Positional Encoding]
 
 $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-- **Q** (Query): 현재 위치의 representation
-- **K** (Key): 다른 위치와 비교할 representation  
-- **V** (Value): 실제 가져올 정보
+- Q (Query): 현재 위치의 representation
+- K (Key): 다른 위치와 비교할 representation  
+- V (Value): 실제 가져올 정보
 - $\sqrt{d_k}$: gradient vanishing 방지 스케일링
 
 ### Multi-Head Attention
@@ -67,10 +67,10 @@ $$PE_{(pos, 2i+1)} = \cos(pos / 10000^{2i/d})$$
 
 ## 파생 모델들
 
-- **Encoder only**: BERT (양방향 이해)
-- **Decoder only**: GPT (단방향 생성)
-- **Encoder-Decoder**: T5, BART (번역, 요약)
-- **Vision**: ViT (이미지 패치 → 토큰)
+- Encoder only: BERT (양방향 이해)
+- Decoder only: GPT (단방향 생성)
+- Encoder-Decoder: T5, BART (번역, 요약)
+- Vision: ViT (이미지 패치 → 토큰)
 
 ---
 

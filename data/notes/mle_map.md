@@ -1,8 +1,8 @@
 # MLE / MAP / Bayesian Inference
 
-**카테고리**: Math & Stats  
-**자신감**: ⭐⭐⭐ (중급)  
-**마지막 복습**: 2026-08-11
+카테고리: Math & Stats  
+자신감: ⭐⭐⭐ (중급)  
+마지막 복습: 2026-08-11
 
 ---
 
@@ -16,8 +16,8 @@ MLE는 데이터만으로 최적 parameter를 추정하고, MAP는 prior도 반�
 
 $$\hat{\theta}_{MLE} = \arg\max_\theta p(D|\theta) = \arg\max_\theta \sum_i \log p(x_i|\theta)$$
 
-- **Gaussian noise 가정** → log-likelihood 최대화 = MSE 최소화 (OLS)
-- **Categorical 분포** → log-likelihood 최대화 = Cross-Entropy 최소화
+- Gaussian noise 가정 → log-likelihood 최대화 = MSE 최소화 (OLS)
+- Categorical 분포 → log-likelihood 최대화 = Cross-Entropy 최소화
 
 ### Consistency
 
@@ -37,7 +37,7 @@ $$\hat{\theta}_{MAP} = \arg\max_\theta \underbrace{p(D|\theta)}_{\text{likelihoo
 
 $$\hat{\theta}_{MAP} = \arg\max_\theta \left[\log p(D|\theta) + \log p(\theta)\right]$$
 
-→ **prior의 log = regularization 항**처럼 작용
+→ prior의 log = regularization 항처럼 작용
 
 | Prior | Regularization |
 |---|---|
@@ -50,10 +50,10 @@ $$\hat{\theta}_{MAP} = \arg\max_\theta \left[\log p(D|\theta) + \log p(\theta)\r
 
 $$p(\theta|D) = \frac{p(D|\theta)p(\theta)}{p(D)}$$
 
-- **Prior** $p(\theta)$: 데이터 전 parameter 믿음
-- **Likelihood** $p(D|\theta)$: parameter 주어졌을 때 data 가능성
-- **Posterior** $p(\theta|D)$: data 반영 후 parameter 분포
-- **Evidence** $p(D) = \int p(D|\theta)p(\theta)d\theta$: 정규화 상수
+- Prior $p(\theta)$: 데이터 전 parameter 믿음
+- Likelihood $p(D|\theta)$: parameter 주어졌을 때 data 가능성
+- Posterior $p(\theta|D)$: data 반영 후 parameter 분포
+- Evidence $p(D) = \int p(D|\theta)p(\theta)d\theta$: 정규화 상수
 
 ### Sequential update
 

@@ -1,8 +1,8 @@
 # OS / I/O / 인터럽트
 
-**카테고리**: Systems  
-**자신감**: ⭐⭐⭐ (중급)  
-**마지막 복습**: 2026-08-09
+카테고리: Systems  
+자신감: ⭐⭐⭐ (중급)  
+마지막 복습: 2026-08-09
 
 ---
 
@@ -68,9 +68,9 @@ file name
 → direct/indirect pointer로 storage block 탐색
 ```
 
-- **inode**: filename 제외한 metadata + data block 위치
-- **Direct pointer**: data block 직접 가리킴
-- **Indirect**: block 주소표를 1~3단계로 가리킴
+- inode: filename 제외한 metadata + data block 위치
+- Direct pointer: data block 직접 가리킴
+- Indirect: block 주소표를 1~3단계로 가리킴
 
 ### Crash Consistency
 
