@@ -154,17 +154,15 @@ function initCopyButtons() {
   const copyNoteBtn = document.getElementById('copy-note-btn');
   if (copyNoteBtn) {
     copyNoteBtn.addEventListener('click', () => {
-      const bodyEl = document.getElementById('note-panel-body');
-      copyElementPlainText(bodyEl, copyNoteBtn);
+      const textToCopy = window.currentNoteRawMd || document.getElementById('note-panel-body')?.innerText || '';
+      copyStringToClipboard(textToCopy, copyNoteBtn);
     });
   }
 
   const copyColBtn = document.getElementById('copy-column-btn');
   if (copyColBtn) {
     copyColBtn.addEventListener('click', () => {
-      const bodyEl = document.getElementById('reader-body');
-      const titleEl = document.getElementById('reader-title');
-      const textToCopy = `${titleEl ? titleEl.innerText + '\n\n' : ''}${bodyEl ? bodyEl.innerText : ''}`;
+      const textToCopy = window.currentColumnRawMd || document.getElementById('reader-body')?.innerText || '';
       copyStringToClipboard(textToCopy, copyColBtn);
     });
   }
@@ -672,8 +670,10 @@ async function openNotePanel(nodeData) {
     const res = await fetch(`data/notes/${nodeData.id}.md`);
     if (res.ok) {
       const md = await res.text();
+      window.currentNoteRawMd = md;
       content = `<div class="note-content">${marked.parse(md)}</div>`;
     } else {
+      window.currentNoteRawMd = '';
       content = `<div class="note-content note-placeholder" style="min-height:200px">
         <div class="note-placeholder-icon">📝</div>
         <p><strong>${nodeData.label}</strong>에 대한 노트가 아직 없어요.</p>
@@ -1421,9 +1421,9 @@ async function openColumnReader(columnId) {
     const res = await fetch(col.file);
     if (!res.ok) throw new Error('File not found');
     const md = await res.text();
+    window.currentColumnRawMd = md;
     
     // Parse markdown (exclude the main title since it is already rendered in header)
-    // We strip the first '# Title' if present in md file
     const cleanMd = md.replace(/^#\s+.+$/m, '');
     bodyEl.innerHTML = marked.parse(cleanMd);
 
