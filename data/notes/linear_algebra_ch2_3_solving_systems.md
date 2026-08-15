@@ -50,8 +50,7 @@ $$\begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 & 12 \end{bmatrix} \begin{bmatri
 ---
 
 #### 3️⃣ [3단계 기하학적 직관]
-![4D to 2D Linear Transformation Mapping Diagram](linear_mapping_kernel_projection.jpg)
-![MML Eq 2.38 3D Solution Plane Geometry](mml_eq238_solution_plane.jpg)
+![4D to 2D Hand-Drawn Blueprint Sketch Transformation Mapping](sketch_4d_to_2d_kernel_mapping.jpg)
 
 - **선형 변환의 찌그러짐 ($A : \mathbb{R}^4 \to \mathbb{R}^2$)**:  
   왼쪽의 거대한 4차원 입력 공간 $\mathbb{R}^4$ 전체가 행렬 $A$라는 사상(Mapping) 변환기를 통과하면서 오른쪽의 2차원 출력 평면 $\mathbb{R}^2$ 으로 납작하게 압착(Projection)되어 찌그러집니다.
