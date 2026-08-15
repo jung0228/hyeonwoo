@@ -175,7 +175,33 @@ function copyElementPlainText(el, btnEl) {
 }
 
 function copyStringToClipboard(text, btnEl) {
-  navigator.clipboard.writeText(text).then(() => {
+  if (!text) {
+    alert('복사할 텍스트가 없습니다.');
+    return;
+  }
+  
+  // Use a temporary textarea element for 100% reliable cross-browser clipboard copy
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-999999px';
+  textarea.style.top = '-999999px';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+
+  let success = false;
+  try {
+    success = document.execCommand('copy');
+  } catch (err) {
+    success = false;
+  }
+  document.body.removeChild(textarea);
+
+  if (success || navigator.clipboard) {
+    if (!success && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    }
     const origText = btnEl.innerText;
     btnEl.innerText = '✅ 복사 완료!';
     btnEl.style.background = '#10b981';
@@ -187,9 +213,9 @@ function copyStringToClipboard(text, btnEl) {
       btnEl.style.color = '';
       btnEl.style.borderColor = '';
     }, 2000);
-  }).catch(err => {
-    alert('복사에 실패했습니다. 단축키 Ctrl+Shift+V를 사용해 주세요.');
-  });
+  } else {
+    alert('복사에 실패했습니다. 단축키 Cmd+C / Ctrl+C를 사용해 주세요.');
+  }
 }
 
 /* ============================================================
