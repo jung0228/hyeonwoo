@@ -50,10 +50,13 @@ $$\begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 & 12 \end{bmatrix} \begin{bmatri
 ---
 
 #### 3️⃣ [3단계 기하학적 직관]
+![4D to 2D Linear Transformation Mapping Diagram](file:///Users/jhw/Desktop/대학원준비_2027/hyeonwoo/linear_mapping_kernel_projection.jpg)
 ![MML Eq 2.38 3D Solution Plane Geometry](file:///Users/jhw/Desktop/대학원준비_2027/hyeonwoo/mml_eq238_solution_plane.jpg)
 
-- 4차원 공간에서 $\lambda_1 \mathbf{v}_1 + \lambda_2 \mathbf{v}_2$ 는 원점 $\mathbf{0}$을 지나는 2차원 해 평면(Vector Subspace)입니다.
-- 여기에 특수해 점 $\mathbf{x}_p$ 를 더하면, 이 평면 전체가 공중으로 평행 이동하여 원점을 지나지 않는 아핀 공간(Affine Subspace)이 됩니다. 바로 이 평면 위에 뜬 무수히 많은 점들이 전부 성립하는 정답입니다.
+- **선형 변환의 찌그러짐 ($A : \mathbb{R}^4 \to \mathbb{R}^2$)**:  
+  왼쪽의 거대한 4차원 입력 공간 $\mathbb{R}^4$ 전체가 행렬 $A$라는 사상(Mapping) 변환기를 통과하면서 오른쪽의 2차원 출력 평면 $\mathbb{R}^2$ 으로 납작하게 압착(Projection)되어 찌그러집니다.
+- **영공간(Kernel)으로 사라진 2차원**:  
+  4차원 중에서 무려 2개의 차원이 변환기를 통과하는 순간 **0점으로 완전히 짓눌려 소멸(Null Space / Kernel)**합니다. 바로 이 짓눌려 사라진 2차원 평면 전체가 $Ax = b$ 의 **무수히 많은 해 공간(Affine Subspace)**을 형성하게 됩니다!
 
 ---
 
