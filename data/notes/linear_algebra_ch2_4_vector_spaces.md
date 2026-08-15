@@ -1,96 +1,109 @@
 # 📐 2.4 Vector Spaces (벡터 공간과 부분공간)
 
-> **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.4 원문 완전 대조 노트**
+> **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.4 스토리텔링 완전 대조 노트**
 
 ---
 
-## 1. 🌐 Section 2.4.1: Groups (군과 대수적 구조)
+## 1. 🌐 서론: 왜 "군(Group)"부터 배우고 "벡터 공간"으로 확장하는가?
 
-### 📌 Definition 2.7 (Group 군)
-집합 $G$ 와 그 상에서 정의된 이항 연산 $\otimes : G \times G \to G$ 에 대해 $G := (G, \otimes)$ 가 다음 4가지 대수적 조건(Group Axioms)을 충족할 때 군(Group)이라 부릅니다:
+선형대수학 2.3절에서 우리는 선형방정식계 $Ax = b$ 를 푸는 법을 배웠습니다. 
+하지만 수학자들은 여기서 한 걸음 더 나아가 **"대체 벡터들이 살고 있는 이 공간(Space)의 본질적인 수학적 규칙은 무엇인가?"** 라는 근본적인 질문을 던집니다.
 
-1. **닫힘성 (Closure)**: $\forall x, y \in G : x \otimes y \in G$
-2. **결합법칙 (Associativity)**: $\forall x, y, z \in G : (x \otimes y) \otimes z = x \otimes (y \otimes z)$
-3. **항등원 (Neutral Element)**: $\exists e \in G \ \forall x \in G : x \otimes e = x \text{ and } e \otimes x = x$
-4. **역원 (Inverse Element)**: $\forall x \in G \ \exists y \in G : x \otimes y = e \text{ and } y \otimes x = e$ (역원은 $x^{-1}$ 로 표기합니다)
-
-- **Abelian Group (아벨군/교환군)**: 추가적으로 교환법칙($x \otimes y = y \otimes x$)이 성립하면 아벨군이라 부릅니다.
+우리가 학교에서 배운 벡터는 "더할 수 있고, 숫자를 곱할 수 있는 대상"이었습니다. 
+이를 수학적으로 엄밀하게 정의하기 위해, 선형대수학은 ** 가장 원시적인 연산 규칙인 [군(Group)]** ➡️ **[벡터 공간(Vector Space)]** ➡️ **[부분공간(Vector Subspace)]** 으로 개념을 단계적으로 확장해 나갑니다.
 
 ---
 
-### 📌 Example 2.10 (군의 예시 및 판별)
-- $(\mathbb{Z}, +)$: 아벨군입니다.
-- $(\mathbb{N}_0, +)$: 항등원 0은 존재하지만 역원이 없으므로 군이 아닙니다.
-- $(\mathbb{Z}, \cdot)$: 항등원 1은 존재하지만 $\pm 1$ 이외 원소의 곱셈 역원이 없으므로 군이 아닙니다.
-- $(\mathbb{R}, \cdot)$: 0의 곱셈 역원이 존재하지 않으므로 군이 아닙니다.
-- $(\mathbb{R} \setminus \{0\}, \cdot)$: 아벨군입니다.
-- $(\mathbb{R}^n, +), (\mathbb{Z}^n, +)$: 성분별 덧셈(Componentwise Addition)에 대해 항등원 $e = (0, \dots, 0)$, 역원 $(-x_1, \dots, -x_n)$ 을 가지는 아벨군입니다 (Eq 2.61).
-- $(\mathbb{R}^{m \times n}, +)$: 행렬 덧셈에 대해 아벨군입니다.
+## 2. ⚔️ Section 2.4.1: Groups (군: 연산의 가장 기본적인 규칙)
+
+### 📌 1. 군(Group)이란 무엇인가? (Definition 2.7)
+집합 $G$ 와 그 집합 안에서 원소끼리 계산하는 이항 연산 $\otimes : G \times G \to G$ 가 있을 때, 다음 4가지 대수적 조건(Group Axioms)을 만족하면 **군(Group)**이라 부릅니다:
+
+1. **닫힘성 (Closure)**: $G$ 안의 두 원소를 연산한 결과도 무조건 $G$ 안에 존재해야 합니다 ($\forall x, y \in G : x \otimes y \in G$).
+2. **결합법칙 (Associativity)**: 계산 순서를 바꿔도 결과가 같습니다 ($\forall x, y, z \in G : (x \otimes y) \otimes z = x \otimes (y \otimes z)$).
+3. **항등원 (Neutral Element)**: 연산해도 자기 자신이 그대로 나오는 특별한 원소 $e$ 가 존재합니다 ($\exists e \in G \ \forall x \in G : x \otimes e = x$).
+4. **역원 (Inverse Element)**: 연산해서 항등원 $e$ 로 되돌려놓는 원소 $x^{-1}$ 가 존재합니다 ($\forall x \in G \ \exists y \in G : x \otimes y = e$).
+
+- **아벨군 (Abelian Group / 교환군)**: 4가지 조건에 더해 **교환법칙($x \otimes y = y \otimes x$)**까지 성립하면 이를 아벨군이라 부릅니다.
 
 ---
 
-### 📌 Definition 2.8 (General Linear Group 일반선형군)
-가역(Invertible/Regular)인 $n \times n$ 정방행렬의 집합은 행렬 곱셈에 대해 군을 형성하며, 이를 일반선형군(General Linear Group) $GL(n, \mathbb{R})$ 이라 부릅니다.
-- 행렬 곱셈은 교환법칙이 성립하지 않으므로 $GL(n, \mathbb{R})$ 은 아벨군이 아닙니다.
+### 📌 2. 어떤 집합이 군이고, 어떤 집합이 군이 아닌가? (Example 2.10)
+- $(\mathbb{Z}, +)$ 정수 덧셈: 덧셈 닫힘, 항등원 0, 역원 $-z$ 가 모두 존재하므로 **아벨군**입니다.
+- $(\mathbb{N}_0, +)$ 자연수와 0: 항등원 0은 있지만, 양수에 대응하는 음수 역원이 없으므로 **군이 아닙니다**.
+- $(\mathbb{R}, \cdot)$ 실수 곱셈: 곱셈 항등원 1은 있지만, **숫자 0은 곱해서 1을 만들 수 있는 역원($1/0$)이 없어서 군이 아닙니다**.
+- $(\mathbb{R} \setminus \{0\}, \cdot)$ 0을 뺀 실수 곱셈: 0을 제거했으므로 역원($1/x$)이 다 존재하여 **아벨군**입니다.
+- $(\mathbb{R}^n, +)$ $n$차원 벡터 덧셈: 성분별 덧셈, 항등원 $[0,\dots,0]^\top$, 역원 $[-x_1,\dots,-x_n]^\top$ 이 존재하므로 **아벨군**입니다 (Eq 2.61).
 
 ---
 
-## 2. ⚔️ Section 2.4.2: Vector Spaces (벡터 공간의 정의와 성질)
-
-### 📌 Definition 2.9 (Vector Space 실수 벡터 공간)
-실수 벡터 공간 $V = (V, +, \cdot)$ 은 집합 $V$ 와 내부 연산인 덧셈($+$) 및 외부 연산인 스칼라배($\cdot$) 가 정의된 구조입니다:
-
-$$+ : V \times V \to V \quad (2.62)$$
-$$\cdot : \mathbb{R} \times V \to V \quad (2.63)$$
-
-다음 8가지 공리(Axioms)를 충족해야 합니다:
-1. $(V, +)$ 이 아벨군(Abelian Group)을 이룹니다 (영벡터 $0 = [0, \dots, 0]^\top$ 포함).
-2. **분배법칙 1**: $\forall \lambda \in \mathbb{R}, x, y \in V : \lambda \cdot (x + y) = \lambda \cdot x + \lambda \cdot y$
-3. **분배법칙 2**: $\forall \lambda, \psi \in \mathbb{R}, x \in V : (\lambda + \psi) \cdot x = \lambda \cdot x + \psi \cdot x$
-4. **외부 연산 결합법칙**: $\forall \lambda, \psi \in \mathbb{R}, x \in V : \lambda \cdot (\psi \cdot x) = (\lambda \psi) \cdot x$
-5. **스칼라 항등원**: $\forall x \in V : 1 \cdot x = x$
+### 📌 3. 일반선형군 GL(n, R) (Definition 2.8)
+가역(Invertible)인 $n \times n$ 정방행렬들의 집합은 행렬 곱셈에 대해 군을 이룹니다. 이를 **일반선형군 $GL(n, \mathbb{R})$**이라 부릅니다.
+- **핵심 포인트**: 행렬 곱셈은 교환법칙이 성립하지 않기 때문에 ($AB \neq BA$), 일반선형군은 아벨군이 아닌 **비아벨군(Non-Abelian Group)**의 대표적인 예시입니다.
 
 ---
 
-### 📌 Remark (벡터 곱셈에 대한 명확한 구분)
-두 벡터의 성분별 곱 $ab$ 는 일반적인 표준 벡터 공간의 연산으로 정의되지 않습니다.
-- **Outer Product (외적)**: $ab^\top \in \mathbb{R}^{n \times n}$ (행렬 생성)
-- **Inner Product (내적/Dot Product)**: $a^\top b \in \mathbb{R}$ (스칼라 생성)
+## 3. ⚔️ Section 2.4.2: Vector Spaces (벡터 공간: 내부 연산 + 외부 연산)
+
+### 📌 1. 군에서 "벡터 공간"으로의 진화 (Definition 2.9)
+군(Group)은 집합 내부 원소끼리의 연산(내부 연산)만 다뤘습니다. 
+하지만 우리가 아는 벡터는 벡터끼리 더할 수 있을 뿐만 아니라, **실수 스칼라 $\lambda$ 를 곱해서 길이를 늘리거나 줄일 수(스케일링) 있습니다!**
+
+따라서 **실수 벡터 공간 $V = (V, +, \cdot)$** 은 다음 두 가지 연산이 정의된 집합입니다:
+- **내부 연산 (벡터 덧셈)**: $+ : V \times V \to V \quad (2.62)$
+- **외부 연산 (스칼라 곱)**: $\cdot : \mathbb{R} \times V \to V \quad (2.63)$
 
 ---
 
-### 📌 Example 2.11 (대표적인 벡터 공간의 종류)
-- $V = \mathbb{R}^n$: 표준 성분별 덧셈과 스칼라배에 대해 대표적인 $n$차원 벡터 공간입니다.
-- $V = \mathbb{R}^{m \times n}$: $m \times n$ 행렬들의 집합도 행렬 덧셈과 스칼라배에 대해 벡터 공간을 이룹니다 ($\mathbb{R}^{mn}$ 과 동등).
-- **Column Vector 표기 관례 (Eq 2.64)**: $\mathbb{R}^n, \mathbb{R}^{n \times 1}$ 은 동일하게 열벡터(Column Vector) $x = [x_1, \dots, x_n]^\top$ 로 표기하며, 행벡터(Row Vector)는 전치 $x^\top \in \mathbb{R}^{1 \times n}$ 로 구분합니다.
+### 📌 2. 벡터 공간의 8가지 공리 (Vector Space Axioms)
+1. $(V, +)$ 내부 덧셈 연산에 대해 **아벨군(Abelian Group)**이어야 함 (영벡터 $0$ 과 음의 역벡터 $-x$ 존재).
+2. **분배법칙 1**: $\lambda \cdot (x + y) = \lambda \cdot x + \lambda \cdot y$
+3. **분배법칙 2**: $(\lambda + \psi) \cdot x = \lambda \cdot x + \psi \cdot x$
+4. **외부 연산 결합법칙**: $\lambda \cdot (\psi \cdot x) = (\lambda \psi) \cdot x$
+5. **스칼라 항등원**: $1 \cdot x = x$
 
 ---
 
-## 3. ⚔️ Section 2.4.3: Vector Subspaces (부분공간)
-
-### 📌 Definition 2.10 (Vector Subspace 벡터 부분공간)
-벡터 공간 $V = (V, +, \cdot)$ 의 공집합이 아닌 부분집합 $U \subseteq V$ 가 기존 $V$의 연산에 대해 스스로 벡터 공간을 이룰 때 $U$를 $V$의 부분공간(Subspace)이라 부르며 $U \subseteq V$ 로 표기합니다.
-
----
-
-### 📌 부분공간 판별 3대 필수 조건 (Subspace Test)
-부분집합 $U \subseteq V$ 가 부분공간인지 확인하기 위한 3가지 판별 조건:
-
-1. **비어있지 않음 (Non-empty)**: $U \neq \emptyset$, 특히 영벡터를 포함해야 함 ($0 \in U$).
-2. **외부 연산(스칼라배) 닫힘성**: $\forall \lambda \in \mathbb{R} \ \forall x \in U : \lambda x \in U$.
-3. **내부 연산(덧셈) 닫힘성**: $\forall x, y \in U : x + y \in U$.
+### 📌 3. 대표적인 벡터 공간 예시 (Example 2.11)
+- $V = \mathbb{R}^n$: $n$차원 화살표/튜플들의 집합.
+- $V = \mathbb{R}^{m \times n}$: $m \times n$ 행렬들의 집합 (행렬끼리 더하고 스칼라를 곱해도 여전히 $m \times n$ 행렬이므로 완벽한 벡터 공간입니다).
+- **표기 관례 (Eq 2.64)**: 벡터 공간 $V$ 의 원소 $x$ 는 기본적으로 **열벡터(Column Vector)** $x = [x_1, \dots, x_n]^\top$ 로 표기합니다.
 
 ---
 
-### 📌 Example 2.12 (부분공간의 대표적 예시 및 맹점)
-- **자명한 부분공간 (Trivial Subspaces)**: 모든 벡터 공간 $V$ 에 대해 자기 자신 $V$ 와 영공간 $\{0\}$ 은 자명한 부분공간입니다.
-- **Figure 2.6 분석 (2차원 공간 $\mathbb{R}^2$ 부분집합 판별)**:
-  - A, C: 스칼라배 및 덧셈 닫힘성 위반 (부분공간 아님).
-  - B: 영벡터 $(0,0)$ 을 포함하지 않음 (부분공간 아님).
-  - D: 원점을 지나는 직선 ➡️ **부분공간이 맞음**.
-- **선형방정식계 해공간과 부분공간의 관계**:
-  - **동차 방정식계 $Ax = 0$ 의 해집합**: 무조건 $\mathbb{R}^n$ 의 부분공간(Subspace / Kernel)을 이룹니다.
-  - **비동차 방정식계 $Ax = b \ (b \neq 0)$ 의 해집합**: 영벡터가 포함되지 않으므로 부분공간이 아니며, 이동된 **아핀 공간(Affine Subspace)**이 됩니다.
-  - **교집합 성질**: 임의의 부분공간들의 교집합(Intersection)은 항상 자기 자신도 부분공간이 됩니다.
+## 4. ⚔️ Section 2.4.3: Vector Subspaces (부분공간: 공간 안에 갇힌 공간)
 
-- **Remark**: $\mathbb{R}^n$ 의 모든 부분공간 $U$ 는 어떤 동차 선형방정식계 $Ax = 0$ 의 해공간으로 표현할 수 있습니다.
+### 📌 1. 부분공간(Subspace)이란 무엇인가? (Definition 2.10)
+거대한 벡터 공간 $V$ 안에 속해 있는 작은 부분집합 $U \subseteq V$ 가 있습니다.
+만약 이 $U$ 안에서 원소들끼리 더하거나 스칼라를 곱해도 **결코 $U$ 밖으로 튕겨 나가지 않고 여전히 $U$ 안에 갇혀 있다면**, 이 $U$를 **부분공간(Vector Subspace)**이라 부릅니다!
+
+---
+
+### 📌 2. 부분공간인지 판별하는 3대 필수 조건 (Subspace Test)
+원래 벡터 공간의 8가지 공리를 다 검증할 필요 없이, 다음 3 가지만 확인하면 부분공간임이 자동으로 증명됩니다:
+
+1. **원점(영벡터)을 포함하는가?**: $0 \in U$ (원점을 안 지나면 닫힐 수 없습니다!)
+2. **스칼라배에 닫혀있는가?**: $\forall \lambda \in \mathbb{R}, x \in U \implies \lambda x \in U$
+3. **덧셈에 닫혀있는가?**: $\forall x, y \in U \implies x + y \in U$
+
+---
+
+### 📌 3. 그림으로 이해하는 부분공간 판별 (Figure 2.6 분석)
+
+2차원 평면 $\mathbb{R}^2$ 상에서 부분집합들이 부분공간인지 판별하는 직관적 예시:
+
+- **케이스 A (원이 그려진 영역)**: 두 벡터를 더하면 원 밖으로 튕겨 나가므로 닫힘성 위반 ➡️ **부분공간 아님**.
+- **케이스 B (원점을 지나지 않는 직선)**: 원점 $(0,0)$ 을 지나지 않으므로 ➡️ **부분공간 아님 (아핀 공간)**.
+- **케이스 C (1사분면 전체)**: 음수 스칼라(-1)를 곱하면 3사분면으로 튕겨 나가므로 스칼라배 닫힘성 위반 ➡️ **부분공간 아님**.
+- **케이스 D (원점을 지나는 무한한 직선)**: 더하거나 숫자를 곱해도 이 직선 상에서 벗어나지 않음 ➡️ **100% 부분공간 성립!**
+
+---
+
+### 📌 4. 선형방정식계 해공간과 부분공간의 치명적 연결고리
+
+- **동차 선형방정식계 $Ax = 0$ 의 해집합**:
+  - $A(0) = 0$ 이므로 원점을 지나고, $A(x+y) = Ax + Ay = 0+0 = 0$ 이 되므로 무조건 **$\mathbb{R}^n$ 의 부분공간(Kernel/Nullspace)**이 됩니다!
+- **비동차 선형방정식계 $Ax = b \ (b \neq 0)$ 의 해집합**:
+  - $A(0) = 0 \neq b$ 이므로 원점을 지나지 않습니다. 따라서 **부분공간이 아니며, 공중에 떠 있는 아핀 공간(Affine Subspace)**이 됩니다.
+- **Remark**: $\mathbb{R}^n$ 의 모든 부분공간 $U$ 는 어떤 동차 선형방정식계 $Ax = 0$ 의 해공간으로 100% 표현할 수 있습니다!
+
