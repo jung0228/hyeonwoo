@@ -50,26 +50,19 @@ const NODE_CLUSTER_OVERRIDE = {
   'rlhf': 'AI'   // RLHF는 LLM alignment → 딥러닝 쪽
 };
 
-// 헬퍼: 노드의 최종 클러스터 반환 (선형대수 내부 서브 클러스터 지원)
+// 헬퍼: 노드의 최종 클러스터 반환
 function getNodeCluster(node) {
-  if (node.id && node.id.startsWith('linear_algebra_ch2')) return '선형대수 Ch2';
-  if (node.id && node.id.startsWith('linear_algebra_ch3')) return '선형대수 Ch3';
-  if (node.id && node.id.startsWith('linear_algebra_ch4')) return '선형대수 Ch4';
-  if (node.id && node.id.startsWith('linear_algebra_problems')) return '선형대수 문제';
-  if (node.id && node.id.startsWith('linear_algebra')) return '선형대수 Ch2';
+  if (node.id && node.id.startsWith('linear_algebra')) return '선형대수';
   return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || 'AI';
 }
 
-// 클러스터 좌표 및 라벨 설정 (선형대수를 Ch2 / Ch3 / Ch4 서브 클러스터로 세분화!)
+// 5개 깔끔한 주요 클러스터 좌표 설정
 const CLUSTER_CONFIG = {
-  '시스템':       { color: '#ef4444', label: '💻  시스템',          cx: 0.06, cy: 0.48 },
-  '선형대수 Ch2': { color: '#f59e0b', label: '📐  선형대수 Ch2 (기초)',  cx: 0.20, cy: 0.35 },
-  '선형대수 Ch3': { color: '#fbbf24', label: '📐  선형대수 Ch3 (해석기하)',cx: 0.20, cy: 0.65 },
-  '선형대수 Ch4': { color: '#d97706', label: '📐  선형대수 Ch4 (분해)',  cx: 0.35, cy: 0.48 },
-  '선형대수 문제':{ color: '#facc15', label: '📝  선형대수 문제집', cx: 0.27, cy: 0.82 },
-  'ML':           { color: '#34d399', label: '📊  머신러닝',        cx: 0.52, cy: 0.48 },
-  'AI':           { color: '#a78bfa', label: '🤖  딥러닝',          cx: 0.72, cy: 0.48 },
-  '알고리즘':     { color: '#06b6d4', label: '🔢  알고리즘',        cx: 0.90, cy: 0.48 }
+  '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.08, cy: 0.48 },
+  '선형대수': { color: '#f59e0b', label: '📐  선형대수학',    cx: 0.28, cy: 0.48 },
+  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.48, cy: 0.48 },
+  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.70, cy: 0.48 },
+  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.90, cy: 0.48 }
 };
 
 /* ============================================================
