@@ -32,3 +32,26 @@
 
 ### 4️⃣ [4단계 실전 AI 연결고리]
 - **선형 회귀 (Linear Regression)**: $y = Xw$에서 노이즈로 해가 없을 때($y \notin \text{Col}(X)$), 정사영을 내려 최적 웨이트 **$w = (X^T X)^{-1} X^T y$** 추정.
+
+---
+
+## 🔍 2. ★ MML 교재 원문 예시 해부: Example 2.1 (3차원 연립방정식 풀이)
+
+MML 교재 2.1절의 **Example 2.1**을 통해 연립선형방정식계의 기본 행 연산과 해 공간을 계산함:
+
+$$\begin{aligned}
+x_1 + 2x_2 + x_3 &= 1 \\
+2x_1 + 3x_2 + 4x_3 &= 3 \\
+x_1 + 4x_2 - 2x_3 &= -1
+\end{aligned}$$
+
+- **증대 행렬 (Augmented Matrix)**:
+  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 2 & 3 & 4 & \mid & 3 \\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
+- **가우스 소거법 (Gauss Elimination)**:
+  1. $R_2 \leftarrow R_2 - 2R_1, R_3 \leftarrow R_3 - R_1 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$
+  2. $R_3 \leftarrow R_3 + 2R_2 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 0 & 1 & \mid & 0 \end{bmatrix}$ (REF 완성)
+- **후방 대입법 (Back-Substitution)**:
+  - $x_3 = 0$
+  - $-x_2 + 2(0) = 1 \implies x_2 = -1$
+  - $x_1 + 2(-1) + 0 = 1 \implies x_1 = 3$
+  - **최종 유일해**: $\mathbf{x = [3, -1, 0]^T}$ (3개의 초평면이 3차원 공간상의 단 하나의 교점 $(3, -1, 0)$에서 만남).
