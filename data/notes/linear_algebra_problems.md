@@ -57,7 +57,7 @@ x_1 + x_2 &= 2 \\\\
 
 #### 3. 3단계 비판적 모순 증명 (Critical Insight & Contradiction)
 1. 대수적 모순 (Algebraic Contradiction): 
-   - 2행을 수식으로 복원하면 $0 \cdot x_1 + 0 \cdot x_2 = 1 \implies \mathbf{0 = 1}$ 이라는 절대 불가능한 모순이 발생함.
+   - 2행을 수식으로 복원하면 $0 \cdot x_1 + 0 \cdot x_2 = 1 \implies \mathbf{0 = 1}$ 이라는 절대 불가능한 모순이 발생합니다.
 2. 열공간 랭크 불일치 (Rank Discrepancy & Column Space): 
    - $\text{Rank}(A) = 1$ 이지만 $\text{Rank}([A \mid b]) = 2$ 이다.
    - 이는 결과 벡터 $b = \begin{bmatrix} 2 \\\\ 5 \end{bmatrix}$ 가 행렬 $A$의 열공간 $\text{Col}(A) = \text{span}\left(\begin{bmatrix} 1 \\\\ 2 \end{bmatrix}\right)$ 선상에 존재하지 않고 공간 밖으로 튕겨 나갔음($b \notin \text{Col}(A)$)을 수학적으로 증명한다.
@@ -65,7 +65,7 @@ x_1 + x_2 &= 2 \\\\
    - 2차원 평면상에서 $x_2 = -x_1 + 2$ 와 $x_2 = -x_1 + \frac{5}{2}$ 로 기울기가 동일하지만 $y$절편이 서로 다른 두 평행 직선이므로 교점이 존재할 수 없다.
 
 #### 4. 실전 AI 연결고리 (Least Squares Approximation)
-- 데이터 분류/회귀 문제에서 센서 노이즈나 타겟 데이터 $y$가 독립 특징 공간 $\text{Col}(X)$ 밖으로 나가면 완벽한 해 $Xw = y$ 는 존재하지 않는다.
+- 데이터 분류/회귀 문제에서 센서 노이즈나 타겟 데이터 $y$가 독립 특징 공간 $\text{Col}(X)$ 밖으로 나가면 완벽한 해 $Xw = y$ 는 존재하지 않습니다.
 - 이때 AI는 정사영(Projection)을 통해 $\text{Col}(X)$ 공간 위로 가장 가까운 점 $\hat{y}$을 내려 최적 근사해 최소제곱법 정규방정식 $w = (X^T X)^{-1} X^T y$ 를 추정한다.
 
 ---
@@ -96,7 +96,7 @@ x_1 + x_2 &= 2 \\\\
 - Rank-Nullity Theorem: 선형변환 $T: V \to W$에서 $\dim(V) = \text{Rank}(T) + \text{Nullity}(T)$
 - 증명 요약:
   1. $\ker(T)$의 기저를 $\{v_1, \dots, v_k\}$ 라 두고, 이를 확장하여 $V$의 기저 $\{v_1, \dots, v_k, v_{k+1}, \dots, v_n\}$ 을 구성한다.
-  2. $\{T(v_{k+1}), \dots, T(v_n)\}$ 이 $\text{Im}(T)$의 독립적인 기저임을 증명.
+  2. $\{T(v_{k+1}), \dots, T(v_n)\}$ 이 $\text{Im}(T)$의 독립적인 기저임을 증명합니다.
   3. 따라서 $\dim(\text{Im}(T)) = n - k \implies n = k + (n-k)$ 성립!
 - AI 연결고리: Autoencoder에서 복원 불가능한 소실 정보 차원이 $\ker(T)$, 표현 가능한 차원이 $\text{Im}(T)$에 대응됨.
 
