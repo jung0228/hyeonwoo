@@ -49,18 +49,32 @@ MML 교재 2.1절 원문 **Example 2.1**:
 
 ---
 
-### 📌 Example 2.2 (MML 원문: 3차원 선형방정식계 구체적 수치 연산)
-MML 교재의 3차원 선형계 가우스 소거 예시:
-$$\begin{aligned}
-x_1 + 2x_2 + x_3 &= 1 \\\\
-2x_1 + 3x_2 + 4x_3 &= 3 \\\\
-x_1 + 4x_2 - 2x_3 &= -1
-\end{aligned}$$
+### 📌 Example 2.2 (MML 원문: 해의 3가지 가능성 - 해 없음, 유일해, 무수히 많은 해)
 
-- **증대 행렬 (Augmented Matrix)**:
-  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 2 & 3 & 4 & \mid & 3 \\\\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
-- **가우스 소거법 (Gauss Elimination)**:
-  1. $R_2 \leftarrow R_2 - 2R_1, R_3 \leftarrow R_3 - R_1 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$
-  2. $R_3 \leftarrow R_3 + 2R_2 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 0 & 1 & \mid & 0 \end{bmatrix}$ (**REF 완성**)
-- **후방 대입법 (Back-Substitution)**:
-  - $x_3 = 0, x_2 = -1, x_1 = 3 \implies \mathbf{x = [3, -1, 0]^T}$ (3개 초평면의 유일한 교점).
+MML 교재 2.1절 원문 **Example 2.2**:
+
+#### 1️⃣ [Case 1: No Solution (해 없음)]
+$$\begin{aligned}
+x_1 + x_2 + x_3 &= 3 \quad (1) \\\\
+x_1 - x_2 + 2x_3 &= 2 \quad (2) \\\\
+2x_1 + 3x_3 &= 1 \quad (3)
+\end{aligned}$$
+- **분석**: (1)식과 (2)식을 더하면 $2x_1 + 3x_3 = 5$ 가 되는데, 이는 (3)식의 $2x_1 + 3x_3 = 1$ 과 **모순($5 = 1$)**됨 ➡️ **해 없음(No Solution)**!
+
+#### 2️⃣ [Case 2: Unique Solution (유일해)]
+$$\begin{aligned}
+x_1 + x_2 + x_3 &= 3 \quad (1) \\\\
+x_1 - x_2 + 2x_3 &= 2 \quad (2) \\\\
+x_2 + x_3 &= 2 \quad (3)
+\end{aligned}$$
+- **분석**: (1)식에서 (3)식을 빼면 $x_1 = 1$. (1)+(2)에서 $2x_1 + 3x_3 = 5 \implies x_3 = 1$. (3)식에서 $x_2 = 1$.
+- **최종 유일해**: $\mathbf{(x_1, x_2, x_3) = (1, 1, 1)}$ 만 존재!
+
+#### 3️⃣ [Case 3: Infinite Solutions (무수히 많은 해)]
+$$\begin{aligned}
+x_1 + x_2 + x_3 &= 3 \quad (1) \\\\
+x_1 - x_2 + 2x_3 &= 2 \quad (2) \\\\
+2x_1 + 3x_3 &= 5 \quad (3)
+\end{aligned}$$
+- **분석**: (1)+(2)=(3) 이므로 3번 식은 중복(Redundancy)되어 제거 가능. $x_3 = a \in \mathbb{R}$ 를 자유 변수로 두면 해집합:
+  $$\mathbf{x = \begin{bmatrix} \frac{5}{2} - \frac{3}{2}a \\\\ \frac{1}{2} + \frac{1}{2}a \\\\ a \end{bmatrix} = \begin{bmatrix} \frac{5}{2} \\\\ \frac{1}{2} \\\\ 0 \end{bmatrix} + a \begin{bmatrix} -\frac{3}{2} \\\\ \frac{1}{2} \\\\ 1 \end{bmatrix}, \quad a \in \mathbb{R}}$$
