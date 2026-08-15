@@ -10,12 +10,12 @@
 ## 📝 2. MML 교재 연습문제 풀이 (MML Ch 2.3)
 
 ### [Problem 3] Ex 2.3 - 2x2 역행렬 수식 유도 및 검증
-- 문제: $A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ 의 역행렬 유도 및 $AA^{-1} = I$ 검증.
+- 문제: $A = \begin{bmatrix} 1 & 2 \\\\ 3 & 4 \end{bmatrix}$ 의 역행렬 유도 및 $AA^{-1} = I$ 검증.
 - 수식 유도:
   - $\det(A) = (1 \cdot 4) - (2 \cdot 3) = -2 \ne 0 \implies$ 역행렬 존재!
-  - $A^{-1} = \frac{1}{\det(A)} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix} = \frac{1}{-2} \begin{bmatrix} 4 & -2 \\ -3 & 1 \end{bmatrix} = \begin{bmatrix} -2 & 1 \\ 1.5 & -0.5 \end{bmatrix}$
+  - $A^{-1} = \frac{1}{\det(A)} \begin{bmatrix} d & -b \\\\ -c & a \end{bmatrix} = \frac{1}{-2} \begin{bmatrix} 4 & -2 \\\\ -3 & 1 \end{bmatrix} = \begin{bmatrix} -2 & 1 \\\\ 1.5 & -0.5 \end{bmatrix}$
 - $A A^{-1} = I$ 곱셈 증명:
-  $$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix} \begin{bmatrix} -2 & 1 \\ 1.5 & -0.5 \end{bmatrix} = \begin{bmatrix} -2+3 & 1-1 \\ -6+6 & 3-2 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} = I_2$$
+  $$\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \end{bmatrix} \begin{bmatrix} -2 & 1 \\\\ 1.5 & -0.5 \end{bmatrix} = \begin{bmatrix} -2+3 & 1-1 \\\\ -6+6 & 3-2 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\\\ 0 & 1 \end{bmatrix} = I_2$$
 
 ---
 

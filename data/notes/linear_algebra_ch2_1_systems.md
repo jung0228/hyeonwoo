@@ -19,7 +19,7 @@
 3. Audio Signals (오디오 신호):
    - 일련의 숫자 시퀀스로 표현되는 오디오 신호는 더하거나 스칼라배를 해도 새로운 오디오 신호가 되므로 벡터임.
 4. Elements of $\mathbb{R}^n$ ($n$차원 실수 튜플):
-   - 본 교재에서 주로 다루는 추상적 대상. 예: $\mathbf{a} = \begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix} \in \mathbb{R}^3$.
+   - 본 교재에서 주로 다루는 추상적 대상. 예: $\mathbf{a} = \begin{bmatrix} 1 \\\\ 2 \\\\ 3 \end{bmatrix} \in \mathbb{R}^3$.
    - 컴퓨터 프로그램의 실수 배열(Array of real numbers) 연산과 1:1로 정확히 대응함.
 
 ---
@@ -95,8 +95,8 @@ x_1 - x_2 + 2x_3 &= 2 \quad (2) \\\\
 
 방정식계 (2.3)을 계수 벡터들의 선형 결합 형태로 컴팩트하게 표기:
 
-$$x_1 \begin{bmatrix} a_{11} \\ \vdots \\ a_{m1} \end{bmatrix} + x_2 \begin{bmatrix} a_{12} \\ \vdots \\ a_{m2} \end{bmatrix} + \dots + x_n \begin{bmatrix} a_{1n} \\ \vdots \\ a_{mn} \end{bmatrix} = \begin{bmatrix} b_1 \\ \vdots \\ b_m \end{bmatrix}$$
+$$x_1 \begin{bmatrix} a_{11} \\\\ \vdots \\\\ a_{m1} \end{bmatrix} + x_2 \begin{bmatrix} a_{12} \\\\ \vdots \\\\ a_{m2} \end{bmatrix} + \dots + x_n \begin{bmatrix} a_{1n} \\\\ \vdots \\\\ a_{mn} \end{bmatrix} = \begin{bmatrix} b_1 \\\\ \vdots \\\\ b_m \end{bmatrix}$$
 
 이를 행렬-벡터 곱셈 형태 $Ax = b$ 로 압축 (Equation 2.10):
 
-$$\begin{bmatrix} a_{11} & a_{12} & \dots & a_{1n} \\ a_{21} & a_{22} & \dots & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & \dots & a_{mn} \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix} = \begin{bmatrix} b_1 \\ b_2 \\ \vdots \\ b_m \end{bmatrix}$$
+$$\begin{bmatrix} a_{11} & a_{12} & \dots & a_{1n} \\\\ a_{21} & a_{22} & \dots & a_{2n} \\\\ \vdots & \vdots & \ddots & \vdots \\\\ a_{m1} & a_{m2} & \dots & a_{mn} \end{bmatrix} \begin{bmatrix} x_1 \\\\ x_2 \\\\ \vdots \\\\ x_n \end{bmatrix} = \begin{bmatrix} b_1 \\\\ b_2 \\\\ \vdots \\\\ b_m \end{bmatrix}$$

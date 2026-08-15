@@ -54,7 +54,7 @@ x_1 + 4x_2 - 2x_3 &= -1
 
 ### 📌 Example 2.3 (MML 원문: 행렬 곱셈 연산 $A \in \mathbb{R}^{3 \times 2}, B \in \mathbb{R}^{2 \times 3}$)
 MML 교재 2.2절 원문 Example 2.3:
-> *"For the matrices $A = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 3 & 0 \end{bmatrix}$ and $B = \begin{bmatrix} 2 & 1 & 0 \\ 1 & 3 & 4 \end{bmatrix}$, calculate $AB$ and $BA$."*
+> *"For the matrices $A = \begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\\\ 3 & 0 \end{bmatrix}$ and $B = \begin{bmatrix} 2 & 1 & 0 \\\\ 1 & 3 & 4 \end{bmatrix}$, calculate $AB$ and $BA$."*
 
 - $AB \in \mathbb{R}^{3 \times 3}$ 계산:
   $$AB = \begin{bmatrix} 1(2)+2(1) & 1(1)+2(3) & 1(0)+2(4) \\\\ 0(2)+1(1) & 0(1)+1(3) & 0(0)+1(4) \\\\ 3(2)+0(1) & 3(1)+0(3) & 3(0)+0(4) \end{bmatrix} = \begin{bmatrix} 4 & 7 & 8 \\\\ 1 & 3 & 4 \\\\ 6 & 3 & 0 \end{bmatrix}$$
@@ -66,7 +66,7 @@ MML 교재 2.2절 원문 Example 2.3:
 
 ### 📌 Example 2.4 (MML 원문: $2 \times 2$ 행렬의 역행렬 유도)
 MML 교재 2.2절 원문 Example 2.4:
-> *"For a matrix $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix} \in \mathbb{R}^{2 \times 2}$, find its inverse $A^{-1}$."*
+> *"For a matrix $A = \begin{bmatrix} a & b \\\\ c & d \end{bmatrix} \in \mathbb{R}^{2 \times 2}$, find its inverse $A^{-1}$."*
 
 - 역행렬 수식 유도:
   $$A^{-1} = \frac{1}{ad - bc} \begin{bmatrix} d & -b \\\\ -c & a \end{bmatrix}$$

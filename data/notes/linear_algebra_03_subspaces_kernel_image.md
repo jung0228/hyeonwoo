@@ -19,7 +19,7 @@
 - 비판적 맹점 지적: 중복되는 기저를 제거하지 않으면 선형종속이 되므로 1번 차감해야 함. $U \cup W$ 는 부분공간이 아니므로 반드시 합공간 $U+W$ 로 서술해야 함.
 
 ### [Problem 5] Ex 2.7 - Kernel/Image 백지 유도 및 직합
-- 문제: $A = \begin{bmatrix} 1 & 2 & 0 & 1 \\ 0 & 1 & 1 & 0 \\ 1 & 3 & 1 & 1 \end{bmatrix}$ 의 Kernel/Image 기저 유도.
+- 문제: $A = \begin{bmatrix} 1 & 2 & 0 & 1 \\\\ 0 & 1 & 1 & 0 \\\\ 1 & 3 & 1 & 1 \end{bmatrix}$ 의 Kernel/Image 기저 유도.
 - 수식 유도:
   - $Ax = 0$ 소거 ➡️ 자유변수 $x_3, x_4 \implies \text{Kernel}$ 기저 2개 ($\text{Nullity}=2$).
   - 피벗 열 2개 $\implies \text{Rank}=2$.

@@ -37,7 +37,7 @@ x_1 + 4x_2 - 2x_3 &= -1
    - $3\text{행}: x_3 = 0$
    - $2\text{행}: -x_2 + 2(0) = 1 \implies x_2 = -1$
    - $1\text{행}: x_1 + 2(-1) + (0) = 1 \implies x_1 = 3$
-   - 최종 해벡터: $\mathbf{x = \begin{bmatrix} 3 \\ -1 \\ 0 \end{bmatrix}}$
+   - 최종 해벡터: $\mathbf{x = \begin{bmatrix} 3 \\\\ -1 \\\\ 0 \end{bmatrix}}$
 4. [4단계 실전 AI 연결]: AI 학습 시 $Ax=b$ 형태의 선형계는 최적화 가중치 구하기의 근본이며, 피벗이 3개로 꽉 찬 것은 모델의 특징(Feature) 컬럼 간 선형 독립성이 완벽함을 뜻한다.
 
 ---
@@ -60,7 +60,7 @@ x_1 + x_2 &= 2 \\
    - 2행을 수식으로 복원하면 $0 \cdot x_1 + 0 \cdot x_2 = 1 \implies \mathbf{0 = 1}$ 이라는 절대 불가능한 모순이 발생함.
 2. 열공간 랭크 불일치 (Rank Discrepancy & Column Space): 
    - $\text{Rank}(A) = 1$ 이지만 $\text{Rank}([A \mid b]) = 2$ 이다.
-   - 이는 결과 벡터 $b = \begin{bmatrix} 2 \\ 5 \end{bmatrix}$ 가 행렬 $A$의 열공간 $\text{Col}(A) = \text{span}\left(\begin{bmatrix} 1 \\ 2 \end{bmatrix}\right)$ 선상에 존재하지 않고 공간 밖으로 튕겨 나갔음($b \notin \text{Col}(A)$)을 수학적으로 증명한다.
+   - 이는 결과 벡터 $b = \begin{bmatrix} 2 \\\\ 5 \end{bmatrix}$ 가 행렬 $A$의 열공간 $\text{Col}(A) = \text{span}\left(\begin{bmatrix} 1 \\\\ 2 \end{bmatrix}\right)$ 선상에 존재하지 않고 공간 밖으로 튕겨 나갔음($b \notin \text{Col}(A)$)을 수학적으로 증명한다.
 3. 기하학적 모순 (Geometric Interpretation): 
    - 2차원 평면상에서 $x_2 = -x_1 + 2$ 와 $x_2 = -x_1 + \frac{5}{2}$ 로 기울기가 동일하지만 $y$절편이 서로 다른 두 평행 직선이므로 교점이 존재할 수 없다.
 
@@ -75,7 +75,7 @@ x_1 + x_2 &= 2 \\
 ### [Problem 3] Ex 2.3 - 행렬식 det(A) 부피 팽창율 및 3x3 Sarrus 증명
 - 개념: $\det(A)$는 $n$차원 단위 초입방체가 선형변환 $A$를 거쳐 변형된 공간의 부피 팽창 비율.
 - 3x3 행렬 Sarrus 공식을 라플라스 전개(Laplace Expansion)로 증명:
-  $$A = \begin{bmatrix} a & b & c \\ d & e & f \\ g & h & i \end{bmatrix}$$
+  $$A = \begin{bmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \end{bmatrix}$$
   $$\det(A) = a(ei - fh) - b(di - fg) + c(dh - eg) = aei + bfg + cdh - ceg - bdi - afh$$
 - AI 연결고리: 생성형 모델인 Normalizing Flow에서 확률밀도 변환 시 부피 변화율인 자코비안 행렬식 $\det(J_f)$을 보정값으로 곱해준다.
 
@@ -135,9 +135,9 @@ x_1 + x_2 &= 2 \\
 ---
 
 ### [Problem 10] Ex 4.3 - Schur Complement (슈어 보강) 및 블록 행렬식 증명
-- 블록 행렬: $M = \begin{bmatrix} A & B \\ C & D \end{bmatrix}$ (단, $D$는 가역)
+- 블록 행렬: $M = \begin{bmatrix} A & B \\\\ C & D \end{bmatrix}$ (단, $D$는 가역)
 - Schur Complement: $S = A - B D^{-1} C$
 - 블록 소거 분해:
-  $$\begin{bmatrix} I & -BD^{-1} \\ 0 & I \end{bmatrix} \begin{bmatrix} A & B \\ C & D \end{bmatrix} \begin{bmatrix} I & 0 \\ -D^{-1}C & I \end{bmatrix} = \begin{bmatrix} A - BD^{-1}C & 0 \\ 0 & D \end{bmatrix}$$
+  $$\begin{bmatrix} I & -BD^{-1} \\\\ 0 & I \end{bmatrix} \begin{bmatrix} A & B \\\\ C & D \end{bmatrix} \begin{bmatrix} I & 0 \\\\ -D^{-1}C & I \end{bmatrix} = \begin{bmatrix} A - BD^{-1}C & 0 \\\\ 0 & D \end{bmatrix}$$
 - 행렬식 증명: $\det(M) = \det(D) \cdot \det(A - B D^{-1} C)$.
 - AI 연결: 가우시안 프로세스(Gaussian Process) 및 칼만 필터(Kalman Filter)의 마지널/조건부 확률 분포 계산의 핵심 연산.

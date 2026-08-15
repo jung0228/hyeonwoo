@@ -43,7 +43,7 @@ x_1 - x_2 + 3x_3 + x_4 &= -1
 
 ### 📌 Example 2.6 (MML 원문: 가우스 소거법 단계별 전개)
 MML 교재 2.3절 원문 Example 2.6:
-> *"Transform the matrix $A = \begin{bmatrix} 1 & 2 & 1 \\ 2 & 3 & 4 \\ 1 & 4 & -2 \end{bmatrix}$ into RREF."*
+> *"Transform the matrix $A = \begin{bmatrix} 1 & 2 & 1 \\\\ 2 & 3 & 4 \\\\ 1 & 4 & -2 \end{bmatrix}$ into RREF."*
 - RREF 가우스-조던 소거 결과:
   $$\begin{bmatrix} 1 & 2 & 1 \\\\ 2 & 3 & 4 \\\\ 1 & 4 & -2 \end{bmatrix} \xrightarrow{\text{ERO}} \begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \end{bmatrix} = I_3$$
 - 결론: 행렬 $A$의 랭크 $\text{Rank}(A) = 3$ (Full Rank) 이며 완벽히 단위행렬 $I_3$ 로 소거됨!
@@ -52,7 +52,7 @@ MML 교재 2.3절 원문 Example 2.6:
 
 ### 📌 Example 2.7 (MML 원문: The Minus-1 Trick으로 Nullspace 암산 추출)
 MML 교재 2.3절 원문 Example 2.7:
-> *"Find the Kernel (Nullspace) of the matrix $A = \begin{bmatrix} 1 & 2 & 0 & 1 \\ 0 & 0 & 1 & 2 \end{bmatrix}$ using the minus-1 trick."*
+> *"Find the Kernel (Nullspace) of the matrix $A = \begin{bmatrix} 1 & 2 & 0 & 1 \\\\ 0 & 0 & 1 & 2 \end{bmatrix}$ using the minus-1 trick."*
 
 - 자유 변수열 위치 확인: 2열, 4열이 피벗이 없는 자유 변수열.
 - $-1$ Trick 행 삽입 행렬 $\tilde{A}$:
@@ -64,7 +64,7 @@ MML 교재 2.3절 원문 Example 2.7:
 
 ### 📌 Example 2.8 (MML 원문: 가우스-조던 $[A \mid I] \to [I \mid A^{-1}]$ 역행렬 계산)
 MML 교재 2.3절 원문 Example 2.8:
-> *"Compute the inverse of $A = \begin{bmatrix} 1 & 2 & 1 \\ 2 & 3 & 4 \\ 1 & 4 & -2 \end{bmatrix}$ using Gauss-Jordan elimination."*
+> *"Compute the inverse of $A = \begin{bmatrix} 1 & 2 & 1 \\\\ 2 & 3 & 4 \\\\ 1 & 4 & -2 \end{bmatrix}$ using Gauss-Jordan elimination."*
 
 - 증대행렬 소거 전개:
   $$[A \mid I_3] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 & 0 & 0 \\\\ 2 & 3 & 4 & \mid & 0 & 1 & 0 \\\\ 1 & 4 & -2 & \mid & 0 & 0 & 1 \end{bmatrix} \xrightarrow{\text{ERO}} \begin{bmatrix} 1 & 0 & 0 & \mid & -22 & 8 & 5 \\\\ 0 & 1 & 0 & \mid & 8 & -3 & -2 \\\\ 0 & 0 & 1 & \mid & 5 & -2 & -1 \end{bmatrix}$$

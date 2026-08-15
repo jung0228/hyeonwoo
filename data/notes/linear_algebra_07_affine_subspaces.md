@@ -9,10 +9,10 @@
 ## 📝 2. MML 교재 연습문제 풀이 (MML Ch 2.8)
 
 ### [Problem 7] Ex 2.7 - 어파인 해공간 수식 증명
-- 문제: $Ax = b$ 의 특수해 $x_p = \begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix}$ 이고 $\text{Kernel}(A)$ 의 기저가 $v_1 = \begin{bmatrix} 2 \\ 1 \\ 0 \end{bmatrix}$ 일 때, 전체 해집합 $S$가 벡터공간이 아닌 어파인 공간(Affine Subspace)임을 증명하시오.
+- 문제: $Ax = b$ 의 특수해 $x_p = \begin{bmatrix} 1 \\\\ 0 \\\\ 2 \end{bmatrix}$ 이고 $\text{Kernel}(A)$ 의 기저가 $v_1 = \begin{bmatrix} 2 \\\\ 1 \\\\ 0 \end{bmatrix}$ 일 때, 전체 해집합 $S$가 벡터공간이 아닌 어파인 공간(Affine Subspace)임을 증명하시오.
 
 - 수식 유도:
-  - 일반해: $S = \left\{ \begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix} + c_1 \begin{bmatrix} 2 \\ 1 \\ 0 \end{bmatrix} \;\middle|\; c_1 \in \mathbb{R} \right\}$
+  - 일반해: $S = \left\{ \begin{bmatrix} 1 \\\\ 0 \\\\ 2 \end{bmatrix} + c_1 \begin{bmatrix} 2 \\\\ 1 \\\\ 0 \end{bmatrix} \;\middle|\; c_1 \in \mathbb{R} \right\}$
   - 증명: 영벡터 $0 = [0, 0, 0]^T \notin S$ 이다 ($c_1$에 어떤 실수를 넣어도 $[0, 0, 0]^T$가 될 수 없음!).
   - $\therefore S$는 덧셈 닫힘과 영원소 공리를 위배하여 벡터공간이 아니며, 원점에서 $x_p$만큼 평행이동된 어파인 공간(Affine Subspace)이다!
 

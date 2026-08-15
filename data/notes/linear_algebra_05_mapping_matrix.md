@@ -18,12 +18,12 @@
      - $T(x^2) = \frac{d}{dx}(x^2) = 2x$
 
   2. 결과 다항식을 기저 $\{1, x, x^2\}$ 의 선형결합 계수 벡터로 표현:
-     - $T(1) = 0 = \mathbf{0} \cdot 1 + \mathbf{0} \cdot x + \mathbf{0} \cdot x^2 \implies \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}$ (1번째 열)
-     - $T(x) = 1 = \mathbf{1} \cdot 1 + \mathbf{0} \cdot x + \mathbf{0} \cdot x^2 \implies \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}$ (2번째 열)
-     - $T(x^2) = 2x = \mathbf{0} \cdot 1 + \mathbf{2} \cdot x + \mathbf{0} \cdot x^2 \implies \begin{bmatrix} 0 \\ 2 \\ 0 \end{bmatrix}$ (3번째 열)
+     - $T(1) = 0 = \mathbf{0} \cdot 1 + \mathbf{0} \cdot x + \mathbf{0} \cdot x^2 \implies \begin{bmatrix} 0 \\\\ 0 \\\\ 0 \end{bmatrix}$ (1번째 열)
+     - $T(x) = 1 = \mathbf{1} \cdot 1 + \mathbf{0} \cdot x + \mathbf{0} \cdot x^2 \implies \begin{bmatrix} 1 \\\\ 0 \\\\ 0 \end{bmatrix}$ (2번째 열)
+     - $T(x^2) = 2x = \mathbf{0} \cdot 1 + \mathbf{2} \cdot x + \mathbf{0} \cdot x^2 \implies \begin{bmatrix} 0 \\\\ 2 \\\\ 0 \end{bmatrix}$ (3번째 열)
 
   3. 계수 열벡터들을 나열하여 행렬 $M$ 완성:
-     $$M = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 2 \\ 0 & 0 & 0 \end{bmatrix}$$
+     $$M = \begin{bmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 2 \\\\ 0 & 0 & 0 \end{bmatrix}$$
 
 ---
 
