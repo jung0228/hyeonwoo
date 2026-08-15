@@ -46,10 +46,10 @@ x_1 + 4x_2 - 2x_3 &= -1
 \end{aligned}$$
 
 - **증대 행렬 (Augmented Matrix)**:
-  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 2 & 3 & 4 & \mid & 3 \\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
+  $$[A \mid b] = \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 2 & 3 & 4 & \mid & 3 \\\\ 1 & 4 & -2 & \mid & -1 \end{bmatrix}$$
 - **가우스 소거법 (Gauss Elimination)**:
-  1. $R_2 \leftarrow R_2 - 2R_1, R_3 \leftarrow R_3 - R_1 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$
-  2. $R_3 \leftarrow R_3 + 2R_2 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\ 0 & -1 & 2 & \mid & 1 \\ 0 & 0 & 1 & \mid & 0 \end{bmatrix}$ (REF 완성)
+  1. $R_2 \leftarrow R_2 - 2R_1, R_3 \leftarrow R_3 - R_1 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 2 & -3 & \mid & -2 \end{bmatrix}$
+  2. $R_3 \leftarrow R_3 + 2R_2 \implies \begin{bmatrix} 1 & 2 & 1 & \mid & 1 \\\\ 0 & -1 & 2 & \mid & 1 \\\\ 0 & 0 & 1 & \mid & 0 \end{bmatrix}$ (REF 완성)
 - **후방 대입법 (Back-Substitution)**:
   - $x_3 = 0$
   - $-x_2 + 2(0) = 1 \implies x_2 = -1$
