@@ -1,6 +1,6 @@
 # 📐 2.2 Matrices (행렬 대수)
 
-> **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.2 원문 완전 대조 노트**
+> POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.2 원문 완전 대조 노트
 
 ---
 
@@ -11,8 +11,8 @@ $m, n \in \mathbb{R}$ 에 대해 실숫값 $(m, n)$-행렬 $A$는 $m$개의 행(
 
 $$A = \begin{bmatrix} a_{11} & a_{12} & \dots & a_{1n} \\\\ a_{21} & a_{22} & \dots & a_{2n} \\\\ \vdots & \vdots & \ddots & \vdots \\\\ a_{m1} & a_{m2} & \dots & a_{mn} \end{bmatrix}, \quad a_{ij} \in \mathbb{R}$$
 
-- **Row Vector / Column Vector**: $(1, n)$-행렬을 행 벡터(Row Vector), $(m, 1)$-행렬을 열 벡터(Column Vector)라 부릅니다.
-- **Vector Stacking (Reshape)**: 모든 실수 $(m, n)$-행렬의 집합을 $\mathbb{R}^{m \times n}$ 이라 표기하며, 행렬 $A \in \mathbb{R}^{m \times n}$ 의 $n$개 열을 수직으로 쌓아 긴 벡터 $\mathbf{a} \in \mathbb{R}^{mn}$ 으로 동등하게 표현할 수 있습니다 (Figure 2.4).
+- Row Vector / Column Vector: $(1, n)$-행렬을 행 벡터(Row Vector), $(m, 1)$-행렬을 열 벡터(Column Vector)라 부릅니다.
+- Vector Stacking (Reshape): 모든 실수 $(m, n)$-행렬의 집합을 $\mathbb{R}^{m \times n}$ 이라 표기하며, 행렬 $A \in \mathbb{R}^{m \times n}$ 의 $n$개 열을 수직으로 쌓아 긴 벡터 $\mathbf{a} \in \mathbb{R}^{mn}$ 으로 동등하게 표현할 수 있습니다 (Figure 2.4).
 
 ---
 
@@ -28,9 +28,9 @@ $A \in \mathbb{R}^{m \times n}, B \in \mathbb{R}^{n \times k}$ 일 때, 곱행�
 
 $$c_{ij} = \sum_{l=1}^n a_{il} b_{lj}, \quad i = 1, \dots, m, \quad j = 1, \dots, k$$
 
-- **차원 매칭 조건 (Remark)**: 행렬 곱셈은 인접한 차원(Neighboring dimensions)이 일치할 때만 가능합니다:
+- 차원 매칭 조건 (Remark): 행렬 곱셈은 인접한 차원(Neighboring dimensions)이 일치할 때만 가능합니다:
   $$A_{n \times k} \cdot B_{k \times m} = C_{n \times m}$$
-- **Hadamard Product (하다마르 곱)과의 구분**: 행렬 곱셈은 성분별 곱이 아닙니다. 프로그래밍 언어에서 배열끼리의 성분별 곱은 하다마르 곱(Hadamard Product, $A \odot B$)이라 부릅니다.
+- Hadamard Product (하다마르 곱)과의 구분: 행렬 곱셈은 성분별 곱이 아닙니다. 프로그래밍 언어에서 배열끼리의 성분별 곱은 하다마르 곱(Hadamard Product, $A \odot B$)이라 부릅니다.
 
 ---
 
@@ -42,16 +42,16 @@ $$AB = \begin{bmatrix} 1 & 2 & 3 \\\\ 3 & 2 & 1 \end{bmatrix} \begin{bmatrix} 0 
 
 $$BA = \begin{bmatrix} 0 & 2 \\\\ 1 & -1 \\\\ 0 & 1 \end{bmatrix} \begin{bmatrix} 1 & 2 & 3 \\\\ 3 & 2 & 1 \end{bmatrix} = \begin{bmatrix} 6 & 4 & 2 \\\\ -2 & 0 & 2 \\\\ 3 & 2 & 1 \end{bmatrix} \in \mathbb{R}^{3 \times 3} \quad (2.16)$$
 
-- **인사이트**: 행렬 곱셈은 교환법칙이 성립하지 않습니다 ($AB \neq BA$). 심지어 $AB$와 $BA$의 연산 결과 차원($2 \times 2$ vs $3 \times 3$) 자체가 다릅니다 (Figure 2.5).
+- 인사이트: 행렬 곱셈은 교환법칙이 성립하지 않습니다 ($AB \neq BA$). 심지어 $AB$와 $BA$의 연산 결과 차원($2 \times 2$ vs $3 \times 3$) 자체가 다릅니다 (Figure 2.5).
 
 ---
 
 ### 📌 Definition 2.2 (Identity Matrix 단위행렬) 및 대수적 성질
 주대각선 성분이 모두 1이고 나머지가 0인 $n \times n$ 행렬을 단위행렬 $I_n$ 이라 정의합니다.
 
-- **결합법칙 (Associativity)**: $(AB)C = A(BC) \quad (2.18)$
-- **분배법칙 (Distributivity)**: $(A+B)C = AC + BC$, $A(C+D) = AC + AD \quad (2.19a, 2.19b)$
-- **단위행렬 곱셈**: $I_m A = A I_n = A \quad (2.20)$
+- 결합법칙 (Associativity): $(AB)C = A(BC) \quad (2.18)$
+- 분배법칙 (Distributivity): $(A+B)C = AC + BC$, $A(C+D) = AC + AD \quad (2.19a, 2.19b)$
+- 단위행렬 곱셈: $I_m A = A I_n = A \quad (2.20)$
 
 ---
 
@@ -97,7 +97,7 @@ $A \in \mathbb{R}^{m \times n}$ 의 행과 열을 뒤집은 $B \in \mathbb{R}^{n
 
 ### 📌 Definition 2.5 (Symmetric Matrix 대칭행렬)
 $A = A^\top$ 인 정방행렬을 대칭행렬(Symmetric Matrix)이라 부릅니다.
-- 대칭행렬의 합 $A + B$는 항상 대칭행렬이지만, **곱 $AB$는 일반적으로 대칭행렬이 아닙니다** (Eq 2.32 Remark).
+- 대칭행렬의 합 $A + B$는 항상 대칭행렬이지만, 곱 $AB$는 일반적으로 대칭행렬이 아닙니다 (Eq 2.32 Remark).
 
 ---
 
