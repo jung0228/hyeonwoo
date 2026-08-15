@@ -740,6 +740,7 @@ async function openNotePanel(nodeData) {
 
   if (window.renderMathInElement) {
     renderMathInElement(bodyEl, {
+      output: 'html',
       delimiters: [
         { left: '$$', right: '$$', display: true },
         { left: '$',  right: '$',  display: false }
@@ -1456,6 +1457,7 @@ async function openColumnReader(columnId) {
     // Apply KaTeX math rendering if equations exist
     if (window.renderMathInElement) {
       renderMathInElement(bodyEl, {
+        output: 'html',
         delimiters: [
           { left: '$$', right: '$$', display: true },
           { left: '$',  right: '$',  display: false }
