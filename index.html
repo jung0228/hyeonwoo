@@ -111,6 +111,7 @@
         <div class="note-panel-header">
           <div class="note-panel-title" id="note-panel-title">개념을 클릭하세요</div>
           <div class="note-panel-meta" id="note-panel-meta"></div>
+          <button class="copy-text-btn" id="copy-note-btn" title="블로그/카페 복사용 (배경색 없이 순수 텍스트만 복사)">📋 블로그용 복사</button>
           <button class="note-close" id="note-close">×</button>
         </div>
         <div class="note-panel-body" id="note-panel-body">
@@ -327,7 +328,10 @@
     <!-- Fullscreen Column Reader Overlay -->
     <div class="column-reader-overlay" id="column-reader-overlay">
       <div class="column-reader-paper">
-        <button class="reader-close-btn" id="reader-close-btn">✕ CLOSE PAPER</button>
+        <div class="reader-top-bar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <button class="copy-text-btn reader-copy-btn" id="copy-column-btn">📋 블로그/카페용 텍스트 복사</button>
+          <button class="reader-close-btn" id="reader-close-btn">✕ CLOSE PAPER</button>
+        </div>
         <div class="reader-header">
           <div class="reader-brand">WHAT'S GOING<br>ON IN THE WORLD</div>
           <div class="reader-meta" id="reader-meta">PUBLISHED ON AUGUST 14, 2026</div>

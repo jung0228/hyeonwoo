@@ -143,10 +143,56 @@ document.addEventListener('DOMContentLoaded', async () => {
   initHeatmap();
   initProgress();
   initResearch();
+  initCopyButtons();
   initReview();
   initColumn();
   updateStatsBadge();
 });
+
+/* ── Copy Plain Text Helper ── */
+function initCopyButtons() {
+  const copyNoteBtn = document.getElementById('copy-note-btn');
+  if (copyNoteBtn) {
+    copyNoteBtn.addEventListener('click', () => {
+      const bodyEl = document.getElementById('note-panel-body');
+      copyElementPlainText(bodyEl, copyNoteBtn);
+    });
+  }
+
+  const copyColBtn = document.getElementById('copy-column-btn');
+  if (copyColBtn) {
+    copyColBtn.addEventListener('click', () => {
+      const bodyEl = document.getElementById('reader-body');
+      const titleEl = document.getElementById('reader-title');
+      const textToCopy = `${titleEl ? titleEl.innerText + '\n\n' : ''}${bodyEl ? bodyEl.innerText : ''}`;
+      copyStringToClipboard(textToCopy, copyColBtn);
+    });
+  }
+}
+
+function copyElementPlainText(el, btnEl) {
+  if (!el) return;
+  const plainText = el.innerText || el.textContent;
+  copyStringToClipboard(plainText, btnEl);
+}
+
+function copyStringToClipboard(text, btnEl) {
+  navigator.clipboard.writeText(text).then(() => {
+    const origText = btnEl.innerText;
+    btnEl.innerText = '✅ 복사 완료!';
+    btnEl.style.background = '#10b981';
+    btnEl.style.color = '#ffffff';
+    btnEl.style.borderColor = '#10b981';
+    setTimeout(() => {
+      btnEl.innerText = origText;
+      btnEl.style.background = '';
+      btnEl.style.color = '';
+      btnEl.style.borderColor = '';
+    }, 2000);
+  }).catch(err => {
+    alert('복사에 실패했습니다. 단축키 Ctrl+Shift+V를 사용해 주세요.');
+  });
+}
 
 /* ============================================================
    NAVIGATION
