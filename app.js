@@ -154,8 +154,8 @@ function initCopyButtons() {
   const copyNoteBtn = document.getElementById('copy-note-btn');
   if (copyNoteBtn) {
     copyNoteBtn.addEventListener('click', () => {
-      let rawText = window.currentNoteRawMd || document.getElementById('note-panel-body')?.innerText || '';
-      const formatted = cleanMarkdownForBlog(rawText);
+      let rawText = window.currentNoteRawMd || '';
+      const formatted = cleanMarkdownForBlog(rawText, 'note-panel-body');
       copyStringToClipboard(formatted, copyNoteBtn);
     });
   }
@@ -163,49 +163,40 @@ function initCopyButtons() {
   const copyColBtn = document.getElementById('copy-column-btn');
   if (copyColBtn) {
     copyColBtn.addEventListener('click', () => {
-      let rawText = window.currentColumnRawMd || document.getElementById('reader-body')?.innerText || '';
-      const formatted = cleanMarkdownForBlog(rawText);
+      let rawText = window.currentColumnRawMd || '';
+      const formatted = cleanMarkdownForBlog(rawText, 'reader-body');
       copyStringToClipboard(formatted, copyColBtn);
     });
   }
 }
 
-// Convert Markdown to beautiful, clean text with perfect line breaks for Blogs & Cafes
-function cleanMarkdownForBlog(md) {
+// Convert Markdown / DOM to clean, readable text without KaTeX duplicate subscripts cracking
+function cleanMarkdownForBlog(md, elementId) {
+  const el = elementId ? document.getElementById(elementId) : null;
+  if (el) {
+    // Clone element to sanitize KaTeX DOM elements safely
+    const clone = el.cloneNode(true);
+
+    // Remove KaTeX MathML hidden elements that cause duplicate text like (x1 x1)
+    clone.querySelectorAll('.katex-mathml').forEach(node => node.remove());
+
+    let text = clone.innerText || clone.textContent || '';
+    
+    // Normalize double linebreaks
+    text = text.replace(/\n{3,}/g, '\n\n');
+    return text.trim();
+  }
+
   if (!md) return '';
   let text = md;
-
-  // 1. Convert headers (# Title) into clean linebreaks
   text = text.replace(/^#{1,6}\s+(.+)$/gm, '\n■ $1\n');
-
-  // 2. Convert blockquotes (> Quote) into indented text
-  text = text.replace(/^>\s+(.+)$/gm, '  "$1"');
-
-  // 3. Convert multi-line matrix / aligned math block separators (\\\\) into clean newlines
   text = text.replace(/\\\\\\\\/g, '\n');
   text = text.replace(/\\\\/g, '\n');
-
-  // 4. Remove LaTeX math wrappers ($$ and $) but keep math expressions readable
-  text = text.replace(/\$\$(.*?)\$\$/gs, (match, p1) => {
-    return '\n' + p1.trim() + '\n';
-  });
+  text = text.replace(/\$\$(.*?)\$\$/gs, '\n$1\n');
   text = text.replace(/\$(.*?)\$/g, '$1');
-
-  // 5. Remove LaTeX environment tags (\begin{...}, \end{...}, \quad, \implies, etc.)
   text = text.replace(/\\begin\{[a-z]+\}/g, '');
   text = text.replace(/\\end\{[a-z]+\}/g, '');
-  text = text.replace(/\\quad/g, '  ');
-  text = text.replace(/\\implies/g, ' ⟹ ');
-  text = text.replace(/\\iff/g, ' ⟺ ');
-  text = text.replace(/\\left/g, '');
-  text = text.replace(/\\right/g, '');
-
-  // 6. Clean up horizontal rules (---)
-  text = text.replace(/^---$/gm, '\n──────────────────────────────\n');
-
-  // 7. Normalize consecutive empty lines (max 2 newlines)
-  text = text.replace(/\n{3,}/g, '\n\n');
-
+  text = text.replace(/\\quad/g, ' ');
   return text.trim();
 }
 
