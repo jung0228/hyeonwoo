@@ -45,7 +45,7 @@ $$\begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 & 12 \end{bmatrix} \begin{bmatri
    - 비피벗 4열 $\mathbf{c}_4 = \begin{bmatrix} -4 \\\\ 12 \end{bmatrix}$ 을 피벗 열들로 표현: $-4\mathbf{c}_1 + 12\mathbf{c}_2 + 0\mathbf{c}_3 - 1\mathbf{c}_4 = \mathbf{0} \implies \mathbf{v}_2 = \begin{bmatrix} -4 \\\\ 12 \\\\ 0 \\\\ -1 \end{bmatrix}$
 
 3. 일반해 집합 (General Solution: Eq 2.43):
-   $$\text{General Solution: } \left\{ \mathbf{x} \in \mathbb{R}^4 : \mathbf{x} = \underbrace{\begin{bmatrix} 42 \\\\ 8 \\\\ 0 \\\\ 0 \end{bmatrix}}_{\mathbf{x}_p} + \lambda_1 \underbrace{\begin{bmatrix} 8 \\\\ 2 \\\\ -1 \\\\ 0 \end{bmatrix}}_{\mathbf{v}_1} + \lambda_2 \underbrace{\begin{bmatrix} -4 \\\\ 12 \\\\ 0 \\\\ -1 \end{bmatrix}}_{\mathbf{v}_2}, \ \lambda_1, \lambda_2 \in \mathbb{R} \right\}$$
+   $$\text{General Solution: } \{ \mathbf{x} \in \mathbb{R}^4 : \mathbf{x} = \begin{bmatrix} 42 \\\\ 8 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 8 \\\\ 2 \\\\ -1 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} -4 \\\\ 12 \\\\ 0 \\\\ -1 \end{bmatrix}, \ \lambda_1, \lambda_2 \in \mathbb{R} \}$$
 
 ---
 
