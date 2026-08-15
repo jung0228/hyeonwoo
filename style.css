@@ -626,6 +626,13 @@ body {
 .note-panel .katex { color: #111827; }
 .note-panel .katex-display { overflow-x: auto; margin: 12px 0; }
 
+/* Disable user drag-selection & rendering on hidden KaTeX MathML elements to prevent duplicate text copy */
+.katex-mathml {
+  display: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
 /* Connected Concepts */
 .connected-concepts {
   margin-top: 20px;
