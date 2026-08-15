@@ -38,7 +38,7 @@
     },
     {
       "id": "linear_algebra_ch2_1_systems",
-      "label": "2.1 선형방정식계 (Row vs Column)",
+      "label": "2.1 선형방정식계",
       "category": "Math",
       "confidence": 3,
       "studyCount": 4,
@@ -51,7 +51,7 @@
     },
     {
       "id": "linear_algebra_ch2_2_matrices",
-      "label": "2.2 행렬 대수 & 사상 합성",
+      "label": "2.2 행렬 대수",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -64,7 +64,7 @@
     },
     {
       "id": "linear_algebra_ch2_3_solving_systems",
-      "label": "2.3 선형계 풀이 (ERO, REF, RREF)",
+      "label": "2.3 선형계 풀이",
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
@@ -77,7 +77,7 @@
     },
     {
       "id": "linear_algebra_ch2_4_vector_spaces",
-      "label": "2.4 벡터공간 & 부분공간 (Ex 2.12)",
+      "label": "2.4 벡터공간과 부분공간",
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
@@ -90,7 +90,7 @@
     },
     {
       "id": "linear_algebra_ch2_5_independence",
-      "label": "2.5 선형 독립 (Linear Independence)",
+      "label": "2.5 선형 독립",
       "category": "Math",
       "confidence": 4,
       "studyCount": 4,
@@ -103,7 +103,7 @@
     },
     {
       "id": "linear_algebra_ch2_6_basis_rank",
-      "label": "2.6 기저와 계수 (Basis & Rank)",
+      "label": "2.6 기저와 계수",
       "category": "Math",
       "confidence": 4,
       "studyCount": 4,
@@ -116,7 +116,7 @@
     },
     {
       "id": "linear_algebra_ch2_7_linear_mappings",
-      "label": "2.7 선형 사상 (Linear Mappings)",
+      "label": "2.7 선형 사상",
       "category": "Math",
       "confidence": 3,
       "studyCount": 4,
@@ -129,7 +129,7 @@
     },
     {
       "id": "linear_algebra_ch2_8_affine_spaces",
-      "label": "2.8 어파인 공간 (Affine Spaces)",
+      "label": "2.8 어파인 공간",
       "category": "Math",
       "confidence": 3,
       "studyCount": 4,
@@ -142,7 +142,7 @@
     },
     {
       "id": "linear_algebra_ch3_1_norms_inner_products",
-      "label": "3.1 노름과 내적 (Norms & Inner Products)",
+      "label": "3.1 노름과 내적",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -154,7 +154,7 @@
     },
     {
       "id": "linear_algebra_ch3_2_lengths_distances",
-      "label": "3.2 길이, 거리, 코사인 유사도",
+      "label": "3.2 거리와 유사도",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -166,7 +166,7 @@
     },
     {
       "id": "linear_algebra_ch3_3_gram_schmidt",
-      "label": "3.3 정규직교기저 & Gram-Schmidt",
+      "label": "3.3 정규직교기저",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -178,7 +178,7 @@
     },
     {
       "id": "linear_algebra_ch3_4_projections_least_squares",
-      "label": "3.4 정사영 & 최소제곱법 (Least Squares)",
+      "label": "3.4 정사영과 최소제곱법",
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
@@ -190,7 +190,7 @@
     },
     {
       "id": "linear_algebra_ch3_5_change_of_basis",
-      "label": "3.5 기저변환 & 닮음변환 ($P^{-1}AP$)",
+      "label": "3.5 기저변환과 닮음변환",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -203,7 +203,7 @@
 
     {
       "id": "linear_algebra_ch4_1_determinant_trace",
-      "label": "4.1 행렬식 & Trace (det & tr)",
+      "label": "4.1 행렬식과 자취",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -215,7 +215,7 @@
     },
     {
       "id": "linear_algebra_ch4_2_eigenvalues_eigenvectors",
-      "label": "4.2 고유값 & 고유벡터 ($Ax = \\lambda x$)",
+      "label": "4.2 고유값과 고유벡터",
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
@@ -227,7 +227,7 @@
     },
     {
       "id": "linear_algebra_ch4_3_cholesky_decomposition",
-      "label": "4.3 숄레스키 분해 ($A = L L^T$)",
+      "label": "4.3 숄레스키 분해",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -239,7 +239,7 @@
     },
     {
       "id": "linear_algebra_ch4_4_eigendecomposition",
-      "label": "4.4 고유값 분해 & Spectral Theorem",
+      "label": "4.4 고유값 분해",
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
@@ -251,7 +251,7 @@
     },
     {
       "id": "linear_algebra_ch4_5_svd",
-      "label": "4.5 특이값 분해 (SVD $A = U \\Sigma V^T$)",
+      "label": "4.5 특이값 분해",
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
@@ -263,7 +263,7 @@
     },
     {
       "id": "linear_algebra_ch4_6_pseudoinverse_pca",
-      "label": "4.6 유사역행렬 & Truncated SVD (PCA)",
+      "label": "4.6 유사역행렬과 주성분 분석",
       "category": "Math",
       "confidence": 4,
       "studyCount": 4,
@@ -275,7 +275,7 @@
     },
     {
       "id": "linear_algebra_ch4_7_schur_complement",
-      "label": "4.7 슈르 보간 & 블록 행렬식",
+      "label": "4.7 슈르 보간과 블록 행렬",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
@@ -342,13 +342,11 @@
     { "source": "linear_algebra_ch2_3_solving_systems", "target": "linear_algebra_ch2_6_basis_rank", "relation": "determines_rank", "weight": 4 },
     { "source": "linear_algebra_ch2_4_vector_spaces", "target": "linear_algebra_ch2_8_affine_spaces", "relation": "extended_to", "weight": 4 },
 
-    { "source": "linear_algebra_ch2_8_affine_spaces", "target": "linear_algebra_ch3_1_norms_inner_products", "relation": "extended_to", "weight": 1 },
     { "source": "linear_algebra_ch3_1_norms_inner_products", "target": "linear_algebra_ch3_2_lengths_distances", "relation": "basis_of", "weight": 5 },
     { "source": "linear_algebra_ch3_2_lengths_distances", "target": "linear_algebra_ch3_3_gram_schmidt", "relation": "basis_of", "weight": 5 },
     { "source": "linear_algebra_ch3_3_gram_schmidt", "target": "linear_algebra_ch3_4_projections_least_squares", "relation": "basis_of", "weight": 5 },
     { "source": "linear_algebra_ch3_4_projections_least_squares", "target": "linear_algebra_ch3_5_change_of_basis", "relation": "basis_of", "weight": 5 },
 
-    { "source": "linear_algebra_ch3_5_change_of_basis", "target": "linear_algebra_ch4_1_determinant_trace", "relation": "extended_to", "weight": 1 },
     { "source": "linear_algebra_ch4_1_determinant_trace", "target": "linear_algebra_ch4_2_eigenvalues_eigenvectors", "relation": "basis_of", "weight": 5 },
     { "source": "linear_algebra_ch4_2_eigenvalues_eigenvectors", "target": "linear_algebra_ch4_3_cholesky_decomposition", "relation": "basis_of", "weight": 5 },
     { "source": "linear_algebra_ch4_3_cholesky_decomposition", "target": "linear_algebra_ch4_4_eigendecomposition", "relation": "basis_of", "weight": 5 },
