@@ -38,9 +38,9 @@ $$a_{i1} x_1 + a_{i2} x_2 + \dots + a_{in} x_n = b_i \quad (i = 1, \dots, m)$$
 
 전체 연립 1차 방정식계:
 $$\begin{aligned}
-a_{11} x_1 + a_{12} x_2 + \dots + a_{1n} x_n &= b_1 \\
-a_{21} x_1 + a_{22} x_2 + \dots + a_{2n} x_n &= b_2 \\
-&\vdots \\
+a_{11} x_1 + a_{12} x_2 + \dots + a_{1n} x_n &= b_1 \\\\
+a_{21} x_1 + a_{22} x_2 + \dots + a_{2n} x_n &= b_2 \\\\
+&\vdots \\\\
 a_{m1} x_1 + a_{m2} x_2 + \dots + a_{mn} x_n &= b_m
 \end{aligned}$$
 여기서 $x_1, \dots, x_n$은 미지수(Unknowns)이며, (2.3)을 만족하는 모든 $n$-튜플 $(x_1, \dots, x_n) \in \mathbb{R}^n$이 해(Solution)가 된다.
