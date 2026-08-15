@@ -184,7 +184,7 @@
       "studyCount": 5,
       "tags": ["Orthogonal Projection", "Least Squares", "Normal Equation"],
       "definition": "1단계 개념: 공간 밖의 점 $y$를 서브스페이스 $\\text{Col}(X)$ 위로 직교 수직(Projection) 내리는 연산.",
-      "purpose": "2단계 존재 이유: 해가 존재하지 않는 $Xw = y$ 시스템에서 오차 $\|Xw - y\|^2$를 최소화하는 정사영 근사해 유도.",
+      "purpose": "2단계 존재 이유: 해가 존재하지 않는 $Xw = y$ 시스템에서 오차 ||Xw - y||^2를 최소화하는 정사영 근사해 유도.",
       "tradeoff_insight": "3단계 비판적 맹점: $(X^TX)$가 역행렬을 가져야만 수식 작동 (Full Column Rank 필요).",
       "ai_connection": "4단계 AI 연결: 선형 회귀 최적 정규방정식 $w = (X^T X)^{-1} X^T y$ 완전 유도."
     },
