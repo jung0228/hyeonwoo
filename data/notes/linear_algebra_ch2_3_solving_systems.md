@@ -50,6 +50,8 @@ $$\begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 & 12 \end{bmatrix} \begin{bmatri
 ---
 
 #### 3️⃣ [3단계 기하학적 직관]
+![MML Eq 2.38 3D Solution Plane Geometry](file:///Users/jhw/Desktop/대학원준비_2027/hyeonwoo/mml_eq238_solution_plane.jpg)
+
 - 4차원 공간에서 $\lambda_1 \mathbf{v}_1 + \lambda_2 \mathbf{v}_2$ 는 원점 $\mathbf{0}$을 지나는 2차원 해 평면(Vector Subspace)입니다.
 - 여기에 특수해 점 $\mathbf{x}_p$ 를 더하면, 이 평면 전체가 공중으로 평행 이동하여 원점을 지나지 않는 아핀 공간(Affine Subspace)이 됩니다. 바로 이 평면 위에 뜬 무수히 많은 점들이 전부 성립하는 정답입니다.
 
