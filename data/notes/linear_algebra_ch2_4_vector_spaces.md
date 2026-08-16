@@ -63,12 +63,30 @@
 
 ---
 
-### 📌 2. 벡터 공간의 8가지 공리 (Vector Space Axioms)
-1. $(V, +)$ 내부 덧셈 연산에 대해 아벨군(Abelian Group)이어야 함 (영벡터 $0$ 과 음의 역벡터 $-x$ 존재).
-2. 분배법칙 1: $\lambda \cdot (x + y) = \lambda \cdot x + \lambda \cdot y$
-3. 분배법칙 2: $(\lambda + \psi) \cdot x = \lambda \cdot x + \psi \cdot x$
-4. 외부 연산 결합법칙: $\lambda \cdot (\psi \cdot x) = (\lambda \psi) \cdot x$
-5. 스칼라 항등원: $1 \cdot x = x$
+### 📌 2. 대수적 개념의 포함 관계 (어떤 개념이 더 큰가?)
+수학적 공간의 포함 관계는 다음과 같이 넓은 개념에서 좁은 개념으로 구체화됩니다:
+
+$$\text{집합 (Set)} \supset \text{군 (Group)} \supset \text{아벨군 (Abelian Group)} \supset \text{벡터 공간 (Vector Space)} \supset \text{부분공간 (Subspace)}$$
+
+- **군 (Group)**: 연산 1개(덧셈 또는 곱셈)에 대한 4가지 조건(닫힘, 결합, 항등원, 역원)을 만족하는 넓은 대수적 구조.
+- **아벨군 (Abelian Group)**: 군에 **교환법칙($x+y = y+x$)**이 추가된 구조.
+- **벡터 공간 (Vector Space)**: 내부 덧셈 연산에 대해 아벨군(4개)을 이루고, 여기에 **스칼라 곱 외부 연산 규칙(4개)**이 합쳐진 **총 8가지 공리를 만족하는 특수 공간**.
+
+---
+
+### 📌 3. 벡터 공간의 8가지 공리 (Vector Space Axioms)
+
+[Part A] 내부 연산: 덧셈($+$)에 대한 4가지 공리 (아벨군 성질)
+1. **덧셈 결합법칙**: $\forall x, y, z \in V : (x + y) + z = x + (y + z)$
+2. **덧셈 교환법칙**: $\forall x, y \in V : x + y = y + x$
+3. **덧셈 항등원(영벡터 $0$) 존재**: $\exists 0 \in V \ \forall x \in V : x + 0 = x$
+4. **덧셈 역원(음의 역벡터 $-x$) 존재**: $\forall x \in V \ \exists -x \in V : x + (-x) = 0$
+
+[Part B] 외부 연산: 스칼라배($\cdot$)에 대한 4가지 공리
+5. **스칼라 분배법칙 1**: $\forall \lambda \in \mathbb{R}, x, y \in V : \lambda \cdot (x + y) = \lambda \cdot x + \lambda \cdot y$
+6. **스칼라 분배법칙 2**: $\forall \lambda, \psi \in \mathbb{R}, x \in V : (\lambda + \psi) \cdot x = \lambda \cdot x + \psi \cdot x$
+7. **스칼라 곱 결합법칙**: $\forall \lambda, \psi \in \mathbb{R}, x \in V : \lambda \cdot (\psi \cdot x) = (\lambda \psi) \cdot x$
+8. **스칼라 항등원**: $\forall x \in V : 1 \cdot x = x$
 
 ---
 
