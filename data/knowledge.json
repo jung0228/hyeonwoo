@@ -90,16 +90,16 @@
     },
     {
       "id": "linear_algebra_ch2_5_independence",
-      "label": "2.5 선형 독립",
+      "label": "2.5 선형독립과 생성",
       "category": "Math",
       "confidence": 4,
-      "studyCount": 4,
-      "note": "linear_algebra_ch2_5_independence.md",
-      "tags": ["Linear Independence", "Span", "Multicollinearity"],
-      "definition": "1단계 개념: 어떤 벡터도 다른 벡터의 선형 결합으로 표현 불가능한 독립 상태.",
-      "purpose": "2단계 존재 이유: 특징(Feature) 간 정보 중복을 막아 역행렬 파탄 및 다중공선성 방지.",
-      "tradeoff_insight": "3단계 비판적 맹점: 선형 종속 시 Rank가 떨어져 무수히 많은 해 발생.",
-      "ai_connection": "4단계 AI 연결: Ridge L2 규제(X^TX + \\lambda I)로 강제 독립성 확보."
+      "studyCount": 5,
+      "note": "linear_algebra_ch2_5_linear_independence.md",
+      "tags": ["Linear Independence", "Span", "Generating Set", "PCA"],
+      "definition": "1단계 개념: 어떤 벡터도 다른 벡터의 선형 결합으로 표현 불가능한 선형독립 및 스팬.",
+      "purpose": "2단계 존재 이유: 특징(Feature) 간 정보 중복을 막아 최소 생성집합(기저)을 도출.",
+      "tradeoff_insight": "3단계 비판적 맹점: 선형 종속 시 Rank가 떨어져 무수히 많은 해 및 정보 손실 발생.",
+      "ai_connection": "4단계 AI 연결: PCA 및 Autoencoder로 선형독립인 주성분 기저축만 남기는 차원 축소."
     },
     {
       "id": "linear_algebra_ch2_6_basis_rank",
