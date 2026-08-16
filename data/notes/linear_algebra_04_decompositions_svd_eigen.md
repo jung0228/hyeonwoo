@@ -5,7 +5,6 @@
 - Spectral Theorem: 실수 대칭행렬($A=A^T$)은 항상 서로 직교하는 고유벡터로 분해됨 ($A = Q \Lambda Q^T$).
 - SVD ($A = U \Sigma V^T$): 세상의 모든 직사각형 행렬($m \times n$)을 [회전 $\rightarrow$ 수축/팽창 $\rightarrow$ 회전] 3단계 축으로 해체.
 
----
 
 ## 📝 2. MML 교재 연습문제 풀이 (MML Ch 4.1 ~ 4.2)
 
@@ -18,7 +17,6 @@
 - 증명: $A^T A = (U \Sigma V^T)^T (U \Sigma V^T) = V \Sigma^T U^T U \Sigma V^T = \mathbf{V (\Sigma^T \Sigma) V^T}$
   - $V$는 $A^T A$의 고유벡터, 特異値 $\sigma_i = \sqrt{\lambda_i(A^TA)}$.
 
----
 
 ## 🔍 3. 비판적 맹점 & 실전 AI 연결
 - Eigendecomposition 한계: $n \times n$ 정방행렬에서만 작동, 비대칭행렬 시 축 비틀림 ➡️ SVD로 극복.

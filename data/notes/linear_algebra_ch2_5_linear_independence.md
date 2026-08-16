@@ -2,7 +2,6 @@
 
 > **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.5 원문 완전 복사 & 심층 가공 노트**
 
----
 
 ## 📖 Part 1. MML 교재 2.5절 전체 원문 (Textbook Full Original Text)
 
@@ -90,7 +89,6 @@ is given as
 We see that the corresponding linear equation system is non-trivially solvable: The last column is not a pivot column, and x4 = -7x1 - 15x2 - 18x3. Therefore, x1, . . . , x4 are linearly dependent as x4 can be expressed as a linear combination of x1, . . . , x3.
 ```
 
----
 
 ## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 

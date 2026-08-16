@@ -2,7 +2,6 @@
 
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.4 스토리텔링 완전 대조 노트
 
----
 
 ## 1. 🌐 서론: 왜 "군(Group)"부터 배우고 "벡터 공간"으로 확장하는가?
 
@@ -12,7 +11,6 @@
 우리가 학교에서 배운 벡터는 "더할 수 있고, 숫자를 곱할 수 있는 대상"이었습니다. 
 이를 수학적으로 엄밀하게 정의하기 위해, 선형대수학은  가장 원시적인 연산 규칙인 [군(Group)] ➡️ [벡터 공간(Vector Space)] ➡️ [부분공간(Vector Subspace)] 으로 개념을 단계적으로 확장해 나갑니다.
 
----
 
 ## 2. ⚔️ Section 2.4.1: Groups (군: 연산의 가장 기본적인 규칙)
 
@@ -32,7 +30,6 @@
 
 - 아벨군 (Abelian Group / 교환군): 4가지 조건에 더해 교환법칙($x \otimes y = y \otimes x$)까지 성립하면 이를 아벨군이라 부릅니다.
 
----
 
 ### 📌 2. 조건별 파탄 반례와 군 판별 (Example 2.10)
 
@@ -43,13 +40,11 @@
 - $(\mathbb{R} \setminus \{0\}, \cdot)$ 0을 뺀 실수 곱셈: 0을 쫓아냈으므로 모든 원소의 곱셈 역원($1/x$)이 존재하여 완벽한 아벨군입니다.
 - $(\mathbb{R}^n, +)$ $n$차원 벡터 덧셈: 성분별 덧셈, 항등원 $[0,\dots,0]^\top$, 역원 $[-x_1,\dots,-x_n]^\top$ 이 존재하므로 아벨군입니다 (Eq 2.61).
 
----
 
 ### 📌 3. 일반선형군 GL(n, R) (Definition 2.8)
 가역(Invertible)인 $n \times n$ 정방행렬들의 집합은 행렬 곱셈에 대해 군을 이룹니다. 이를 일반선형군 $GL(n, \mathbb{R})$이라 부릅니다.
 - 핵심 포인트: 행렬 곱셈은 교환법칙이 성립하지 않기 때문에 ($AB \neq BA$), 일반선형군은 아벨군이 아닌 비아벨군(Non-Abelian Group)의 대표적인 예시입니다.
 
----
 
 ## 3. ⚔️ Section 2.4.2: Vector Spaces (벡터 공간: 내부 연산 + 외부 연산)
 
@@ -61,7 +56,6 @@
 - 내부 연산 (벡터 덧셈): $+ : V \times V \to V \quad (2.62)$
 - 외부 연산 (스칼라 곱): $\cdot : \mathbb{R} \times V \to V \quad (2.63)$
 
----
 
 ### 📌 2. 대수적 개념의 포함 관계 (어떤 개념이 더 큰가?)
 수학적 공간의 포함 관계는 다음과 같이 넓은 개념에서 좁은 개념으로 구체화됩니다:
@@ -72,7 +66,6 @@ $$\text{집합 (Set)} \supset \text{군 (Group)} \supset \text{아벨군 (Abelia
 - **아벨군 (Abelian Group)**: 군에 **교환법칙($x+y = y+x$)**이 추가된 구조.
 - **벡터 공간 (Vector Space)**: 내부 덧셈 연산에 대해 아벨군(4개)을 이루고, 여기에 **스칼라 곱 외부 연산 규칙(4개)**이 합쳐진 **총 8가지 공리를 만족하는 특수 공간**.
 
----
 
 ### 📌 3. 벡터 공간의 8가지 공리 (Vector Space Axioms)
 
@@ -88,14 +81,12 @@ $$\text{집합 (Set)} \supset \text{군 (Group)} \supset \text{아벨군 (Abelia
 7. **스칼라 곱 결합법칙**: $\forall \lambda, \psi \in \mathbb{R}, x \in V : \lambda \cdot (\psi \cdot x) = (\lambda \psi) \cdot x$
 8. **스칼라 항등원**: $\forall x \in V : 1 \cdot x = x$
 
----
 
 ### 📌 3. 대표적인 벡터 공간 예시 (Example 2.11)
 - $V = \mathbb{R}^n$: $n$차원 화살표/튜플들의 집합.
 - $V = \mathbb{R}^{m \times n}$: $m \times n$ 행렬들의 집합 (행렬끼리 더하고 스칼라를 곱해도 여전히 $m \times n$ 행렬이므로 완벽한 벡터 공간입니다).
 - 표기 관례 (Eq 2.64): 벡터 공간 $V$ 의 원소 $x$ 는 기본적으로 열벡터(Column Vector) $x = [x_1, \dots, x_n]^\top$ 로 표기합니다.
 
----
 
 ## 4. ⚔️ Section 2.4.3: Vector Subspaces (부분공간: 공간 안에 갇힌 공간)
 
@@ -103,7 +94,6 @@ $$\text{집합 (Set)} \supset \text{군 (Group)} \supset \text{아벨군 (Abelia
 거대한 벡터 공간 $V$ 안에 속해 있는 작은 부분집합 $U \subseteq V$ 가 있습니다.
 만약 이 $U$ 안에서 원소들끼리 더하거나 스칼라를 곱해도 결코 $U$ 밖으로 튕겨 나가지 않고 여전히 $U$ 안에 갇혀 있다면, 이 $U$를 부분공간(Vector Subspace)이라 부릅니다!
 
----
 
 ### 📌 2. 부분공간인지 판별하는 3대 필수 조건 (Subspace Test)
 원래 벡터 공간의 8가지 공리를 다 검증할 필요 없이, 다음 3 가지만 확인하면 부분공간임이 자동으로 증명됩니다:
@@ -112,7 +102,6 @@ $$\text{집합 (Set)} \supset \text{군 (Group)} \supset \text{아벨군 (Abelia
 2. 스칼라배에 닫혀있는가?: $\forall \lambda \in \mathbb{R}, x \in U \implies \lambda x \in U$
 3. 덧셈에 닫혀있는가?: $\forall x, y \in U \implies x + y \in U$
 
----
 
 ### 📌 3. 그림으로 이해하는 부분공간 판별 (Figure 2.6 분석)
 
@@ -123,7 +112,6 @@ $$\text{집합 (Set)} \supset \text{군 (Group)} \supset \text{아벨군 (Abelia
 - 케이스 C (1사분면 전체): 음수 스칼라(-1)를 곱하면 3사분면으로 튕겨 나가므로 스칼라배 닫힘성 위반 ➡️ 부분공간 아님.
 - 케이스 D (원점을 지나는 무한한 직선): 더하거나 숫자를 곱해도 이 직선 상에서 벗어나지 않음 ➡️ 100% 부분공간 성립!
 
----
 
 ### 📌 4. 선형방정식계 해공간과 부분공간의 치명적 연결고리
 

@@ -5,7 +5,6 @@
 - 역행렬 ($A^{-1}$): 찌그러진 공간을 원래 공간으로 원상복구하는 역변환 ($A A^{-1} = I$).
 - 가역성 파탄 조건: $\det(A) = 0 \implies$ 면적이 0으로 납작하게 눌려(Dimensionality Collapse) 역변환 불가능.
 
----
 
 ## 📝 2. MML 교재 연습문제 풀이 (MML Ch 2.3)
 
@@ -17,7 +16,6 @@
 - $A A^{-1} = I$ 곱셈 증명:
   $$\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \end{bmatrix} \begin{bmatrix} -2 & 1 \\\\ 1.5 & -0.5 \end{bmatrix} = \begin{bmatrix} -2+3 & 1-1 \\\\ -6+6 & 3-2 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\\\ 0 & 1 \end{bmatrix} = I_2$$
 
----
 
 ## 🔍 3. 비판적 맹점 & 실전 AI 연결
 

@@ -6,7 +6,6 @@
 
 > 코테 90분 3문제 Python 기준. 아래 패턴 중 하나 이상 복합 적용.
 
----
 
 ## 1. Sliding Window
 
@@ -35,7 +34,6 @@ def longest_at_most_k(items, k):
 
 > Prefix Sum과 비교: Sliding Window는 가변 크기 창, Prefix Sum은 고정 구간 합
 
----
 
 ## 2. Prefix Sum + Dictionary
 
@@ -57,7 +55,6 @@ def count_target_subarrays(nums, target):
 
 > 핵심: 현재 누적합이 `prefix`라면, 이전에 `prefix - target`이 나온 횟수만큼 정답에 더함
 
----
 
 ## 3. Heap + Interval
 
@@ -79,7 +76,6 @@ def min_resources(intervals):
     return len(heap)
 ```
 
----
 
 ## 4. Binary Search on Answer (정답 이분탐색)
 
@@ -107,7 +103,6 @@ def minimum_capacity(files, days):
     return left
 ```
 
----
 
 ## 5. BFS Grid (최단 경로)
 
@@ -135,7 +130,6 @@ def shortest_path(grid, start, goal):
 
 > A*와의 관계: BFS는 h(n)=0인 A*. 거리 추정치가 있으면 A*로 가속 가능.
 
----
 
 ## 6. Topological Sort (Kahn's Algorithm)
 
@@ -164,7 +158,6 @@ def topological_sort(n, edges):
     return order if len(order) == n else None  # None이면 cycle 존재
 ```
 
----
 
 ## 7. Dynamic Programming
 
@@ -186,7 +179,6 @@ def max_non_adjacent_sum(values):
 
 > `@lru_cache`는 같은 i를 중복 계산하지 않음. 없으면 지수 시간.
 
----
 
 ## 시험 직전 우선순위
 
@@ -196,7 +188,6 @@ def max_non_adjacent_sum(values):
 4. 슬라이딩 윈도우, prefix sum, heap, binary search, BFS, topo sort
 5. 빈 입력, 중복, `None`, 매우 큰 입력 처리
 
----
 
 ## 체크리스트
 

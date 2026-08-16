@@ -4,13 +4,11 @@
 자신감: ⭐⭐⭐ (중급)  
 마지막 복습: 2026-08-11
 
----
 
 ## 한 문장 요약
 
 MLE는 데이터만으로 최적 parameter를 추정하고, MAP는 prior도 반영하며, Bayesian은 uncertainty까지 분포로 표현한다.
 
----
 
 ## MLE (Maximum Likelihood Estimation)
 
@@ -27,7 +25,6 @@ $$\hat{\theta}_n \xrightarrow{p} \theta_0$$
 
 > MLE가 항상 consistent하지는 않음 — 식별 가능성(identifiability) + 정규성 조건 필요
 
----
 
 ## MAP (Maximum A Posteriori)
 
@@ -44,7 +41,6 @@ $$\hat{\theta}_{MAP} = \arg\max_\theta \left[\log p(D|\theta) + \log p(\theta)\r
 | Gaussian prior $\mathcal{N}(0, \sigma^2)$ | $L_2$ (Ridge) |
 | Laplace prior | $L_1$ (Lasso) |
 
----
 
 ## Bayesian Inference
 
@@ -70,7 +66,6 @@ $$p(\theta|D_1, D_2) \propto p(D_2|\theta) \cdot p(\theta|D_1)$$
 | Uncertainty | 표현 불가 | 표현 불가 | 표현 |
 | 데이터 적을 때 | 불안정 | Prior로 안정 | 안정 |
 
----
 
 ## Cross-Entropy와의 연결
 
@@ -80,7 +75,6 @@ $$\text{CE}(q, p) = -\sum_k q_k \log p_k = H(q) + D_{KL}(q \| p)$$
 
 $q$가 고정이면 CE 최소화 = KL Divergence 최소화
 
----
 
 ## 체크리스트
 

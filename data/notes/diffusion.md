@@ -1,17 +1,14 @@
----
 # Diffusion Model
 
 카테고리: Generative Models  
 자신감: ⭐⭐ (기초)  
 마지막 복습: 2026-08-10
 
----
 
 ## 한 문장 요약
 
 데이터에 노이즈를 점진적으로 추가하는 forward process와, 노이즈에서 데이터를 복원하는 reverse process를 학습하는 생성 모델.
 
----
 
 ## 핵심 아이디어
 
@@ -33,7 +30,6 @@ $$p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\the
 
 $$\mathcal{L} = \mathbb{E}_{x_0, \epsilon, t}\left[\|\epsilon - \epsilon_\theta(x_t, t)\|^2\right]$$
 
----
 
 ## VAE와의 연결
 
@@ -48,7 +44,6 @@ $$\mathcal{L} = \mathbb{E}_{x_0, \epsilon, t}\left[\|\epsilon - \epsilon_\theta(
 
 결론: 둘 다 ELBO 최대화. Diffusion은 "T개의 VAE를 순서대로 쌓은 것"으로 볼 수 있음.
 
----
 
 ## GAN과의 비교
 
@@ -59,7 +54,6 @@ $$\mathcal{L} = \mathbb{E}_{x_0, \epsilon, t}\left[\|\epsilon - \epsilon_\theta(
 | 속도 | 빠름 | 느림 (T step) |
 | 품질 | 선명 | 고품질 |
 
----
 
 ## 주요 변형
 
@@ -68,7 +62,6 @@ $$\mathcal{L} = \mathbb{E}_{x_0, \epsilon, t}\left[\|\epsilon - \epsilon_\theta(
 - Score-based / SDE: 연속 시간 관점
 - Latent Diffusion (SD): pixel space → latent space에서 diffuse
 
----
 
 ## 체크리스트
 

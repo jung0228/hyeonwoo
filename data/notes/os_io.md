@@ -4,7 +4,6 @@
 자신감: ⭐⭐⭐ (중급)  
 마지막 복습: 2026-08-09
 
----
 
 ## 개념 구분
 
@@ -29,7 +28,6 @@ Driver  : device를 관리하는 kernel code 전체
 Handler : interrupt가 오면 실행되는 driver 내부 함수
 ```
 
----
 
 ## SSD Read 전체 흐름
 
@@ -56,7 +54,6 @@ Interrupt  : I/O 완료를 CPU에 알리는 신호
 Driver     : kernel 요청을 controller 명령으로 변환 + 완료 처리
 ```
 
----
 
 ## File System 연계
 
@@ -83,7 +80,6 @@ Copy-on-Write (CoW)
  : ZFS, Btrfs, APFS
 ```
 
----
 
 ## 체크리스트
 

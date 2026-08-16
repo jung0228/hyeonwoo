@@ -2,7 +2,6 @@
 
 > **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.7 원문 완전 복사 & 심층 가공 노트**
 
----
 
 ## 📖 Part 1. MML 교재 원문 (Textbook Original Text)
 
@@ -55,7 +54,6 @@ Direct Consequences:
 - If dim(V) = dim(W), then \Phi is injective <==> \Phi is surjective <==> \Phi is bijective.
 ```
 
----
 
 ## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 

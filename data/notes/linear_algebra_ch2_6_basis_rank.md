@@ -2,7 +2,6 @@
 
 > **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.6 원문 완전 복사 & 심층 가공 노트**
 
----
 
 ## 📖 Part 1. MML 교재 원문 (Textbook Original Text)
 
@@ -64,7 +63,6 @@ A = [1 2 1; -2 -3 1; 3 5 0] --> REF [1 2 1; 0 1 3; 0 0 0] (Eq 2.84).
 Two pivot rows/columns, so rk(A) = 2.
 ```
 
----
 
 ## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 

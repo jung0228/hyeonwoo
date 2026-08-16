@@ -2,7 +2,6 @@
 
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.2 원문 완전 대조 노트
 
----
 
 ## 1. 🌐 Definition & Basic Concepts (행렬의 정의와 기본 개념)
 
@@ -14,7 +13,6 @@ $$A = \begin{bmatrix} a_{11} & a_{12} & \dots & a_{1n} \\\\ a_{21} & a_{22} & \d
 - Row Vector / Column Vector: $(1, n)$-행렬을 행 벡터(Row Vector), $(m, 1)$-행렬을 열 벡터(Column Vector)라 부릅니다.
 - Vector Stacking (Reshape): 모든 실수 $(m, n)$-행렬의 집합을 $\mathbb{R}^{m \times n}$ 이라 표기하며, 행렬 $A \in \mathbb{R}^{m \times n}$ 의 $n$개 열을 수직으로 쌓아 긴 벡터 $\mathbf{a} \in \mathbb{R}^{mn}$ 으로 동등하게 표현할 수 있습니다 (Figure 2.4).
 
----
 
 ## 2. ⚔️ Section 2.2.1: Matrix Addition and Multiplication (덧셈과 곱셈 연산)
 
@@ -32,7 +30,6 @@ $$c_{ij} = \sum_{l=1}^n a_{il} b_{lj}, \quad i = 1, \dots, m, \quad j = 1, \dots
   $$A_{n \times k} \cdot B_{k \times m} = C_{n \times m}$$
 - Hadamard Product (하다마르 곱)과의 구분: 행렬 곱셈은 성분별 곱이 아닙니다. 프로그래밍 언어에서 배열끼리의 성분별 곱은 하다마르 곱(Hadamard Product, $A \odot B$)이라 부릅니다.
 
----
 
 ### 📌 Example 2.3 (MML 원문: 행렬 곱셈 교환법칙 불성립 증명)
 
@@ -44,7 +41,6 @@ $$BA = \begin{bmatrix} 0 & 2 \\\\ 1 & -1 \\\\ 0 & 1 \end{bmatrix} \begin{bmatrix
 
 - 인사이트: 행렬 곱셈은 교환법칙이 성립하지 않습니다 ($AB \neq BA$). 심지어 $AB$와 $BA$의 연산 결과 차원($2 \times 2$ vs $3 \times 3$) 자체가 다릅니다 (Figure 2.5).
 
----
 
 ### 📌 Definition 2.2 (Identity Matrix 단위행렬) 및 대수적 성질
 주대각선 성분이 모두 1이고 나머지가 0인 $n \times n$ 행렬을 단위행렬 $I_n$ 이라 정의합니다.
@@ -53,7 +49,6 @@ $$BA = \begin{bmatrix} 0 & 2 \\\\ 1 & -1 \\\\ 0 & 1 \end{bmatrix} \begin{bmatrix
 - 분배법칙 (Distributivity): $(A+B)C = AC + BC$, $A(C+D) = AC + AD \quad (2.19a, 2.19b)$
 - 단위행렬 곱셈: $I_m A = A I_n = A \quad (2.20)$
 
----
 
 ## 3. ⚔️ Section 2.2.2: Inverse and Transpose (역행렬과 전치행렬)
 
@@ -61,7 +56,6 @@ $$BA = \begin{bmatrix} 0 & 2 \\\\ 1 & -1 \\\\ 0 & 1 \end{bmatrix} \begin{bmatrix
 정방행렬 $A \in \mathbb{R}^{n \times n}$ 에 대해 $AB = I_n = BA$ 를 만족하는 $B \in \mathbb{R}^{n \times n}$ 가 존재할 때, $B$를 $A$의 역행렬(Inverse)이라 부르고 $A^{-1}$ 로 표기합니다.
 - 역행렬이 존재하면 가역(Invertible/Regular/Nonsingular)이라 부르고, 존재하지 않으면 특이(Singular/Noninvertible)라 부릅니다. 역행렬이 존재할 때 이는 유일합니다.
 
----
 
 ### 📌 Remark: $2 \times 2$ 행렬의 역행렬 공식 (Equation 2.21 ~ 2.24)
 
@@ -73,7 +67,6 @@ $$AA' = (a_{11}a_{22} - a_{12}a_{21}) I$$
 
 $$A^{-1} = \frac{1}{a_{11}a_{22} - a_{12}a_{21}} \begin{bmatrix} a_{22} & -a_{12} \\\\ -a_{21} & a_{11} \end{bmatrix} \quad (2.24)$$
 
----
 
 ### 📌 Example 2.4 (Inverse Matrix 수치 예시: Eq 2.25)
 
@@ -81,7 +74,6 @@ $$A = \begin{bmatrix} 1 & 2 & 1 \\\\ 4 & 4 & 5 \\\\ 6 & 7 & 7 \end{bmatrix}, \qu
 
 두 행렬은 $AB = I_3 = BA$ 를 만족하므로 서로의 역행렬 관계입니다 ($B = A^{-1}$).
 
----
 
 ### 📌 Definition 2.4 (Transpose 전치행렬) & 주요 성질 (Eq 2.26 ~ 2.31)
 $A \in \mathbb{R}^{m \times n}$ 의 행과 열을 뒤집은 $B \in \mathbb{R}^{n \times m} \ (b_{ij} = a_{ji})$ 를 전치행렬이라 부르며 $A^\top$ 로 표기합니다.
@@ -93,13 +85,11 @@ $A \in \mathbb{R}^{m \times n}$ 의 행과 열을 뒤집은 $B \in \mathbb{R}^{n
 - $(AB)^\top = B^\top A^\top \quad (2.30)$
 - $(A + B)^\top = A^\top + B^\top \quad (2.31)$
 
----
 
 ### 📌 Definition 2.5 (Symmetric Matrix 대칭행렬)
 $A = A^\top$ 인 정방행렬을 대칭행렬(Symmetric Matrix)이라 부릅니다.
 - 대칭행렬의 합 $A + B$는 항상 대칭행렬이지만, 곱 $AB$는 일반적으로 대칭행렬이 아닙니다 (Eq 2.32 Remark).
 
----
 
 ## 4. ⚔️ Section 2.2.3 & 2.2.4: Scalar Multiplication & Compact Representation
 
@@ -108,7 +98,6 @@ $C = \begin{bmatrix} 1 & 2 \\\\ 3 & 4 \end{bmatrix}$ 일 때, 임의의 스칼�
 
 $$(\lambda + \psi) C = \begin{bmatrix} (\lambda + \psi)1 & (\lambda + \psi)2 \\\\ (\lambda + \psi)3 & (\lambda + \psi)4 \end{bmatrix} = \begin{bmatrix} \lambda & 2\lambda \\\\ 3\lambda & 4\lambda \end{bmatrix} + \begin{bmatrix} \psi & 2\psi \\\\ 3\psi & 4\psi \end{bmatrix} = \lambda C + \psi C$$
 
----
 
 ### 📌 Section 2.2.4: 선형방정식계의 컴팩트 행렬 표현 (Equation 2.35 & 2.36)
 

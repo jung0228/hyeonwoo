@@ -4,7 +4,6 @@
 > 
 > 본 문서에는 MML(Mathematics for Machine Learning) 교재 Chapter 2 (Exercises 2.1 ~ 2.20)에 수록된 전수 연습문제의 단계별 풀이, 증명, 수치적 맹점 및 실전 AI 연결고리가 수록되어 있습니다.
 
----
 
 ## 📝 Part 1. 군, 유체 및 행렬 연산 (Exercises 2.1 ~ 2.4)
 
@@ -29,7 +28,6 @@ $\mathbb{R} \setminus \{-1\}$ 상에서 정의된 연산 $a \star b := ab + a + 
    - $4x^2 + 8x - 12 = 0 \implies x^2 + 2x - 3 = 0 \implies (x+3)(x-1) = 0$.
    - $x = 1$ 또는 $x = -3$ (두 값 모두 $\mathbb{R} \setminus \{-1\}$ 에 속하므로 유효한 해입니다).
 
----
 
 ### [Problem 2.2] 잉여류(Congruence Classes) $\mathbb{Z}_n$ 과 아벨군 및 소수(Prime) 조건 증명
 
@@ -46,7 +44,6 @@ n-합동류 집합 $\mathbb{Z}_n = \{0, 1, \dots, n-1\}$ 상의 덧셈 $\oplus$ 
 - d. 베주 정리(Bézout's identity)에 의한 소수 조건 증명:
   - $\mathbb{Z}_n \setminus \{0\}$ 의 모든 원소가 곱셈 역원을 가지려면 임의의 $a \in \{1, \dots, n-1\}$ 에 대해 $\gcd(a, n) = 1$ 이어야 합니다. 이는 오직 $n$이 소수(Prime)일 때만 성립합니다.
 
----
 
 ### [Problem 2.3] 상삼각 행렬 집합 $G$의 군(Group) 판별
 
@@ -59,7 +56,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - 역원: $A(x,y,z)^{-1} = \begin{bmatrix} 1 & -x & xy-z \\ 0 & 1 & -y \\ 0 & 0 & 1 \end{bmatrix} \in G$.
 - 교환법칙 불성립: $x_1 y_2 \neq x_2 y_1$ 인 경우가 존재하므로 군은 맞지만 아벨군은 아닙니다 (비아벨군 Non-Abelian Group / 하이젠베르크 군).
 
----
 
 ### [Problem 2.4] 행렬 곱셈 계산 (Matrix Products)
 
@@ -74,7 +70,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - e. $(4 \times 2) \times (2 \times 4)$ ➡️ 가능 ($4 \times 4$ 결과 행렬):
   $$\begin{bmatrix} 12 & 3 & -3 & -12 \\ -3 & 1 & 2 & 6 \\ 6 & 5 & 1 & 0 \\ 13 & 12 & 3 & 2 \end{bmatrix}$$
 
----
 
 ## 📝 Part 2. 선형방정식계 해법 & 역행렬 (Exercises 2.5 ~ 2.8)
 
@@ -92,7 +87,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
   - 자유변수: $x_3, x_4$
   - 일반해: $S = \left\{ \begin{bmatrix} 4.5 \\ 1.5 \\ 0 \\ 0 \\ 0.5 \end{bmatrix} + \lambda_1 \begin{bmatrix} 0 \\ 0 \\ 1 \\ 0 \\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} 1.5 \\ -1.5 \\ 0 \\ 1 \\ 0 \end{bmatrix} \mid \lambda_1, \lambda_2 \in \mathbb{R} \right\}$
 
----
 
 ### [Problem 2.6] $3 \times 6$ 선형방정식계 가우스 소거법 해 도출
 
@@ -102,7 +96,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - 일반해:
   $$\mathbf{x} = \begin{bmatrix} 0 \\ 1 \\ 0 \\ 0 \\ 1 \\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} 0 \\ 0 \\ 1 \\ 0 \\ 0 \\ 0 \end{bmatrix} + \lambda_3 \begin{bmatrix} 0 \\ -1 \\ 0 \\ -1 \\ 1 \\ 1 \end{bmatrix}, \quad \lambda_1, \lambda_2, \lambda_3 \in \mathbb{R}$$
 
----
 
 ### [Problem 2.7] 고유값 방정식 $(A - 12I)x = 0$ 및 제약조건 조건 해 도출
 
@@ -112,7 +105,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - 합 제약 대입: $3x_3 + 1.5x_3 + x_3 = 5.5x_3 = 1 \implies x_3 = \frac{2}{11}$.
 - 유일해 도출: $\mathbf{x} = \begin{bmatrix} 6/11 \\ 3/11 \\ 2/11 \end{bmatrix}$.
 
----
 
 ### [Problem 2.8] 역행렬 계산 및 가역성 판별
 
@@ -122,7 +114,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
   - 가우스-조던 소거법 $[A \mid I_4] \rightsquigarrow [I_4 \mid A^{-1}]$ 적용:
     $$A^{-1} = \begin{bmatrix} 0 & -1 & 0 & 1 \\ -1 & 0 & 0 & 1 \\ 1 & 1 & 0 & -1 \\ -1 & -1 & 1 & 0 \end{bmatrix}$$
 
----
 
 ## 📝 Part 3. 부분공간, 선형독립 & 기저 (Exercises 2.9 ~ 2.15)
 
@@ -133,7 +124,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - c. $C$: $\gamma = 0$ 일 때만 원점 $(0,0,0)$ 을 포함하여 부분공간이 됨 ($\gamma \neq 0$ 이면 아핀 공간).
 - d. $D$: $\xi_2 \in \mathbb{Z}$ 스칼라배 $0.5$ 곱하면 정수 집합을 탈출하므로 부분공간 아님.
 
----
 
 ### [Problem 2.10 ~ 2.11] 선형독립성 판별 및 선형 결합 표기
 
@@ -141,7 +131,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - 2.10 b. $x_1 - x_2 + x_3 = 0 \implies$ 선형 종속 (Linearly Dependent).
 - 2.11 선형 결합: $y = c_1 x_1 + c_2 x_2 + c_3 x_3 \implies c_1 = 1, c_2 = -4, c_3 = 2 \implies \mathbf{y = x_1 - 4x_2 + 2x_3}$.
 
----
 
 ### [Problem 2.12 ~ 2.15] 부분공간의 교집합 $U_1 \cap U_2$ 기저 도출
 
@@ -150,7 +139,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - 2.13 & 2.14: $A_1 x = 0$ 과 $A_2 x = 0$ 동시 만족 영공간 기저 도출.
 - 2.15 c: $F$ 의 기저 $\{(1,0,1), (0,1,1)\}$, $G$ 의 기저 $\{(1,1,1), (-1,1,-3)\}$. 교집합 $F \cap G = \text{span}\{(1,3,4)\}$.
 
----
 
 ## 📝 Part 4. 선형사상, 기저변환 & 사상 행렬 (Exercises 2.16 ~ 2.20)
 
@@ -162,7 +150,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - d. 행렬 곱셈: 선형사상 (Linear).
 - e. 2차원 회전 행렬: 선형사상 (Linear).
 
----
 
 ### [Problem 2.17] 선형사상 행렬 $A_\Phi$, Rank, Kernel 및 Image 계산
 
@@ -171,14 +158,12 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - $\dim(\ker(\Phi)) = 0$ ($\ker(\Phi) = \{\mathbf{0}\}$).
 - $\dim(\text{Im}(\Phi)) = 3$ ($\text{Im}(\Phi) = \text{Col}(A_\Phi)$).
 
----
 
 ### [Problem 2.18] 자기동형사상(Automorphism) 합성 정리 증명
 
 - $f \circ g = \text{id}_E \implies g = f^{-1}$.
 - 따라서 $f$와 $g$는 가역 전단사 함수이므로 $\ker(f) = \{\mathbf{0}\}$, $\text{Im}(g) = E$ 성립.
 
----
 
 ### [Problem 2.19] 기저변환 행렬 $\tilde{A}_\Phi = P^{-1} A_\Phi P$ 도출
 
@@ -186,7 +171,6 @@ $G = \left\{ \begin{bmatrix} 1 & x & z \\ 0 & 1 & y \\ 0 & 0 & 1 \end{bmatrix} \
 - 기저변환 행렬 $P = \begin{bmatrix} 1 & 1 & 1 \\ 1 & 2 & 0 \\ 1 & 1 & 0 \end{bmatrix} \implies P^{-1} = \begin{bmatrix} 0 & 1 & -2 \\ 0 & -1 & 1 \\ 1 & 0 & 1 \end{bmatrix}$.
 - 신기저 표현 행렬: $\tilde{A}_\Phi = P^{-1} A_\Phi P = \begin{bmatrix} 2 & 3 & 0 \\ -1 & -2 & 0 \\ 2 & 3 & 1 \end{bmatrix}$.
 
----
 
 ### [Problem 2.20] 종합 기저변환 및 준동형사상 $A'$ 행렬 정밀 도출
 

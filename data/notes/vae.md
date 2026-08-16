@@ -1,17 +1,14 @@
----
 # VAE (Variational Autoencoder)
 
 카테고리: Generative Models  
 자신감: ⭐⭐⭐ (중급)  
 마지막 복습: 2026-08-10
 
----
 
 ## 한 문장 요약
 
 VAE는 데이터를 확률적 잠재 공간(latent space)에 인코딩하고, 그 분포에서 샘플링해서 새 데이터를 생성하는 모델이다.
 
----
 
 ## 핵심 아이디어
 
@@ -31,7 +28,6 @@ $$\mathcal{L} = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{KL}(q_\phi(z|x
 직접 $z \sim q(z|x)$를 샘플링하면 역전파 불가.  
 대신 $z = \mu + \sigma \cdot \epsilon$, $\epsilon \sim \mathcal{N}(0, I)$로 분리.
 
----
 
 ## Diffusion과의 연결
 
@@ -46,14 +42,12 @@ $$\mathcal{L} = \mathbb{E}\left[\sum_t D_{KL}(q(x_{t-1}|x_t, x_0) \| p_\theta(x_
 
 → 각 step이 조건부 VAE처럼 동작. 근본 목적함수 구조는 동일!
 
----
 
 ## VQ-VAE (Discrete Token과의 연결)
 
 VAE의 연속 latent space → 코드북의 이산 인덱스로 양자화  
 → 이미지/음성의 discrete token 표현 가능 (HCX Omni 8B에서 활용)
 
----
 
 ## 체크리스트
 

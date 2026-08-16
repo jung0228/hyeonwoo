@@ -4,7 +4,6 @@
 > 
 > 본 문서는 MML 교재 Chapter 2 (2.1절부터 2.9절까지 단 하나의 정의, 정리, 예시, 맹점도 빠짐없이) 완전히 파고들어 전수 정리한 바이블 노트입니다.
 
----
 
 ## 📌 Chapter 2 세부 목차 (Full Section Map)
 
@@ -30,7 +29,6 @@
   - 아핀 공간 $L = x_0 + U$, 아핀 변환 $f(x) = Ax + b$
 - 2.9 Summary & AI Connection (실전 AI 연결고리)
 
----
 
 ## 💡 1. Section 2.1 & 2.2: 선형방정식계 & 행렬 대수
 
@@ -43,7 +41,6 @@
 - $C = AB \iff c_{ij} = \sum_k a_{ik}b_{kj}$
 - 기하학적 본질: 변환 $B$ 적용 후 변환 $A$를 연속 적용하는 선형 사상의 합성(Composition of Linear Mappings).
 
----
 
 ## 💡 2. Section 2.3: 선형방정식계의 풀이 (Solving Systems)
 
@@ -59,7 +56,6 @@
 - REF vs RREF: RREF는 피벗이 $1$이고, 피벗 열의 다른 모든 성분이 $0$.
 - The Minus-1 Trick: RREF 자유 변수 열의 대각 위치에 $-1$을 채워 넣고 Nullspace 기저를 연산 없이 즉시 추출하는 MML 고유 스킬.
 
----
 
 ## 💡 3. Section 2.4: Vector Spaces & Vector Subspaces (벡터 공간과 부분공간)
 
@@ -72,7 +68,6 @@ $V$의 부분집합 $U \subseteq V$가 그 자체로 벡터 공간이 되기 위
 2. 덧셈에 대해 닫혀있음 (Closed under Addition): $\forall u, v \in U \implies u + v \in U$.
 3. 스칼라배에 대해 닫혀있음 (Closed under Scalar Multiplication): $\forall u \in U, c \in \mathbb{R} \implies c u \in U$.
 
----
 
 ### 🔍 ★ MML 교재 원문 심층 해부: Example 2.12 (Vector Subspaces)
 
@@ -104,7 +99,6 @@ MML 교재에서 $\mathbb{R}^2$ 평면 상의 4가지 부분집합 $A, B, C, D$�
     2) 덧셈 닫힘: $(a, -2a) + (b, -2b) = (a+b, -2(a+b)) \in U_D$.
     3) 스칼라배 닫힘: $c(a, -2a) = (ca, -2(ca)) \in U_D$.
 
----
 
 ## 💡 4. Section 2.5 & 2.6: 선형 독립, 기저(Basis), 그리고 Rank
 
@@ -119,7 +113,6 @@ MML 교재에서 $\mathbb{R}^2$ 평면 상의 4가지 부분집합 $A, B, C, D$�
 - 행렬 $A$의 독립적인 행/열의 개수. ($\text{Row Rank} = \text{Column Rank} = \text{Rank}(A)$).
 - Rouché-Capelli Theorem: $\text{Rank}(A) = \text{Rank}([A \mid b]) = n \iff$ 유일해.
 
----
 
 ## 💡 5. Section 2.7 & 2.8: 선형 사상, Rank-Nullity 정리, 어파인 공간
 
@@ -139,7 +132,6 @@ MML 교재에서 $\mathbb{R}^2$ 평면 상의 4가지 부분집합 $A, B, C, D$�
 - 원점을 지나지 않는 부분공간의 평행이동 $L = x_0 + U$.
 - 신경망 레이어: $y = \sigma(W x + b)$에서 편향(Bias) $b$가 아핀 공간 평행 이동을 담당.
 
----
 
 ## 📝 6. MML Chapter 2 전수 연습문제 풀이집
 

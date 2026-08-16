@@ -4,13 +4,11 @@
 자신감: ⭐⭐⭐ (중급)  
 마지막 복습: 2026-08-09
 
----
 
 ## 한 문장 요약
 
 Virtual Memory는 프로세스가 연속된 큰 메모리 공간을 가지는 것처럼 추상화하고, MMU + Page Table + TLB가 가상→물리 주소를 변환한다.
 
----
 
 ## 주소 변환 흐름
 
@@ -36,7 +34,6 @@ PTE: PPN | present | dirty | accessed | permission(r/w/x)
 
 - TLB: 최근 VPN→PPN mapping cache (miss 시 page table walk)
 
----
 
 ## Page Fault 처리
 
@@ -49,7 +46,6 @@ PTE: PPN | present | dirty | accessed | permission(r/w/x)
 잘못된 주소 / 권한 위반 시:
 → signal 발생 또는 프로세스 종료 (복구 불가)
 
----
 
 ## Paging 장단점
 
@@ -65,7 +61,6 @@ PTE: PPN | present | dirty | accessed | permission(r/w/x)
  - Translation + page-fault 비용
 ```
 
----
 
 ## Page Table 구조들
 
@@ -80,7 +75,6 @@ Inverted Page Table
  : PID+VPN search가 느림 → hash로 보완
 ```
 
----
 
 ## Swap & Thrashing
 
@@ -91,7 +85,6 @@ Thrashing : working set > RAM → page fault/swap만 반복
 
 > Thrashing 해결: working set 모니터링, 프로세스 줄이기, RAM 증설
 
----
 
 ## Cache와의 관계
 
@@ -99,7 +92,6 @@ Thrashing : working set > RAM → page fault/swap만 반복
 - Page table walk = cache miss 상황의 fallback
 - Memory-mapped I/O = file을 virtual address에 매핑
 
----
 
 ## 체크리스트
 

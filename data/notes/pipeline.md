@@ -4,13 +4,11 @@
 자신감: ⭐⭐⭐ (중급)  
 마지막 복습: 2026-08-10
 
----
 
 ## 한 문장 요약
 
 CPU Pipeline은 IF→ID→EX→MEM→WB 5단계를 동시에 진행해 throughput을 높이지만, Hazard(충돌)가 발생하면 stall이나 forwarding으로 해결한다.
 
----
 
 ## 5단계 파이프라인
 
@@ -28,7 +26,6 @@ IF  → ID  → EX  → MEM → WB
 
 > Cycle time = 가장 느린 stage가 결정
 
----
 
 ## Hazard 세 종류
 
@@ -63,7 +60,6 @@ WAW :: 두 write가 같은 레지스터 (늦은 write가 먼저 반영될 수 �
 앞 instruction이 기다리는 동안 독립적인 뒤 instruction을 먼저 실행  
 → Reorder Buffer(ROB)가 program order로 commit 보장
 
----
 
 ## Stall vs Bubble
 
@@ -72,7 +68,6 @@ Stall  :: instruction을 기다리게 함 (파이프라인 멈춤)
 Bubble :: stall의 결과로 생긴 빈 cycle (NOP)
 ```
 
----
 
 ## 체크리스트
 

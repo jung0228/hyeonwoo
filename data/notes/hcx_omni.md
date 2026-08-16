@@ -4,13 +4,11 @@
 자신감: ⭐⭐⭐⭐ (심화)  
 마지막 복습: 2026-08-11
 
----
 
 ## 한 문장 요약
 
 HCX SEED Omni 8B는 한국어에 강점을 둔 8B급 Any-to-Any 멀티모달 모델로, 8단계 학습 파이프라인과 Data Recipe 최적화가 핵심이다.
 
----
 
 ## 8단계 학습 파이프라인
 
@@ -25,7 +23,6 @@ HCX SEED Omni 8B는 한국어에 강점을 둔 8B급 Any-to-Any 멀티모달 모
 | 7 | Continuous audio encoder 연결 | Whisper + MambaMia compressor (25Hz→1Hz) |
 | 8 | 4단계 SFT | 대화/지시/영상이해/long-context |
 
----
 
 ## Discrete vs Continuous
 
@@ -38,7 +35,6 @@ Continuous Feature (이해): 이미지 → Encoder → Projector → LLM
 - 이해가 목표면 → Continuous (높은 정보 보존)
 - HCX는 둘 다 사용 (생성 + 이해 동시 지원)
 
----
 
 ## Data Recipe가 핵심인 이유
 
@@ -52,7 +48,6 @@ Token mixture ratio:
 $$\text{Text:Image:Audio} = 20:65:15$$
 → 파일 수 비율이 아닌 실제 소비 token 기준
 
----
 
 ## 면접 핵심 포인트
 
@@ -61,7 +56,6 @@ $$\text{Text:Image:Audio} = 20:65:15$$
 3. Vision loss weight: 초기 0.5 → 학습 후반 1.0으로 증가
 4. Long-context: 영상 프레임 + 음성 + 텍스트 → 32K context
 
----
 
 ## 체크리스트
 

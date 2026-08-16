@@ -6,7 +6,6 @@
 - Rank-Nullity 정리: $\text{Rank}(A) + \text{Nullity}(A) = n$ (입력 전체 차원 보존 법칙).
 - 부분공간 차원 정리: $\dim(U+W) = \dim(U) + \dim(W) - \dim(U \cap W)$.
 
----
 
 ## 📝 2. MML 교재 연습문제 풀이 (MML Ch 2.4 & 2.7)
 
@@ -25,7 +24,6 @@
   - 피벗 열 2개 $\implies \text{Rank}=2$.
   - 검증: $2 + 2 = 4 = n$ (Domain $\mathbb{R}^4$ 완벽 일치!).
 
----
 
 ## 🔍 3. 비판적 맹점 & 실전 AI 연결
 - Information Loss in Kernel: Kernel로 들어간 정보는 0으로 매핑되어 영구 손실 ➡️ ResNet의 Skip Connection ($y = F(x) + x$) 으로 손실 강제 차단.

@@ -2,7 +2,6 @@
 
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.3 원문 완전 대조 노트
 
----
 
 ## 1. 🌐 Section 2.3.1: Particular and General Solution (특수해와 일반해)
 
@@ -13,7 +12,6 @@ $$A \mathbf{x} = \mathbf{b} \iff \begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 &
 
 위 예제는 2개의 방정식과 4개의 미지수를 가지므로 무수히 많은 해가 존재합니다.
 
----
 
 ### 📌 특수해 (Particular Solution $\mathbf{x}_p$) 및 동차해 ($\mathbf{x}_h$) 직관 해설 (Eq 2.39 ~ 2.43)
 
@@ -29,7 +27,6 @@ $$\mathbf{x} = \mathbf{x}_p + \mathbf{x}_h$$
   - 영단어 Homogeneous(동차)의 앞글자 $h$를 딴 기호입니다.
   - $A \mathbf{x}_h = \mathbf{0}$ 이 되어 행렬 $A$에 의해 0으로 사라지는 영공간(Kernel) 기저들의 선형 결합입니다.
 
----
 
 #### 2️⃣ [2단계 수치 유도: 숫자는 어디서 나왔는가?]
 
@@ -47,7 +44,6 @@ $$\begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 & 12 \end{bmatrix} \begin{bmatri
 3. 일반해 집합 (General Solution: Eq 2.43):
    $$\text{General Solution: } \{ \mathbf{x} \in \mathbb{R}^4 : \mathbf{x} = \begin{bmatrix} 42 \\\\ 8 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 8 \\\\ 2 \\\\ -1 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} -4 \\\\ 12 \\\\ 0 \\\\ -1 \end{bmatrix}, \ \lambda_1, \lambda_2 \in \mathbb{R} \}$$
 
----
 
 #### 3️⃣ [3단계 기하학적 직관]
 ![4D to 2D Hand-Drawn Blueprint Sketch Transformation Mapping](sketch_4d_to_2d_kernel_mapping.jpg)
@@ -57,13 +53,11 @@ $$\begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 & 12 \end{bmatrix} \begin{bmatri
 - 영공간(Kernel)으로 사라진 2차원:  
   4차원 중에서 무려 2개의 차원이 변환기를 통과하는 순간 0점으로 완전히 짓눌려 소멸(Null Space / Kernel)합니다. 바로 이 짓눌려 사라진 2차원 평면 전체가 $Ax = b$ 의 무수히 많은 해 공간(Affine Subspace)을 형성하게 됩니다!
 
----
 
 #### 4️⃣ [4단계 실전 AI 연결고리]
 - LLM / 신경망의 해 공간: 초거대 언어모델(LLM)은 파라미터 수(미지수 $n$)가 입력 조건(방정식 $m$)보다 훨씬 많아 자유변수가 무수히 많은 선형계입니다.
 - AI가 학습된다는 것은 해 평면 위에서 하나의 최적 특수해 $\mathbf{x}_p$ 를 찾아내는 과정이며, 동차해 공간 $\mathbf{x}_h$ 의 존재 덕분에 파라미터가 약간 흔들려도 동일한 출력을 내놓는 영공간 강건성(Null-space Robustness)을 가집니다.
 
----
 
 ## 2. ⚔️ Section 2.3.2: Elementary Transformations (기본 행 연산 & 가우스 소거법)
 
@@ -73,7 +67,6 @@ $$\begin{bmatrix} 1 & 0 & 8 & -4 \\\\ 0 & 1 & 2 & 12 \end{bmatrix} \begin{bmatri
 2. 한 행에 0이 아닌 스칼라 $\lambda \in \mathbb{R} \setminus \{0\}$ 배 곱함
 3. 한 행의 스칼라 배를 다른 행에 더함
 
----
 
 ### 📌 Example 2.6 (가우스 소거법 전개 과정: Eq 2.44 ~ 2.47)
 
@@ -86,7 +79,6 @@ $$\begin{bmatrix} -2 & 4 & -2 & -1 & 4 & \mid & -3 \\\\ 4 & -8 & 3 & -3 & 1 & \m
 - 일반해 집합 (Eq 2.47):
   $${ \mathbf{x} \in \mathbb{R}^5 : \mathbf{x} = \begin{bmatrix} 2 \\\\ 0 \\\\ -1 \\\\ 1 \\\\ 0 \end{bmatrix} + \lambda_1 \begin{bmatrix} 2 \\\\ 1 \\\\ 0 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} 2 \\\\ 0 \\\\ -1 \\\\ 2 \\\\ 1 \end{bmatrix}, \ \lambda_1, \lambda_2 \in \mathbb{R} }$$
 
----
 
 ### 📌 Definition 2.6 (Row-Echelon Form 행 사다리꼴 REF) & 피벗
 1. 영행(모든 성분이 0인 행)은 행렬의 가장 아래쪽에 위치합니다.
@@ -94,7 +86,6 @@ $$\begin{bmatrix} -2 & 4 & -2 & -1 & 4 & \mid & -3 \\\\ 4 & -8 & 3 & -3 & 1 & \m
 - Basic & Free Variables (주변수와 자유변수): 피벗 열에 대응하는 변수($x_1, x_3, x_4$)를 주변수(Basic Variables), 나머지 변수($x_2, x_5$)를 자유변수(Free Variables)라 부릅니다.
 - Reduced Row-Echelon Form (기약 행 사다리꼴 RREF): REF 상태에서 모든 피벗이 1이고, 피벗이 속한 열의 다른 성분이 모두 0인 형태입니다.
 
----
 
 ### 📌 Example 2.7 (RREF 형태 및 영공간 추출: Eq 2.49 & 2.50)
 
@@ -104,14 +95,12 @@ $$A = \begin{bmatrix} \mathbf{1} & 3 & 0 & 0 & 3 \\\\ 0 & 0 & \mathbf{1} & 0 & 9
 
 $$\text{Solutions of } Ax = 0: \quad \mathbf{x} = \lambda_1 \begin{bmatrix} 3 \\\\ -1 \\\\ 0 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} 3 \\\\ 0 \\\\ 9 \\\\ -4 \\\\ -1 \end{bmatrix}, \quad \lambda_1, \lambda_2 \in \mathbb{R}$$
 
----
 
 ### 📌 -1 Trick (-1 트릭을 통한 영공간 기저 즉시 도출 직관 해설: Eq 2.51 ~ 2.55)
 
 #### 1️⃣ [-1 트릭이란 무엇인가?]
 $Ax = 0$ 이 되는 영공간(Kernel) 기저를 구할 때, 연립방정식을 이항하고 풀 필요 없이 행렬 대각선 빈자리에 $[-1]$ 행을 억지로 쓱 삽입한 뒤, 그 세로 줄을 그대로 베껴 쓰면 1초 만에 답이 튀어나오는 매직 꼼수(Trick)입니다.
 
----
 
 #### 2️⃣ [-1 트릭 실전 2단계 조작법 (Example 2.8)]
 
@@ -130,7 +119,6 @@ $$A = \begin{bmatrix} \mathbf{1} & 3 & 0 & 0 & 3 \\\\ 0 & 0 & \mathbf{1} & 0 & 9
    - 이 두 세로 열이 곧바로 $Ax = 0$ 의 영공간(Kernel) 기저가 됩니다!
      $$\text{Solutions of } Ax = 0: \quad \mathbf{x} = \lambda_1 \begin{bmatrix} 3 \\\\ -1 \\\\ 0 \\\\ 0 \\\\ 0 \end{bmatrix} + \lambda_2 \begin{bmatrix} 3 \\\\ 0 \\\\ 9 \\\\ -4 \\\\ -1 \end{bmatrix}$$
 
----
 
 ### 📌 가우스-조던 소거법을 통한 역행렬 계산 (Eq 2.56 ~ 2.58)
 정방행렬 $A \in \mathbb{R}^{n \times n}$ 의 역행렬 $A^{-1}$ 은 증대행렬 $[A \mid I_n]$ 에 가우스 소거법을 적용하여 $[I_n \mid A^{-1}]$ 형태로 변환하여 구합니다 (Eq 2.56).
@@ -142,7 +130,6 @@ $$[A \mid I_4] = \begin{bmatrix} 1 & 0 & 2 & 0 & \mid & 1 & 0 & 0 & 0 \\\\ 1 & 1
 따라서 $A$의 역행렬은 우변의 행렬로 얻어집니다 (Eq 2.58):
 $$A^{-1} = \begin{bmatrix} -1 & 2 & -2 & 2 \\\\ 1 & -1 & 2 & -2 \\\\ 1 & -1 & 1 & -1 \\\\ -1 & 0 & -1 & 2 \end{bmatrix}$$
 
----
 
 ## 4. ⚔️ Section 2.3.4: Algorithms for Solving Systems (선형계 알고리즘 & 반복법)
 
@@ -151,7 +138,6 @@ $$A^{-1} = \begin{bmatrix} -1 & 2 & -2 & 2 \\\\ 1 & -1 & 2 & -2 \\\\ 1 & -1 & 1 
 
 $$Ax = b \iff A^\top A x = A^\top b \iff x = (A^\top A)^{-1} A^\top b \quad (2.59)$$
 
----
 
 ### 📌 수치적 연산 복잡도 & 반복적 해법 (Stationary & Krylov Subspace Methods: Eq 2.60)
 - 가우스 소거법의 한계: 수천 개 미지수까지는 가우스 소거법으로 해결 가능하지만, 수백만 개 미지수의 대형 시스템에서는 복잡도가 $\mathcal{O}(n^3)$ 으로 폭발하여 비실용적입니다.

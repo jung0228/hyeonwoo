@@ -2,7 +2,6 @@
 
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.1 원문 완전 대조 노트
 
----
 
 ## 1. 🌐 Chapter 2 Intro: 벡터(Vector)의 4가지 유형
 
@@ -22,7 +21,6 @@
    - 본 교재에서 주로 다루는 추상적 대상. 예: $\mathbf{a} = \begin{bmatrix} 1 \\\\ 2 \\\\ 3 \end{bmatrix} \in \mathbb{R}^3$.
    - 컴퓨터 프로그램의 실수 배열(Array of real numbers) 연산과 1:1로 정확히 대응합니다.
 
----
 
 ## 2. ⚔️ Section 2.1: Systems of Linear Equations (선형방정식계)
 
@@ -45,7 +43,6 @@ a_{m1} x_1 + a_{m2} x_2 + \dots + a_{mn} x_n &= b_m
 \end{aligned}$$
 여기서 $x_1, \dots, x_n$은 미지수(Unknowns)이며, (2.3)을 만족하는 모든 $n$-튜플 $(x_1, \dots, x_n) \in \mathbb{R}^n$이 해(Solution)가 됩니다.
 
----
 
 ### 📌 Example 2.2 (해의 3가지 가능성 - 해 없음, 유일해, 무수히 많은 해)
 
@@ -78,7 +75,6 @@ x_1 - x_2 + 2x_3 &= 2 \quad (2) \\\\
 - $x_3 = a \in \mathbb{R}$를 자유 변수(Free Variable)로 정의하면, 해집합은 다음과 같이 무수히 많은 해를 가집니다:
   $$\left( \frac{5}{2} - \frac{3}{2}a, \; \frac{1}{2} + \frac{1}{2}a, \; a \right), \quad a \in \mathbb{R}$$
 
----
 
 ### 📌 Remark: 기하학적 해석 (Geometric Interpretation)
 
@@ -89,7 +85,6 @@ x_1 - x_2 + 2x_3 &= 2 \quad (2) \\\\
   - Equation (2.8): $4x_1 + 4x_2 = 5$, $2x_1 - 4x_2 = 1$ 의 해집합은 점 $(x_1, x_2) = (1, \frac{1}{4})$.
 - 3차원 공간 ($\mathbb{R}^3$): 각 방정식은 3차원 공간 상의 평면(Plane)을 정의하며, 이 평면들의 교집합이 해집합이 됩니다 (평면, 직선, 점, 또는 해 없음).
 
----
 
 ## 3. 📐 행렬 벡터 표기법 (Matrix-Vector Notation: Eq 2.9 & 2.10)
 

@@ -2,7 +2,6 @@
 
 > **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.8 원문 완전 복사 & 심층 가공 노트**
 
----
 
 ## 📖 Part 1. MML 교재 원문 (Textbook Original Text)
 
@@ -39,7 +38,6 @@ For two vector spaces V, W, a linear mapping \Phi : V -> W, and a in W, the mapp
 is an affine mapping from V to W. The vector a is called the translation vector of \phi.
 ```
 
----
 
 ## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 

@@ -4,13 +4,11 @@
 자신감: ⭐⭐⭐ (중급)  
 마지막 복습: 2026-08-10
 
----
 
 ## 한 문장 요약
 
 Cache는 메모리 계층 구조에서 DRAM보다 빠른 임시 저장소로, Tag | Set Index | Block Offset으로 주소를 분해해서 데이터를 찾는다.
 
----
 
 ## 주소 분해
 
@@ -29,7 +27,6 @@ Hit  : valid bit = 1 AND tag 일치 → 데이터 사용
 Miss : lower cache / DRAM에서 whole line 가져옴
 ```
 
----
 
 ## Direct vs Set Associative
 
@@ -45,7 +42,6 @@ N-way Set Associative
 
 > `conflict miss` = 서로 다른 데이터가 같은 set을 두고 경쟁해서 발생하는 miss
 
----
 
 ## Cache Line 크기 트레이드오프
 
@@ -56,7 +52,6 @@ N-way Set Associative
 | 불필요한 byte 전송, bandwidth 낭비 | 연속 data도 여러 번 miss 가능 |
 | line 수 감소, miss penalty 증가 | tag overhead 증가 |
 
----
 
 ## Write 정책
 
@@ -66,7 +61,6 @@ Write-back     : 캐시에만 씀, evict 시 메모리 업데이트
 Write buffer   : write-through에서 queue로 CPU 대기 줄임
 ```
 
----
 
 ## False Sharing
 
@@ -77,7 +71,6 @@ Write buffer   : write-through에서 queue로 CPU 대기 줄임
 
 해결: 변수 padding으로 cache line에 혼자 있게 하기
 
----
 
 ## Pipeline과의 관계
 
@@ -85,7 +78,6 @@ Write buffer   : write-through에서 queue로 CPU 대기 줄임
 - L1 cache: pipeline의 MEM stage와 직결
 - TLB: 가상 주소 → 물리 주소 translation의 cache
 
----
 
 ## 체크리스트
 
