@@ -731,18 +731,23 @@ async function openNotePanel(nodeData) {
       let md = await res.text();
       window.currentNoteRawMd = md;
       
-      // Protect KaTeX math blocks ($$ and $) from marked.js underscore and backslash corruption
+      // Escape KaTeX math delims before marked processing
+      // Replace inline math _ with \_ placeholder or preserve verbatim via code-like token
       const mathBlocks = [];
-      md = md.replace(/\$\$[\s\S]*?\$\$|\$[^\$\n]+?\$/g, (match) => {
-        mathBlocks.push(match);
-        return `___MATH_BLOCK_${mathBlocks.length - 1}___`;
+      const safeMd = md.replace(/\$\$([\s\S]*?)\$\$|\$([^\$\n]+?)\$/g, (match, displayMath, inlineMath) => {
+        const isDisplay = match.startsWith('$$');
+        const content = isDisplay ? displayMath : inlineMath;
+        const placeholder = `MATHBLOCK${mathBlocks.length}END`;
+        mathBlocks.push({ match, isDisplay, content });
+        return placeholder;
       });
-      
-      let html = marked.parse(md);
-      
-      // Restore math blocks back
-      html = html.replace(/___MATH_BLOCK_(\d+)___/g, (_, idx) => {
-        return mathBlocks[parseInt(idx, 10)];
+
+      let html = marked.parse(safeMd);
+
+      mathBlocks.forEach((item, idx) => {
+        const placeholder = `MATHBLOCK${idx}END`;
+        // Replace html encoded placeholders or raw placeholders
+        html = html.replace(new RegExp(placeholder, 'g'), item.match);
       });
       
       content = `<div class="note-content">${html}</div>`;
