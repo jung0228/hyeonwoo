@@ -25,53 +25,47 @@
 ## 🧠 1. [1단계 개념 정의] 선형결합과 선형독립이란 무엇인가?
 
 ### 📌 1. 선형결합 (Linear Combination: Definition 2.11 & Eq 2.65)
-벡터 공간 $V$ 의 유한개의 벡터 $\mathbf{x}_1, \dots, \mathbf{x}_k \in V$ 와 실수 스칼라 $\lambda_1, \dots, \lambda_k \in \mathbb{R}$ 에 대해 다음과 같이 표현되는 모든 벡터 $\mathbf{v} \in V$ 를 선형결합이라 부릅니다:
+벡터 집합 $\mathbf{v}_1, \dots, \mathbf{v}_k$ 와 스칼라 $c_1, \dots, c_k$ 에 대해 다음과 같이 표현되는 벡터:
 
-$$\mathbf{v} = \lambda_1 \mathbf{x}_1 + \dots + \lambda_k \mathbf{x}_k = \sum_{i=1}^k \lambda_i \mathbf{x}_i \in V \quad (2.65)$$
+$$\mathbf{v} = \sum_{i=1}^k c_i \mathbf{v}_i = c_1 \mathbf{v}_1 + \dots + c_k \mathbf{v}_k \quad (2.65)$$
 
-- **영벡터의 자명한 선형결합**: 영벡터 $\mathbf{0}$ 은 모든 계수를 0으로 둔 자명한 결합 $\mathbf{0} = \sum 0 \mathbf{x}_i$ 로 언제나 표현 가능합니다.
-- **핵심 질문**: 계수 $\lambda_i$ 중 **0이 아닌 스칼라가 적어도 하나 이상 존재하는 비자명한(non-trivial) 조합으로 $\mathbf{0}$을 만들 수 있는가?**
+- **Span (생성: Definition 2.13)**: 벡터들의 선형결합으로 생성 가능한 전체 부분공간 $\text{span}(\mathbf{v}_1, \dots, \mathbf{v}_k)$.
 
 ### 📌 2. 선형독립과 선형종속 (Linear Independence: Definition 2.12)
-벡터 집합 $\{\mathbf{x}_1, \dots, \mathbf{x}_k\} \subseteq V$ 에 대해 선형방정식:
+$$\sum_{i=1}^k c_i \mathbf{v}_i = \mathbf{0} \iff c_1 = c_2 = \dots = c_k = 0$$
 
-$$\sum_{i=1}^k \lambda_i \mathbf{x}_i = \mathbf{0} \quad (\lambda_1 \mathbf{x}_1 + \dots + \lambda_k \mathbf{x}_k = \mathbf{0})$$
+어떤 벡터도 다른 벡터들의 선형결합으로 표현할 수 없는 상태를 **선형독립(Linearly Independent)**이라 부르며, 0이 아닌 계수로 $\mathbf{0}$을 만들 수 있으면 **선형종속(Linearly Dependent)**이라 부릅니다.
 
-을 만족하는 계수 $\lambda_1, \dots, \lambda_k$ 가 **오직 $\lambda_1 = \dots = \lambda_k = 0$ (자명한 해) 일 때만 성립하면**, 이 벡터들은 **선형독립(Linearly Independent)**이라 부릅니다.
+## 💡 2. [2단계 존재 이유] 데이터 중복 제거 및 역행렬 파탄 방지
+백터 간 종속(Dependence) 관계가 있으면 정보가 중복되어 행렬 랭크가 떨어지고 역행렬이 파탄 납니다.
 
-반면, 0이 아닌 계수 $\lambda_i \neq 0$ 가 하나라도 존재하여 $\mathbf{0}$을 만들 수 있다면, 이 벡터들은 **선형종속(Linearly Dependent)**이라 부릅니다.
+## ⚖️ 3. [3단계 상황별 직관 & 맹점] 지리학적 예시 및 행렬 랭크 판별
 
-## 💡 2. [2단계 왜 쓰는가 & 직관] 선형독립의 본질과 가우스 소거법
+### 📌 1. 선형종속의 직관적 기하학 (Example 2.13 & Figure 2.7)
+한 벡터가 다른 벡터들의 평면/직선 상에 얹혀 있어 새로운 차원을 제공하지 못하는 상태입니다.
+- 나이로비 ➡️ 키갈리 이동 시 "북서쪽 506km"와 "남서쪽 374km" 2개 벡터면 충분하지만, 여기에 "서쪽 751km" 벡터를 추가하면 앞선 두 벡터의 합으로 표현되는 중복 정보(선형종속)가 됩니다.
 
-### 📌 1. 지리학적 직관으로 이해하는 선형독립 (Example 2.13 & Figure 2.7)
-우리가 나이로비(Nairobi)에서 키갈리(Kigali)로 가는 위치 벡터를 설명할 때:
-- **안내 1**: "북서쪽으로 506km 이동 후, 남서쪽으로 374km 이동하세요."
-  - 북서쪽 벡터(파란색)와 남서쪽 벡터(보라색)는 **서로가 서로를 표현할 수 없는 완전히 독립된 차원 2개(선형독립)**입니다.
-- **안내 2**: 여기에 추가로 "서쪽으로 751km 이동한 셈입니다." 라고 서쪽 벡터(검은색)를 덧붙입니다.
-  - 서쪽 벡터는 앞선 두 벡터의 합(선형결합)으로 이미 완벽히 표현되는 **군더더기 중복 정보**입니다!
-  - 이 3번째 벡터가 추가되는 순간 3개의 벡터 모음은 **선형종속(Linearly Dependent)**이 됩니다.
+### 📌 2. MML 교재 원문 예시 해부 (Examples 2.14, 2.15 & Rank 판별)
 
-### 📌 2. 가우스 소거법으로 선형독립을 검증하는 직관 이유 (Remark p.41~42)
-1. $k$개의 벡터는 **선형독립 아니면 선형종속 둘 중 하나**만 존재합니다.
-2. 벡터들 중 **영벡터 $\mathbf{0}$이 하나라도 껴있거나, 동일한 벡터가 2개 이상 포함되면 무조건 선형종속**입니다.
-3. **가우스 소거법을 통한 실전 선형독립 판별법**:
-   - 벡터 $\mathbf{x}_1, \dots, \mathbf{x}_k$ 를 행렬 $A$ 의 열벡터로 나열하고 가우스 소거법을 수행하여 행 사다리꼴(REF)을 만듭니다 (Eq 2.66).
-   - **피벗 열(Pivot Column)의 본질**: 가우스 소거법 결과 **피벗이 있는 열**은 왼쪽에 있는 벡터들로 결코 만들어낼 수 없는 **새로운 독립적인 차원 방향**을 뜻합니다 ➡️ **선형독립!**
-   - **비피벗 열(Non-pivot Column)의 본질**: 피벗이 생기지 않는 열은 앞선 피벗 열들의 선형결합으로 100% 표현되는 **중복 정보(종속 원소)**를 의미합니다 ➡️ **선형종속!**
+#### 🎯 Example 2.14 (3개 2차원/4차원 벡터의 선형 독립성 판별)
+$$\mathbf{x}_1 = \begin{bmatrix} 1 \\ 2 \\ -3 \\ 4 \end{bmatrix}, \quad \mathbf{x}_2 = \begin{bmatrix} 1 \\ 1 \\ 0 \\ 2 \end{bmatrix}, \quad \mathbf{x}_3 = \begin{bmatrix} -1 \\ -2 \\ 1 \\ 1 \end{bmatrix}$$
 
-### 📌 3. MML 교재 원문 실전 예제 분석 (Example 2.14 & 2.15)
-- **Example 2.14 ($\mathbb{R}^4$ 공간 3개 벡터: Eq 2.67~2.69)**:
-  - 열행렬 $A = [\mathbf{x}_1, \mathbf{x}_2, \mathbf{x}_3]$ REF 변환 결과 3개 열 모두 피벗이 존재하므로 **완벽한 선형독립**.
-- **Example 2.15 (기저 변환 벡터 4개: Eq 2.70~2.76)**:
-  - 계수 행렬 $A$ RREF 변환 결과 4번째 열이 비피벗 열이 되어 $\mathbf{x}_4 = -7\mathbf{x}_1 - 15\mathbf{x}_2 - 18\mathbf{x}_3$ 의 선형종속 관계 형성. ($m > k$ 인 경우 무조건 선형종속).
+계수 행렬 $[\mathbf{x}_1, \mathbf{x}_2, \mathbf{x}_3]$ 소거 결과 모든 열이 피벗 열(Pivot Column)이므로 유일해 $c_1=c_2=c_3=0$ 만 존재하여 **완벽한 선형 독립(Linearly Independent)**입니다!
 
-## ⚖️ 3. [3단계 상황별 Trade-off & 맹점] 선형종속이 일어날 때의 파탄
-- **역행렬 파탄 및 다중공선성**: 데이터의 피처(Feature) 간에 선형종속이 발생하면 행렬의 Rank가 떨어지고, 역행렬이 존재하지 않게 되어(Singular Matrix) 선형 회귀 등 최적화 방정식의 유일해 도출이 파탄 납니다.
-- **기저(Basis)와의 관계**:
-  - **Span (스팬: Def 2.13)**: 벡터 $A$ 의 모든 가능한 선형결합들의 집합 $\text{span}[A]$.
-  - **Generating Set (생성집합)**: 공간 $V$ 전체를 빠짐없이 덮어 생성하는 벡터 모음 ($V = \text{span}[A]$).
-  - **Basis (기저: Def 2.14)**: 선형독립인 생성집합. 공간 전체를 지탱하는 더 이상 뺄 수 없는 **'최소 생성집합(Minimal Generating Set)'**.
+#### 🎯 Example 2.15 (4개 벡터의 선형 종속성 판별: Eq 2.73~2.76)
+$$\begin{aligned}
+\mathbf{x}_1 &= \mathbf{b}_1 - 2\mathbf{b}_2 + \mathbf{b}_3 - \mathbf{b}_4 \\
+\mathbf{x}_2 &= -4\mathbf{b}_1 - 2\mathbf{b}_2 + 4\mathbf{b}_4 \\
+\mathbf{x}_3 &= 2\mathbf{b}_1 + 3\mathbf{b}_2 - \mathbf{b}_3 - 3\mathbf{b}_4 \\
+\mathbf{x}_4 &= 17\mathbf{b}_1 - 10\mathbf{b}_2 + 11\mathbf{b}_3 + \mathbf{b}_4
+\end{aligned}$$
 
-## 🚀 4. [4단계 실전 AI 연결고리] 머신러닝 차원 축소 매핑
-- **PCA (주성분 분석) & Feature Selection**:
-  - 딥러닝 입력 데이터에서 선형종속 관계에 있는 중복 피처를 가우스 소거법/SVD로 찾아내어 선형독립인 주요 성분 기저축만 남기는 방식으로 차원 축소를 수행합니다.
+계수 행렬 $A$ 소거 시 4번째 열이 비피벗 열이 되어 $\mathbf{x}_4 = -7\mathbf{x}_1 - 15\mathbf{x}_2 - 18\mathbf{x}_3$ 선형 결합 표현 가능 ➡️ **선형 종속(Linearly Dependent)!**
+
+#### 📌 행렬 랭크를 통한 선형독립 자동 판별 규칙
+행렬 $V = [\mathbf{v}_1, \dots, \mathbf{v}_k]$ 의 피벗 개수(Rank)를 이용한 판별:
+- $\text{Rank}(V) = k \implies$ **선형 독립 (Full Column Rank)**
+- $\text{Rank}(V) < k \implies$ **선형 종속 (Rank Deficient)**
+
+## 🚀 4. [4단계 실전 AI 연결고리] 다중공선성 (Multicollinearity) & Ridge 규제
+AI 특징(Feature) 간 선형 종속 시 모델의 가중치 추정이 불가능해지므로 $X^\top X$ 가 비가역(Singular)이 됩니다. 이를 막기 위해 L2 규제(Ridge: $X^\top X + \lambda I$)를 적용하여 강제 독립성을 확보합니다.
