@@ -1,66 +1,87 @@
 # 📐 2.6 Basis and Rank (기저와 계수)
 
-> POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.6 원문 완전 대조 스토리텔링 노트
+> **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.6 원문 완전 복사 & 심층 가공 노트**
 
 ---
 
-## 1. 🌐 서론: 왜 "기저(Basis)"와 "계수(Rank)"를 배우는가?
+## 📖 Part 1. MML 교재 원문 (Textbook Original Text)
 
-2.5절에서 우리는 벡터들의 중복성을 판단하는 선형독립(Linear Independence)과 공간을 펼쳐내는 스팬(Span)을 공부했습니다.
-이제 2.6절의 핵심 주제는 "그렇다면 어떠한 벡터 모음이 공간 전체를 낭비 없이 정확하게 지탱하는 뼈대(기저)가 되는가?" 그리고 "행렬이 가진 실질적인 정보의 차원 수(Rank)는 얼마인가?" 입니다.
+### 1. Definition 2.13 (Generating Set and Span) & Definition 2.14 (Basis)
+```text
+Definition 2.13 (Generating Set and Span).
+Consider a vector space V = (V, +, \cdot) and set of vectors A = {x1, ..., xk} in V. If every vector v in V can be expressed as a linear combination of x1, ..., xk, A is called a generating set of V. The set of all linear combinations of vectors in A is called the span of A. If A spans the vector space V, we write V = span[A] or V = span[x1, ..., xk].
+
+Definition 2.14 (Basis).
+Consider a vector space V = (V, +, \cdot) and A in V. A generating set A of V is called minimal if there exists no smaller set A_tilde \subsetneq A in V that spans V. Every linearly independent generating set of V is minimal and is called a basis of V.
+```
+
+### 2. Theorem (Equivalent Statements for Basis) & Example 2.16
+```text
+Let V = (V, +, \cdot) be a vector space and B in V, B != \emptyset. Then, the following statements are equivalent:
+1. B is a basis of V.
+2. B is a minimal generating set.
+3. B is a maximal linearly independent set of vectors in V, i.e., adding any other vector to this set will make it linearly dependent.
+4. Every vector x in V is a linear combination of vectors from B, and every linear combination is unique, i.e., with
+x = \sum_{i=1}^k \lambda_i b_i = \sum_{i=1}^k \psi_i b_i  (Eq 2.77)
+and \lambda_i, \psi_i in R, b_i in B it follows that \lambda_i = \psi_i, i = 1, ..., k.
+
+Example 2.16 (Standard & Non-standard Bases):
+In R^3, canonical basis B = {[1,0,0]^T, [0,1,0]^T, [0,0,1]^T}.
+Different bases B1 = {[1,0,0]^T, [1,1,0]^T, [1,1,1]^T}.
+Set A = {[1,2,3,4]^T, [2,-1,0,2]^T, [1,1,0,-4]^T} is linearly independent, but not a generating set (and no basis) of R^4.
+```
+
+### 3. Remark & Example 2.17 (Determining a Basis via Pivot Columns)
+```text
+Remark (Finding a Basis of U = span[x1, ..., xm] in R^n):
+1. Write the spanning vectors as columns of a matrix A.
+2. Determine the row-echelon form of A.
+3. The spanning vectors associated with the pivot columns are a basis of U.
+
+Example 2.17:
+Spanning vectors x1, x2, x3, x4 in R^5. Matrix A = [x1, x2, x3, x4]:
+[  1  2  3 -1 ]         [ 1  2  3 -1 ]
+[  2 -1 -4  8 ]  --> ... --> [ 0  1  2 -2 ]
+[ -1  1  3 -5 ]         [ 0  0  0  1 ]
+[ -1  2  5 -6 ]         [ 0  0  0  0 ]
+[ -1 -2 -3  1 ]         [ 0  0  0  0 ]
+Pivot columns are 1, 2, 4. Therefore, {x1, x2, x4} is a basis of U.
+```
+
+### 4. Section 2.6.2 Rank (Definition & Properties) & Example 2.18
+```text
+Definition (Rank).
+The number of linearly independent columns of a matrix A in R^{m \times n} equals the number of linearly independent rows and is called the rank of A and is denoted by rk(A).
+
+Remark (Properties of Rank):
+- rk(A) = rk(A^T), i.e., column rank equals row rank.
+- The columns of A span a subspace U in R^m with dim(U) = rk(A).
+- A in R^{n \times n} is regular (invertible) if and only if rk(A) = n.
+- Full rank matrix: rk(A) = min(m, n). Rank deficient if rk(A) < min(m, n).
+
+Example 2.18:
+A = [1 2 1; -2 -3 1; 3 5 0] --> REF [1 2 1; 0 1 3; 0 0 0] (Eq 2.84).
+Two pivot rows/columns, so rk(A) = 2.
+```
 
 ---
 
-## 2. ⚔️ Section 2.6.1: Generating Set and Basis (생성집합과 기저)
+## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 
-### 📌 1. 기저(Basis)의 동치 조건 (Definition 2.14 & Theorem 2.15)
-공집합이 아닌 벡터 집합 $B \subseteq V$ 에 대해 다음 명제들은 모두 완전히 동치(Equivalent)입니다:
+### 📌 1. [개념 정의] 기저(Basis)와 계수(Rank)란 무엇인가?
+- **기저 (Basis)**: 어떤 공간 전체를 덮으면서(Span) 중복된 원소가 단 하나도 없는 **"최소 뼈대 벡터 모음"**입니다.
+- **계수 (Rank)**: 행렬이 가진 **실질적인 독립 정보의 차원 수**를 의미합니다.
 
-1. $B$ 는 벡터 공간 $V$ 의 기저(Basis)입니다.
-2. $B$ 는 공간 $V$ 의 최소 생성집합(Minimal Generating Set)입니다. (원소를 하나라도 빼면 더 이상 공간 전체를 생성할 수 없음)
-3. $B$ 는 공간 $V$ 의 최대 선형독립 집합(Maximal Linearly Independent Set)입니다. (원소를 하나라도 더 추가하면 무조건 선형종속이 됨)
-4. 공간 $V$ 안의 모든 벡터 $\mathbf{x} \in V$ 는 $B$ 의 원소들의 선형결합으로 "유일하게(Uniquely)" 표현됩니다 (Eq 2.77).
+### 📌 2. [존재 이유 & 직관] 왜 최소 생성집합이자 최대 독립집합인가?
+- 기저(Basis)는 두 가지 팽창과 축소의 조화점입니다:
+  - 공간 전체를 표현하려 벡터를 자꾸 추가하다 보면(Generating Set) 팽창하지만,
+  - 군더더기를 싹 제거해서 가장 작게 다이어트시킨 상태(Minimal)가 됩니다.
+  - 동시에 독립성을 유지하며 가장 많이 모을 수 있는 최대 개수(Maximal Linearly Independent)가 됩니다.
 
-$$\mathbf{x} = \sum_{i=1}^k \lambda_i \mathbf{b}_i = \sum_{i=1}^k \psi_i \mathbf{b}_i \implies \lambda_i = \psi_i$$
+### 📌 3. [상황별 Trade-off & 맹점] Row Rank = Column Rank 의 경이로움
+- 행렬의 세로 길이(행)와 가로 길이(열)가 완전히 달라도, **독립된 행의 개수와 독립된 열의 개수는 무조건 100% 일치**합니다 ($\text{rk}(A) = \text{rk}(A^\top)$).
+- **Rank Deficient (계수 결손)**: 만약 100차원 데이터 행렬의 Rank가 5라면, 불필요한 노이즈와 중복 정보가 95개나 섞여 있음을 뜻합니다.
 
----
-
-### 📌 2. 차원(Dimension: Definition 2.16)
-- 차원 $\text{dim}(V)$: 벡터 공간 $V$ 의 기저 벡터의 개수를 의미합니다.
-- 직관적 의미: 그 공간 안에서 서로 독립적으로 움직일 수 있는 독립된 방향의 개수입니다.
-- Remark: 차원이 벡터 내부 원소의 개수를 의미하는 것은 아닙니다. 예를 들어 $V = \text{span}\left(\begin{bmatrix} 0 \\ 1 \end{bmatrix}\right) \subseteq \mathbb{R}^2$ 는 원소가 2개이지만 독립 방향이 1개이므로 1차원 부분공간입니다.
-
----
-
-### 📌 3. 실전 기저 구하기 4단계 알고리즘 (Remark p.46)
-부분공간 $U = \text{span}[\mathbf{x}_1, \dots, \mathbf{x}_m] \subseteq \mathbb{R}^n$ 의 기저를 구하는 법:
-1. 생성 벡터들을 행렬의 열벡터(Column Vectors)로 써서 행렬 $A = [\mathbf{x}_1 \mid \dots \mid \mathbf{x}_m]$ 을 구성합니다.
-2. 가우스 소거법을 수행하여 행 사다리꼴(REF)로 변환합니다.
-3. 피벗 열(Pivot Columns)에 해당하는 원래 행렬 $A$ 의 열벡터들을 선택합니다.
-4. 이 선택된 열벡터 모음이 바로 부분공간 $U$ 의 기저(Basis)가 됩니다!
-
----
-
-## 3. ⚔️ Section 2.6.2: Rank (행렬의 계수)
-
-### 📌 1. Rank(계수)의 정의와 대칭성 (Definition 2.17 & Remark p.47)
-행렬 $A \in \mathbb{R}^{m \times n}$ 의 선형독립인 열(Column)의 개수를 행렬의 계수(Rank)라 부르며 $\text{rk}(A)$ 로 표기합니다.
-
-- 놀라운 대칭성 (Fundamental Theorem of Rank):
-  $$\text{rk}(A) = \text{rk}(A^\top)$$
-  즉, 선형독립인 열의 개수(Column Rank)와 선형독립인 행의 개수(Row Rank)는 언제나 정확하게 일치합니다!
-
----
-
-### 📌 2. Rank의 핵심 주요 성질
-- $\text{rk}(A) \le \min(m, n)$: 행렬의 Rank는 행의 개수와 열의 개수 중 작은 값을 넘을 수 없습니다.
-- Full Rank (만적 계수): $\text{rk}(A) = \min(m, n)$ 일 때 행렬이 손실 없이 꽉 차있다고 말합니다.
-- Matrix Multiplication Rank Bound: $\text{rk}(AB) \le \min(\text{rk}(A), \text{rk}(B))$
-- Subadditivity: $\text{rk}(A + B) \le \text{rk}(A) + \text{rk}(B)$
-
----
-
-### 📌 3. MML 원문 수치 계산 예제 (Eq 2.84)
-$$A = \begin{bmatrix} 1 & 2 & 1 \\ -2 & -3 & 1 \\ 3 & 5 & 0 \end{bmatrix} \xrightarrow{\text{REF}} \begin{bmatrix} \mathbf{1} & 2 & 1 \\ 0 & \mathbf{1} & 3 \\ 0 & 0 & 0 \end{bmatrix}$$
-
-피벗의 개수가 2개이므로, 이 행렬의 실질적 정보 차원 수인 $\text{rk}(A) = 2$ 가 됩니다!
+### 📌 4. [실전 AI 연결고리]
+- **SVD(이상값 분해) & Low-Rank Approximation (LoRA)**:
+  - LLM 초거대 모델 파인튜닝 시 전체 가중치 업데이트 행렬 $W$ 대신 Low-rank 행렬 $A \times B$ ($\text{rank} \ll d$) 로 분해하여 파라미터 메모리를 99% 절약하는 기술의 핵심 근거가 됩니다.

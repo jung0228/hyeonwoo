@@ -1,59 +1,75 @@
 # 📐 2.7 Linear Mappings (선형사상과 기저변환)
 
-> POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.7 원문 완전 대조 스토리텔링 노트
+> **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.7 원문 완전 복사 & 심층 가공 노트**
 
 ---
 
-## 1. 🌐 서론: 왜 "선형사상(Linear Mapping)"을 행렬로 다루는가?
+## 📖 Part 1. MML 교재 원문 (Textbook Original Text)
 
-벡터 공간의 구조를 깨뜨리지 않고 다른 공간으로 옮겨주는 변환을 선형사상(Linear Mapping)이라 합니다.
-이 장에서는 사상(Mapping)과 행렬(Matrix)이 완벽하게 1:1로 매핑되는 원리, 기저가 바뀔 때 좌표 변환 행렬이 어떻게 바뀌는지(Basis Change), 그리고 사상에 의해 영으로 사라지는 공간(Kernel/Nullspace)과 살아남는 공간(Image/Column Space)의 관계를 규명하는 Rank-Nullity 정리를 공부합니다.
+### 1. Definition 2.15 (Linear Mapping) & Definition 2.16 (Injective, Surjective, Bijective)
+```text
+Definition 2.15 (Linear Mapping).
+For vector spaces V, W, a mapping \Phi : V -> W is called a linear mapping (or vector space homomorphism / linear transformation) if
+\forall x, y in V, \forall \lambda, \psi in R: \Phi(\lambda x + \psi y) = \lambda \Phi(x) + \psi \Phi(y). (Eq 2.87)
+
+Special Mappings:
+- Isomorphism: \Phi : V -> W linear and bijective.
+- Endomorphism: \Phi : V -> V linear.
+- Automorphism: \Phi : V -> V linear and bijective.
+
+Definition 2.16 (Injective, Surjective, Bijective):
+- Injective if \forall x, y in V: \Phi(x) = \Phi(y) ==> x = y.
+- Surjective if \Phi(V) = W.
+- Bijective if it is both injective and surjective.
+```
+
+### 2. Theorem 2.20 (Basis Change / Basis Transformation Matrix)
+```text
+Theorem 2.20 (Basis Change).
+For a linear mapping \Phi : V -> W, ordered bases B = (b1, ..., bn), B_tilde = (b1_tilde, ..., bn_tilde) of V and C = (c1, ..., cm), C_tilde = (c1_tilde, ..., cm_tilde) of W, and a transformation matrix A_\Phi with respect to B and C, the transformation matrix A_\Phi_tilde with respect to B_tilde and C_tilde is given by
+A_\Phi_tilde = T^{-1} A_\Phi S   (Eq 2.116)
+where S is the transformation matrix of id_V mapping B_tilde to B, and T is the transformation matrix of id_W mapping C_tilde to C.
+```
+
+### 3. Definition 2.23 (Kernel and Image) & Remark (Column Space / Null Space)
+```text
+Definition 2.23 (Image and Kernel).
+For \Phi : V -> W, we define:
+- ker(\Phi) := \Phi^{-1}(0_W) = {v in V : \Phi(v) = 0_W}  (Eq 2.122)
+- Im(\Phi) := \Phi(V) = {w in W | \exists v in V : \Phi(v) = w} (Eq 2.123)
+
+Remark (Null Space and Column Space):
+- Im(\Phi) = {Ax : x in R^n} = span[a1, ..., an] in R^m (Column Space of A).
+- rk(A) = dim(Im(\Phi)).
+- ker(\Phi) is the general solution to homogeneous system Ax = 0 (Null Space of A).
+```
+
+### 4. Theorem 2.24 (Rank-Nullity Theorem)
+```text
+Theorem 2.24 (Rank-Nullity Theorem).
+For vector spaces V, W and a linear mapping \Phi : V -> W it holds that
+dim(ker(\Phi)) + dim(Im(\Phi)) = dim(V). (Eq 2.129)
+
+Direct Consequences:
+- If dim(Im(\Phi)) < dim(V), then ker(\Phi) is non-trivial (dim(ker(\Phi)) >= 1).
+- If dim(V) = dim(W), then \Phi is injective <==> \Phi is surjective <==> \Phi is bijective.
+```
 
 ---
 
-## 2. ⚔️ Section 2.7.1: Linear Mappings & Matrix Representation (선형사상과 사상 행렬)
+## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 
-### 📌 1. 선형사상 분류 용어 정립 (Definition 2.18 & p.49)
-두 실수 벡터 공간 $V, W$ 간의 선형사상 $\Phi : V \to W$ ($\Phi(\mathbf{x} + \mathbf{y}) = \Phi(\mathbf{x}) + \Phi(\mathbf{y})$, $\Phi(\lambda \mathbf{x}) = \lambda \Phi(\mathbf{x})$) 의 분류:
+### 📌 1. [개념 정의] 선형사상, 영공간(Kernel), 상(Image)이란 무엇인가?
+- **선형사상 (Linear Mapping)**: 공간의 선형성(가산성 + 스칼라배)을 보존하면서 한 공간 $V$ 의 벡터를 다른 공간 $W$ 로 변환시키는 함수/행렬 사상입니다.
+- **Kernel (영공간)**: 사상을 거친 결과 영벡터 $\mathbf{0}$ 으로 무참히 찌그러져 사멸하는 입력 벡터들의 집합입니다.
+- **Image (상 / Column Space)**: 사상을 지나 결과 공간 $W$ 상에 실제로 살아남아 도달한 결과물들의 표현 범위입니다.
 
-- Isomorphism (동형사상): $\Phi : V \to W$ 가 전단사(Bijective)인 선형사상 (두 공간의 구조가 완전히 동일함).
-- Endomorphism (단형사상): $\Phi : V \to V$ 자기 자신으로의 선형사상.
-- Automorphism (자기동형사상): $\Phi : V \to V$ 자기 자신으로의 전단사(Bijective) 선형사상 (가역 행렬과 일치).
+### 📌 2. [존재 이유 & 직관] 왜 Rank-Nullity 정리가 위대한가?
+- **차원 등분 보존 법칙**: $n$차원 입력 공간 $V$ 전체는 선형 변환을 거칠 때 **"영으로 소실된 차원(Kernel)" + "살아남은 결과 차원(Image)"** 으로 단 1차원의 오차도 없이 완벽하게 분할 보전됩니다!
+$$\text{dim}(\ker(\Phi)) + \text{dim}(\text{Im}(\Phi)) = n = \text{dim}(V)$$
 
----
+### 📌 3. [상황별 Trade-off & 맹점] 기저변환(Basis Change)과 유사 변환
+- **$\tilde{A}_\Phi = P^{-1} A_\Phi P$ 의 본질**: 시점을 바꾸면(기저 변경) 복잡해 보이던 사상 행렬이 아주 단순한 대각 행렬(Diagonal Matrix)로 변신할 수 있습니다 (고유값 분해 및 대각화의 핵심원리).
 
-### 📌 2. 기저 변환 행렬 (Basis Change: Theorem 2.20 & Eq 2.103~2.104)
-정렬된 기저 $B = (\mathbf{b}_1, \dots, \mathbf{b}_n)$ 에 대한 좌표를 $\hat{\mathbf{x}}$, 새로운 기저 $\tilde{B} = (\tilde{\mathbf{b}}_1, \dots, \tilde{\mathbf{b}}_n)$ 에 대한 좌표를 $\tilde{\mathbf{x}}$ 라 할 때:
-
-$$\tilde{A}_\Phi = T^{-1} A_\Phi S$$
-
-- $S$: 정의역 $V$ 에서 $B \to \tilde{B}$ 기저변환 행렬
-- $T$: 공역 $W$ 에서 $C \to \tilde{C}$ 기저변환 행렬
-- Similarity Transformation (닮음 변환): $V = W$ 일 때 $\tilde{A}_\Phi = P^{-1} A_\Phi P$ 형태가 되며, 이는 대각화(Diagonalization) 및 고유값 분해(Eigendecomposition)의 핵심 수학적 기반이 됩니다!
-
----
-
-## 3. ⚔️ Section 2.7.2: Kernel and Image (영공간과 상)
-
-### 📌 1. Kernel (Nullspace) 과 Image (Column Space) 의 정의 (Definition 2.22 & Eq 2.124)
-선형사상 $\Phi : V \to W$ (사상 행렬 $A \in \mathbb{R}^{m \times n}$) 에 대해:
-
-- Kernel (Nullspace / 영공간): $W$ 의 영벡터 $\mathbf{0}_W$ 로 사상되는 $V$ 안의 모든 벡터들의 집합.
-  $$\ker(\Phi) = \{\mathbf{x} \in V \mid \Phi(\mathbf{x}) = \mathbf{0}_W\} \subseteq V \quad (\text{Width } n \text{ 차원 부분공간})$$
-  - *의미*: 동차 방정식계 $A\mathbf{x} = \mathbf{0}$ 의 일반해 공간.
-
-- Image (Column Space / 상): $V$ 의 벡터들이 사상되어 도달할 수 있는 $W$ 안의 모든 결과 벡터들의 집합.
-  $$\text{Im}(\Phi) = \{\Phi(\mathbf{x}) \in W \mid \mathbf{x} \in V\} = \text{span}[\mathbf{a}_1, \dots, \mathbf{a}_n] \subseteq W \quad (\text{Height } m \text{ 차원 부분공간})$$
-  - *의미*: 행렬 $A$ 의 열벡터들이 만들어내는 Column Space.
-
----
-
-### 📌 2. Rank-Nullity 정리 (차원 정리: Theorem 2.24 & Eq 2.129)
-선형대수학 최고 핵심 정리 중 하나인 Rank-Nullity Theorem (Fundamental Theorem of Linear Mappings):
-
-$$\text{dim}(\ker(\Phi)) + \text{dim}(\text{Im}(\Phi)) = \text{dim}(V)$$
-
-$$\text{Nullity}(A) + \text{Rank}(A) = n \quad (\text{입력 공간 } V \text{ 의 전체 차원 수})$$
-
-- 직관적 해석: 
-  $n$차원 입력 공간 전체는 선형사상을 통과하면서 "영으로 찌그러져 사라지는 차원 $\text{dim}(\ker(\Phi))$" 과 "사상되어 살아남는 차원 $\text{dim}(\text{Im}(\Phi))$" 두 개로 정확하게 등분 분할됩니다!
+### 📌 4. [실전 AI 연결고리]
+- **Autoencoder 라텐트 정보 손실 파악**: 고차원 데이터 $X \in \mathbb{R}^D$ 가 인코더 $W$ 를 지나 잠재 공간 $z \in \mathbb{R}^d$ ($d \ll D$) 로 압축될 때, Rank-Nullity 정리로 인해 차원 차이 $(D - d)$ 만큼의 정보가 영공간(Kernel)으로 사라지게 됩니다.
