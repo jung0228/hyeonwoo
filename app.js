@@ -728,9 +728,24 @@ async function openNotePanel(nodeData) {
     const notePath = nodeData.note ? (nodeData.note.startsWith('data/notes/') ? nodeData.note : `data/notes/${nodeData.note}`) : `data/notes/${nodeData.id}.md`;
     const res = await fetch(notePath);
     if (res.ok) {
-      const md = await res.text();
+      let md = await res.text();
       window.currentNoteRawMd = md;
-      content = `<div class="note-content">${marked.parse(md)}</div>`;
+      
+      // Protect KaTeX math blocks ($$ and $) from marked.js underscore and backslash corruption
+      const mathBlocks = [];
+      md = md.replace(/\$\$[\s\S]*?\$\$|\$[^\$\n]+?\$/g, (match) => {
+        mathBlocks.push(match);
+        return `___MATH_BLOCK_${mathBlocks.length - 1}___`;
+      });
+      
+      let html = marked.parse(md);
+      
+      // Restore math blocks back
+      html = html.replace(/___MATH_BLOCK_(\d+)___/g, (_, idx) => {
+        return mathBlocks[parseInt(idx, 10)];
+      });
+      
+      content = `<div class="note-content">${html}</div>`;
     } else {
       window.currentNoteRawMd = '';
       content = `<div class="note-content note-placeholder" style="min-height:200px">
