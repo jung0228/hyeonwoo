@@ -87,7 +87,7 @@ $$\hat{\mathbf{y}} = A_\Phi \hat{\mathbf{x}} \quad (\text{Eq 2.94})$$
 
 $$\tilde{A}_\Phi = T^{-1} A_\Phi S \quad (\text{Eq 2.105})$$
 
-#### 💡 [실전 해설 1] 기저변환 행렬 $S$ 와 $T$ 는 대체 어떻게 구하는가?
+#### 💡 [실전 해설 1] 기저변환 행렬 $S$ 와 $T$ 는 대체 어떻게 구하며 무슨 뜻인가?
 - $S$ 행렬 구하기 (출발 공간 $V$):
   출발 공간 $V$ 의 새로운 기저 벡터 $\tilde{\mathcal{B}} = (\tilde{\mathbf{b}}_1, \dots, \tilde{\mathbf{b}}_n)$ 들을 옛날 기저($\mathcal{B}$) 관점의 좌표로 써서 열(Column)로 그대로 세워 나열하면 $S$ 행렬이 완결됩니다:
   $$S = \begin{bmatrix} \mid & \mid & \mid \\ \tilde{\mathbf{b}}_1 & \dots & \tilde{\mathbf{b}}_n \\ \mid & \mid & \mid \end{bmatrix}$$
@@ -95,15 +95,25 @@ $$\tilde{A}_\Phi = T^{-1} A_\Phi S \quad (\text{Eq 2.105})$$
   도착 공간 $W$ 의 새로운 기저 벡터 $\tilde{\mathcal{C}} = (\tilde{\mathbf{c}}_1, \dots, \tilde{\mathbf{c}}_m)$ 들을 옛날 기저($\mathcal{C}$) 관점의 좌표로 써서 열(Column)로 그대로 세워 나열하면 $T$ 행렬이 완결됩니다:
   $$T = \begin{bmatrix} \mid & \mid & \mid \\ \tilde{\mathbf{c}}_1 & \dots & \tilde{\mathbf{c}}_m \\ \mid & \mid & \mid \end{bmatrix}$$
 
-#### 💡 [실전 해설 2] 왜 하필 $T$ 에만 역행렬($T^{-1}$)을 곱하는가?
+- "옛날 기저 관점의 좌표로 쓴다"는 것의 진짜 의미:
+  우리가 평소에 사물을 보고 종이에 적는 숫자 $\tilde{\mathbf{b}}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ 은 이미 표준기저(옛날 기저 $e_1, e_2$) 기준으로 $1 e_1 + 1 e_2$ 라고 읽어낸 좌표입니다!
+  따라서 옛날 기저가 표준기저일 때에는 우리가 보고 적은 새 기저 벡터 숫자 $[1, 1]^\top, [1, -1]^\top$ 그 자체를 열로 세워놓기만 하면 곧바로 $S = \begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}$ 번역기가 완성됩니다.
+  (만약 옛날 기저가 표준기저가 아니라 찌그러진 축 $\mathbf{b}_1, \mathbf{b}_2$ 라면, $\tilde{\mathbf{b}}_1 = c_1 \mathbf{b}_1 + c_2 \mathbf{b}_2$ 의 계수 $[c_1, c_2]^\top$ 를 구해서 세워야 합니다).
+
+- $S$ 행렬의 수치적 작동 검증 예시:
+  새 기저 $\tilde{\mathbf{b}}_1 = [1, 1]^\top, \tilde{\mathbf{b}}_2 = [1, -1]^\top$ 일 때 $S = \begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}$ 가 됩니다.
+  새 좌표계 기준으로 "1번 축 2칸, 2번 축 3칸"($\hat{\mathbf{x}}_{\tilde{\mathcal{B}}} = [2, 3]^\top$) 에 서 있다는 영희의 위치를 $S$ 에 곱해봅시다:
+  $$S \hat{\mathbf{x}}_{\tilde{\mathcal{B}}} = \begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix} \begin{bmatrix} 2 \\ 3 \end{bmatrix} = \begin{bmatrix} 2+3 \\ 2-3 \end{bmatrix} = \begin{bmatrix} 5 \\ -1 \end{bmatrix}$$
+  실제 위치 $2 \tilde{\mathbf{b}}_1 + 3 \tilde{\mathbf{b}}_2 = (5, -1)$ 과 정확히 일치합니다! 즉 $S$ 는 새로운 눈으로 말한 좌표를 옛날 눈이 알아듣는 실제 좌표로 해석해 주는 번역기입니다.
+
+#### 💡 [실전 해설 2] 왜 하필 $T$ 에만 역행렬($T^{-1}$)을 곱하는가? (환율/무역 비유)
 이것은 데이터가 이동하는 화살표 경로(경로 합성)의 방향 때문입니다!
 
-새로운 입력 데이터 $\hat{\mathbf{x}}_{\tilde{\mathcal{B}}}$ 를 넣어서 최종 새로운 출력 데이터 $\hat{\mathbf{y}}_{\tilde{\mathcal{C}}}$ 로 도착하려면 3단계 우회 경로를 타야 합니다:
-
-1. 1단계 ($S$ 곱하기): 새로운 입력 좌표($\tilde{\mathcal{B}}$)를 기존 계산기 $A_\Phi$ 에 넣기 위해 옛날 입력 기저 좌표($\mathcal{B}$)로 바꿉니다. ($S$ 는 원래 '새 기저 ➡️ 옛 기저' 방향이므로 방향 일치 ➡️ 그냥 $S$ 곱함).
-2. 2단계 ($A_\Phi$ 곱하기): 옛 입력 좌표로 기존 변환 $A_\Phi$ 를 수행하여 옛날 출력 기저 좌표($\mathcal{C}$)를 얻습니다.
-3. 3단계 ($T^{-1}$ 곱하기): 지금 손에 든 것은 '옛날 출력 기저($\mathcal{C}$)' 좌표인데, 우리가 원하는 최종 목적지는 '새로운 출력 기저($\tilde{\mathcal{C}}$)' 좌표입니다!
-   $T$ 행렬은 원래 '새 기저 ➡️ 옛 기저' 방향으로 만들어 두었기 때문에, 반대 방향인 '옛 기저 ➡️ 새 기저' 로 되돌리려면 반드시 역행렬 $T^{-1}$ 을 곱해 방향을 꺾어주어야 합니다!
+- 비유: 한국 원화($\tilde{\mathcal{B}}$)를 들고 미국 달러 상품($\tilde{\mathcal{C}}$)을 사고 싶은데, 우리에겐 엔화($\mathcal{B}$)를 엔화 상품($\mathcal{C}$)으로 바꿔주는 오래된 기계($A_\Phi$)만 있는 상황.
+1. 1단계 ($S$ 곱하기): 원화($\tilde{\mathcal{B}}$)를 엔화($\mathcal{B}$)로 환전합니다. ($S$ 는 원래 '원화 ➡️ 엔화' 표이므로 방향 일치 ➡️ 그냥 $S$ 곱함).
+2. 2단계 ($A_\Phi$ 곱하기): 엔화($\mathcal{B}$)를 기계에 넣어 엔화 상품($\mathcal{C}$)을 받습니다.
+3. 3단계 ($T^{-1}$ 곱하기): 손에 든 엔화 상품($\mathcal{C}$)을 달러 상품($\tilde{\mathcal{C}}$)으로 교환해야 합니다!
+   준비된 협정표 $T$ 는 원래 '달러 상품 ➡️ 엔화 상품' 방향으로 정의되어 있기 때문에, 반대 방향인 '엔화 상품 ➡️ 달러 상품' 으로 바꾸려면 반드시 역표인 역행렬 $T^{-1}$ 을 곱해야만 최종 달러 상품($\tilde{\mathcal{C}}$)을 얻을 수 있습니다!
 
 - 증명 핵심 요약 (Proof Eq 2.108~2.110):
   $$\Phi(\tilde{\mathbf{b}}_j) = \sum_{k=1}^m \tilde{a}_{kj} \tilde{\mathbf{c}}_k = \sum_{l=1}^m \left( \sum_{k=1}^m t_{lk} \tilde{a}_{kj} \right) \mathbf{c}_l$$
