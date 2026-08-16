@@ -61,9 +61,19 @@ $$\mathbf{x} = -\frac{1}{2} b_1 + \frac{5}{2} b_2 \implies \text{새로운 좌�
 
 $$\hat{\mathbf{y}} = A_\Phi \hat{\mathbf{x}} \quad (\text{Eq 2.94})$$
 
+#### 💡 [쉬운 언어로 풀어쓴 변환 행렬 $A_\Phi$ 의 직관적 본질]
+이 문장과 수식의 진짜 의미는 다음과 같습니다:
+
+1. "기저 벡터들이 어디로 이동했는지 그 결과표를 열(Column)로 적어놓은 행렬":
+   출발지 공간 $V$ 의 뼈대(기저 $\mathbf{b}_1, \dots, \mathbf{b}_n$)들이 이동 규칙 $\Phi$ 를 타고 도착지 공간 $W$ 로 건너갔을 때, 도착지의 뼈대($\mathbf{c}_1, \dots, \mathbf{c}_m$)를 기준으로 어디에 떨어졌는지 그 위치 숫자를 열(Column)로 하나씩 세워놓은 결과표가 바로 변환 행렬 $A_\Phi$ 입니다.
+2. 왜 쓰는가?:
+   출발지 공간에는 무수히 많은 무한개의 벡터가 살고 있어서 일일이 이동 위치를 계산할 수 없습니다. 하지만 공간의 뼈대인 기저 벡터들($\mathbf{b}_1, \dots, \mathbf{b}_n$)이 어디로 가는지 그 착륙 지점만 알면, 세상 모든 벡터의 이동 결과는 단순한 행렬 곱셈 $\hat{\mathbf{y}} = A_\Phi \hat{\mathbf{x}}$ 딱 한 번으로 자동 계산됩니다!
+3. 딥러닝 Linear Layer ($Y = W X$) 와의 연결:
+   인공신경망의 가장 기본 레이어인 `nn.Linear(in_features=4, out_features=2)` 의 가중치 행렬 $W$ ($2 \times 4$ 행렬)는 입력 4차원 공간의 뼈대 4개가 2차원 출력 공간으로 건너갔을 때의 착륙 지점 좌표를 4개의 열(Column)로 적어놓은 변환 행렬 $A_\Phi$ 바로 그 자체입니다!
+
 - Example 2.21 수치 계산 (Eq 2.95~2.96):
   $$\Phi(\mathbf{b}_1) = \mathbf{c}_1 - \mathbf{c}_2 + 3\mathbf{c}_3 - \mathbf{c}_4, \quad \Phi(\mathbf{b}_2) = 2\mathbf{c}_1 + \mathbf{c}_2 + 7\mathbf{c}_3 + 2\mathbf{c}_4, \quad \Phi(\mathbf{b}_3) = 3\mathbf{c}_2 + \mathbf{c}_3 + 4\mathbf{c}_4$$
-  $$A_\Phi = \begin{bmatrix} 1 & 2 & 0 \\ -1 & 1 & 3 \\ 3 & 7 & 1 \\ -1 & 2 & 4 \end{bmatrix}$$
+  $$A_\Phi = \begin{bmatrix} \mathbf{1} & \mathbf{2} & \mathbf{0} \\ \mathbf{-1} & \mathbf{1} & \mathbf{3} \\ \mathbf{3} & \mathbf{7} & \mathbf{1} \\ \mathbf{-1} & \mathbf{2} & \mathbf{4} \end{bmatrix}$$
 
 - Example 2.22 (2차원 벡터 변환 행렬 기하학: Eq 2.97 & Figure 2.10):
   - 회전 행렬 $A_1 = \begin{bmatrix} \cos(\pi/4) & -\sin(\pi/4) \\ \sin(\pi/4) & \cos(\pi/4) \end{bmatrix}$ (45도 회전)

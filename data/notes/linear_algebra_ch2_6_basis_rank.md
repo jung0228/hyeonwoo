@@ -36,12 +36,23 @@ $$\mathbf{x} = \sum_{i=1}^k \lambda_i \mathbf{b}_i = \sum_{i=1}^k \psi_i \mathbf
   $$B_1 = \left\{ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} \right\}$$
 - 기저가 아닌 예시: $A = \{[1,2,3,4]^\top, [2,-1,0,2]^\top, [1,1,0,-4]^\top\}$ 는 4차원 공간 $\mathbb{R}^4$ 에서 선형독립이지만 원소가 3개뿐이어서 $\mathbb{R}^4$ 전체를 생성하지 못하므로 기저가 아닙니다!
 
-### 📌 4. 차원(Dimension: Definition 2.16 & Remark)
+### 📌 4. [직관적 해설] "기저를 새로운 축으로 표현한다"는 것은 무슨 뜻인가?
+수학적으로 공간 안의 한 객체(벡터)는 고정되어 있습니다. 하지만 그 벡터를 "어떤 기준선(축/Basis)으로 분해해서 숫자로 써낼 것인가?" 는 온전히 우리의 선택입니다.
+
+- 표준 기저 (Standard Basis): 우리가 흔히 쓰는 $(1, 0)$ 과 $(0, 1)$ 가로/세로 직교 좌표계.
+- 새로운 기저 (New Basis): 공간을 바라보는 새로운 기준 척도축 $(\mathbf{b}_1, \mathbf{b}_2)$.
+
+즉, "기저를 바꾼다"는 것은 세상은 가만히 있는데, 내가 세상을 바라보는 '카메라 렌즈(좌표계)'를 교체하는 것입니다.
+
+- 왜 새로운 축으로 표현하는가?
+  원래 표준 관점에서는 서로 복잡하게 얽혀(Coupled) 있던 문제가, 고유벡터 등 제대로 된 새로운 기저 축에서 바라보면 서로 완벽히 독립(Decoupled)되어 대각화($\tilde{A} = P^{-1}AP = \text{diag}(\lambda_1, \lambda_2)$) 되기 때문입니다.
+
+### 📌 5. 차원(Dimension: Definition 2.16 & Remark)
 - 차원 $\text{dim}(V)$: 벡터 공간 $V$ 의 기저 벡터의 개수를 의미합니다.
 - 직관적 맹점: 차원이 벡터 내부 원소의 개수(길이)를 의미하지는 않습니다!
   - 예: $V = \text{span}\left(\begin{bmatrix} 0 \\ 1 \end{bmatrix}\right)$ 은 벡터 원소가 2개지만 기저가 1개이므로 1차원 부분공간입니다.
 
-### 📌 5. 실전 기저 구하기 4단계 알고리즘 & 원문 예제 (Example 2.17)
+### 📌 6. 실전 기저 구하기 4단계 알고리즘 & 원문 예제 (Example 2.17)
 부분공간 $U = \text{span}[\mathbf{x}_1, \dots, \mathbf{x}_m] \subseteq \mathbb{R}^n$ 의 기저를 찾는 법:
 1. 생성 벡터들을 행렬의 열벡터로 나열하여 행렬 $A = [\mathbf{x}_1 \mid \dots \mid \mathbf{x}_m]$ 을 세웁니다.
 2. 가우스 소거법을 수행하여 행 사다리꼴(REF)로 변환합니다.
