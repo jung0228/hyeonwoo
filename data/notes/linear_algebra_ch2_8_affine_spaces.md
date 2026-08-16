@@ -1,6 +1,6 @@
 # 📐 2.8 Affine Spaces (아핀 공간과 아핀 사상)
 
-> **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.8 원문 완전 복사 & 심층 가공 노트**
+> POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.8 원문 완전 복사 & 심층 가공 노트
 
 
 ## 📖 Part 1. MML 교재 원문 (Textbook Original Text)
@@ -42,17 +42,17 @@ is an affine mapping from V to W. The vector a is called the translation vector 
 ## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 
 ### 📌 1. [개념 정의] 아핀 공간(Affine Subspace)과 아핀 사상(Affine Mapping)이란 무엇인가?
-- **아핀 공간 (Affine Subspace)**: 원점 $\mathbf{0}$ 을 지나야만 하는 부분공간(Subspace)의 속박에서 벗어나, 지지점 $\mathbf{x}_0$ 만큼 공중에 붕 떠서 이동된 공간($L = \mathbf{x}_0 + U$)입니다.
-- **아핀 사상 (Affine Mapping)**: 단순 회경/축소 등의 선형사상 $A\mathbf{x}$ 에 평행이동(Translation) $+\mathbf{a}$ 가 결합된 사상입니다.
+- 아핀 공간 (Affine Subspace): 원점 $\mathbf{0}$ 을 지나야만 하는 부분공간(Subspace)의 속박에서 벗어나, 지지점 $\mathbf{x}_0$ 만큼 공중에 붕 떠서 이동된 공간($L = \mathbf{x}_0 + U$)입니다.
+- 아핀 사상 (Affine Mapping): 단순 회경/축소 등의 선형사상 $A\mathbf{x}$ 에 평행이동(Translation) $+\mathbf{a}$ 가 결합된 사상입니다.
 
 ### 📌 2. [존재 이유 & 직관] 비동차 선형계 $A\mathbf{x} = \mathbf{b}$ 의 해집합의 본질
-- **$A\mathbf{x} = \mathbf{0}$ 동차 방정식의 해**: 원점을 무조건 포함하므로 **선형 부분공간(Kernel)**이 됩니다.
-- **$A\mathbf{x} = \mathbf{b}$ 비동차 방정식의 해**: 특수해 $\mathbf{x}_p$ 만큼 평행이동되어 원점을 안 지나므로 **아핀 부분공간($\mathbf{x}_p + \text{ker}(A)$)**이 됩니다!
+- $A\mathbf{x} = \mathbf{0}$ 동차 방정식의 해: 원점을 무조건 포함하므로 선형 부분공간(Kernel)이 됩니다.
+- $A\mathbf{x} = \mathbf{b}$ 비동차 방정식의 해: 특수해 $\mathbf{x}_p$ 만큼 평행이동되어 원점을 안 지나므로 아핀 부분공간($\mathbf{x}_p + \text{ker}(A)$)이 됩니다!
 
 ### 📌 3. [상황별 Trade-off & 맹점]
-- **원점이 없는 공간의 파탄**: 아핀 공간은 원점을 지나지 않는 한 원소끼리 더하거나 스칼라를 곱했을 때 원점을 벗어나므로 **단독으로는 벡터 공간 공리가 파탄** 납니다. 반드시 "방향 부분공간 $U$"와 "평행이동 벡터 $\mathbf{x}_0$" 의 결합으로 표현해야 합니다.
+- 원점이 없는 공간의 파탄: 아핀 공간은 원점을 지나지 않는 한 원소끼리 더하거나 스칼라를 곱했을 때 원점을 벗어나므로 단독으로는 벡터 공간 공리가 파탄 납니다. 반드시 "방향 부분공간 $U$"와 "평행이동 벡터 $\mathbf{x}_0$" 의 결합으로 표현해야 합니다.
 
 ### 📌 4. [실전 AI 연결고리]
-- **인공신경망 Linear Layer ($Y = W X + b$) & SVM Hyperplane**:
-  - 퍼셉트론과 딥러닝 레이어의 입력 $X$ 에 가중치 $W$ 를 곱하고 편향(Bias) $b$ 를 더하는 행위는 수학적으로 완벽한 **아핀 사상(Affine Mapping)**입니다.
-  - Support Vector Machine(SVM)의 클래스 분류 경계면 또한 지지점 $\mathbf{x}_0$ 과 차원 $(n-1)$ 의 **아핀 초평면(Affine Hyperplane)**을 찾는 최적화 알고리즘입니다.
+- 인공신경망 Linear Layer ($Y = W X + b$) & SVM Hyperplane:
+  - 퍼셉트론과 딥러닝 레이어의 입력 $X$ 에 가중치 $W$ 를 곱하고 편향(Bias) $b$ 를 더하는 행위는 수학적으로 완벽한 아핀 사상(Affine Mapping)입니다.
+  - Support Vector Machine(SVM)의 클래스 분류 경계면 또한 지지점 $\mathbf{x}_0$ 과 차원 $(n-1)$ 의 아핀 초평면(Affine Hyperplane)을 찾는 최적화 알고리즘입니다.

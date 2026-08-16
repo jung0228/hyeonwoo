@@ -1,6 +1,6 @@
 # 📐 2.7 Linear Mappings (선형사상과 기저변환)
 
-> **POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.7 원문 완전 복사 & 심층 가공 노트**
+> POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.7 원문 완전 복사 & 심층 가공 노트
 
 
 ## 📖 Part 1. MML 교재 원문 (Textbook Original Text)
@@ -58,16 +58,16 @@ Direct Consequences:
 ## 🧠 Part 2. 한국어 정밀 가공 & 개념 설명 (Deep Interpretation)
 
 ### 📌 1. [개념 정의] 선형사상, 영공간(Kernel), 상(Image)이란 무엇인가?
-- **선형사상 (Linear Mapping)**: 공간의 선형성(가산성 + 스칼라배)을 보존하면서 한 공간 $V$ 의 벡터를 다른 공간 $W$ 로 변환시키는 함수/행렬 사상입니다.
-- **Kernel (영공간)**: 사상을 거친 결과 영벡터 $\mathbf{0}$ 으로 무참히 찌그러져 사멸하는 입력 벡터들의 집합입니다.
-- **Image (상 / Column Space)**: 사상을 지나 결과 공간 $W$ 상에 실제로 살아남아 도달한 결과물들의 표현 범위입니다.
+- 선형사상 (Linear Mapping): 공간의 선형성(가산성 + 스칼라배)을 보존하면서 한 공간 $V$ 의 벡터를 다른 공간 $W$ 로 변환시키는 함수/행렬 사상입니다.
+- Kernel (영공간): 사상을 거친 결과 영벡터 $\mathbf{0}$ 으로 무참히 찌그러져 사멸하는 입력 벡터들의 집합입니다.
+- Image (상 / Column Space): 사상을 지나 결과 공간 $W$ 상에 실제로 살아남아 도달한 결과물들의 표현 범위입니다.
 
 ### 📌 2. [존재 이유 & 직관] 왜 Rank-Nullity 정리가 위대한가?
-- **차원 등분 보존 법칙**: $n$차원 입력 공간 $V$ 전체는 선형 변환을 거칠 때 **"영으로 소실된 차원(Kernel)" + "살아남은 결과 차원(Image)"** 으로 단 1차원의 오차도 없이 완벽하게 분할 보전됩니다!
+- 차원 등분 보존 법칙: $n$차원 입력 공간 $V$ 전체는 선형 변환을 거칠 때 "영으로 소실된 차원(Kernel)" + "살아남은 결과 차원(Image)" 으로 단 1차원의 오차도 없이 완벽하게 분할 보전됩니다!
 $$\text{dim}(\ker(\Phi)) + \text{dim}(\text{Im}(\Phi)) = n = \text{dim}(V)$$
 
 ### 📌 3. [상황별 Trade-off & 맹점] 기저변환(Basis Change)과 유사 변환
-- **$\tilde{A}_\Phi = P^{-1} A_\Phi P$ 의 본질**: 시점을 바꾸면(기저 변경) 복잡해 보이던 사상 행렬이 아주 단순한 대각 행렬(Diagonal Matrix)로 변신할 수 있습니다 (고유값 분해 및 대각화의 핵심원리).
+- $\tilde{A}_\Phi = P^{-1} A_\Phi P$ 의 본질: 시점을 바꾸면(기저 변경) 복잡해 보이던 사상 행렬이 아주 단순한 대각 행렬(Diagonal Matrix)로 변신할 수 있습니다 (고유값 분해 및 대각화의 핵심원리).
 
 ### 📌 4. [실전 AI 연결고리]
-- **Autoencoder 라텐트 정보 손실 파악**: 고차원 데이터 $X \in \mathbb{R}^D$ 가 인코더 $W$ 를 지나 잠재 공간 $z \in \mathbb{R}^d$ ($d \ll D$) 로 압축될 때, Rank-Nullity 정리로 인해 차원 차이 $(D - d)$ 만큼의 정보가 영공간(Kernel)으로 사라지게 됩니다.
+- Autoencoder 라텐트 정보 손실 파악: 고차원 데이터 $X \in \mathbb{R}^D$ 가 인코더 $W$ 를 지나 잠재 공간 $z \in \mathbb{R}^d$ ($d \ll D$) 로 압축될 때, Rank-Nullity 정리로 인해 차원 차이 $(D - d)$ 만큼의 정보가 영공간(Kernel)으로 사라지게 됩니다.
