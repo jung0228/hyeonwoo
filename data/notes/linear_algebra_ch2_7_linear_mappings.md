@@ -87,6 +87,24 @@ $$\hat{\mathbf{y}} = A_\Phi \hat{\mathbf{x}} \quad (\text{Eq 2.94})$$
 
 $$\tilde{A}_\Phi = T^{-1} A_\Phi S \quad (\text{Eq 2.105})$$
 
+#### 💡 [실전 해설 1] 기저변환 행렬 $S$ 와 $T$ 는 대체 어떻게 구하는가?
+- $S$ 행렬 구하기 (출발 공간 $V$):
+  출발 공간 $V$ 의 새로운 기저 벡터 $\tilde{\mathcal{B}} = (\tilde{\mathbf{b}}_1, \dots, \tilde{\mathbf{b}}_n)$ 들을 옛날 기저($\mathcal{B}$) 관점의 좌표로 써서 열(Column)로 그대로 세워 나열하면 $S$ 행렬이 완결됩니다:
+  $$S = \begin{bmatrix} \mid & \mid & \mid \\ \tilde{\mathbf{b}}_1 & \dots & \tilde{\mathbf{b}}_n \\ \mid & \mid & \mid \end{bmatrix}$$
+- $T$ 행렬 구하기 (도착 공간 $W$):
+  도착 공간 $W$ 의 새로운 기저 벡터 $\tilde{\mathcal{C}} = (\tilde{\mathbf{c}}_1, \dots, \tilde{\mathbf{c}}_m)$ 들을 옛날 기저($\mathcal{C}$) 관점의 좌표로 써서 열(Column)로 그대로 세워 나열하면 $T$ 행렬이 완결됩니다:
+  $$T = \begin{bmatrix} \mid & \mid & \mid \\ \tilde{\mathbf{c}}_1 & \dots & \tilde{\mathbf{c}}_m \\ \mid & \mid & \mid \end{bmatrix}$$
+
+#### 💡 [실전 해설 2] 왜 하필 $T$ 에만 역행렬($T^{-1}$)을 곱하는가?
+이것은 데이터가 이동하는 화살표 경로(경로 합성)의 방향 때문입니다!
+
+새로운 입력 데이터 $\hat{\mathbf{x}}_{\tilde{\mathcal{B}}}$ 를 넣어서 최종 새로운 출력 데이터 $\hat{\mathbf{y}}_{\tilde{\mathcal{C}}}$ 로 도착하려면 3단계 우회 경로를 타야 합니다:
+
+1. 1단계 ($S$ 곱하기): 새로운 입력 좌표($\tilde{\mathcal{B}}$)를 기존 계산기 $A_\Phi$ 에 넣기 위해 옛날 입력 기저 좌표($\mathcal{B}$)로 바꿉니다. ($S$ 는 원래 '새 기저 ➡️ 옛 기저' 방향이므로 방향 일치 ➡️ 그냥 $S$ 곱함).
+2. 2단계 ($A_\Phi$ 곱하기): 옛 입력 좌표로 기존 변환 $A_\Phi$ 를 수행하여 옛날 출력 기저 좌표($\mathcal{C}$)를 얻습니다.
+3. 3단계 ($T^{-1}$ 곱하기): 지금 손에 든 것은 '옛날 출력 기저($\mathcal{C}$)' 좌표인데, 우리가 원하는 최종 목적지는 '새로운 출력 기저($\tilde{\mathcal{C}}$)' 좌표입니다!
+   $T$ 행렬은 원래 '새 기저 ➡️ 옛 기저' 방향으로 만들어 두었기 때문에, 반대 방향인 '옛 기저 ➡️ 새 기저' 로 되돌리려면 반드시 역행렬 $T^{-1}$ 을 곱해 방향을 꺾어주어야 합니다!
+
 - 증명 핵심 요약 (Proof Eq 2.108~2.110):
   $$\Phi(\tilde{\mathbf{b}}_j) = \sum_{k=1}^m \tilde{a}_{kj} \tilde{\mathbf{c}}_k = \sum_{l=1}^m \left( \sum_{k=1}^m t_{lk} \tilde{a}_{kj} \right) \mathbf{c}_l$$
   $$\Phi(\tilde{\mathbf{b}}_j) = \Phi\left(\sum_{i=1}^n s_{ij} \mathbf{b}_i\right) = \sum_{l=1}^m \left( \sum_{i=1}^n a_{li} s_{ij} \right) \mathbf{c}_l$$
