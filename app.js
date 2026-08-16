@@ -725,7 +725,8 @@ async function openNotePanel(nodeData) {
 
   let content = '';
   try {
-    const res = await fetch(`data/notes/${nodeData.id}.md`);
+    const notePath = nodeData.note ? (nodeData.note.startsWith('data/notes/') ? nodeData.note : `data/notes/${nodeData.note}`) : `data/notes/${nodeData.id}.md`;
+    const res = await fetch(notePath);
     if (res.ok) {
       const md = await res.text();
       window.currentNoteRawMd = md;
