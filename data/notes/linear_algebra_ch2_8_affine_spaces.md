@@ -17,10 +17,15 @@
 
 $$L = \mathbf{x}_0 + U := \{ \mathbf{x}_0 + \mathbf{u} \mid \mathbf{u} \in U \} = \{ \mathbf{v} \in V \mid \exists \mathbf{u} \in U : \mathbf{v} = \mathbf{x}_0 + \mathbf{u} \} \subseteq V \quad (\text{Eq 2.130a,b})$$
 
-- 지지점 (Support Point / Support Vector): $\mathbf{x}_0$ 은 원점에서 아핀 공간으로 건너가는 기준 위치 벡터입니다.
+- 지지점 (Support Point / Support Vector): $\mathbf{x}_0$ 은 원점에서 공중에 떠있는 아핀 공간으로 건너가는 '시작 위치 발판 벡터(특수해 $\mathbf{x}_p$)'입니다.
 - 방향 공간 (Direction Space): $U$ 는 원점을 지나는 본래의 $k$차원 선형 부분공간입니다.
 - 핵심 구분: $\mathbf{x}_0 \notin U$ 이면 영벡터 $\mathbf{0} \notin L$ 이 되므로, 아핀 부분공간은 그 자체로는 원점을 포함하지 않아 선형 벡터 부분공간이 아닙니다!
 - 아핀 공간의 포섭 관계 (Remark p.61): 두 아핀 공간 $L = \mathbf{x}_0 + U$ 와 $\tilde{L} = \tilde{\mathbf{x}}_0 + \tilde{U}$ 에 대해 $L \subseteq \tilde{L} \iff U \subseteq \tilde{U}$ 이고 $\mathbf{x}_0 - \tilde{\mathbf{x}}_0 \in \tilde{U}$.
+
+#### 💡 [직관적 해설 1] 지지점($\mathbf{x}_0$)의 정체는 무엇인가?
+공중에 붕 떠있는 평면이나 직선($L$)은 원점 $\mathbf{0}$ 을 지나지 않습니다. 원점에 서 있는 사람이 공중에 떠있는 아핀 공간으로 가려면:
+1. 1단계 (지지점 $\mathbf{x}_0$ 곱하기): 원점에서 공중의 떠있는 공간 $L$ 위로 폴짝 뛰어올라 일단 아무 점 하나($\mathbf{x}_0$)에 착지해야 합니다! (이 자리를 받쳐주는 발판이 지지점).
+2. 2단계 (방향 공간 $U$ 걷기): 그 착지한 자리($\mathbf{x}_0$)에서부터 평면 방향($U$)을 따라 자유롭게 2차원적으로 걸어 다닙니다 ($L = \mathbf{x}_0 + U$).
 
 ### 📌 2. 매개변수 방정식 (Parametric Equation: Eq 2.131)
 $k$차원 아핀 공간 $L = \mathbf{x}_0 + U$ 에서 방향 공간 $U$ 의 순서기저가 $(\mathbf{b}_1, \dots, \mathbf{b}_k)$ 일 때, $L$ 안의 모든 벡터 $\mathbf{x} \in L$ 은 매개변수 $\lambda_1, \dots, \lambda_k \in \mathbb{R}$ 로 오직 유일하게 표현됩니다:
@@ -41,6 +46,13 @@ $$\mathbf{x} = \mathbf{x}_0 + \lambda_1 \mathbf{b}_1 + \dots + \lambda_k \mathbf
 
 - $\mathbb{R}^n$ 상의 모든 $k$차원 아핀 부분공간은 비동차 선형방정식계 $A\mathbf{x} = \mathbf{b}$ ($A \in \mathbb{R}^{m \times n}, \mathbf{b} \in \mathbb{R}^m, \text{rk}(A) = n-k$) 의 해집합입니다.
 - 동차 방정식계 $A\mathbf{x} = \mathbf{0}$ 의 해집합(선형 부분공간)은 지지점이 $\mathbf{x}_0 = \mathbf{0}$ 인 특수한 아핀 공간입니다.
+
+#### 💡 [직관적 해설 2] 거창해 보이는 이 수식과 문장들의 쉬운 한글 번역
+> "연립방정식 $A\mathbf{x} = \mathbf{b}$ 의 해들을 좌표평면에 그리면 무조건 공중에 떠있는 '점, 직선, 평면(아핀 공간)'이 된다!"
+
+1. 차원 $n - \text{rk}(A)$ 의 의미: 전체 미지수 개수($n$)에서 피벗 개수($\text{rk}(A)$)를 뺀 자유 변수(Free Variable)의 개수만큼 직선(1차원)이나 평면(2차원)의 차원 크기가 결정됩니다!
+2. 모든 아핀 공간은 방정식의 해집합이라는 의미: 공중에 붕 떠있는 모든 직선($y = 2x + 3$)은 알고 보면 비동차 연립방정식($-2x + y = 3$)의 해집합 그 자체라는 뜻입니다!
+3. 지하철 선로 비유: 우변이 0인 동차계 $A\mathbf{x} = \mathbf{0}$ 의 해집합 $\text{ker}(A)$ 은 원점을 지나는 지상의 선로 방향이고, 우변이 $\mathbf{b}$ 인 비동차계 $A\mathbf{x} = \mathbf{b}$ 의 특수해 $\mathbf{x}_p$ 는 그 선로를 통째로 공중으로 들어 올린 높이(지지점) 역할을 합니다!
 
 ## 2. ⚔️ Section 2.8.2: Affine Mappings (아핀 사상)
 
