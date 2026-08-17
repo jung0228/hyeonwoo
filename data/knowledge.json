@@ -749,6 +749,24 @@
       "purpose": "2단계 존재 이유: 벡터 간 유사도 측정 및 길이/각도를 보존하는 회전 변환 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: 내적은 유사도가 클수록 높고 거리(Metric)는 낮음. 직교행렬 역행렬은 전치만으로 O(1) 연산.",
       "ai_connection": "4단계 AI 연결: 코사인 유사도(Cosine Similarity) 및 SVD/PCA 직교 회전 변환."
+    },
+    {
+      "id": "linear_algebra_ch3_5_orthonormal_basis",
+      "label": "3.5 & 3.6 정규직교기저와 직교 여공간",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/linear_algebra_ch3_5_orthonormal_basis.md",
+      "tags": [
+        "Orthonormal Basis",
+        "Gram-Schmidt",
+        "Orthogonal Complement",
+        "Normal Vector"
+      ],
+      "definition": "1단계 개념: 상호 직교 단위기저(ONB) 및 부분공간과 수직인 직교 여공간(U^perp).",
+      "purpose": "2단계 존재 이유: 좌표 계산의 극단적 단순화(내적 단일연산) 및 신호/잔차 공간의 수직 분해.",
+      "tradeoff_insight": "3단계 비판적 맹점: 직교기저는 복잡한 역행렬 없이 전치만으로 좌표를 추출하며, U와 U^perp는 영벡터만 공유.",
+      "ai_connection": "4단계 AI 연결: PCA 주성분 ONB 축소, SVM 초평면 법선벡터, 최소제곱법 오차의 직교 여공간 배치."
     }
   ],
   "edges": [
@@ -1145,6 +1163,12 @@
     {
       "source": "linear_algebra_ch3_2_inner_products",
       "target": "linear_algebra_ch3_3_lengths_angles",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch3_3_lengths_angles",
+      "target": "linear_algebra_ch3_5_orthonormal_basis",
       "relation": "basis_of",
       "weight": 3
     }
