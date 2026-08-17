@@ -1,0 +1,103 @@
+# 📐 3.2 Inner Products (내적과 대칭 양의 정정 행렬)
+
+> POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 3.2 전수 분석 & 4단계 정밀 해설 노트
+
+## 🌐 0. 3.1절(Norms)과의 연결 및 빌드업: 왜 "내적(Inner Product)"을 배우는가?
+
+우리는 지난 3.1절에서 벡터의 "길이(Length)"와 "거리(Distance)"를 구하는 노름(Norm)을 공부했습니다. 
+하지만 노름만으로는 "두 벡터가 서로 몇 도로 꺾여 있는지(각도 Angle)"나 "두 벡터가 서로 직교(Orthogonal)하는지"를 직접 판단할 수 없습니다.
+
+내적(Inner Product)은 벡터 공간에 각도(Angle)와 직교성(Orthogonality)이라는 핵심 기하학적 개념을 도입하는 더 강력하고 일반적인 대수적 도구입니다.
+
+```text
+[3.1절: 노름 (Norm)]            [3.2절: 내적 (Inner Product)]         [후속 AI 모델 연결]
+- 벡터의 길이 (Length)    ───>  - 두 벡터 간의 각도 (Angle)   ───>  - Ch 12: Kernel Method (SVM 커널 트릭)
+- 원점으로부터의 거리     ───>  - 직교성 (Orthogonality)     ───>  - Ch 10: PCA (주성분 직교 기저)
+- $\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$  - 대칭 양의 정정 행렬 $A$  ───>  - Ch 4: Cholesky & Eigen-decomposition
+```
+
+---
+
+## 1. ⚔️ Section 3.2.1 & 3.2.2: General Inner Products (일반 내적의 정의)
+
+### 📌 1. 도트 곱 (Dot Product / Scalar Product: Eq 3.5)
+우리가 유클리드 공간 $\mathbb{R}^n$ 에서 흔히 사용하는 표준적인 내적을 도트 곱(Dot Product)이라 부릅니다:
+
+$$\mathbf{x}^\top \mathbf{y} = \sum_{i=1}^n x_i y_i \quad (\text{Eq 3.5})$$
+
+### 📌 2. 이선형 사상 (Bilinear Mapping: Eq 3.6~3.7)
+인자 2개를 받는 사상 $\Omega : V \times V \to \mathbb{R}$ 이 각 인자에 대해 각각 선형성(Linearity)을 가질 때 이를 이선형 사상(Bilinear Mapping)이라 부릅니다. 
+즉, 모든 $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$ 및 $\lambda, \psi \in \mathbb{R}$ 에 대해 다음이 성립합니다:
+
+1. 첫 번째 인자에 대한 선형성:
+   $$\Omega(\lambda \mathbf{x} + \psi \mathbf{y}, \mathbf{z}) = \lambda \Omega(\mathbf{x}, \mathbf{z}) + \psi \Omega(\mathbf{y}, \mathbf{z}) \quad (\text{Eq 3.6})$$
+2. 두 번째 인자에 대한 선형성:
+   $$\Omega(\mathbf{x}, \lambda \mathbf{y} + \psi \mathbf{z}) = \lambda \Omega(\mathbf{x}, \mathbf{y}) + \psi \Omega(\mathbf{x}, \mathbf{z}) \quad (\text{Eq 3.7})$$
+
+### 📌 3. 내적과 내적 공간의 엄밀한 정의 (Definition 3.2 & 3.3)
+벡터 공간 $V$ 위에서 정의된 이선형 사상 $\Omega : V \times V \to \mathbb{R}$ 이 다음 두 성질을 만족하면 이를 내적(Inner Product)이라 부르고 $\langle \mathbf{x}, \mathbf{y} \rangle$ 로 표기합니다:
+
+1. 대칭성 (Symmetric: Def 3.2): 
+   $$\forall \mathbf{x}, \mathbf{y} \in V : \langle \mathbf{x}, \mathbf{y} \rangle = \langle \mathbf{y}, \mathbf{x} \rangle$$
+2. 양의 정정성 (Positive Definite: Def 3.2 & Eq 3.8): 
+   $$\forall \mathbf{x} \in V \setminus \{\mathbf{0}\} : \langle \mathbf{x}, \mathbf{x} \rangle > 0 \quad \text{and} \quad \langle \mathbf{0}, \mathbf{0} \rangle = 0$$
+
+- 내적 공간 (Inner Product Space: Def 3.3): 순서쌍 $(V, \langle \cdot, \cdot \rangle)$ 을 내적 공간이라 부릅니다. 표준 도트 곱을 사용하는 내적 공간은 유클리드 벡터 공간(Euclidean Vector Space)이라 부릅니다.
+
+### 📌 4. 도트 곱이 아닌 일반 내적 예시 (Example 3.3 & Eq 3.9)
+$\mathbb{R}^2$ 에서 다음과 같이 정의된 연산은 도트 곱($x_1 y_1 + x_2 y_2$)이 아니지만 내적의 공리를 완벽히 만족하는 내적입니다:
+
+$$\langle \mathbf{x}, \mathbf{y} \rangle := x_1 y_1 - (x_1 y_2 + x_2 y_1) + 2 x_2 y_2 \quad (\text{Eq 3.9})$$
+
+---
+
+## 2. ⚔️ Section 3.2.3: Symmetric, Positive Definite Matrices (대칭 양의 정정 행렬)
+
+### 📌 1. 행렬 표현 $A$ 를 통한 내적 도출 (Eq 3.10 & Theorem 3.5)
+유한차원 벡터 공간 $V$ 의 순서기저 $\mathcal{B} = (\mathbf{b}_1, \dots, \mathbf{b}_n)$ 에 대해 임의의 두 벡터 $\mathbf{x} = \sum_{i=1}^n \hat{x}_i \mathbf{b}_i$, $\mathbf{y} = \sum_{j=1}^n \hat{y}_j \mathbf{b}_j$ 의 내적은 이선형성에 의해 다음과 같이 행렬 곱 형태로 유일하게 결정됩니다:
+
+$$\langle \mathbf{x}, \mathbf{y} \rangle = \left\langle \sum_{i=1}^n \hat{x}_i \mathbf{b}_i, \sum_{j=1}^n \hat{y}_j \mathbf{b}_j \right\rangle = \sum_{i=1}^n \sum_{j=1}^n \hat{x}_i \langle \mathbf{b}_i, \mathbf{b}_j \rangle \hat{y}_j = \hat{\mathbf{x}}^\top A \hat{\mathbf{y}} \quad (\text{Eq 3.10})$$
+
+여기서 성분 $A_{ij} := \langle \mathbf{b}_i, \mathbf{b}_j \rangle$ 은 기저 벡터들 사이의 내적을 모아놓은 행렬입니다.
+
+- Theorem 3.5: 실수 유한차원 공간 $V$ 상의 연산 $\langle \cdot, \cdot \rangle$ 이 내적일 필요충분조건은, 대칭 양의 정정 행렬 $A \in \mathbb{R}^{n \times n}$ 이 존재하여 $\langle \mathbf{x}, \mathbf{y} \rangle = \hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 로 표현되는 것입니다 (Eq 3.15).
+
+### 📌 2. 대칭 양의 정정 행렬의 정의 (Definition 3.4 & Eq 3.11)
+실수 대칭 행렬 $A \in \mathbb{R}^{n \times n}$ ($A^\top = A$) 이 모든 0이 아닌 벡터 $\mathbf{x} \in V \setminus \{\mathbf{0}\}$ 에 대해 다음을 만족할 때 대칭 양의 정정 행렬 (Symmetric Positive Definite Matrix, SPD)이라 부릅니다:
+
+$$\mathbf{x}^\top A \mathbf{x} > 0 \quad (\text{Eq 3.11})$$
+
+- 등호($\ge 0$)만 성립하는 경우에는 대칭 반양의 정정 행렬 (Symmetric Positive Semidefinite Matrix, SPSD)이라 부릅니다.
+
+### 📌 3. 원문 예제 판별 (Example 3.4 & Eq 3.12~3.13b)
+- $A_1 = \begin{bmatrix} 9 & 6 \\ 6 & 5 \end{bmatrix}$:
+  $$\mathbf{x}^\top A_1 \mathbf{x} = 9 x_1^2 + 12 x_1 x_2 + 5 x_2^2 = (3 x_1 + 2 x_2)^2 + x_2^2 > 0 \quad (\forall \mathbf{x} \neq \mathbf{0})$$
+  완전제곱식의 합으로 변형되어 항상 0보다 크므로 양의 정정 행렬(SPD) 성립!
+- $A_2 = \begin{bmatrix} 9 & 6 \\ 6 & 3 \end{bmatrix}$:
+  $$\mathbf{x}^\top A_2 \mathbf{x} = 9 x_1^2 + 12 x_1 x_2 + 3 x_2^2 = (3 x_1 + 2 x_2)^2 - x_2^2$$
+  $\mathbf{x} = [2, -3]^\top$ 일 때 $(6 - 6)^2 - (-3)^2 = -9 < 0$ 이 되므로 양의 정정 행렬 불성립!
+
+### 📌 4. 대칭 양의 정정 행렬(SPD)의 2대 핵심 정리 성질
+1. Null Space (Kernel)의 단일성: $A$ 의 영공간(Kernel)은 오직 영벡터 $\{\mathbf{0}\}$ 뿐입니다 ($\text{ker}(A) = \{\mathbf{0}\}$). 따라서 $A$ 는 무조건 가역 행렬(Invertible / Non-singular)입니다.
+2. 주대각 성분의 양수성: $A$ 의 모든 대각 성분 $a_{ii}$ 는 무조건 양수입니다 ($a_{ii} = \mathbf{e}_i^\top A \mathbf{e}_i > 0$).
+
+---
+
+## 🧠 3. 4단계 정밀 개념 해설
+
+### 1️⃣ [1단계 개념 정의]
+- 내적(Inner Product): 두 벡터를 받아 하나의 실수를 반환하는 이선형, 대칭, 양의 정정 사상이며, 공간에 각도(Angle)와 직교성(Orthogonality)을 부여하는 기하학적 기준입니다.
+- SPD 행렬: $\mathbf{x}^\top A \mathbf{x} > 0$ 을 만족하는 대칭 행렬로, 일반적인 내적 연산 $\langle \mathbf{x}, \mathbf{y} \rangle = \hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 을 생성하는 핵심 가중치 행렬입니다.
+
+### 2️⃣ [2단계 왜 쓰는가?]
+- 표준 도트 곱($\mathbf{x}^\top \mathbf{y}$)을 넘어, 공간의 축이 비틀어지거나 가중치가 다른 임의의 차원 공간에서도 거리와 각도를 왜곡 없이 엄밀하게 정의하기 위해 사용합니다.
+
+### 3️⃣ [3단계 상황별 직관 & Trade-off]
+- SPD 행렬 $A$ 의 이차형식(Quadratic Form) 직관:
+  - $A = I$ 이면 평범한 동그란 형태의 유클리드 공간 도트 곱이 됩니다.
+  - $A$ 가 일반적인 SPD 행렬이면 타원(Ellipsoid) 형태의 변형된 거리/각도 측정 공간이 만들어집니다.
+  - $A$ 의 고유값이 모두 양수($\lambda_i > 0$)인 것과 양의 정정성이 완전 동치입니다!
+
+### 4️⃣ [4단계 실전 AI 연결고리]
+- 커널 기법 (Kernel Methods - Ch 12): 머신러닝의 SVM이나 커널 PCA에서 고차원 특징 공간에서의 내적 $\langle \Phi(\mathbf{x}), \Phi(\mathbf{y}) \rangle = k(\mathbf{x}, \mathbf{y})$ 을 직접 계산하지 않고 커널 함수 $k$ 로 대체하는 Kernel Trick의 이론적 기반이 됩니다.
+- Cholesky 분해 (Cholesky Decomposition - Ch 4.3): 공분산 행렬(Covariance Matrix)과 같은 SPD 행렬은 삼각행렬의 곱 $A = L L^\top$ 으로 고속 분해되어 가우시안 샘플링 및 최적화 계산에 핵심 활용됩니다.
