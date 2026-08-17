@@ -47,8 +47,8 @@
         <button class="nav-btn" id="btn-research" data-view="research">
           <span class="nav-icon">🔭</span><span class="nav-label"> Research</span>
         </button>
-        <button class="nav-btn" id="btn-review" data-view="review">
-          <span class="nav-icon">🔁</span><span class="nav-label"> 복습</span>
+        <button class="nav-btn" id="btn-analytics" data-view="analytics">
+          <span class="nav-icon">🧠</span><span class="nav-label"> 사고분석</span>
         </button>
         <button class="nav-btn" id="btn-column" data-view="column">
           <span class="nav-icon">📰</span><span class="nav-label"> 칼럼</span>
@@ -247,60 +247,60 @@
   </main>
 
   <!-- ===== VIEW: REVIEW ===== -->
-    <div class="view" id="view-review">
-      <div class="review-page">
-
-        <div class="review-header">
-          <div class="review-header-left">
-            <h1 class="review-title">🔁 복습 카드</h1>
-            <div class="review-subtitle">탭해서 개념 확인 · 자신감 평가로 다음 순서 결정</div>
-          </div>
-          <div class="review-filter-group">
-            <button class="review-filter-btn active" data-filter="all">전체</button>
-            <button class="review-filter-btn" data-filter="weak">😰 약점</button>
-            <button class="review-filter-btn" data-filter="random">🎲 랜덤</button>
+    <!-- ===== VIEW: ANALYTICS (사고 분석 & 일정 대시보드) ===== -->
+    <div class="view" id="view-analytics">
+      <div class="column-page">
+        <div class="column-page-header" style="margin-bottom: 24px;">
+          <div class="newspaper-brand">THOUGHT & ACTIVITY<br>DIRECTOR</div>
+          <div class="newspaper-meta-row">
+            <span>REAL-TIME INSIGHTS</span>
+            <span>HYEONWOO JUNG</span>
+            <span id="analytics-date">2026. 08. 17 MON</span>
           </div>
         </div>
 
-        <div class="review-progress-wrap">
-          <div class="review-progress-track">
-            <div class="review-progress-bar" id="review-progress-bar"></div>
-          </div>
-          <span class="review-progress-label" id="review-progress-label">0 / 0</span>
-        </div>
-
-        <div class="review-card-area">
-          <div class="review-card" id="review-card">
-            <div class="review-card-inner" id="review-card-inner">
-              <div class="review-card-face review-card-front">
-                <div class="review-card-category-badge" id="review-card-cat"></div>
-                <div class="review-card-name" id="review-card-name">—</div>
-                <div class="review-card-hint">탭해서 내용 보기 👇</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 20px;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #10b981; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span>✓</span> 오늘 완료한 핵심 작업 (Done Today)
+            </h3>
+            <div id="analytics-done-list" style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.88rem;">
+                ✔ 대화 로그 기반 사고 분석 리포트 자동 생성
               </div>
-              <div class="review-card-face review-card-back">
-                <div class="review-card-back-content" id="review-card-content"></div>
+              <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.88rem;">
+                ✔ 맥북 용량 39GB 확보 및 구글 드라이브 백업
+              </div>
+            </div>
+          </div>
+
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 20px;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #38bdf8; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span>➔</span> 다음에 진행할 핵심 할 일 (Next Action Plan)
+            </h3>
+            <div id="analytics-next-list" style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.88rem;">
+                🎯 hyeonwoo 지식 관리 웹사이트 사고분석 탭 배포
+              </div>
+              <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.88rem;">
+                🎯 대학원 2027 포스텍/카이스트 입시 서류 점검
               </div>
             </div>
           </div>
         </div>
 
-        <div class="review-rating" id="review-rating">
-          <div class="review-rating-label">얼마나 알고 있나요?</div>
-          <div class="review-rating-btns">
-            <button class="rrb" data-score="0"><span class="rrb-e">😰</span><span class="rrb-l">몰라요</span></button>
-            <button class="rrb" data-score="1"><span class="rrb-e">🤔</span><span class="rrb-l">아직요</span></button>
-            <button class="rrb" data-score="2"><span class="rrb-e">😊</span><span class="rrb-l">알아요</span></button>
-            <button class="rrb" data-score="3"><span class="rrb-e">💪</span><span class="rrb-l">완벽해요</span></button>
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 20px;">
+          <h3 style="font-size: 1rem; font-weight: 700; color: #c084fc; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <span>📜</span> 실시간 사고 흐름 히스토리 (Daily Thought Logs)
+          </h3>
+          <div id="analytics-history-timeline" style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="border-left: 2px solid #38bdf8; padding-left: 14px;">
+              <div style="font-family: monospace; font-size: 0.8rem; color: #38bdf8;">2026. 08. 17</div>
+              <div style="font-weight: 700; font-size: 0.92rem; margin-top: 2px;">hyeonwoo 웹사이트에 사고분석/일정 탭 통합</div>
+              <div style="font-size: 0.82rem; color: #94a3b8;">복습 탭을 제거하고 대화 세션 기반 사고 분석 및 데일리 디렉터 모듈 추가</div>
+            </div>
           </div>
         </div>
-
-        <div class="review-done" id="review-done">
-          <div class="review-done-icon">🎉</div>
-          <div class="review-done-title">오늘의 복습 완료!</div>
-          <div class="review-done-stats" id="review-done-stats"></div>
-          <button class="review-restart-btn" onclick="restartReview()">다시 복습하기 🔁</button>
-        </div>
-
       </div>
     </div>
 
