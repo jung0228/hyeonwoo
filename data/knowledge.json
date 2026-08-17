@@ -1,28 +1,279 @@
 {
   "nodes": [
-    { "id": "vae", "label": "VAE", "category": "Generative", "confidence": 3, "studyCount": 4, "tags": ["ELBO", "Latent Space", "Encoder-Decoder"] },
-    { "id": "diffusion", "label": "Diffusion Model", "category": "Generative", "confidence": 2, "studyCount": 3, "tags": ["DDPM", "Score Matching", "Denoising"] },
-    { "id": "gan", "label": "GAN", "category": "Generative", "confidence": 2, "studyCount": 2, "tags": ["Adversarial", "Generator", "Discriminator"] },
-    { "id": "flow", "label": "Normalizing Flow", "category": "Generative", "confidence": 1, "studyCount": 1, "tags": ["Bijective", "Change of Variables"] },
-    { "id": "transformer", "label": "Transformer", "category": "Architecture", "confidence": 4, "studyCount": 8, "tags": ["Attention", "Multi-Head", "Positional Encoding"] },
-    { "id": "attention", "label": "Attention Mechanism", "category": "Architecture", "confidence": 4, "studyCount": 7, "tags": ["QKV", "Softmax", "Self-Attention"] },
-    { "id": "bert", "label": "BERT", "category": "Language Model", "confidence": 3, "studyCount": 4, "tags": ["Bidirectional", "MLM", "NSP"] },
-    { "id": "gpt", "label": "GPT / Autoregressive LM", "category": "Language Model", "confidence": 3, "studyCount": 5, "tags": ["Causal LM", "Next Token Prediction"] },
-    { "id": "llm", "label": "LLM (Large Scale)", "category": "Language Model", "confidence": 3, "studyCount": 5, "tags": ["Scaling Law", "Emergent Ability", "RLHF"] },
-    { "id": "rlhf", "label": "RLHF / PPO", "category": "RL", "confidence": 2, "studyCount": 3, "tags": ["Reward Model", "PPO", "Alignment"] },
-    { "id": "rl_basic", "label": "RL 기초", "category": "RL", "confidence": 2, "studyCount": 2, "tags": ["MDP", "Value Function", "Policy Gradient"] },
-    { "id": "multimodal", "label": "Multimodal LM", "category": "Multimodal", "confidence": 3, "studyCount": 5, "tags": ["Vision-Language", "Cross-Attention", "CLIP"] },
-    { "id": "vision_encoder", "label": "Vision Encoder", "category": "Multimodal", "confidence": 3, "studyCount": 4, "tags": ["ViT", "CNN", "Patch Embedding"] },
-    { "id": "discrete_token", "label": "Discrete Token (VQVAE)", "category": "Multimodal", "confidence": 3, "studyCount": 4, "tags": ["Codebook", "VQ", "Quantization"] },
-    { "id": "audio_model", "label": "Audio / Speech Model", "category": "Multimodal", "confidence": 2, "studyCount": 3, "tags": ["Whisper", "Codec", "ASR"] },
-    { "id": "hcx_omni", "label": "HCX SEED Omni 8B", "category": "Multimodal", "confidence": 4, "studyCount": 6, "tags": ["Any-to-Any", "Data Recipe", "SFT Stages"] },
-    { "id": "vit", "label": "ViT", "category": "Architecture", "confidence": 3, "studyCount": 4, "tags": ["Patch", "CLS Token", "Image Classification"] },
-    { "id": "resnet", "label": "ResNet / CNN", "category": "Architecture", "confidence": 3, "studyCount": 3, "tags": ["Residual", "Skip Connection", "Conv"] },
-    { "id": "sft", "label": "Instruction Tuning / SFT", "category": "Language Model", "confidence": 3, "studyCount": 4, "tags": ["Fine-tuning", "Instruction Following", "CoT"] },
-    { "id": "data_recipe", "label": "Data Recipe / Mixture", "category": "Training", "confidence": 4, "studyCount": 5, "tags": ["Token Ratio", "Curriculum", "Data Curation"] },
-    { "id": "lora", "label": "LoRA / PEFT", "category": "Training", "confidence": 2, "studyCount": 2, "tags": ["Low-Rank", "Adapter", "Parameter Efficient"] },
-    { "id": "kv_cache", "label": "KV Cache / Inference Opt.", "category": "Architecture", "confidence": 2, "studyCount": 2, "tags": ["Inference Speed", "Memory", "Quantization"] },
-    { "id": "clip", "label": "CLIP", "category": "Multimodal", "confidence": 3, "studyCount": 3, "tags": ["Contrastive", "Zero-shot", "Image-Text"] },
+    {
+      "id": "vae",
+      "label": "VAE",
+      "category": "Generative",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "ELBO",
+        "Latent Space",
+        "Encoder-Decoder"
+      ]
+    },
+    {
+      "id": "diffusion",
+      "label": "Diffusion Model",
+      "category": "Generative",
+      "confidence": 2,
+      "studyCount": 3,
+      "tags": [
+        "DDPM",
+        "Score Matching",
+        "Denoising"
+      ]
+    },
+    {
+      "id": "gan",
+      "label": "GAN",
+      "category": "Generative",
+      "confidence": 2,
+      "studyCount": 2,
+      "tags": [
+        "Adversarial",
+        "Generator",
+        "Discriminator"
+      ]
+    },
+    {
+      "id": "flow",
+      "label": "Normalizing Flow",
+      "category": "Generative",
+      "confidence": 1,
+      "studyCount": 1,
+      "tags": [
+        "Bijective",
+        "Change of Variables"
+      ]
+    },
+    {
+      "id": "transformer",
+      "label": "Transformer",
+      "category": "Architecture",
+      "confidence": 4,
+      "studyCount": 8,
+      "tags": [
+        "Attention",
+        "Multi-Head",
+        "Positional Encoding"
+      ]
+    },
+    {
+      "id": "attention",
+      "label": "Attention Mechanism",
+      "category": "Architecture",
+      "confidence": 4,
+      "studyCount": 7,
+      "tags": [
+        "QKV",
+        "Softmax",
+        "Self-Attention"
+      ]
+    },
+    {
+      "id": "bert",
+      "label": "BERT",
+      "category": "Language Model",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Bidirectional",
+        "MLM",
+        "NSP"
+      ]
+    },
+    {
+      "id": "gpt",
+      "label": "GPT / Autoregressive LM",
+      "category": "Language Model",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "Causal LM",
+        "Next Token Prediction"
+      ]
+    },
+    {
+      "id": "llm",
+      "label": "LLM (Large Scale)",
+      "category": "Language Model",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "Scaling Law",
+        "Emergent Ability",
+        "RLHF"
+      ]
+    },
+    {
+      "id": "rlhf",
+      "label": "RLHF / PPO",
+      "category": "RL",
+      "confidence": 2,
+      "studyCount": 3,
+      "tags": [
+        "Reward Model",
+        "PPO",
+        "Alignment"
+      ]
+    },
+    {
+      "id": "rl_basic",
+      "label": "RL 기초",
+      "category": "RL",
+      "confidence": 2,
+      "studyCount": 2,
+      "tags": [
+        "MDP",
+        "Value Function",
+        "Policy Gradient"
+      ]
+    },
+    {
+      "id": "multimodal",
+      "label": "Multimodal LM",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "Vision-Language",
+        "Cross-Attention",
+        "CLIP"
+      ]
+    },
+    {
+      "id": "vision_encoder",
+      "label": "Vision Encoder",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "ViT",
+        "CNN",
+        "Patch Embedding"
+      ]
+    },
+    {
+      "id": "discrete_token",
+      "label": "Discrete Token (VQVAE)",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Codebook",
+        "VQ",
+        "Quantization"
+      ]
+    },
+    {
+      "id": "audio_model",
+      "label": "Audio / Speech Model",
+      "category": "Multimodal",
+      "confidence": 2,
+      "studyCount": 3,
+      "tags": [
+        "Whisper",
+        "Codec",
+        "ASR"
+      ]
+    },
+    {
+      "id": "hcx_omni",
+      "label": "HCX SEED Omni 8B",
+      "category": "Multimodal",
+      "confidence": 4,
+      "studyCount": 6,
+      "tags": [
+        "Any-to-Any",
+        "Data Recipe",
+        "SFT Stages"
+      ]
+    },
+    {
+      "id": "vit",
+      "label": "ViT",
+      "category": "Architecture",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Patch",
+        "CLS Token",
+        "Image Classification"
+      ]
+    },
+    {
+      "id": "resnet",
+      "label": "ResNet / CNN",
+      "category": "Architecture",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Residual",
+        "Skip Connection",
+        "Conv"
+      ]
+    },
+    {
+      "id": "sft",
+      "label": "Instruction Tuning / SFT",
+      "category": "Language Model",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Fine-tuning",
+        "Instruction Following",
+        "CoT"
+      ]
+    },
+    {
+      "id": "data_recipe",
+      "label": "Data Recipe / Mixture",
+      "category": "Training",
+      "confidence": 4,
+      "studyCount": 5,
+      "tags": [
+        "Token Ratio",
+        "Curriculum",
+        "Data Curation"
+      ]
+    },
+    {
+      "id": "lora",
+      "label": "LoRA / PEFT",
+      "category": "Training",
+      "confidence": 2,
+      "studyCount": 2,
+      "tags": [
+        "Low-Rank",
+        "Adapter",
+        "Parameter Efficient"
+      ]
+    },
+    {
+      "id": "kv_cache",
+      "label": "KV Cache / Inference Opt.",
+      "category": "Architecture",
+      "confidence": 2,
+      "studyCount": 2,
+      "tags": [
+        "Inference Speed",
+        "Memory",
+        "Quantization"
+      ]
+    },
+    {
+      "id": "clip",
+      "label": "CLIP",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Contrastive",
+        "Zero-shot",
+        "Image-Text"
+      ]
+    },
     {
       "id": "linear_algebra_problems",
       "label": "📝 선형대수 MML 문제 모음",
@@ -30,7 +281,11 @@
       "confidence": 4,
       "studyCount": 5,
       "note": "linear_algebra_problems.md",
-      "tags": ["MML Problems", "Proofs", "AI Connections"],
+      "tags": [
+        "MML Problems",
+        "Proofs",
+        "AI Connections"
+      ],
       "definition": "1단계 문제 모음: MML (Mathematics for Machine Learning) Ch 2~4 10대 핵심 문제 전수 풀이집.",
       "purpose": "2단계 존재 이유: 수식 증명 및 알고리즘 구현/수치적 맹점 파악을 위한 실전 문제 모음.",
       "tradeoff_insight": "3단계 비판적 맹점: 단순 수식 증명을 넘어 부동소수점 오차, Ill-conditioned, Rank-Nullity의 한계를 파악.",
@@ -43,7 +298,11 @@
       "confidence": 3,
       "studyCount": 4,
       "note": "linear_algebra_ch2_1_systems.md",
-      "tags": ["Ax=b", "Row Picture", "Column Picture"],
+      "tags": [
+        "Ax=b",
+        "Row Picture",
+        "Column Picture"
+      ],
       "definition": "1단계 개념: $Ax=b$를 초평면 교점(Row) 및 열벡터 선형결합(Column)으로 바라보는 2가지 시각.",
       "purpose": "2단계 존재 이유: $b \\in \\text{Col}(A)$ 일 때만 해가 존재한다는 선형결합 본질 파악.",
       "tradeoff_insight": "3단계 비판적 맹점: 센서 노이즈로 $b \\notin \\text{Col}(A)$ 이면 완벽해 불가능.",
@@ -56,7 +315,11 @@
       "confidence": 3,
       "studyCount": 3,
       "note": "linear_algebra_ch2_2_matrices.md",
-      "tags": ["Matrix Multiplication", "Composition", "Inverse"],
+      "tags": [
+        "Matrix Multiplication",
+        "Composition",
+        "Inverse"
+      ],
       "definition": "1단계 개념: 행렬 곱셈 $AB$를 선형 변환의 연속적 연쇄 합성(Composition)으로 해석.",
       "purpose": "2단계 존재 이유: 연속 공간 변환을 컴퓨터 행렬 곱셈으로 연산 실현.",
       "tradeoff_insight": "3단계 비판적 맹점: 교환법칙 불성립($AB \\neq BA$). 변환 순서가 바뀌면 결과 폭망.",
@@ -69,7 +332,12 @@
       "confidence": 4,
       "studyCount": 5,
       "note": "linear_algebra_ch2_3_solving_systems.md",
-      "tags": ["ERO", "RREF", "Particular+General", "Minus-1 Trick"],
+      "tags": [
+        "ERO",
+        "RREF",
+        "Particular+General",
+        "Minus-1 Trick"
+      ],
       "definition": "1단계 개념: ERO를 통한 REF/RREF 변환 및 특수해+동차해 $x = x_p + x_h$ 아핀 구조.",
       "purpose": "2단계 존재 이유: 가우스 소거법으로 해의 공간 구조와 Nullspace를 정밀 추출.",
       "tradeoff_insight": "3단계 비판적 맹점: 피벗이 0 근처일 때 부동소수점 오차가 폭발하므로 Partial Pivoting 필수.",
@@ -82,7 +350,11 @@
       "confidence": 4,
       "studyCount": 5,
       "note": "linear_algebra_ch2_4_vector_spaces.md",
-      "tags": ["Vector Space", "Subspace", "Example 2.12"],
+      "tags": [
+        "Vector Space",
+        "Subspace",
+        "Example 2.12"
+      ],
       "definition": "1단계 개념: 원점 포함 및 덧셈/스칼라배 닫힘을 만족하는 벡터 부분공간 (Ex 2.12 A,B,C,D 해부).",
       "purpose": "2단계 존재 이유: 변환 시 어떤 차원 공간이 보존되고 소실되는지 3대 공리로 증명.",
       "tradeoff_insight": "3단계 비판적 맹점: 원점을 지나지 않는 직선(Case A)이나 1사분면(Case B)은 부분공간 파탄.",
@@ -95,7 +367,12 @@
       "confidence": 4,
       "studyCount": 5,
       "note": "linear_algebra_ch2_5_linear_independence.md",
-      "tags": ["Linear Independence", "Span", "Generating Set", "PCA"],
+      "tags": [
+        "Linear Independence",
+        "Span",
+        "Generating Set",
+        "PCA"
+      ],
       "definition": "1단계 개념: 어떤 벡터도 다른 벡터의 선형 결합으로 표현 불가능한 선형독립 및 스팬.",
       "purpose": "2단계 존재 이유: 특징(Feature) 간 정보 중복을 막아 최소 생성집합(기저)을 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 선형 종속 시 Rank가 떨어져 무수히 많은 해 및 정보 손실 발생.",
@@ -108,7 +385,11 @@
       "confidence": 4,
       "studyCount": 4,
       "note": "linear_algebra_ch2_6_basis_rank.md",
-      "tags": ["Basis", "Rank", "Effective Dimension"],
+      "tags": [
+        "Basis",
+        "Rank",
+        "Effective Dimension"
+      ],
       "definition": "1단계 개념: 공간을 생성하는 최소 독립 기저(Basis)와 유효 정보 차원 계수(Rank).",
       "purpose": "2단계 존재 이유: 데이터 공간 내의 유일한 좌표 표현 및 차원 측정.",
       "tradeoff_insight": "3단계 비판적 맹점: Row Rank = Column Rank 법칙 성립.",
@@ -121,7 +402,11 @@
       "confidence": 3,
       "studyCount": 4,
       "note": "linear_algebra_ch2_7_linear_mappings.md",
-      "tags": ["Kernel", "Image", "Rank-Nullity"],
+      "tags": [
+        "Kernel",
+        "Image",
+        "Rank-Nullity"
+      ],
       "definition": "1단계 개념: 가산성과 스칼라곱을 보존하는 변환 T(x)와 Rank-Nullity 차원 보존 정리.",
       "purpose": "2단계 존재 이유: 정보 소실 공간(Kernel)과 보존 공간(Image) 추적.",
       "tradeoff_insight": "3단계 비판적 맹점: Kernel로 들어간 정보는 영구 손실됨.",
@@ -134,7 +419,11 @@
       "confidence": 3,
       "studyCount": 4,
       "note": "linear_algebra_ch2_8_affine_spaces.md",
-      "tags": ["Affine Space", "Translation", "Bias"],
+      "tags": [
+        "Affine Space",
+        "Translation",
+        "Bias"
+      ],
       "definition": "1단계 개념: 원점을 지나지 않고 xp 만큼 평행 이동된 부분공간 $L = x_0 + U$.",
       "purpose": "2단계 존재 이유: 비동차 데이터 표현 및 신경망 편향 연산.",
       "tradeoff_insight": "3단계 비판적 맹점: 원점을 지나지 않아 벡터공간 공리는 파탄 남.",
@@ -146,7 +435,11 @@
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
-      "tags": ["Norm", "Inner Product", "Orthogonality"],
+      "tags": [
+        "Norm",
+        "Inner Product",
+        "Orthogonality"
+      ],
       "definition": "1단계 개념: 벡터의 길이(Norm)와 두 벡터 간 사이각 및 직교성을 측정하는 내적 연산.",
       "purpose": "2단계 존재 이유: 벡터 공간에 거리 및 각도 개념을 부여하여 해석기하학 기반 마련.",
       "tradeoff_insight": "3단계 비판적 맹점: L1 노름(Sparse)과 L2 노름(Euclidean)의 기하학적 제약 구역이 다름.",
@@ -158,7 +451,11 @@
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
-      "tags": ["Distance", "Angle", "Cosine Similarity"],
+      "tags": [
+        "Distance",
+        "Angle",
+        "Cosine Similarity"
+      ],
       "definition": "1단계 개념: 코사인 유사도 $\\cos \\theta = \\frac{\\langle x, y \\rangle}{\\|x\\| \\|y\\|}$ 및 코시-슈바르츠 부등식.",
       "purpose": "2단계 존재 이유: 고차원 임베딩 공간에서 두 데이터 간 방향성 유사도 측정.",
       "tradeoff_insight": "3단계 비판적 맹점: 차원의 curse로 고차원에서 모든 벡터 간 거리 차이가 무뎌짐.",
@@ -170,7 +467,11 @@
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
-      "tags": ["Orthonormal Basis", "Gram-Schmidt", "QR"],
+      "tags": [
+        "Orthonormal Basis",
+        "Gram-Schmidt",
+        "QR"
+      ],
       "definition": "1단계 개념: 임의의 기저를 단위 길이면서 서로 90도 직교하는 기저로 직교화하는 연산.",
       "purpose": "2단계 존재 이유: 계산 시 축 간 간섭을 100% 없애 대각선 직교 연산 실현.",
       "tradeoff_insight": "3단계 비판적 맹점: 수치 오차 수율 폭발 시 Modified Gram-Schmidt 사용.",
@@ -182,7 +483,11 @@
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
-      "tags": ["Orthogonal Projection", "Least Squares", "Normal Equation"],
+      "tags": [
+        "Orthogonal Projection",
+        "Least Squares",
+        "Normal Equation"
+      ],
       "definition": "1단계 개념: 공간 밖의 점 $y$를 서브스페이스 $\\text{Col}(X)$ 위로 직교 수직(Projection) 내리는 연산.",
       "purpose": "2단계 존재 이유: 해가 존재하지 않는 $Xw = y$ 시스템에서 오차 ||Xw - y||^2를 최소화하는 정사영 근사해 유도.",
       "tradeoff_insight": "3단계 비판적 맹점: $(X^TX)$가 역행렬을 가져야만 수식 작동 (Full Column Rank 필요).",
@@ -194,20 +499,27 @@
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
-      "tags": ["Change of Basis", "Similarity", "P^-1AP"],
+      "tags": [
+        "Change of Basis",
+        "Similarity",
+        "P^-1AP"
+      ],
       "definition": "1단계 개념: 구기저 좌표를 신기저 좌표로 재좌표화하는 변환 행렬 $P$와 유사 변환 $P^{-1}AP$.",
       "purpose": "2단계 존재 이유: 공간의 얽혀 있는 축을 독립된 대각선 축으로 변경하여 행렬 거듭제곱 파격 절감.",
       "tradeoff_insight": "3단계 비판적 맹점: 초기 기저변환 행렬 $P$ 구하기 비용 $O(n^3)$ 발생.",
       "ai_connection": "4단계 AI 연결: Transformer Multi-Head Attention Subspace 기저변환."
     },
-
     {
       "id": "linear_algebra_ch4_1_determinant_trace",
       "label": "4.1 행렬식과 자취",
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
-      "tags": ["Determinant", "Trace", "Volume Expansion"],
+      "tags": [
+        "Determinant",
+        "Trace",
+        "Volume Expansion"
+      ],
       "definition": "1단계 개념: 공간 변환 시 부피 팽창율인 $\\det(A)$와 대각선 합 $\\text{tr}(A) = \\sum \\lambda_i$.",
       "purpose": "2단계 존재 이유: 행렬의 공간 찌그러짐 가역성 및 고유값 전체 합 추적.",
       "tradeoff_insight": "3단계 비판적 맹점: $\\det(A)=0$ 이면 공간 1차원 이상 멸실 ➡️ 역행렬 파탄.",
@@ -219,7 +531,11 @@
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
-      "tags": ["Eigenvalue", "Eigenvector", "Characteristic Eq"],
+      "tags": [
+        "Eigenvalue",
+        "Eigenvector",
+        "Characteristic Eq"
+      ],
       "definition": "1단계 개념: 변환 후에도 방향이 변하지 않는 고집 센 고유축 $x$와 길이 팽창 배율 $\\lambda$.",
       "purpose": "2단계 존재 이유: 선형 변환의 가장 핵심적인 불변 주성분 축 추출.",
       "tradeoff_insight": "3단계 비판적 맹점: 정방행렬에서만 존재하며 복소수 고유값이 나올 수 있음.",
@@ -231,7 +547,11 @@
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
-      "tags": ["Cholesky", "Positive Definite", "L L^T"],
+      "tags": [
+        "Cholesky",
+        "Positive Definite",
+        "L L^T"
+      ],
       "definition": "1단계 개념: 양의 정정치 실수 대칭행렬 $A$를 하삼각행렬 $L$과 $L^T$의 곱으로 고속 분해.",
       "purpose": "2단계 존재 이유: LU 분해보다 연산량을 정확히 2배 절감하여 고속 정규방정식 솔버 구축.",
       "tradeoff_insight": "3단계 비판적 맹점: 행렬이 Symmetric Positive Definite 일 때만 제한 작동.",
@@ -243,7 +563,11 @@
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
-      "tags": ["Diagonalization", "Spectral Theorem", "Q Lambda Q^T"],
+      "tags": [
+        "Diagonalization",
+        "Spectral Theorem",
+        "Q Lambda Q^T"
+      ],
       "definition": "1단계 개념: 대각화 $A = P \\Lambda P^{-1}$ 및 실수 대칭행렬 직교 분해 $A = Q \\Lambda Q^T$ 증명.",
       "purpose": "2단계 존재 이유: 거대 행렬 거듭제곱 $A^k = Q \\Lambda^k Q^T$ 고속 연산.",
       "tradeoff_insight": "3단계 비판적 맹점: 고유벡터가 $n$개 미만으로 모자라면 대각화 파탄.",
@@ -255,7 +579,11 @@
       "category": "Math",
       "confidence": 4,
       "studyCount": 5,
-      "tags": ["SVD", "Singular Values", "U Sigma V^T"],
+      "tags": [
+        "SVD",
+        "Singular Values",
+        "U Sigma V^T"
+      ],
       "definition": "1단계 개념: 모든 직사각형 행렬($m \\times n$)을 [회전 $V^T$ $\\to$ 수축/팽창 $\\Sigma$ $\\to$ 회전 $U$] 3단계 해체.",
       "purpose": "2단계 존재 이유: 정방행렬 한계를 넘어 전 세계 모든 행렬의 최적 Low-Rank 압축 및 축 추출.",
       "tradeoff_insight": "3단계 비판적 맹점: SVD는 L2 오차 기반이라 Outlier 노이즈에 축이 튐.",
@@ -267,7 +595,11 @@
       "category": "Math",
       "confidence": 4,
       "studyCount": 4,
-      "tags": ["Pseudoinverse", "Truncated SVD", "PCA"],
+      "tags": [
+        "Pseudoinverse",
+        "Truncated SVD",
+        "PCA"
+      ],
       "definition": "1단계 개념: 핀로즈 유사역행렬 $A^+ = V \\Sigma^+ U^T$ 및 상위 $r$개 특이값만 남기는 Truncated SVD.",
       "purpose": "2단계 존재 이유: 역행렬이 존재하지 않는 모든 찌그러진 행렬의 최적 유일 근사 역행렬 구함.",
       "tradeoff_insight": "3단계 비판적 맹점: 버려지는 하위 특이값에 해당하는 복원 오차가 발생함.",
@@ -279,136 +611,868 @@
       "category": "Math",
       "confidence": 3,
       "studyCount": 3,
-      "tags": ["Schur Complement", "Block Matrix", "Conditional"],
+      "tags": [
+        "Schur Complement",
+        "Block Matrix",
+        "Conditional"
+      ],
       "definition": "1단계 개념: 거대 블록 행렬 $M=[A \\ B; C \\ D]$에서 $A$를 소거해 얻는 조건부 공간 행렬 $S = D - CA^{-1}B$.",
       "purpose": "2단계 존재 이유: 거대 행렬 역행렬 및 가우시안 조건부 확률 $P(X \\mid Y)$ 연산 블록 분할.",
       "tradeoff_insight": "3단계 비판적 맹점: 서브 블록 $A$가 반드시 가역(Invertible)이어야 함.",
       "ai_connection": "4단계 AI 연결: VAE 및 Gaussian Process 조건부 공분산 계산."
     },
-    { "id": "pipeline", "label": "CPU Pipeline & Hazard", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["IF/ID/EX/MEM/WB", "RAW", "Forwarding", "OoO"] },
-    { "id": "cache", "label": "Cache 구조", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["Set Associative", "Tag/Index/Offset", "False Sharing"] },
-    { "id": "virtual_memory", "label": "Virtual Memory & Paging", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["TLB", "Page Fault", "Page Table"] },
-    { "id": "os_io", "label": "OS / I/O / 인터럽트", "category": "Systems", "confidence": 3, "studyCount": 4, "tags": ["System Call", "DMA", "IRQ Handler"] },
-    { "id": "file_system", "label": "File System", "category": "Systems", "confidence": 2, "studyCount": 3, "tags": ["inode", "Journaling", "CoW", "Crash Consistency"] },
-    { "id": "concurrency", "label": "동시성 / 동기화", "category": "Systems", "confidence": 2, "studyCount": 2, "tags": ["Mutex", "Deadlock", "Race Condition", "Lock-free"] },
-    { "id": "sliding_window", "label": "Sliding Window", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["Two Pointer", "연속 구간", "Hash Map"] },
-    { "id": "prefix_sum", "label": "Prefix Sum + Hash", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["누적합", "부분배열", "O(n)"] },
-    { "id": "heap_interval", "label": "Heap + Interval", "category": "Algorithm", "confidence": 3, "studyCount": 2, "tags": ["Min-Heap", "구간 스케줄링", "최소 자원"] },
-    { "id": "binary_search", "label": "Binary Search on Answer", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["정답 이분탐색", "Parametric Search"] },
-    { "id": "bfs_grid", "label": "BFS / DFS", "category": "Algorithm", "confidence": 4, "studyCount": 4, "tags": ["Grid 탐색", "최단경로", "deque"] },
-    { "id": "topo_sort", "label": "Topological Sort", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["indegree", "DAG", "Kahn's Algorithm"] },
-    { "id": "dp", "label": "Dynamic Programming", "category": "Algorithm", "confidence": 3, "studyCount": 4, "tags": ["Memoization", "Bottom-up", "lru_cache"] },
-    { "id": "astar", "label": "A* / 휴리스틱 탐색", "category": "Algorithm", "confidence": 2, "studyCount": 2, "tags": ["f(n)=g(n)+h(n)", "Admissible", "Consistent"] },
-    { "id": "graph_algo", "label": "그래프 알고리즘", "category": "Algorithm", "confidence": 3, "studyCount": 3, "tags": ["Dijkstra", "Union-Find", "MST"] },
-    { "id": "mle_map", "label": "MLE / MAP / Bayesian", "category": "Math & Stats", "confidence": 3, "studyCount": 5, "tags": ["Maximum Likelihood", "Prior/Posterior", "Consistency"] },
-    { "id": "cross_entropy", "label": "Cross-Entropy & KL Div.", "category": "Math & Stats", "confidence": 4, "studyCount": 5, "tags": ["NLL", "KL Divergence", "Information Theory"] },
-    { "id": "pca", "label": "PCA / 선형대수", "category": "Math & Stats", "confidence": 3, "studyCount": 3, "tags": ["Eigenvalue", "Covariance Matrix", "Dimensionality Reduction"] },
-    { "id": "bias_variance", "label": "Bias-Variance Tradeoff", "category": "Math & Stats", "confidence": 3, "studyCount": 4, "tags": ["Overfitting", "Underfitting", "Regularization"] },
-    { "id": "ensemble", "label": "Ensemble (Bagging/Boosting)", "category": "Math & Stats", "confidence": 3, "studyCount": 3, "tags": ["Random Forest", "XGBoost", "Variance Reduction"] },
-    { "id": "cnn_math", "label": "CNN 수식 & 출력 크기", "category": "Math & Stats", "confidence": 3, "studyCount": 3, "tags": ["(N+2P-K)/S+1", "Equivariance", "Pooling"] },
-    { "id": "gnn", "label": "GNN (Graph Neural Network)", "category": "Architecture", "confidence": 2, "studyCount": 2, "tags": ["Message Passing", "Aggregation", "Inductive"] }
+    {
+      "id": "pipeline",
+      "label": "CPU Pipeline & Hazard",
+      "category": "Systems",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "IF/ID/EX/MEM/WB",
+        "RAW",
+        "Forwarding",
+        "OoO"
+      ]
+    },
+    {
+      "id": "cache",
+      "label": "Cache 구조",
+      "category": "Systems",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Set Associative",
+        "Tag/Index/Offset",
+        "False Sharing"
+      ]
+    },
+    {
+      "id": "virtual_memory",
+      "label": "Virtual Memory & Paging",
+      "category": "Systems",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "TLB",
+        "Page Fault",
+        "Page Table"
+      ]
+    },
+    {
+      "id": "os_io",
+      "label": "OS / I/O / 인터럽트",
+      "category": "Systems",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "System Call",
+        "DMA",
+        "IRQ Handler"
+      ]
+    },
+    {
+      "id": "file_system",
+      "label": "File System",
+      "category": "Systems",
+      "confidence": 2,
+      "studyCount": 3,
+      "tags": [
+        "inode",
+        "Journaling",
+        "CoW",
+        "Crash Consistency"
+      ]
+    },
+    {
+      "id": "concurrency",
+      "label": "동시성 / 동기화",
+      "category": "Systems",
+      "confidence": 2,
+      "studyCount": 2,
+      "tags": [
+        "Mutex",
+        "Deadlock",
+        "Race Condition",
+        "Lock-free"
+      ]
+    },
+    {
+      "id": "sliding_window",
+      "label": "Sliding Window",
+      "category": "Algorithm",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Two Pointer",
+        "연속 구간",
+        "Hash Map"
+      ]
+    },
+    {
+      "id": "prefix_sum",
+      "label": "Prefix Sum + Hash",
+      "category": "Algorithm",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "누적합",
+        "부분배열",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "heap_interval",
+      "label": "Heap + Interval",
+      "category": "Algorithm",
+      "confidence": 3,
+      "studyCount": 2,
+      "tags": [
+        "Min-Heap",
+        "구간 스케줄링",
+        "최소 자원"
+      ]
+    },
+    {
+      "id": "binary_search",
+      "label": "Binary Search on Answer",
+      "category": "Algorithm",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "정답 이분탐색",
+        "Parametric Search"
+      ]
+    },
+    {
+      "id": "bfs_grid",
+      "label": "BFS / DFS",
+      "category": "Algorithm",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Grid 탐색",
+        "최단경로",
+        "deque"
+      ]
+    },
+    {
+      "id": "topo_sort",
+      "label": "Topological Sort",
+      "category": "Algorithm",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "indegree",
+        "DAG",
+        "Kahn's Algorithm"
+      ]
+    },
+    {
+      "id": "dp",
+      "label": "Dynamic Programming",
+      "category": "Algorithm",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Memoization",
+        "Bottom-up",
+        "lru_cache"
+      ]
+    },
+    {
+      "id": "astar",
+      "label": "A* / 휴리스틱 탐색",
+      "category": "Algorithm",
+      "confidence": 2,
+      "studyCount": 2,
+      "tags": [
+        "f(n)=g(n)+h(n)",
+        "Admissible",
+        "Consistent"
+      ]
+    },
+    {
+      "id": "graph_algo",
+      "label": "그래프 알고리즘",
+      "category": "Algorithm",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Dijkstra",
+        "Union-Find",
+        "MST"
+      ]
+    },
+    {
+      "id": "mle_map",
+      "label": "MLE / MAP / Bayesian",
+      "category": "Math & Stats",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "Maximum Likelihood",
+        "Prior/Posterior",
+        "Consistency"
+      ]
+    },
+    {
+      "id": "cross_entropy",
+      "label": "Cross-Entropy & KL Div.",
+      "category": "Math & Stats",
+      "confidence": 4,
+      "studyCount": 5,
+      "tags": [
+        "NLL",
+        "KL Divergence",
+        "Information Theory"
+      ]
+    },
+    {
+      "id": "pca",
+      "label": "PCA / 선형대수",
+      "category": "Math & Stats",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Eigenvalue",
+        "Covariance Matrix",
+        "Dimensionality Reduction"
+      ]
+    },
+    {
+      "id": "bias_variance",
+      "label": "Bias-Variance Tradeoff",
+      "category": "Math & Stats",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Overfitting",
+        "Underfitting",
+        "Regularization"
+      ]
+    },
+    {
+      "id": "ensemble",
+      "label": "Ensemble (Bagging/Boosting)",
+      "category": "Math & Stats",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Random Forest",
+        "XGBoost",
+        "Variance Reduction"
+      ]
+    },
+    {
+      "id": "cnn_math",
+      "label": "CNN 수식 & 출력 크기",
+      "category": "Math & Stats",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "(N+2P-K)/S+1",
+        "Equivariance",
+        "Pooling"
+      ]
+    },
+    {
+      "id": "gnn",
+      "label": "GNN (Graph Neural Network)",
+      "category": "Architecture",
+      "confidence": 2,
+      "studyCount": 2,
+      "tags": [
+        "Message Passing",
+        "Aggregation",
+        "Inductive"
+      ]
+    },
+    {
+      "id": "linear_algebra_ch3_1_norms",
+      "label": "3.1 노름과 길이기하학",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "linear_algebra_ch3_1_norms.md",
+      "tags": [
+        "Norm",
+        "Euclidean Norm",
+        "Manhattan Norm",
+        "Analytic Geometry"
+      ],
+      "definition": "1단계 개념: 벡터 공간 위 원소에 길이(Length)를 할당하는 함수 및 3대 공리.",
+      "purpose": "2단계 존재 이유: 벡터 간 거리와 유사도를 정량적으로 측정하기 위함.",
+      "tradeoff_insight": "3단계 비판적 맹점: L1 노름은 Sparsity(희소성)를 유도하고 L2 노름은 미분 가능한 매끈한 제약을 줌.",
+      "ai_connection": "4단계 AI 연결: SVM 마진 최적화 및 Lasso/Ridge 규제 페널티 항 활용."
+    }
   ],
   "edges": [
-    { "source": "vae", "target": "diffusion", "relation": "conceptual_root", "weight": 3 },
-    { "source": "vae", "target": "flow", "relation": "comparison", "weight": 2 },
-    { "source": "vae", "target": "discrete_token", "relation": "derived", "weight": 3 },
-    { "source": "gan", "target": "diffusion", "relation": "comparison", "weight": 2 },
-    { "source": "transformer", "target": "attention", "relation": "contains", "weight": 4 },
-    { "source": "transformer", "target": "bert", "relation": "derived", "weight": 3 },
-    { "source": "transformer", "target": "gpt", "relation": "derived", "weight": 3 },
-    { "source": "transformer", "target": "vit", "relation": "applied_to", "weight": 3 },
-    { "source": "gpt", "target": "llm", "relation": "scaled_up", "weight": 3 },
-    { "source": "llm", "target": "rlhf", "relation": "finetuned_with", "weight": 3 },
-    { "source": "rl_basic", "target": "rlhf", "relation": "applied_to", "weight": 3 },
-    { "source": "llm", "target": "multimodal", "relation": "extended_to", "weight": 3 },
-    { "source": "llm", "target": "sft", "relation": "finetuned_with", "weight": 3 },
-    { "source": "vision_encoder", "target": "multimodal", "weight": 3, "relation": "input_to" },
-    { "source": "discrete_token", "target": "multimodal", "weight": 3, "relation": "enables_generation" },
-    { "source": "audio_model", "target": "multimodal", "weight": 2, "relation": "input_to" },
-    { "source": "multimodal", "target": "hcx_omni", "weight": 4, "relation": "instantiated_as" },
-    { "source": "data_recipe", "target": "hcx_omni", "weight": 4, "relation": "key_component" },
-    { "source": "vit", "target": "vision_encoder", "weight": 3, "relation": "is_a" },
-    { "source": "resnet", "target": "vision_encoder", "weight": 2, "relation": "is_a" },
-    { "source": "clip", "target": "multimodal", "weight": 3, "relation": "enables" },
-    { "source": "lora", "target": "sft", "weight": 2, "relation": "enables_efficient" },
-    { "source": "sft", "target": "hcx_omni", "weight": 3, "relation": "used_in" },
-    { "source": "linear_algebra_ch2_1_systems", "target": "linear_algebra_ch2_2_matrices", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch2_2_matrices", "target": "linear_algebra_ch2_3_solving_systems", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch2_3_solving_systems", "target": "linear_algebra_ch2_4_vector_spaces", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch2_4_vector_spaces", "target": "linear_algebra_ch2_5_independence", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch2_5_independence", "target": "linear_algebra_ch2_6_basis_rank", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch2_6_basis_rank", "target": "linear_algebra_ch2_7_linear_mappings", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch2_7_linear_mappings", "target": "linear_algebra_ch2_8_affine_spaces", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch2_1_systems", "target": "linear_algebra_ch2_8_affine_spaces", "relation": "chapter_loop", "weight": 4 },
-    { "source": "linear_algebra_ch2_1_systems", "target": "linear_algebra_ch2_3_solving_systems", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch2_2_matrices", "target": "linear_algebra_ch2_7_linear_mappings", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch2_3_solving_systems", "target": "linear_algebra_ch2_6_basis_rank", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch2_4_vector_spaces", "target": "linear_algebra_ch2_6_basis_rank", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch2_4_vector_spaces", "target": "linear_algebra_ch2_8_affine_spaces", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch2_5_independence", "target": "linear_algebra_ch2_7_linear_mappings", "relation": "internal_link", "weight": 4 },
-
-    { "source": "linear_algebra_ch3_1_norms_inner_products", "target": "linear_algebra_ch3_2_lengths_distances", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch3_2_lengths_distances", "target": "linear_algebra_ch3_3_gram_schmidt", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch3_3_gram_schmidt", "target": "linear_algebra_ch3_4_projections_least_squares", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch3_4_projections_least_squares", "target": "linear_algebra_ch3_5_change_of_basis", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch3_1_norms_inner_products", "target": "linear_algebra_ch3_5_change_of_basis", "relation": "chapter_loop", "weight": 4 },
-    { "source": "linear_algebra_ch3_1_norms_inner_products", "target": "linear_algebra_ch3_3_gram_schmidt", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch3_1_norms_inner_products", "target": "linear_algebra_ch3_4_projections_least_squares", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch3_2_lengths_distances", "target": "linear_algebra_ch3_5_change_of_basis", "relation": "internal_link", "weight": 4 },
-
-    { "source": "linear_algebra_ch4_1_determinant_trace", "target": "linear_algebra_ch4_2_eigenvalues_eigenvectors", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch4_2_eigenvalues_eigenvectors", "target": "linear_algebra_ch4_3_cholesky_decomposition", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch4_3_cholesky_decomposition", "target": "linear_algebra_ch4_4_eigendecomposition", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch4_4_eigendecomposition", "target": "linear_algebra_ch4_5_svd", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch4_5_svd", "target": "linear_algebra_ch4_6_pseudoinverse_pca", "relation": "basis_of", "weight": 5 },
-    { "source": "linear_algebra_ch4_6_pseudoinverse_pca", "target": "linear_algebra_ch4_7_schur_complement", "relation": "key_component", "weight": 5 },
-    { "source": "linear_algebra_ch4_1_determinant_trace", "target": "linear_algebra_ch4_7_schur_complement", "relation": "chapter_loop", "weight": 4 },
-    { "source": "linear_algebra_ch4_1_determinant_trace", "target": "linear_algebra_ch4_4_eigendecomposition", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch4_2_eigenvalues_eigenvectors", "target": "linear_algebra_ch4_4_eigendecomposition", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch4_2_eigenvalues_eigenvectors", "target": "linear_algebra_ch4_5_svd", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch4_4_eigendecomposition", "target": "linear_algebra_ch4_6_pseudoinverse_pca", "relation": "internal_link", "weight": 4 },
-    { "source": "linear_algebra_ch4_5_svd", "target": "lora", "relation": "applied_to", "weight": 4, "insight": "SVD의 Truncated SVD 원리가 LoRA의 근간" },
-    { "source": "linear_algebra_ch4_5_svd", "target": "pca", "relation": "basis_of", "weight": 4, "insight": "SVD = PCA 주성분 분석" },
-    { "source": "pipeline", "target": "cache", "relation": "interacts_with", "weight": 3 },
-    { "source": "cache", "target": "virtual_memory", "relation": "interacts_with", "weight": 3 },
-    { "source": "virtual_memory", "target": "os_io", "relation": "managed_by", "weight": 3 },
-    { "source": "os_io", "target": "file_system", "relation": "implements", "weight": 3 },
-    { "source": "os_io", "target": "concurrency", "relation": "enables", "weight": 2 },
-    { "source": "file_system", "target": "virtual_memory", "relation": "uses", "weight": 2 },
-    { "source": "bfs_grid", "target": "astar", "relation": "generalized_to", "weight": 3 },
-    { "source": "bfs_grid", "target": "topo_sort", "relation": "uses", "weight": 2 },
-    { "source": "dp", "target": "astar", "relation": "related_to", "weight": 2 },
-    { "source": "sliding_window", "target": "prefix_sum", "relation": "comparison", "weight": 2 },
-    { "source": "heap_interval", "target": "graph_algo", "relation": "used_in", "weight": 2 },
-    { "source": "graph_algo", "target": "topo_sort", "relation": "contains", "weight": 2 },
-    { "source": "binary_search", "target": "dp", "relation": "combined_with", "weight": 2 },
-    { "source": "mle_map", "target": "cross_entropy", "relation": "derives", "weight": 4 },
-    { "source": "mle_map", "target": "bias_variance", "relation": "related_to", "weight": 3 },
-    { "source": "mle_map", "target": "vae", "relation": "used_in", "weight": 3 },
-    { "source": "cross_entropy", "target": "llm", "relation": "trains", "weight": 4 },
-    { "source": "cross_entropy", "target": "vae", "relation": "used_in", "weight": 3 },
-    { "source": "bias_variance", "target": "ensemble", "relation": "explains", "weight": 3 },
-    { "source": "pca", "target": "vae", "relation": "comparison", "weight": 2 },
-    { "source": "cnn_math", "target": "resnet", "relation": "basis_of", "weight": 3 },
-    { "source": "cnn_math", "target": "vit", "relation": "comparison", "weight": 2 },
-    { "source": "gnn", "target": "graph_algo", "relation": "learns", "weight": 2 },
-    { "source": "rl_basic", "target": "mle_map", "relation": "related_to", "weight": 2 },
-    { "source": "pipeline", "target": "concurrency", "relation": "related_to", "weight": 2 },
-    { "source": "dp", "target": "rl_basic", "relation": "basis_of", "weight": 3 }
+    {
+      "source": "vae",
+      "target": "diffusion",
+      "relation": "conceptual_root",
+      "weight": 3
+    },
+    {
+      "source": "vae",
+      "target": "flow",
+      "relation": "comparison",
+      "weight": 2
+    },
+    {
+      "source": "vae",
+      "target": "discrete_token",
+      "relation": "derived",
+      "weight": 3
+    },
+    {
+      "source": "gan",
+      "target": "diffusion",
+      "relation": "comparison",
+      "weight": 2
+    },
+    {
+      "source": "transformer",
+      "target": "attention",
+      "relation": "contains",
+      "weight": 4
+    },
+    {
+      "source": "transformer",
+      "target": "bert",
+      "relation": "derived",
+      "weight": 3
+    },
+    {
+      "source": "transformer",
+      "target": "gpt",
+      "relation": "derived",
+      "weight": 3
+    },
+    {
+      "source": "transformer",
+      "target": "vit",
+      "relation": "applied_to",
+      "weight": 3
+    },
+    {
+      "source": "gpt",
+      "target": "llm",
+      "relation": "scaled_up",
+      "weight": 3
+    },
+    {
+      "source": "llm",
+      "target": "rlhf",
+      "relation": "finetuned_with",
+      "weight": 3
+    },
+    {
+      "source": "rl_basic",
+      "target": "rlhf",
+      "relation": "applied_to",
+      "weight": 3
+    },
+    {
+      "source": "llm",
+      "target": "multimodal",
+      "relation": "extended_to",
+      "weight": 3
+    },
+    {
+      "source": "llm",
+      "target": "sft",
+      "relation": "finetuned_with",
+      "weight": 3
+    },
+    {
+      "source": "vision_encoder",
+      "target": "multimodal",
+      "weight": 3,
+      "relation": "input_to"
+    },
+    {
+      "source": "discrete_token",
+      "target": "multimodal",
+      "weight": 3,
+      "relation": "enables_generation"
+    },
+    {
+      "source": "audio_model",
+      "target": "multimodal",
+      "weight": 2,
+      "relation": "input_to"
+    },
+    {
+      "source": "multimodal",
+      "target": "hcx_omni",
+      "weight": 4,
+      "relation": "instantiated_as"
+    },
+    {
+      "source": "data_recipe",
+      "target": "hcx_omni",
+      "weight": 4,
+      "relation": "key_component"
+    },
+    {
+      "source": "vit",
+      "target": "vision_encoder",
+      "weight": 3,
+      "relation": "is_a"
+    },
+    {
+      "source": "resnet",
+      "target": "vision_encoder",
+      "weight": 2,
+      "relation": "is_a"
+    },
+    {
+      "source": "clip",
+      "target": "multimodal",
+      "weight": 3,
+      "relation": "enables"
+    },
+    {
+      "source": "lora",
+      "target": "sft",
+      "weight": 2,
+      "relation": "enables_efficient"
+    },
+    {
+      "source": "sft",
+      "target": "hcx_omni",
+      "weight": 3,
+      "relation": "used_in"
+    },
+    {
+      "source": "linear_algebra_ch2_1_systems",
+      "target": "linear_algebra_ch2_2_matrices",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch2_2_matrices",
+      "target": "linear_algebra_ch2_3_solving_systems",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch2_3_solving_systems",
+      "target": "linear_algebra_ch2_4_vector_spaces",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch2_4_vector_spaces",
+      "target": "linear_algebra_ch2_5_independence",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch2_5_independence",
+      "target": "linear_algebra_ch2_6_basis_rank",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch2_6_basis_rank",
+      "target": "linear_algebra_ch2_7_linear_mappings",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch2_7_linear_mappings",
+      "target": "linear_algebra_ch2_8_affine_spaces",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch2_1_systems",
+      "target": "linear_algebra_ch2_8_affine_spaces",
+      "relation": "chapter_loop",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch2_1_systems",
+      "target": "linear_algebra_ch2_3_solving_systems",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch2_2_matrices",
+      "target": "linear_algebra_ch2_7_linear_mappings",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch2_3_solving_systems",
+      "target": "linear_algebra_ch2_6_basis_rank",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch2_4_vector_spaces",
+      "target": "linear_algebra_ch2_6_basis_rank",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch2_4_vector_spaces",
+      "target": "linear_algebra_ch2_8_affine_spaces",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch2_5_independence",
+      "target": "linear_algebra_ch2_7_linear_mappings",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch3_1_norms_inner_products",
+      "target": "linear_algebra_ch3_2_lengths_distances",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch3_2_lengths_distances",
+      "target": "linear_algebra_ch3_3_gram_schmidt",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch3_3_gram_schmidt",
+      "target": "linear_algebra_ch3_4_projections_least_squares",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch3_4_projections_least_squares",
+      "target": "linear_algebra_ch3_5_change_of_basis",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch3_1_norms_inner_products",
+      "target": "linear_algebra_ch3_5_change_of_basis",
+      "relation": "chapter_loop",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch3_1_norms_inner_products",
+      "target": "linear_algebra_ch3_3_gram_schmidt",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch3_1_norms_inner_products",
+      "target": "linear_algebra_ch3_4_projections_least_squares",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch3_2_lengths_distances",
+      "target": "linear_algebra_ch3_5_change_of_basis",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch4_1_determinant_trace",
+      "target": "linear_algebra_ch4_2_eigenvalues_eigenvectors",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch4_2_eigenvalues_eigenvectors",
+      "target": "linear_algebra_ch4_3_cholesky_decomposition",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch4_3_cholesky_decomposition",
+      "target": "linear_algebra_ch4_4_eigendecomposition",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch4_4_eigendecomposition",
+      "target": "linear_algebra_ch4_5_svd",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch4_5_svd",
+      "target": "linear_algebra_ch4_6_pseudoinverse_pca",
+      "relation": "basis_of",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch4_6_pseudoinverse_pca",
+      "target": "linear_algebra_ch4_7_schur_complement",
+      "relation": "key_component",
+      "weight": 5
+    },
+    {
+      "source": "linear_algebra_ch4_1_determinant_trace",
+      "target": "linear_algebra_ch4_7_schur_complement",
+      "relation": "chapter_loop",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch4_1_determinant_trace",
+      "target": "linear_algebra_ch4_4_eigendecomposition",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch4_2_eigenvalues_eigenvectors",
+      "target": "linear_algebra_ch4_4_eigendecomposition",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch4_2_eigenvalues_eigenvectors",
+      "target": "linear_algebra_ch4_5_svd",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch4_4_eigendecomposition",
+      "target": "linear_algebra_ch4_6_pseudoinverse_pca",
+      "relation": "internal_link",
+      "weight": 4
+    },
+    {
+      "source": "linear_algebra_ch4_5_svd",
+      "target": "lora",
+      "relation": "applied_to",
+      "weight": 4,
+      "insight": "SVD의 Truncated SVD 원리가 LoRA의 근간"
+    },
+    {
+      "source": "linear_algebra_ch4_5_svd",
+      "target": "pca",
+      "relation": "basis_of",
+      "weight": 4,
+      "insight": "SVD = PCA 주성분 분석"
+    },
+    {
+      "source": "pipeline",
+      "target": "cache",
+      "relation": "interacts_with",
+      "weight": 3
+    },
+    {
+      "source": "cache",
+      "target": "virtual_memory",
+      "relation": "interacts_with",
+      "weight": 3
+    },
+    {
+      "source": "virtual_memory",
+      "target": "os_io",
+      "relation": "managed_by",
+      "weight": 3
+    },
+    {
+      "source": "os_io",
+      "target": "file_system",
+      "relation": "implements",
+      "weight": 3
+    },
+    {
+      "source": "os_io",
+      "target": "concurrency",
+      "relation": "enables",
+      "weight": 2
+    },
+    {
+      "source": "file_system",
+      "target": "virtual_memory",
+      "relation": "uses",
+      "weight": 2
+    },
+    {
+      "source": "bfs_grid",
+      "target": "astar",
+      "relation": "generalized_to",
+      "weight": 3
+    },
+    {
+      "source": "bfs_grid",
+      "target": "topo_sort",
+      "relation": "uses",
+      "weight": 2
+    },
+    {
+      "source": "dp",
+      "target": "astar",
+      "relation": "related_to",
+      "weight": 2
+    },
+    {
+      "source": "sliding_window",
+      "target": "prefix_sum",
+      "relation": "comparison",
+      "weight": 2
+    },
+    {
+      "source": "heap_interval",
+      "target": "graph_algo",
+      "relation": "used_in",
+      "weight": 2
+    },
+    {
+      "source": "graph_algo",
+      "target": "topo_sort",
+      "relation": "contains",
+      "weight": 2
+    },
+    {
+      "source": "binary_search",
+      "target": "dp",
+      "relation": "combined_with",
+      "weight": 2
+    },
+    {
+      "source": "mle_map",
+      "target": "cross_entropy",
+      "relation": "derives",
+      "weight": 4
+    },
+    {
+      "source": "mle_map",
+      "target": "bias_variance",
+      "relation": "related_to",
+      "weight": 3
+    },
+    {
+      "source": "mle_map",
+      "target": "vae",
+      "relation": "used_in",
+      "weight": 3
+    },
+    {
+      "source": "cross_entropy",
+      "target": "llm",
+      "relation": "trains",
+      "weight": 4
+    },
+    {
+      "source": "cross_entropy",
+      "target": "vae",
+      "relation": "used_in",
+      "weight": 3
+    },
+    {
+      "source": "bias_variance",
+      "target": "ensemble",
+      "relation": "explains",
+      "weight": 3
+    },
+    {
+      "source": "pca",
+      "target": "vae",
+      "relation": "comparison",
+      "weight": 2
+    },
+    {
+      "source": "cnn_math",
+      "target": "resnet",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "cnn_math",
+      "target": "vit",
+      "relation": "comparison",
+      "weight": 2
+    },
+    {
+      "source": "gnn",
+      "target": "graph_algo",
+      "relation": "learns",
+      "weight": 2
+    },
+    {
+      "source": "rl_basic",
+      "target": "mle_map",
+      "relation": "related_to",
+      "weight": 2
+    },
+    {
+      "source": "pipeline",
+      "target": "concurrency",
+      "relation": "related_to",
+      "weight": 2
+    },
+    {
+      "source": "dp",
+      "target": "rl_basic",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch2_8_affine",
+      "target": "linear_algebra_ch3_1_norms",
+      "relation": "extended_to",
+      "weight": 3
+    }
   ],
   "categories": {
-    "Generative":     { "color": "#a78bfa", "icon": "✨" },
-    "Architecture":   { "color": "#818cf8", "icon": "🏗️" },
-    "Language Model": { "color": "#c084fc", "icon": "📝" },
-    "Multimodal":     { "color": "#fb923c", "icon": "🎭" },
-    "RL":             { "color": "#34d399", "icon": "🎮" },
-    "Training":       { "color": "#e879f9", "icon": "⚙️" },
-    "Systems":        { "color": "#ef4444", "icon": "💻" },
-    "Algorithm":      { "color": "#06b6d4", "icon": "🔢" },
-    "Math & Stats":   { "color": "#4ade80", "icon": "📐" },
-    "Math Problems":  { "color": "#facc15", "icon": "📝" }
+    "Generative": {
+      "color": "#a78bfa",
+      "icon": "✨"
+    },
+    "Architecture": {
+      "color": "#818cf8",
+      "icon": "🏗️"
+    },
+    "Language Model": {
+      "color": "#c084fc",
+      "icon": "📝"
+    },
+    "Multimodal": {
+      "color": "#fb923c",
+      "icon": "🎭"
+    },
+    "RL": {
+      "color": "#34d399",
+      "icon": "🎮"
+    },
+    "Training": {
+      "color": "#e879f9",
+      "icon": "⚙️"
+    },
+    "Systems": {
+      "color": "#ef4444",
+      "icon": "💻"
+    },
+    "Algorithm": {
+      "color": "#06b6d4",
+      "icon": "🔢"
+    },
+    "Math & Stats": {
+      "color": "#4ade80",
+      "icon": "📐"
+    },
+    "Math Problems": {
+      "color": "#facc15",
+      "icon": "📝"
+    }
   },
   "sessions": [
-    { "date": "2026-08-14", "topics": ["linear_algebra_01_systems_rank", "linear_algebra_06_change_of_basis", "linear_algebra_07_affine_subspaces", "linear_algebra_08_schur_complement", "linear_algebra_problems"], "note": "선형대수학 8대 마스터 노드 및 10대 문제 풀이집 정복 완료" }
+    {
+      "date": "2026-08-14",
+      "topics": [
+        "linear_algebra_01_systems_rank",
+        "linear_algebra_06_change_of_basis",
+        "linear_algebra_07_affine_subspaces",
+        "linear_algebra_08_schur_complement",
+        "linear_algebra_problems"
+      ],
+      "note": "선형대수학 8대 마스터 노드 및 10대 문제 풀이집 정복 완료"
+    }
   ]
 }
