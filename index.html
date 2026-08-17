@@ -250,12 +250,30 @@
     <!-- ===== VIEW: ANALYTICS (투데이 리포트 & 일일 일정 대시보드) ===== -->
     <div class="view" id="view-analytics" style="overflow-y: auto; max-height: calc(100vh - 80px); padding-bottom: 60px;">
       <div class="column-page">
-        <div class="column-page-header" style="margin-bottom: 24px;">
-          <div class="newspaper-brand">TODAY REPORT</div>
-          <div class="newspaper-meta-row">
-            <span>REAL-TIME TRACKING</span>
-            <span>HYEONWOO JUNG</span>
-            <span id="analytics-date">2026. 08. 17 MON</span>
+        <!-- ⏳ D-DAY COUNTER BAR WIDGET -->
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">네이버클라우드 인턴</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #f8fafc; margin-top: 2px;">네이버 체험형 인턴 입과</div>
+            </div>
+            <div style="font-family: monospace; font-size: 1.25rem; font-weight: 900; color: #10b981; background: rgba(16, 185, 129, 0.2); padding: 6px 14px; border-radius: 10px;">D-14</div>
+          </div>
+
+          <div style="flex: 1; min-width: 200px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 14px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px;">POSTECH AI대학원</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #f8fafc; margin-top: 2px;">포스텍 1지망 서류 마감</div>
+            </div>
+            <div style="font-family: monospace; font-size: 1.25rem; font-weight: 900; color: #38bdf8; background: rgba(56, 189, 248, 0.2); padding: 6px 14px; border-radius: 10px;">D-22</div>
+          </div>
+
+          <div style="flex: 1; min-width: 200px; background: rgba(192, 132, 252, 0.12); border: 1px solid rgba(192, 132, 252, 0.3); border-radius: 14px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 700; color: #c084fc; text-transform: uppercase; letter-spacing: 0.5px;">서울대 데이터사이언스</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #f8fafc; margin-top: 2px;">도재영 교수님 사전 컨택</div>
+            </div>
+            <div style="font-family: monospace; font-size: 1.25rem; font-weight: 900; color: #c084fc; background: rgba(192, 132, 252, 0.2); padding: 6px 14px; border-radius: 10px;">D-7</div>
           </div>
         </div>
 
