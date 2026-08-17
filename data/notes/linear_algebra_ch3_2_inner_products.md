@@ -70,6 +70,34 @@ $$\langle \mathbf{x}, \mathbf{y} \rangle = \left\langle \sum_{i=1}^n \hat{x}_i \
 
 - Theorem 3.5: 실수 유한차원 공간 $V$ 상의 연산 $\langle \cdot, \cdot \rangle$ 이 내적일 필요충분조건은, 대칭 양의 정정 행렬 $A \in \mathbb{R}^{n \times n}$ 이 존재하여 $\langle \mathbf{x}, \mathbf{y} \rangle = \hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 로 표현되는 것입니다 (Eq 3.15).
 
+#### 💡 [손으로 직접 해보는 구체적인 수치 예시]
+
+가장 이해하기 쉬운 2차원 공간 $\mathbb{R}^2$ 에서 구체적인 수치로 행렬 $A$ 가 어떻게 만들어지고 $\hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 로 계산되는지 직접 확인해 봅시다!
+
+##### 1단계: 기저 벡터들 사이의 내적값으로 행렬 $A$ 의 성분 채우기
+우리가 예시 3.3(Example 3.3)에서 보았던 특수 내적 연산 $\langle \mathbf{u}, \mathbf{v} \rangle = u_1 v_1 - (u_1 v_2 + u_2 v_1) + 2 u_2 v_2$ 를 사용해 봅시다.
+표준기저 $\mathbf{b}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \mathbf{b}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$ 의 기저끼리 내적을 구합니다:
+
+- $A_{11} = \langle \mathbf{b}_1, \mathbf{b}_1 \rangle = 1 \cdot 1 - (1 \cdot 0 + 0 \cdot 1) + 2(0 \cdot 0) = \mathbf{1}$
+- $A_{12} = \langle \mathbf{b}_1, \mathbf{b}_2 \rangle = 1 \cdot 0 - (1 \cdot 1 + 0 \cdot 0) + 2(0 \cdot 1) = \mathbf{-1}$
+- $A_{21} = \langle \mathbf{b}_2, \mathbf{b}_1 \rangle = \langle \mathbf{b}_1, \mathbf{b}_2 \rangle = \mathbf{-1}$ (대칭성에 의해 $A_{12}$ 와 동일)
+- $A_{22} = \langle \mathbf{b}_2, \mathbf{b}_2 \rangle = 0 \cdot 0 - (0 \cdot 1 + 1 \cdot 0) + 2(1 \cdot 1) = \mathbf{2}$
+
+기저 벡터들의 내적 결과표인 행렬 $A$ 완성:
+$$A = \begin{bmatrix} A_{11} & A_{12} \\ A_{21} & A_{22} \end{bmatrix} = \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}$$
+
+##### 2단계: 임의의 두 벡터 $\mathbf{x} = \begin{bmatrix} 2 \\ 3 \end{bmatrix}$, $\mathbf{y} = \begin{bmatrix} 4 \\ 1 \end{bmatrix}$ 에 대해 내적 직접 계산
+- 방법 1 (내적 정의에 직접 대입):
+  $$\langle \mathbf{x}, \mathbf{y} \rangle = (2 \cdot 4) - (2 \cdot 1 + 3 \cdot 4) + 2 (3 \cdot 1) = 8 - 14 + 6 = \mathbf{0}$$
+- 방법 2 (행렬 곱 $\hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 에 대입):
+  $$\hat{\mathbf{x}}^\top A \hat{\mathbf{y}} = \begin{bmatrix} 2 & 3 \end{bmatrix} \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix} \begin{bmatrix} 4 \\ 1 \end{bmatrix}$$
+  1. 먼저 $A \hat{\mathbf{y}}$ 연산: $\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix} \begin{bmatrix} 4 \\ 1 \end{bmatrix} = \begin{bmatrix} 4 - 1 \\ -4 + 2 \end{bmatrix} = \begin{bmatrix} 3 \\ -2 \end{bmatrix}$
+  2. 마지막 $\hat{\mathbf{x}}^\top$ 곱하기: $\begin{bmatrix} 2 & 3 \end{bmatrix} \begin{bmatrix} 3 \\ -2 \end{bmatrix} = 2 \cdot 3 + 3 \cdot (-2) = 6 - 6 = \mathbf{0}$
+
+##### 🎯 결론
+내적 정의에 복잡하게 하나씩 대입해서 계산한 결과($0$)와, 기저 내적표로 만든 행렬 곱 $\hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 으로 계산한 결과($0$)가 완벽하게 100% 일치합니다! 
+즉, 행렬 $A$ 는 "기저 벡터들끼리의 내적 관계를 모아놓은 가중치 표" 역할을 합니다.
+
 ### 📌 2. 대칭 양의 정정 행렬의 정의 (Definition 3.4 & Eq 3.11)
 실수 대칭 행렬 $A \in \mathbb{R}^{n \times n}$ ($A^\top = A$) 이 모든 0이 아닌 벡터 $\mathbf{x} \in V \setminus \{\mathbf{0}\}$ 에 대해 다음을 만족할 때 대칭 양의 정정 행렬 (Symmetric Positive Definite Matrix, SPD)이라 부릅니다:
 
