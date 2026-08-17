@@ -1418,6 +1418,30 @@
       "target": "linear_algebra_ch3_1_norms",
       "relation": "extended_to",
       "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch2_8_affine_spaces",
+      "target": "linear_algebra_ch3_1_norms",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch3_1_norms",
+      "target": "linear_algebra_ch3_1_norms_inner_products",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch3_5_change_of_basis",
+      "target": "linear_algebra_ch4_1_determinant_trace",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch4_7_schur_complement",
+      "target": "linear_algebra_problems",
+      "relation": "basis_of",
+      "weight": 3
     }
   ],
   "categories": {
