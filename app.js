@@ -90,8 +90,8 @@ const scheduleDataMap = {
     content: '• 2.6 기저/계수, 2.7 선형사상, 2.8 어파인공간 노트 작성<br>• 포스텍(손진희 랩 1지망) 및 서울대(도재영 랩) 타겟 연구실 조사'
   },
   '2026-08-17': {
-    title: '🌟 [오늘] 3.1 노름/내적 & 투데이 리포트 / 캘린더 모달 연동',
-    content: '• 선형대수 3.1 노름과 길이기하학 개념 노트 작성<br>• hyeonwoo 사이트에 [투데이 리포트] 탭 및 캘린더 상세 모달 연동 완료!<br>• 포스텍 1지망 서류 작성 & 서울대 도재영 교수님 컨택 메일 템플릿 준비'
+    title: '🌟 [오늘] 선형대수 3.1~3.8 전수 완수 & 투데이 리포트 연동',
+    content: '• <b>3.1 Norms</b> (L1/L2/Manhattan/Triangle Inequality)<br>• <b>3.2 Inner Products</b> (Bilinear/Positive Definite Matrix A)<br>• <b>3.3 Lengths & Distances</b> (Cauchy-Schwarz Inequality)<br>• <b>3.4 Angles & Orthogonality</b> (Cosine Similarity)<br>• <b>3.5 Orthonormal Basis</b> (Gram-Schmidt Orthonormalization)<br>• <b>3.6 Orthogonal Complement</b> (Null space & Row space relation)<br>• <b>3.7 Inner Product of Functions</b> (Continuous function space & Integration)<br>• <b>3.8 Orthogonal Projections</b> (Least Squares & Affine Projection)<br>• hyeonwoo 사이트에 [투데이 리포트] & 캘린더 모달 배포 완료!'
   },
   '2026-09-14': {
     title: '🟢 네이버클라우드 체험형 인턴 첫 출근 (입과일)',
