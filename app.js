@@ -65,6 +65,63 @@ const CLUSTER_CONFIG = {
   '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.90, cy: 0.48 }
 };
 
+// ==========================================
+// 📅 CALENDAR SCHEDULE DETAIL MODAL FUNCTIONS
+// ==========================================
+const scheduleDataMap = {
+  '2026-08-11': {
+    title: '🧹 맥북 저장 용량 대청소 & 백업',
+    content: '• 맥북 39GB 저장 공간 확보 (캐시/어플 삭제)<br>• 바탕화면 및 다운로드 150+개 파일 Google Drive로 자동 이사'
+  },
+  '2026-08-13': {
+    title: '🎯 2027 대학원 / 채용 병행 전략',
+    content: '• 2027 봄학기 대학원 서류 준비 및 채용 병행 일정 수립<br>• 포스텍/카이스트/서울대 타겟 연구실 1차 정리'
+  },
+  '2026-08-14': {
+    title: '📐 선형대수학 개념 맵 & MML 가이드',
+    content: '• CONTENT_GUIDE.md 작성 및 선형대수 전체 챕터 맵 설계<br>• 선형방정식계 및 행렬 대수 기본 노드 작성'
+  },
+  '2026-08-15': {
+    title: '✏️ 벡터공간 & 선형독립 수식 스케치',
+    content: '• 2.4 벡터공간과 2.5 선형독립 수식 노트 작성<br>• 4차원-2차원 사상 커널 스케치 이미지(sketch_4d_to_2d) 작성'
+  },
+  '2026-08-16': {
+    title: '🧠 선형사상, 기저, 어파인공간 & 연구실 탐색',
+    content: '• 2.6 기저/계수, 2.7 선형사상, 2.8 어파인공간 노트 작성<br>• 포스텍(손진희 랩 1지망) 및 서울대(도재영 랩) 타겟 연구실 조사'
+  },
+  '2026-08-17': {
+    title: '🌟 [오늘] 3.1 노름/내적 & 투데이 리포트 / 캘린더 모달 연동',
+    content: '• 선형대수 3.1 노름과 길이기하학 개념 노트 작성<br>• hyeonwoo 사이트에 [투데이 리포트] 탭 및 캘린더 상세 모달 연동 완료!<br>• 포스텍 1지망 서류 작성 & 서울대 도재영 교수님 컨택 메일 템플릿 준비'
+  }
+};
+
+function openCalendarModal(dateStr) {
+  const modal = document.getElementById('calendar-modal');
+  const dateLabel = document.getElementById('modal-date-label');
+  const titleLabel = document.getElementById('modal-title-label');
+  const contentEl = document.getElementById('modal-detail-content');
+
+  if (!modal) return;
+
+  dateLabel.textContent = dateStr;
+  const item = scheduleDataMap[dateStr];
+
+  if (item) {
+    titleLabel.textContent = item.title;
+    contentEl.innerHTML = item.content;
+  } else {
+    titleLabel.textContent = '등록된 일정 항목';
+    contentEl.innerHTML = `• <b>${dateStr}</b> 세부 일정 및 대화 기록이 준비되어 있습니다.<br>• 자유롭게 새로운 일정을 등록하거나 AI에 추가를 요청하실 수 있습니다.`;
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeCalendarModal() {
+  const modal = document.getElementById('calendar-modal');
+  if (modal) modal.style.display = 'none';
+}
+
 /* ============================================================
    BOOT
    ============================================================ */

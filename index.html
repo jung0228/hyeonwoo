@@ -290,19 +290,19 @@
             <div style="padding: 10px;">7</div>
             <div style="padding: 10px; color: #38bdf8;">8</div>
 
-            <div style="padding: 10px; color: #f43f5e;">9</div>
-            <div style="padding: 10px;">10</div>
-            <div style="padding: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; border-radius: 8px; font-weight: 700; color: #10b981;" title="맥북 용량 대청소 & 백업">11</div>
-            <div style="padding: 10px;">12</div>
-            <div style="padding: 10px; background: rgba(99, 102, 241, 0.15); border: 1px solid #6366f1; border-radius: 8px; font-weight: 700;" title="대학원/채용 병행 전략">13</div>
-            <div style="padding: 10px; background: rgba(168, 85, 247, 0.2); border: 1px solid #c084fc; border-radius: 8px; font-weight: 700; color: #c084fc;" title="선형대수학 개념 구조 작성">14</div>
-            <div style="padding: 10px; background: rgba(168, 85, 247, 0.2); border: 1px solid #c084fc; border-radius: 8px; font-weight: 700; color: #c084fc;" title="선형대수 수식 & 2.4/2.5 학습">15</div>
+            <div style="padding: 10px; color: #f43f5e; cursor:pointer;" onclick="openCalendarModal('2026-08-09')">9</div>
+            <div style="padding: 10px; cursor:pointer;" onclick="openCalendarModal('2026-08-10')">10</div>
+            <div style="padding: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; border-radius: 8px; font-weight: 700; color: #10b981; cursor:pointer;" title="맥북 용량 대청소 & 백업" onclick="openCalendarModal('2026-08-11')">11</div>
+            <div style="padding: 10px; cursor:pointer;" onclick="openCalendarModal('2026-08-12')">12</div>
+            <div style="padding: 10px; background: rgba(99, 102, 241, 0.15); border: 1px solid #6366f1; border-radius: 8px; font-weight: 700; cursor:pointer;" title="대학원/채용 병행 전략" onclick="openCalendarModal('2026-08-13')">13</div>
+            <div style="padding: 10px; background: rgba(168, 85, 247, 0.2); border: 1px solid #c084fc; border-radius: 8px; font-weight: 700; color: #c084fc; cursor:pointer;" title="선형대수학 개념 구조 작성" onclick="openCalendarModal('2026-08-14')">14</div>
+            <div style="padding: 10px; background: rgba(168, 85, 247, 0.2); border: 1px solid #c084fc; border-radius: 8px; font-weight: 700; color: #c084fc; cursor:pointer;" title="선형대수 수식 & 2.4/2.5 학습" onclick="openCalendarModal('2026-08-15')">15</div>
 
-            <div style="padding: 10px; background: rgba(168, 85, 247, 0.2); border: 1px solid #c084fc; border-radius: 8px; font-weight: 700; color: #c084fc;" title="선형사상, 기저, 어파인공간 학습">16</div>
-            <div style="padding: 10px; background: rgba(56, 189, 248, 0.25); border: 2px solid #38bdf8; border-radius: 8px; font-weight: 900; color: #38bdf8;" title="오늘: 3.1 노름/내적 & 투데이 리포트">17★</div>
-            <div style="padding: 10px;">18</div>
-            <div style="padding: 10px;">19</div>
-            <div style="padding: 10px;">20</div>
+            <div style="padding: 10px; background: rgba(168, 85, 247, 0.2); border: 1px solid #c084fc; border-radius: 8px; font-weight: 700; color: #c084fc; cursor:pointer;" title="선형사상, 기저, 어파인공간 학습" onclick="openCalendarModal('2026-08-16')">16</div>
+            <div style="padding: 10px; background: rgba(56, 189, 248, 0.25); border: 2px solid #38bdf8; border-radius: 8px; font-weight: 900; color: #38bdf8; cursor:pointer;" title="오늘: 3.1 노름/내적 & 투데이 리포트" onclick="openCalendarModal('2026-08-17')">17★</div>
+            <div style="padding: 10px; cursor:pointer;" onclick="openCalendarModal('2026-08-18')">18</div>
+            <div style="padding: 10px; cursor:pointer;" onclick="openCalendarModal('2026-08-19')">19</div>
+            <div style="padding: 10px; cursor:pointer;" onclick="openCalendarModal('2026-08-20')">20</div>
             <div style="padding: 10px;">21</div>
             <div style="padding: 10px; color: #38bdf8;">22</div>
           </div>
@@ -435,6 +435,23 @@
         </div>
         <div class="reader-body-columns" id="reader-body">
           <!-- Multi-column markdown content populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 📅 Calendar Schedule Detail Modal -->
+    <div id="calendar-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75); backdrop-filter:blur(10px); z-index:9999; justify-content:center; align-items:center;">
+      <div style="background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:20px; width:90%; max-width:480px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.8); position:relative;">
+        <button onclick="closeCalendarModal()" style="position:absolute; top:18px; right:18px; background:none; border:none; color:#94a3b8; font-size:1.2rem; cursor:pointer;">✕</button>
+        <div style="font-family:monospace; font-size:0.8rem; color:#38bdf8; margin-bottom:4px;" id="modal-date-label">2026. 08. 17</div>
+        <h3 style="font-size:1.2rem; font-weight:700; color:#f8fafc; margin-bottom:16px;" id="modal-title-label">일정 상세 관리</h3>
+        
+        <div id="modal-detail-content" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px; font-size:0.9rem; color:#cbd5e1; line-height:1.6; margin-bottom:20px;">
+          일정 정보를 불러오는 중...
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button onclick="closeCalendarModal()" style="padding:10px 18px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:#f8fafc; font-weight:600; cursor:pointer;">닫기</button>
         </div>
       </div>
     </div>
