@@ -336,7 +336,60 @@
           </div>
         </div>
 
-        <!-- 📌 2. Done Today & Next Action Plan Grid -->
+        <!-- 📌 2. Yesterday Review & Active Recall Quiz Widget (어제 학습 3초 인덱싱 복습) -->
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 16px; padding: 22px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: #f59e0b; display: flex; align-items: center; gap: 8px;">
+                <span>🧠</span> 어제 학습 3분 인덱싱 복습 (Yesterday Active Recall)
+              </h3>
+              <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 3px;">어제(2026.08.16) 공부한 핵심 개념 3가지 — 카드를 탭하여 백지 인덱싱을 확인하세요!</div>
+            </div>
+            <button onclick="refreshYesterdayQuiz()" style="padding: 6px 12px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; color: #f59e0b; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
+              🔄 카드 새로고침
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+            <!-- Quiz Card 1: Basis Change -->
+            <div class="recall-card" onclick="toggleRecallCard(this)" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s ease;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 0.7rem; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 3px 8px; border-radius: 6px;">선형대수 2.7</span>
+                <span style="font-size: 0.75rem; color: #f59e0b; font-weight: 600;">탭해서 답 확인 👆</span>
+              </div>
+              <div style="font-weight: 700; font-size: 0.92rem; color: #f8fafc; margin-bottom: 6px;">Q. 기저변환 공식 A~ = T⁻¹ A S 에서 왜 T에만 역행렬이 곱해지는가?</div>
+              <div class="recall-answer" style="display: none; font-size: 0.83rem; color: #cbd5e1; line-height: 1.5; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; margin-top: 8px;">
+                💡 <b>정답</b>: T는 '새 기저 ➔ 옛 기저' 방향으로 만들어진 번역기인데, 2단계 출력 결과는 '옛 기저'이므로 최종 목표인 '새 기저'로 되돌리려면 <b>반대 방향인 역행렬 T⁻¹</b>을 곱해야 하기 때문!
+              </div>
+            </div>
+
+            <!-- Quiz Card 2: Support Point -->
+            <div class="recall-card" onclick="toggleRecallCard(this)" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s ease;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 0.7rem; font-weight: 700; color: #c084fc; background: rgba(192, 132, 252, 0.15); padding: 3px 8px; border-radius: 6px;">선형대수 2.8</span>
+                <span style="font-size: 0.75rem; color: #f59e0b; font-weight: 600;">탭해서 답 확인 👆</span>
+              </div>
+              <div style="font-weight: 700; font-size: 0.92rem; color: #f8fafc; margin-bottom: 6px;">Q. 어파인 공간에서 '지지점(Support Point x₀)'의 기하학적 정체는?</div>
+              <div class="recall-answer" style="display: none; font-size: 0.83rem; color: #cbd5e1; line-height: 1.5; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; margin-top: 8px;">
+                💡 <b>정답</b>: 원점을 지나지 않고 공중에 붕 떠있는 평면/직선으로 건너가서 첫 착지를 하게 해주는 <b>'시작 발판 위치 벡터(방정식 A x = b 의 특수해 xₚ)'</b>!
+              </div>
+            </div>
+
+            <!-- Quiz Card 3: Eigenvector Inverse -->
+            <div class="recall-card" onclick="toggleRecallCard(this)" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s ease;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 0.7rem; font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.15); padding: 3px 8px; border-radius: 6px;">선형대수 Q&A</span>
+                <span style="font-size: 0.75rem; color: #f59e0b; font-weight: 600;">탭해서 답 확인 👆</span>
+              </div>
+              <div style="font-weight: 700; font-size: 0.92rem; color: #f8fafc; margin-bottom: 6px;">Q. 행렬 A와 그 역행렬 A⁻¹ 은 고유벡터가 같은가? 왜 그런가?</div>
+              <div class="recall-answer" style="display: none; font-size: 0.83rem; color: #cbd5e1; line-height: 1.5; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; margin-top: 8px;">
+                💡 <b>정답</b>: 100% 동일함! A가 특정 축 방향으로 λ배 늘린 변환이라면, 역행렬 A⁻¹ 은 똑같은 축 방향으로 1/λ배 줄이는 변환이므로 <b>축(고유벡터 v)은 불변이고 고유값만 역수(1/λ)</b>가 됨!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 📌 3. Done Today & Next Action Plan Grid -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
           <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 20px;">
             <h3 style="font-size: 1rem; font-weight: 700; color: #10b981; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
@@ -344,10 +397,10 @@
             </h3>
             <div id="analytics-done-list" style="display: flex; flex-direction: column; gap: 10px;">
               <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.88rem;">
-                ✔ 대화 로그 기반 사고 분석 리포트 자동 생성
+                ✔ MML 3.1 노름(Norms) 및 3.2 내적(Inner Products) 전수 작성
               </div>
               <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.88rem;">
-                ✔ hyeonwoo 사이트에 투데이 리포트 탭 & 캘린더 통합
+                ✔ hyeonwoo 사이트에 [투데이 리포트] & 3초 복습 퀴즈 카드 통합
               </div>
             </div>
           </div>
@@ -364,7 +417,7 @@
                 ✉️ [서울대 컨택] 도재영 교수님 사전 컨택 메일 발송 및 CV 첨부
               </div>
               <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.88rem;">
-                🎯 캘린더 클릭 시 상세 일정 등록 모달 연동
+                📐 MML 3.3 정규직교기저(Gram-Schmidt) 및 3.4 정사영 학습
               </div>
             </div>
           </div>

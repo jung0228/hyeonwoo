@@ -126,6 +126,26 @@ function closeCalendarModal() {
   if (modal) modal.style.display = 'none';
 }
 
+function toggleRecallCard(cardEl) {
+  if (!cardEl) return;
+  const ans = cardEl.querySelector('.recall-answer');
+  if (!ans) return;
+  const isHidden = ans.style.display === 'none' || !ans.style.display;
+  ans.style.display = isHidden ? 'block' : 'none';
+  cardEl.style.borderColor = isHidden ? 'rgba(245, 158, 11, 0.6)' : 'rgba(255, 255, 255, 0.08)';
+  cardEl.style.background = isHidden ? 'rgba(245, 158, 11, 0.08)' : 'rgba(30, 41, 59, 0.6)';
+}
+
+function refreshYesterdayQuiz() {
+  const cards = document.querySelectorAll('.recall-card');
+  cards.forEach(card => {
+    const ans = card.querySelector('.recall-answer');
+    if (ans) ans.style.display = 'none';
+    card.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+    card.style.background = 'rgba(30, 41, 59, 0.6)';
+  });
+}
+
 /* ============================================================
    BOOT
    ============================================================ */
