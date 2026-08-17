@@ -34,7 +34,51 @@ $n$차원 벡터 공간 $V$ 와 기저 집합 $\{\mathbf{b}_1, \dots, \mathbf{b}
 
 ### 📌 2. 그람-슈미트 직교화 과정 (Gram-Schmidt Process: Strang 2003)
 
-임의의 정규화되지 않고 삐뚤어진 기저 집합 $\{\tilde{\mathbf{b}}_1, \dots, \tilde{\mathbf{b}}_n\}$ 이 주어졌을 때, 이를 결합 행렬 $\tilde{B} = [\tilde{\mathbf{b}}_1 \mid \dots \mid \tilde{\mathbf{b}}_n]$ 로 구성하고 증대행렬 $[\tilde{B}\tilde{B}^\top \mid \tilde{B}]$ 에 가우스 소거법을 적용하거나 반복적 직교 투영 알고리즘을 수행하여 완벽한 정규직교기저 $\{\mathbf{b}_1, \dots, \mathbf{b}_n\}$ 를 구성하는 생성적 방법을 그람-슈미트 과정(Gram-Schmidt Process)이라 부릅니다.
+임의의 정규화되지 않고 삐뚤어진 기저 집합 $\{\tilde{\mathbf{b}}_1, \dots, \tilde{\mathbf{b}}_n\}$ 이 주어졌을 때, 순차적으로 직교하는 성분만 남겨서 완벽한 정규직교기저 $\{\mathbf{b}_1, \dots, \mathbf{b}_n\}$ 를 만들어내는 생성적 알고리즘입니다.
+
+
+#### 💡 [그람-슈미트 3단계 작동 원리 알고리즘]
+
+1. 1단계: 첫 번째 벡터 정규화
+   - 첫 번째 벡터는 방향을 그대로 유지한 채 단위 길이로 만듭니다:
+     $$\mathbf{u}_1 = \tilde{\mathbf{b}}_1, \quad \mathbf{b}_1 = \frac{\mathbf{u}_1}{\|\mathbf{u}_1\|}$$
+
+2. 2단계: 이전 기저로의 정사영(그림자) 성분 빼기 (직교화)
+   - 두 번째 벡터에서 첫 번째 기저 $\mathbf{b}_1$ 방향으로 드리운 그림자 성분을 빼버리면, $\mathbf{b}_1$ 과 완벽히 수직인 순수 잔차 성분 $\mathbf{u}_2$ 만 남습니다:
+     $$\mathbf{u}_2 = \tilde{\mathbf{b}}_2 - \langle \tilde{\mathbf{b}}_2, \mathbf{b}_1 \rangle \mathbf{b}_1, \quad \mathbf{b}_2 = \frac{\mathbf{u}_2}{\|\mathbf{u}_2\|}$$
+
+3. $k$단계: 일반화 점화식
+   - $k$번째 벡터 $\tilde{\mathbf{b}}_k$ 에서 이전에 구해둔 모든 정규직교기저들($\mathbf{b}_1, \dots, \mathbf{b}_{k-1}$)로의 그림자 성분을 전부 빼서 직교 벡터 $\mathbf{u}_k$ 를 구한 뒤 정규화합니다:
+     $$\mathbf{u}_k = \tilde{\mathbf{b}}_k - \sum_{j=1}^{k-1} \langle \tilde{\mathbf{b}}_k, \mathbf{b}_j \rangle \mathbf{b}_j, \quad \mathbf{b}_k = \frac{\mathbf{u}_k}{\|\mathbf{u}_k\|}$$
+
+
+#### 💡 [손으로 직접 푸는 2차원 수치 예제]
+
+삐뚤어진 두 기저 벡터 $\tilde{\mathbf{b}}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}, \tilde{\mathbf{b}}_2 = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$ 에 표준 도트 곱 내적을 적용하여 정규직교기저를 만들어 봅시다!
+
+##### 1단계: 첫 번째 정규직교기저 $\mathbf{b}_1$ 구하기
+- $\mathbf{u}_1 = \tilde{\mathbf{b}}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$
+- 크기(노름): $\|\mathbf{u}_1\| = \sqrt{1^2 + 1^2} = \sqrt{2}$
+- 정규화된 첫 번째 기저:
+  $$\mathbf{b}_1 = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix}$$
+
+##### 2단계: 두 번째 벡터에서 $\mathbf{b}_1$ 방향 그림자 빼기 ($\mathbf{u}_2$ 구하기)
+- 그림자 계수(내적): 
+  $$\langle \tilde{\mathbf{b}}_2, \mathbf{b}_1 \rangle = \begin{bmatrix} 1 & 2 \end{bmatrix} \left( \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right) = \frac{1 + 2}{\sqrt{2}} = \frac{3}{\sqrt{2}}$$
+- $\mathbf{b}_1$ 방향 그림자 벡터:
+  $$\langle \tilde{\mathbf{b}}_2, \mathbf{b}_1 \rangle \mathbf{b}_1 = \frac{3}{\sqrt{2}} \left( \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right) = \frac{3}{2} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 1.5 \\ 1.5 \end{bmatrix}$$
+- 그림자를 뺀 순수 수직 잔차 $\mathbf{u}_2$:
+  $$\mathbf{u}_2 = \tilde{\mathbf{b}}_2 - \langle \tilde{\mathbf{b}}_2, \mathbf{b}_1 \rangle \mathbf{b}_1 = \begin{bmatrix} 1 \\ 2 \end{bmatrix} - \begin{bmatrix} 1.5 \\ 1.5 \end{bmatrix} = \begin{bmatrix} -0.5 \\ 0.5 \end{bmatrix} = \frac{1}{2} \begin{bmatrix} -1 \\ 1 \end{bmatrix}$$
+
+##### 3단계: 두 번째 정규직교기저 $\mathbf{b}_2$ 정규화
+- 크기(노름): $\|\mathbf{u}_2\| = \sqrt{(-0.5)^2 + 0.5^2} = \sqrt{0.5} = \frac{1}{\sqrt{2}}$
+- 정규화된 두 번째 기저:
+  $$\mathbf{b}_2 = \frac{\mathbf{u}_2}{\|\mathbf{u}_2\|} = \frac{\frac{1}{2} \begin{bmatrix} -1 \\ 1 \end{bmatrix}}{\frac{1}{\sqrt{2}}} = \frac{1}{\sqrt{2}} \begin{bmatrix} -1 \\ 1 \end{bmatrix}$$
+
+##### 🎯 직교성 및 정규성 최종 검산
+- 직교성: $\mathbf{b}_1^\top \mathbf{b}_2 = \left(\frac{1}{\sqrt{2}}\right)\left(\frac{1}{\sqrt{2}}\right) (1\cdot(-1) + 1\cdot 1) = \frac{1}{2}(-1 + 1) = \mathbf{0}$ (완벽 수직!)
+- 정규성: $\|\mathbf{b}_1\| = 1, \|\mathbf{b}_2\| = 1$ (완벽 단위 길이!)
+- 이렇게 삐뚤어져 있던 기저가 서로 90도로 수직인 완벽한 정규직교기저(ONB)로 변환되었습니다!
 
 
 ### 📌 3. 정규직교기저의 대표 예시 (Example 3.8 & Eq 3.35)
