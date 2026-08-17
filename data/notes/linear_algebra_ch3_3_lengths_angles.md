@@ -4,21 +4,20 @@
 
 ## 🌐 0. 3.2절(Inner Products)과의 연결 및 빌드업: 왜 "길이, 거리, 각도"를 한데 묶어 공부하는가?
 
-우리는 지난 3.2절(Inner Products)에서 벡터 공간 상에 내적(Inner Product) $\langle \mathbf{x}, \mathbf{y} \rangle$ 및 대칭 양의 정정 행렬(SPD)을 정의했습니다.
+우리는 지난 3.2절(Inner Products)에서 벡터 공간 상에 내적(Inner Product) $\langle \mathbf{x}, \mathbf{y} \rangle = \hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 및 대칭 양의 정정 행렬(SPD)을 정의했습니다.
 
-3.3절과 3.4절은 내적(Inner Product) 하나만 정의되면, 공간의 모든 기하학적 구조(길이, 거리, 각도, 직교성)가 자동으로 유도되어 완성된다는 것을 보여줍니다!
+3.3절과 3.4절은 내적(Inner Product)이라는 단 하나의 핵심 개념만 정의되면, 공간 안의 모든 기하학적 구조(길이, 거리, 각도, 직교성)가 수식적으로 완벽히 유도되어 완성된다는 것을 보여줍니다.
 
-```text
-                               ┌───> 1. 길이 (Length / Induced Norm): $\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$
-                               │
-[내적 (Inner Product)] ────────┼───> 2. 거리 (Distance / Metric): $d(\mathbf{x}, \mathbf{y}) = \|\mathbf{x} - \mathbf{y}\|$
-$\langle \mathbf{x}, \mathbf{y} \rangle = \hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$    │
-                               ├───> 3. 각도 (Angle): $\cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|}$
-                               │
-                               └───> 4. 직교성 (Orthogonality): $\langle \mathbf{x}, \mathbf{y} \rangle = 0 \iff \mathbf{x} \perp \mathbf{y}$
-```
+### 🔗 내적 하나로 완성되는 4가지 핵심 기하학적 개념
 
----
+1. 내적이 유도하는 벡터의 길이 (Length / Induced Norm):
+   자기 자신과의 내적에 제곱근을 취하면 벡터의 크기인 노름이 유도됩니다 ($\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$).
+2. 내적이 유도하는 두 벡터 간의 거리 (Distance / Metric):
+   두 벡터의 차이에 대해 유도된 노름을 적용하면 벡터 간의 물리적 거리가 도출됩니다 ($d(\mathbf{x}, \mathbf{y}) = \|\mathbf{x} - \mathbf{y}\|$).
+3. 내적이 유도하는 두 벡터 사이의 각도 (Angle):
+   코시-슈바르츠 부등식을 적용하여 두 벡터 사이의 기하학적 각도가 유일하게 정의됩니다 ($\cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|}$).
+4. 내적이 유도하는 두 벡터의 직교성 (Orthogonality):
+   내적값이 정확히 0이 될 때 두 벡터는 상호 직교 관계에 놓이게 됩니다 ($\langle \mathbf{x}, \mathbf{y} \rangle = 0 \iff \mathbf{x} \perp \mathbf{y}$).
 
 ## 1. ⚔️ Section 3.3: Lengths and Distances (내적에 의해 유도되는 길이와 거리)
 
