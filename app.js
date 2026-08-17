@@ -69,25 +69,21 @@ const CLUSTER_CONFIG = {
    BOOT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load from localStorage first, then fallback to fetch
-  const stored = localStorage.getItem('hyeonwoo_knowledge_v1');
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-      if (parsed && Array.isArray(parsed.nodes) && parsed.nodes.length > 0) {
-        knowledgeData = parsed;
+  // Always fetch latest knowledge.json first to prevent stale localStorage cache issues
+  try {
+    const res = await fetch('data/knowledge.json');
+    knowledgeData = await res.json();
+    localStorage.setItem('hyeonwoo_knowledge_v1', JSON.stringify(knowledgeData));
+  } catch (e) {
+    console.error('Failed to fetch data/knowledge.json, checking localStorage:', e);
+    const stored = localStorage.getItem('hyeonwoo_knowledge_v1');
+    if (stored) {
+      try {
+        knowledgeData = JSON.parse(stored);
+      } catch (err) {
+        knowledgeData = { nodes: [], edges: [], categories: {}, sessions: [] };
       }
-    } catch (e) {
-      knowledgeData = null;
-    }
-  }
-
-  if (!knowledgeData) {
-    try {
-      const res = await fetch('data/knowledge.json');
-      knowledgeData = await res.json();
-    } catch (e) {
-      console.error('Failed to load knowledge.json:', e);
+    } else {
       knowledgeData = { nodes: [], edges: [], categories: {}, sessions: [] };
     }
   }
