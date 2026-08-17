@@ -1414,12 +1414,6 @@
       "weight": 3
     },
     {
-      "source": "linear_algebra_ch2_8_affine",
-      "target": "linear_algebra_ch3_1_norms",
-      "relation": "extended_to",
-      "weight": 3
-    },
-    {
       "source": "linear_algebra_ch2_8_affine_spaces",
       "target": "linear_algebra_ch3_1_norms",
       "relation": "basis_of",
