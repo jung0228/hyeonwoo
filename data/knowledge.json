@@ -787,6 +787,26 @@
       "purpose": "2단계 존재 이유: 차원 축소 시 데이터 정보 손실(재구성 오차) 최소화 및 해가 없는 연립방정식의 최소제곱 근사해 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 일반기저는 B(B^T B)^-1 B^T 역행렬 연산 필요, 정규직교기저(ONB)는 B B^T 로 O(1) 초고속 사영.",
       "ai_connection": "4단계 AI 연결: 선형회귀 정규방정식, PCA 주성분 정사영, 오토인코더 Latent Projection, SVM 분리초평면 마진."
+    },
+    {
+      "id": "linear_algebra_ch3_9_rotations",
+      "label": "3.9 & 3.10 회전 변환과 해석기하학 총결산",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/linear_algebra_ch3_9_rotations.md",
+      "tags": [
+        "Rotation",
+        "Givens Rotation",
+        "SO(3)",
+        "Kernel Trick",
+        "Gaussian Process",
+        "PCA"
+      ],
+      "definition": "1단계 개념: 거리/각도를 보존하는 직교 자기동형사상(R^T R = I, det(R)=1) 및 기븐스 회전.",
+      "purpose": "2단계 존재 이유: 공간의 형태 왜곡 없이 방향 전환(기저 변환) 및 수치 선형대수(QR분해) 소거 수행.",
+      "tradeoff_insight": "3단계 비판적 맹점: 2D 회전은 교환법칙 성립(가환군), 3D 이상 회전은 순서가 결과에 영향(비가환군).",
+      "ai_connection": "4단계 AI 연결: 3D 비전/NeRF 카메라 외부파라미터 R, 로보틱스 기구학, 커널 트릭, PCA 직교사영."
     }
   ],
   "edges": [
@@ -1195,6 +1215,12 @@
     {
       "source": "linear_algebra_ch3_5_orthonormal_basis",
       "target": "linear_algebra_ch3_7_orthogonal_projections",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch3_7_orthogonal_projections",
+      "target": "linear_algebra_ch3_9_rotations",
       "relation": "basis_of",
       "weight": 3
     }
