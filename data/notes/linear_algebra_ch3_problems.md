@@ -73,14 +73,14 @@ $\mathbf{x} = \begin{bmatrix} 1 \\\\ 2 \end{bmatrix}, \mathbf{y} = \begin{bmatri
 ### 2. 단계별 수치 계산
 - a. 표준 도트 곱:
   $$\langle \mathbf{x}, \mathbf{y} \rangle = 1(-1) + 2(-1) = -3$$
-  $$\|\mathbf{x}\| = \sqrt{1^2 + 2^2} = \sqrt{5}, \quad \|\mathbf{y}\| = \sqrt{(-1)^2 + (-1)^2} = \sqrt{2}$$
+  $$\Vert\mathbf{x}\Vert = \sqrt{1^2 + 2^2} = \sqrt{5}, \quad \Vert\mathbf{y}\Vert = \sqrt{(-1)^2 + (-1)^2} = \sqrt{2}$$
   $$\cos\omega = \frac{-3}{\sqrt{5}\sqrt{2}} = \frac{-3}{\sqrt{10}} \implies \omega = \arccos\left(-\frac{3}{\sqrt{10}}\right) \approx 2.820 \text{ rad} \approx 161.57^\circ$$
 
 - b. 가중치 내적 $B$:
   $$B \mathbf{y} = \begin{bmatrix} 2 & 1 \\\\ 1 & 3 \end{bmatrix} \begin{bmatrix} -1 \\\\ -1 \end{bmatrix} = \begin{bmatrix} -3 \\\\ -4 \end{bmatrix}$$
   $$\langle \mathbf{x}, \mathbf{y} \rangle_B = \begin{bmatrix} 1 & 2 \end{bmatrix} \begin{bmatrix} -3 \\\\ -4 \end{bmatrix} = -3 - 8 = -11$$
-  $$\|\mathbf{x}\|_B^2 = \begin{bmatrix} 1 & 2 \end{bmatrix} \begin{bmatrix} 2 & 1 \\\\ 1 & 3 \end{bmatrix} \begin{bmatrix} 1 \\\\ 2 \end{bmatrix} = \begin{bmatrix} 1 & 2 \end{bmatrix} \begin{bmatrix} 4 \\\\ 7 \end{bmatrix} = 18 \implies \|\mathbf{x}\|_B = \sqrt{18} = 3\sqrt{2}$$
-  $$\|\mathbf{y}\|_B^2 = \begin{bmatrix} -1 & -1 \end{bmatrix} \begin{bmatrix} -3 \\\\ -4 \end{bmatrix} = 7 \implies \|\mathbf{y}\|_B = \sqrt{7}$$
+  $$\Vert\mathbf{x}\Vert_B^2 = \begin{bmatrix} 1 & 2 \end{bmatrix} \begin{bmatrix} 2 & 1 \\\\ 1 & 3 \end{bmatrix} \begin{bmatrix} 1 \\\\ 2 \end{bmatrix} = \begin{bmatrix} 1 & 2 \end{bmatrix} \begin{bmatrix} 4 \\\\ 7 \end{bmatrix} = 18 \implies \Vert\mathbf{x}\Vert_B = \sqrt{18} = 3\sqrt{2}$$
+  $$\Vert\mathbf{y}\Vert_B^2 = \begin{bmatrix} -1 & -1 \end{bmatrix} \begin{bmatrix} -3 \\\\ -4 \end{bmatrix} = 7 \implies \Vert\mathbf{y}\Vert_B = \sqrt{7}$$
   $$\cos\omega = \frac{-11}{\sqrt{18}\sqrt{7}} = \frac{-11}{\sqrt{126}} \implies \omega = \arccos\left(\frac{-11}{\sqrt{126}}\right) \approx 2.941 \text{ rad} \approx 168.49^\circ$$
 
 
@@ -160,20 +160,20 @@ $\mathbf{b}_1 = \begin{bmatrix} 1 \\\\ 1 \\\\ 1 \end{bmatrix}, \mathbf{b}_2 = \b
 
 ### 2. 단계별 수치 풀이
 1. 첫 번째 단위 기저 $\mathbf{c}_1$:
-   $$\mathbf{u}_1 = \mathbf{b}_1 = \begin{bmatrix} 1 \\\\ 1 \\\\ 1 \end{bmatrix}, \quad \|\mathbf{u}_1\| = \sqrt{1+1+1} = \sqrt{3} \implies \mathbf{c}_1 = \frac{1}{\sqrt{3}} \begin{bmatrix} 1 \\\\ 1 \\\\ 1 \end{bmatrix}$$
+   $$\mathbf{u}_1 = \mathbf{b}_1 = \begin{bmatrix} 1 \\\\ 1 \\\\ 1 \end{bmatrix}, \quad \Vert\mathbf{u}_1\Vert = \sqrt{1+1+1} = \sqrt{3} \implies \mathbf{c}_1 = \frac{1}{\sqrt{3}} \begin{bmatrix} 1 \\\\ 1 \\\\ 1 \end{bmatrix}$$
 
 2. 두 번째 직교 벡터 $\mathbf{u}_2$ 및 정규화 $\mathbf{c}_2$:
    $$\mathbf{b}_1^\top \mathbf{b}_2 = 1(-1) + 1(2) + 1(0) = 1$$
-   $$\mathbf{u}_2 = \mathbf{b}_2 - \frac{\mathbf{b}_1^\top \mathbf{b}_2}{\|\mathbf{b}_1\|^2}\mathbf{b}_1 = \begin{bmatrix} -1 \\\\ 2 \\\\ 0 \end{bmatrix} - \frac{1}{3}\begin{bmatrix} 1 \\\\ 1 \\\\ 1 \end{bmatrix} = \frac{1}{3}\begin{bmatrix} -4 \\\\ 5 \\\\ -1 \end{bmatrix}$$
-   $$\|\mathbf{u}_2\| = \frac{1}{3}\sqrt{(-4)^2 + 5^2 + (-1)^2} = \frac{\sqrt{42}}{3} \implies \mathbf{c}_2 = \frac{1}{\sqrt{42}} \begin{bmatrix} -4 \\\\ 5 \\\\ -1 \end{bmatrix}$$
+   $$\mathbf{u}_2 = \mathbf{b}_2 - \frac{\mathbf{b}_1^\top \mathbf{b}_2}{\Vert\mathbf{b}_1\Vert^2}\mathbf{b}_1 = \begin{bmatrix} -1 \\\\ 2 \\\\ 0 \end{bmatrix} - \frac{1}{3}\begin{bmatrix} 1 \\\\ 1 \\\\ 1 \end{bmatrix} = \frac{1}{3}\begin{bmatrix} -4 \\\\ 5 \\\\ -1 \end{bmatrix}$$
+   $$\Vert\mathbf{u}_2\Vert = \frac{1}{3}\sqrt{(-4)^2 + 5^2 + (-1)^2} = \frac{\sqrt{42}}{3} \implies \mathbf{c}_2 = \frac{1}{\sqrt{42}} \begin{bmatrix} -4 \\\\ 5 \\\\ -1 \end{bmatrix}$$
 
-- 검산: $\mathbf{c}_1^\top \mathbf{c}_2 = \frac{1}{\sqrt{126}} (-4 + 5 - 1) = 0$, $\|\mathbf{c}_1\| = 1, \|\mathbf{c}_2\| = 1$.
+- 검산: $\mathbf{c}_1^\top \mathbf{c}_2 = \frac{1}{\sqrt{126}} (-4 + 5 - 1) = 0$, $\Vert\mathbf{c}_1\Vert = 1, \Vert\mathbf{c}_2\Vert = 1$.
 
 
 ## 📝 [Problem 3.9] 코시-슈바르츠 부등식을 이용한 부등식 증명
 
 ### 1. 문제 정의
-$x_1, \dots, x_n > 0$ 이며 $\sum_{i=1}^n x_i = 1$ 일 때, 코시-슈바르츠 부등식 $(\mathbf{u}^\top \mathbf{v})^2 \le \|\mathbf{u}\|^2 \|\mathbf{v}\|^2$ 을 사용하여 다음을 증명하시오:
+$x_1, \dots, x_n > 0$ 이며 $\sum_{i=1}^n x_i = 1$ 일 때, 코시-슈바르츠 부등식 $(\mathbf{u}^\top \mathbf{v})^2 \le \Vert\mathbf{u}\Vert^2 \Vert\mathbf{v}\Vert^2$ 을 사용하여 다음을 증명하시오:
 - a. $\sum_{i=1}^n x_i^2 \ge \frac{1}{n}$
 - b. $\sum_{i=1}^n \frac{1}{x_i} \ge n^2$
 

@@ -66,7 +66,7 @@ $$R_{ij}(\theta) = \begin{bmatrix} I_{i-1} & 0 & \dots & 0 & 0 \\\\ 0 & \cos\the
 ### 📌 5. 회전 변환의 핵심 기하학적 성질 (Properties of Rotations: Section 3.9.4)
 
 1. 거리 보존 (Distance Preservation):
-   $$\|R_\theta(\mathbf{x}) - R_\theta(\mathbf{y})\| = \|\mathbf{x} - \mathbf{y}\|$$
+   $$\VertR_\theta(\mathbf{x}) - R_\theta(\mathbf{y})\Vert = \Vert\mathbf{x} - \mathbf{y}\Vert$$
    (회전 후에도 두 점 사이의 유클리드 거리는 완벽히 불변입니다.)
 
 2. 각도 보존 (Angle Preservation):

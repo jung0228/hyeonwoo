@@ -26,7 +26,7 @@ $n$차원 벡터 공간 $V$ 와 기저 집합 $\{\mathbf{b}_1, \dots, \mathbf{b}
    $$\langle \mathbf{b}_i, \mathbf{b}_j \rangle = 0 \quad (i \neq j)$$
 
 2. 정규화 조건 (Normalization: Eq 3.34)
-   $$\langle \mathbf{b}_i, \mathbf{b}_i \rangle = 1 \iff \|\mathbf{b}_i\| = 1$$
+   $$\langle \mathbf{b}_i, \mathbf{b}_i \rangle = 1 \iff \Vert\mathbf{b}_i\Vert = 1$$
 
 - 직교 기저(Orthogonal Basis): 직교성 조건(Eq 3.33)만 만족하고 길이가 1이 아닌 기저를 의미합니다.
 - 정규직교기저(ONB): 직교성과 정규화 조건(Eq 3.33과 3.34)을 동시에 모두 만족하여, 모든 기저 벡터가 서로 수직이면서 길이가 정확히 1인 단위 벡터들로 구성된 기저입니다.
@@ -41,15 +41,15 @@ $n$차원 벡터 공간 $V$ 와 기저 집합 $\{\mathbf{b}_1, \dots, \mathbf{b}
 
 1. 1단계: 첫 번째 벡터 정규화
    - 첫 번째 벡터는 방향을 그대로 유지한 채 단위 길이로 만듭니다:
-     $$\mathbf{u}_1 = \tilde{\mathbf{b}}_1, \quad \mathbf{b}_1 = \frac{\mathbf{u}_1}{\|\mathbf{u}_1\|}$$
+     $$\mathbf{u}_1 = \tilde{\mathbf{b}}_1, \quad \mathbf{b}_1 = \frac{\mathbf{u}_1}{\Vert\mathbf{u}_1\Vert}$$
 
 2. 2단계: 이전 기저로의 정사영(그림자) 성분 빼기 (직교화)
    - 두 번째 벡터에서 첫 번째 기저 $\mathbf{b}_1$ 방향으로 드리운 그림자 성분을 빼버리면, $\mathbf{b}_1$ 과 완벽히 수직인 순수 잔차 성분 $\mathbf{u}_2$ 만 남습니다:
-     $$\mathbf{u}_2 = \tilde{\mathbf{b}}_2 - \langle \tilde{\mathbf{b}}_2, \mathbf{b}_1 \rangle \mathbf{b}_1, \quad \mathbf{b}_2 = \frac{\mathbf{u}_2}{\|\mathbf{u}_2\|}$$
+     $$\mathbf{u}_2 = \tilde{\mathbf{b}}_2 - \langle \tilde{\mathbf{b}}_2, \mathbf{b}_1 \rangle \mathbf{b}_1, \quad \mathbf{b}_2 = \frac{\mathbf{u}_2}{\Vert\mathbf{u}_2\Vert}$$
 
 3. $k$단계: 일반화 점화식
    - $k$번째 벡터 $\tilde{\mathbf{b}}_k$ 에서 이전에 구해둔 모든 정규직교기저들($\mathbf{b}_1, \dots, \mathbf{b}_{k-1}$)로의 그림자 성분을 전부 빼서 직교 벡터 $\mathbf{u}_k$ 를 구한 뒤 정규화합니다:
-     $$\mathbf{u}_k = \tilde{\mathbf{b}}_k - \sum_{j=1}^{k-1} \langle \tilde{\mathbf{b}}_k, \mathbf{b}_j \rangle \mathbf{b}_j, \quad \mathbf{b}_k = \frac{\mathbf{u}_k}{\|\mathbf{u}_k\|}$$
+     $$\mathbf{u}_k = \tilde{\mathbf{b}}_k - \sum_{j=1}^{k-1} \langle \tilde{\mathbf{b}}_k, \mathbf{b}_j \rangle \mathbf{b}_j, \quad \mathbf{b}_k = \frac{\mathbf{u}_k}{\Vert\mathbf{u}_k\Vert}$$
 
 
 #### 💡 [손으로 직접 푸는 2차원 수치 예제]
@@ -58,7 +58,7 @@ $n$차원 벡터 공간 $V$ 와 기저 집합 $\{\mathbf{b}_1, \dots, \mathbf{b}
 
 ##### 1단계: 첫 번째 정규직교기저 $\mathbf{b}_1$ 구하기
 - $\mathbf{u}_1 = \tilde{\mathbf{b}}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$
-- 크기(노름): $\|\mathbf{u}_1\| = \sqrt{1^2 + 1^2} = \sqrt{2}$
+- 크기(노름): $\Vert\mathbf{u}_1\Vert = \sqrt{1^2 + 1^2} = \sqrt{2}$
 - 정규화된 첫 번째 기저:
   $$\mathbf{b}_1 = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix}$$
 
@@ -71,13 +71,13 @@ $n$차원 벡터 공간 $V$ 와 기저 집합 $\{\mathbf{b}_1, \dots, \mathbf{b}
   $$\mathbf{u}_2 = \tilde{\mathbf{b}}_2 - \langle \tilde{\mathbf{b}}_2, \mathbf{b}_1 \rangle \mathbf{b}_1 = \begin{bmatrix} 1 \\ 2 \end{bmatrix} - \begin{bmatrix} 1.5 \\ 1.5 \end{bmatrix} = \begin{bmatrix} -0.5 \\ 0.5 \end{bmatrix} = \frac{1}{2} \begin{bmatrix} -1 \\ 1 \end{bmatrix}$$
 
 ##### 3단계: 두 번째 정규직교기저 $\mathbf{b}_2$ 정규화
-- 크기(노름): $\|\mathbf{u}_2\| = \sqrt{(-0.5)^2 + 0.5^2} = \sqrt{0.5} = \frac{1}{\sqrt{2}}$
+- 크기(노름): $\Vert\mathbf{u}_2\Vert = \sqrt{(-0.5)^2 + 0.5^2} = \sqrt{0.5} = \frac{1}{\sqrt{2}}$
 - 정규화된 두 번째 기저:
-  $$\mathbf{b}_2 = \frac{\mathbf{u}_2}{\|\mathbf{u}_2\|} = \frac{\frac{1}{2} \begin{bmatrix} -1 \\ 1 \end{bmatrix}}{\frac{1}{\sqrt{2}}} = \frac{1}{\sqrt{2}} \begin{bmatrix} -1 \\ 1 \end{bmatrix}$$
+  $$\mathbf{b}_2 = \frac{\mathbf{u}_2}{\Vert\mathbf{u}_2\Vert} = \frac{\frac{1}{2} \begin{bmatrix} -1 \\ 1 \end{bmatrix}}{\frac{1}{\sqrt{2}}} = \frac{1}{\sqrt{2}} \begin{bmatrix} -1 \\ 1 \end{bmatrix}$$
 
 ##### 🎯 직교성 및 정규성 최종 검산
 - 직교성: $\mathbf{b}_1^\top \mathbf{b}_2 = \left(\frac{1}{\sqrt{2}}\right)\left(\frac{1}{\sqrt{2}}\right) (1\cdot(-1) + 1\cdot 1) = \frac{1}{2}(-1 + 1) = \mathbf{0}$ (완벽 수직!)
-- 정규성: $\|\mathbf{b}_1\| = 1, \|\mathbf{b}_2\| = 1$ (완벽 단위 길이!)
+- 정규성: $\Vert\mathbf{b}_1\Vert = 1, \Vert\mathbf{b}_2\Vert = 1$ (완벽 단위 길이!)
 - 이렇게 삐뚤어져 있던 기저가 서로 90도로 수직인 완벽한 정규직교기저(ONB)로 변환되었습니다!
 
 
@@ -89,7 +89,7 @@ $n$차원 벡터 공간 $V$ 와 기저 집합 $\{\mathbf{b}_1, \dots, \mathbf{b}
 2. $\mathbb{R}^2$ 공간의 45도 회전 정규직교기저 (Eq 3.35)
    $$\mathbf{b}_1 = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix}, \quad \mathbf{b}_2 = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ -1 \end{bmatrix}$$
    - 내적 확인: $\mathbf{b}_1^\top \mathbf{b}_2 = \frac{1}{2}(1 - 1) = 0$ (서로 수직 직교)
-   - 길이 확인: $\|\mathbf{b}_1\| = \sqrt{\frac{1}{2} + \frac{1}{2}} = 1$, $\|\mathbf{b}_2\| = \sqrt{\frac{1}{2} + \frac{1}{2}} = 1$ (단위 길이)
+   - 길이 확인: $\Vert\mathbf{b}_1\Vert = \sqrt{\frac{1}{2} + \frac{1}{2}} = 1$, $\Vert\mathbf{b}_2\Vert = \sqrt{\frac{1}{2} + \frac{1}{2}} = 1$ (단위 길이)
    - 따라서 두 벡터는 $\mathbb{R}^2$ 의 훌륭한 정규직교기저를 형성합니다.
 
 
@@ -122,7 +122,7 @@ $$\mathbf{x} = \sum_{m=1}^M \lambda_m \mathbf{b}_m + \sum_{j=1}^{D-M} \psi_j \ma
 3차원 공간 $\mathbb{R}^3$ ($D=3$) 에서 원점을 지나는 2차원 평면 $U$ ($M=2$) 가 주어졌을 때:
 
 - 직교 여공간 $U^\perp$ 는 $3 - 2 = 1$차원의 직선 공간이 됩니다.
-- 이때 $U^\perp$ 를 생성하는 길이 1인 단위 기저 벡터 $\mathbf{w}$ ($\|\mathbf{w}\| = 1$) 를 평면 $U$ 의 법선 벡터(Normal Vector)라고 부릅니다.
+- 이때 $U^\perp$ 를 생성하는 길이 1인 단위 기저 벡터 $\mathbf{w}$ ($\Vert\mathbf{w}\Vert = 1$) 를 평면 $U$ 의 법선 벡터(Normal Vector)라고 부릅니다.
 - 법선 벡터 $\mathbf{w}$ 와 내적해서 0이 되는 모든 점들의 모임이 곧 평면 $U$ 가 됩니다:
   $$U = \{\mathbf{x} \in \mathbb{R}^3 \mid \langle \mathbf{w}, \mathbf{x} \rangle = 0\}$$
 

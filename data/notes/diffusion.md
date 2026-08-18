@@ -28,7 +28,7 @@ $$p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\the
 
 모델이 각 step에서 추가된 노이즈 $\epsilon$을 예측:
 
-$$\mathcal{L} = \mathbb{E}_{x_0, \epsilon, t}\left[\|\epsilon - \epsilon_\theta(x_t, t)\|^2\right]$$
+$$\mathcal{L} = \mathbb{E}_{x_0, \epsilon, t}\left[\Vert\epsilon - \epsilon_\theta(x_t, t)\Vert^2\right]$$
 
 
 ## VAE와의 연결
@@ -37,8 +37,8 @@ $$\mathcal{L} = \mathbb{E}_{x_0, \epsilon, t}\left[\|\epsilon - \epsilon_\theta(
 
 | | VAE | Diffusion |
 |---|---|---|
-| Encoder | $q_\phi(z\|x)$ | $q(x_{1:T}\|x_0)$ (고정) |
-| Decoder | $p_\theta(x\|z)$ | $p_\theta(x_{0:T})$ |
+| Encoder | $q_\phi(z\Vertx)$ | $q(x_{1:T}\Vertx_0)$ (고정) |
+| Decoder | $p_\theta(x\Vertz)$ | $p_\theta(x_{0:T})$ |
 | ELBO | 단일 KL | T step KL의 합 |
 | Latent | 연속, 저차원 | 데이터와 동일 차원 |
 

@@ -51,19 +51,19 @@ $$\hat{A}(k) := \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^\top = \sum_{i=1
 
 근사 오차를 측정하기 위해 행렬의 크기를 재는 스펙트럼 노름을 정의합니다:
 
-$$\|A\|_2 := \max_{\mathbf{x} \neq \mathbf{0}} \frac{\|A\mathbf{x}\|_2}{\|\mathbf{x}\|_2} \quad (\text{Definition 4.23 & Eq 4.93})$$
+$$\VertA\Vert_2 := \max_{\mathbf{x} \neq \mathbf{0}} \frac{\VertA\mathbf{x}\Vert_2}{\Vert\mathbf{x}\Vert_2} \quad (\text{Definition 4.23 & Eq 4.93})$$
 
 - Theorem 4.24: 행렬 $A$ 의 스펙트럼 노름은 $A$ 의 가장 큰 특이값 $\sigma_1$ 과 정확히 일치합니다:
-  $$\|A\|_2 = \sigma_1$$
+  $$\VertA\Vert_2 = \sigma_1$$
 
 
 ### 📌 4. 에카르트-영 정리 (Eckart-Young Theorem: Theorem 4.25 & Eq 4.94~4.99)
 
 에카르트와 영(Eckart & Young, 1936)이 증명한 이 정리는 SVD 저계수 근사가 "세상에 존재하는 모든 계수 $k$ 이하의 행렬들 중 원본 행렬과 오차가 가장 적은 유일한 최적해"임을 보장합니다:
 
-$$\hat{A}(k) = \text{argmin}_{\text{rk}(B) = k} \|A - B\|_2 \quad (\text{Eq 4.94})$$
+$$\hat{A}(k) = \text{argmin}_{\text{rk}(B) = k} \VertA - B\Vert_2 \quad (\text{Eq 4.94})$$
 
-$$\|A - \hat{A}(k)\|_2 = \sigma_{k+1} \quad (\text{Eq 4.95})$$
+$$\VertA - \hat{A}(k)\Vert_2 = \sigma_{k+1} \quad (\text{Eq 4.95})$$
 
 - 오차의 수학적 증명 직관:
   원본 $A$ 와 근사 행렬 $\hat{A}(k)$ 의 차이 행렬은 버려진 나머지 특이값들의 합입니다:

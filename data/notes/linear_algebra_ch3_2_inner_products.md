@@ -14,10 +14,10 @@
 ### 🔗 노름(3.1절) ➡️ 내적(3.2절) ➡️ 후속 AI 모델로 이어지는 거대한 기하학적 흐름
 
 1. 노름에서 내적으로의 자연스러운 확장:
-   사실 노름과 내적은 완전히 별개의 개념이 아닙니다! 자기 자신과의 내적에 제곱근을 취하면 바로 벡터의 노름이 유도됩니다 ($\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$). 즉, 내적은 노름을 품고 있는 더 근본적인 상위 구조입니다.
+   사실 노름과 내적은 완전히 별개의 개념이 아닙니다! 자기 자신과의 내적에 제곱근을 취하면 바로 벡터의 노름이 유도됩니다 ($\Vert\mathbf{x}\Vert = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$). 즉, 내적은 노름을 품고 있는 더 근본적인 상위 구조입니다.
 
 2. 두 벡터 사이의 각도와 직교성 탄생:
-   내적 $\langle \mathbf{x}, \mathbf{y} \rangle$ 을 정의함으로써 우리는 비로소 $\cos\theta = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|}$ 관계식을 통해 두 데이터 벡터 간의 각도 $\theta$ 를 측정할 수 있게 되며, 내적값이 0일 때 두 벡터가 완전히 직교(Orthogonal)함을 선언할 수 있게 됩니다.
+   내적 $\langle \mathbf{x}, \mathbf{y} \rangle$ 을 정의함으로써 우리는 비로소 $\cos\theta = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert}$ 관계식을 통해 두 데이터 벡터 간의 각도 $\theta$ 를 측정할 수 있게 되며, 내적값이 0일 때 두 벡터가 완전히 직교(Orthogonal)함을 선언할 수 있게 됩니다.
 
 3. 대칭 양의 정정 행렬(SPD)과 후속 AI 인공지능 알고리즘 연결:
    일반적인 내적 연산은 행렬 곱 형태인 $\langle \mathbf{x}, \mathbf{y} \rangle = \hat{\mathbf{x}}^\top A \hat{\mathbf{y}}$ 로 확장되며, 이때 등장하는 가중치 행렬 $A$ 가 바로 대칭 양의 정정 행렬(Symmetric Positive Definite Matrix, SPD)입니다. 

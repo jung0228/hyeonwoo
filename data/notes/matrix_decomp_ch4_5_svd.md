@@ -94,7 +94,7 @@ $$(A\mathbf{v}_i)^\top (A\mathbf{v}_j) = \mathbf{v}_i^\top (A^\top A) \mathbf{v}
 
 이 직교 벡터 $A\mathbf{v}_i$ 를 단위 길이로 정규화한 것이 바로 좌특이벡터 $\mathbf{u}_i$ 가 됩니다:
 
-$$\mathbf{u}_i := \frac{A\mathbf{v}_i}{\|A\mathbf{v}_i\|} = \frac{1}{\sqrt{\lambda_i}} A\mathbf{v}_i = \frac{1}{\sigma_i} A\mathbf{v}_i \quad (\text{Eq 4.78})$$
+$$\mathbf{u}_i := \frac{A\mathbf{v}_i}{\VertA\mathbf{v}_i\Vert} = \frac{1}{\sqrt{\lambda_i}} A\mathbf{v}_i = \frac{1}{\sigma_i} A\mathbf{v}_i \quad (\text{Eq 4.78})$$
 
 이 식을 정리하면 선형대수학의 황금 방정식인 특이값 방정식(Singular Value Equation)이 완성됩니다:
 

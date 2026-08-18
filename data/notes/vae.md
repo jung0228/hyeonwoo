@@ -18,7 +18,7 @@ $$q_\phi(z|x) \approx p_\theta(z|x)$$
 
 ### ELBO (Evidence Lower Bound)
 
-$$\mathcal{L} = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{KL}(q_\phi(z|x) \| p(z))$$
+$$\mathcal{L} = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{KL}(q_\phi(z|x) \Vert p(z))$$
 
 - 첫 번째 항: Reconstruction Loss — 원본을 잘 복원해야 함
 - 두 번째 항: KL Divergence — latent가 표준정규분포에 가까워야 함
@@ -38,7 +38,7 @@ $$\mathcal{L} = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{KL}(q_\phi(z|x
 - Diffusion: T step에 걸친 점진적 noise 추가/제거가 각 step의 VAE
 
 Diffusion의 ELBO:
-$$\mathcal{L} = \mathbb{E}\left[\sum_t D_{KL}(q(x_{t-1}|x_t, x_0) \| p_\theta(x_{t-1}|x_t))\right]$$
+$$\mathcal{L} = \mathbb{E}\left[\sum_t D_{KL}(q(x_{t-1}|x_t, x_0) \Vert p_\theta(x_{t-1}|x_t))\right]$$
 
 → 각 step이 조건부 VAE처럼 동작. 근본 목적함수 구조는 동일!
 

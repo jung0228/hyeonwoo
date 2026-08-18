@@ -16,7 +16,7 @@ $$A = U \Sigma V^T$$
 
 ### 2. 최적 저랭크 근사 (Eckart-Young-Mirsky Theorem)
 랭크 $k < r$인 가장 최적의 근사 행렬 $A_k$:
-$$A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^T, \quad \min_{\text{rank}(B)=k} \|A - B\|_F = \sqrt{\sum_{i=k+1}^{r} \sigma_i^2}$$
+$$A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^T, \quad \min_{\text{rank}(B)=k} \VertA - B\Vert_F = \sqrt{\sum_{i=k+1}^{r} \sigma_i^2}$$
 
 ### 3. 고유값 분해 (Eigendecomposition)
 정방 대칭 행렬 $S \in \mathbb{R}^{n \times n}$에 대해 (Spectral Theorem):

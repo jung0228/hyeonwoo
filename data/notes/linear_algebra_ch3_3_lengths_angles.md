@@ -14,15 +14,15 @@
 
 1. 내적이 유도하는 벡터의 길이 (Length / Induced Norm)
    - 자기 자신과의 내적에 제곱근을 취하면 벡터의 크기인 노름이 유도됩니다.
-   - 수식: $\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$
+   - 수식: $\Vert\mathbf{x}\Vert = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$
 
 2. 내적이 유도하는 두 벡터 간의 거리 (Distance / Metric)
    - 두 벡터의 차이에 대해 유도된 노름을 적용하면 벡터 간의 물리적 거리가 도출됩니다.
-   - 수식: $d(\mathbf{x}, \mathbf{y}) = \|\mathbf{x} - \mathbf{y}\|$
+   - 수식: $d(\mathbf{x}, \mathbf{y}) = \Vert\mathbf{x} - \mathbf{y}\Vert$
 
 3. 내적이 유도하는 두 벡터 사이의 각도 (Angle)
    - 코시-슈바르츠 부등식을 적용하여 두 벡터 사이의 기하학적 각도가 유일하게 정의됩니다.
-   - 수식: $\cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|}$
+   - 수식: $\cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert}$
 
 4. 내적이 유도하는 두 벡터의 직교성 (Orthogonality)
    - 내적값이 정확히 0이 될 때 두 벡터는 상호 직교 관계에 놓이게 됩니다.
@@ -36,17 +36,17 @@
 
 모든 내적(Inner Product)은 다음과 같이 벡터의 노름(길이)을 자연스럽게 유도(Induce)합니다:
 
-$$\|\mathbf{x}\| := \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle} \quad (\text{Eq 3.16})$$
+$$\Vert\mathbf{x}\Vert := \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle} \quad (\text{Eq 3.16})$$
 
 - 주의 (Remark): 모든 내적은 노름을 유도하지만, 모든 노름이 내적으로부터 유도되는 것은 아닙니다!
-  - 예시: 맨해튼 노름($\ell_1$ norm: $\|\mathbf{x}\|_1 = \sum |x_i|$)은 대응하는 내적이 존재하지 않는 대표적인 노름입니다.
+  - 예시: 맨해튼 노름($\ell_1$ norm: $\Vert\mathbf{x}\Vert_1 = \sum |x_i|$)은 대응하는 내적이 존재하지 않는 대표적인 노름입니다.
 
 
 ### 📌 2. 코시-슈바르츠 부등식 (Cauchy-Schwarz Inequality: Eq 3.17)
 
-내적 공간 $(V, \langle \cdot, \cdot \rangle)$ 상에서 유도된 노름 $\|\cdot\|$ 은 무조건 다음 코시-슈바르츠 부등식을 만족합니다:
+내적 공간 $(V, \langle \cdot, \cdot \rangle)$ 상에서 유도된 노름 $\Vert\cdot\Vert$ 은 무조건 다음 코시-슈바르츠 부등식을 만족합니다:
 
-$$|\langle \mathbf{x}, \mathbf{y} \rangle| \le \|\mathbf{x}\| \|\mathbf{y}\| \quad (\text{Eq 3.17})$$
+$$|\langle \mathbf{x}, \mathbf{y} \rangle| \le \Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert \quad (\text{Eq 3.17})$$
 
 - 기하학적 의미: 두 벡터의 내적 절대값은 각 벡터의 길이를 곱한 것보다 절대 클 수 없습니다.
 
@@ -56,10 +56,10 @@ $$|\langle \mathbf{x}, \mathbf{y} \rangle| \le \|\mathbf{x}\| \|\mathbf{y}\| \qu
 동일한 벡터 $\mathbf{x} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ 이라도 어떤 내적을 채택하느냐에 따라 측정되는 물리적 길이가 달라집니다!
 
 1. 표준 도트 곱 적용 시:
-   $$\|\mathbf{x}\| = \sqrt{\mathbf{x}^\top \mathbf{x}} = \sqrt{1^2 + 1^2} = \sqrt{2} \approx 1.414 \quad (\text{Eq 3.18})$$
+   $$\Vert\mathbf{x}\Vert = \sqrt{\mathbf{x}^\top \mathbf{x}} = \sqrt{1^2 + 1^2} = \sqrt{2} \approx 1.414 \quad (\text{Eq 3.18})$$
 
 2. 가중치 행렬 $A = \begin{bmatrix} 1 & -1/2 \\ -1/2 & 1 \end{bmatrix}$ 내적 적용 시:
-   $$\langle \mathbf{x}, \mathbf{x} \rangle = \begin{bmatrix} 1 & 1 \end{bmatrix} \begin{bmatrix} 1 & -1/2 \\ -1/2 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = 1 - 1 + 1 = 1 \implies \|\mathbf{x}\| = \sqrt{1} = 1 \quad (\text{Eq 3.20})$$
+   $$\langle \mathbf{x}, \mathbf{x} \rangle = \begin{bmatrix} 1 & 1 \end{bmatrix} \begin{bmatrix} 1 & -1/2 \\ -1/2 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = 1 - 1 + 1 = 1 \implies \Vert\mathbf{x}\Vert = \sqrt{1} = 1 \quad (\text{Eq 3.20})$$
 
 - 직관적 비교: 동일한 벡터라도 이 내적 공간에서는 도트 곱 공간보다 더 "짧게" 측정됩니다.
 
@@ -68,7 +68,7 @@ $$|\langle \mathbf{x}, \mathbf{y} \rangle| \le \|\mathbf{x}\| \|\mathbf{y}\| \qu
 
 내적 공간 $(V, \langle \cdot, \cdot \rangle)$ 상의 두 벡터 $\mathbf{x}, \mathbf{y}$ 사이의 거리 $d(\mathbf{x}, \mathbf{y})$ 는 유도된 노름으로 정의됩니다:
 
-$$d(\mathbf{x}, \mathbf{y}) := \|\mathbf{x} - \mathbf{y}\| = \sqrt{\langle \mathbf{x} - \mathbf{y}, \mathbf{x} - \mathbf{y} \rangle} \quad (\text{Eq 3.21})$$
+$$d(\mathbf{x}, \mathbf{y}) := \Vert\mathbf{x} - \mathbf{y}\Vert = \sqrt{\langle \mathbf{x} - \mathbf{y}, \mathbf{x} - \mathbf{y} \rangle} \quad (\text{Eq 3.21})$$
 
 - 거리함수(Metric)의 3대 공리:
   1. 양의 정정성: $d(\mathbf{x}, \mathbf{y}) \ge 0$ 이며, $d(\mathbf{x}, \mathbf{y}) = 0 \iff \mathbf{x} = \mathbf{y}$
@@ -85,9 +85,9 @@ $$d(\mathbf{x}, \mathbf{y}) := \|\mathbf{x} - \mathbf{y}\| = \sqrt{\langle \math
 
 ### 📌 1. 두 벡터 사이의 각도 (Angle: Eq 3.24~3.25 & Example 3.6)
 
-코시-슈바르츠 부등식에 의해 $-1 \le \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|} \le 1$ 이 항상 보장되므로, 두 벡터 사이의 각도 $\omega \in [0, \pi]$ 는 유일하게 결정됩니다:
+코시-슈바르츠 부등식에 의해 $-1 \le \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert} \le 1$ 이 항상 보장되므로, 두 벡터 사이의 각도 $\omega \in [0, \pi]$ 는 유일하게 결정됩니다:
 
-$$\cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|} \quad (\text{Eq 3.25})$$
+$$\cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert} \quad (\text{Eq 3.25})$$
 
 - Example 3.6 수치 연산: $\mathbf{x} = [1, 1]^\top, \mathbf{y} = [1, 2]^\top$ 에 대한 도트 곱 내적 시:
   $$\cos\omega = \frac{1\cdot 1 + 1\cdot 2}{\sqrt{2} \sqrt{5}} = \frac{3}{\sqrt{10}} \implies \omega = \arccos\left(\frac{3}{\sqrt{10}}\right) \approx 0.32 \text{ rad} \approx 18^\circ$$
@@ -99,7 +99,7 @@ $$\cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\m
   $$\mathbf{x} \perp \mathbf{y} \iff \langle \mathbf{x}, \mathbf{y} \rangle = 0$$
 
 - 정규직교 (Orthonormal): 직교하면서 동시에 각각의 길이가 1인 단위 벡터인 경우입니다.
-  $$\mathbf{x} \perp \mathbf{y} \quad \text{and} \quad \|\mathbf{x}\| = 1, \; \|\mathbf{y}\| = 1$$
+  $$\mathbf{x} \perp \mathbf{y} \quad \text{and} \quad \Vert\mathbf{x}\Vert = 1, \; \Vert\mathbf{y}\Vert = 1$$
 
 - 영벡터의 성질: 영벡터 $\mathbf{0}$ 은 공간 상의 모든 벡터와 직교합니다.
 
@@ -131,10 +131,10 @@ $$A A^\top = I = A^\top A \implies A^{-1} = A^\top \quad (\text{Eq 3.29~3.30})$$
 직교 행렬 $A$ 로 벡터 공간을 변환하더라도 길이(Distance)와 각도(Angle)가 100% 보존됩니다:
 
 1. 길이 보존 (Length Preservation):
-   $$\|A \mathbf{x}\|_2^2 = (A \mathbf{x})^\top (A \mathbf{x}) = \mathbf{x}^\top A^\top A \mathbf{x} = \mathbf{x}^\top I \mathbf{x} = \mathbf{x}^\top \mathbf{x} = \|\mathbf{x}\|_2^2 \quad (\text{Eq 3.31})$$
+   $$\VertA \mathbf{x}\Vert_2^2 = (A \mathbf{x})^\top (A \mathbf{x}) = \mathbf{x}^\top A^\top A \mathbf{x} = \mathbf{x}^\top I \mathbf{x} = \mathbf{x}^\top \mathbf{x} = \Vert\mathbf{x}\Vert_2^2 \quad (\text{Eq 3.31})$$
 
 2. 각도 보존 (Angle Preservation):
-   $$\cos\omega_{new} = \frac{(A \mathbf{x})^\top (A \mathbf{y})}{\|A \mathbf{x}\| \|A \mathbf{y}\|} = \frac{\mathbf{x}^\top A^\top A \mathbf{y}}{\|\mathbf{x}\| \|\mathbf{y}\|} = \frac{\mathbf{x}^\top \mathbf{y}}{\|\mathbf{x}\| \|\mathbf{y}\|} = \cos\omega_{orig} \quad (\text{Eq 3.32})$$
+   $$\cos\omega_{new} = \frac{(A \mathbf{x})^\top (A \mathbf{y})}{\VertA \mathbf{x}\Vert \VertA \mathbf{y}\Vert} = \frac{\mathbf{x}^\top A^\top A \mathbf{y}}{\Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert} = \frac{\mathbf{x}^\top \mathbf{y}}{\Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert} = \cos\omega_{orig} \quad (\text{Eq 3.32})$$
 
 - 기하학적 본질: 직교 행렬에 의한 변환은 공간 전체의 형태를 찌그러뜨리지 않는 순수한 회전(Rotation) 및 반사(Flip) 변환입니다.
 
@@ -143,7 +143,7 @@ $$A A^\top = I = A^\top A \implies A^{-1} = A^\top \quad (\text{Eq 3.29~3.30})$$
 
 
 ### 1️⃣ [1단계 개념 정의]
-- 유도된 노름 & 거리: 내적 $\langle \mathbf{x}, \mathbf{x} \rangle$ 으로 유도되는 벡터의 크기 $\|\mathbf{x}\|$ 와 차이 $\|\mathbf{x} - \mathbf{y}\|$.
+- 유도된 노름 & 거리: 내적 $\langle \mathbf{x}, \mathbf{x} \rangle$ 으로 유도되는 벡터의 크기 $\Vert\mathbf{x}\Vert$ 와 차이 $\Vert\mathbf{x} - \mathbf{y}\Vert$.
 - 직교 행렬 (Orthogonal Matrix): $A^{-1} = A^\top$ 을 만족하는 행렬로, 공간의 정규직교 기저 축들을 회전/반사 변환시키는 행렬.
 
 
@@ -160,5 +160,5 @@ $$A A^\top = I = A^\top A \implies A^{-1} = A^\top \quad (\text{Eq 3.29~3.30})$$
 
 
 ### 4️⃣ [4단계 실전 AI 연결고리]
-- 코사인 유사도 (Cosine Similarity - NLP/추천시스템): 텍스트 임베딩 벡터 간의 유사도를 측정할 때 내적 공식 $\cos\omega = \frac{\mathbf{x}^\top \mathbf{y}}{\|\mathbf{x}\| \|\mathbf{y}\|}$ 을 그대로 사용합니다.
+- 코사인 유사도 (Cosine Similarity - NLP/추천시스템): 텍스트 임베딩 벡터 간의 유사도를 측정할 때 내적 공식 $\cos\omega = \frac{\mathbf{x}^\top \mathbf{y}}{\Vert\mathbf{x}\Vert \Vert\mathbf{y}\Vert}$ 을 그대로 사용합니다.
 - PCA 및 SVD (Ch 4.5 & Ch 10): 특이값 분해 $X = U \Sigma V^\top$ 에서 우측/좌측 특이 벡터 행렬 $U, V$ 가 모두 직교 행렬이므로, 데이터의 거리를 훼손하지 않는 주성분 회전 변환이 가능해집니다.

@@ -117,7 +117,7 @@ $$S = P D P^\top \quad (\text{단, } P^\top P = I)$$
    - 고유값: $\lambda_1 = \frac{7}{2}, \quad \lambda_2 = \frac{3}{2}$
 
 2. 정규직교 고유벡터 구축 (Eq 4.57~4.58):
-   $$\mathbf{p}_1 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\\\ -1 \end{bmatrix}, \quad \mathbf{p}_2 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\\\ 1 \end{bmatrix} \quad (\mathbf{p}_1^\top \mathbf{p}_2 = 0, \|\mathbf{p}_i\| = 1)$$
+   $$\mathbf{p}_1 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\\\ -1 \end{bmatrix}, \quad \mathbf{p}_2 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\\\ 1 \end{bmatrix} \quad (\mathbf{p}_1^\top \mathbf{p}_2 = 0, \Vert\mathbf{p}_i\Vert = 1)$$
 
 3. 직교 행렬 $P$ 및 대각 행렬 $D$ 완성 (Eq 4.59~4.61):
    $$P = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & 1 \\\\ -1 & 1 \end{bmatrix}, \quad D = \begin{bmatrix} 7/2 & 0 \\\\ 0 & 3/2 \end{bmatrix}$$

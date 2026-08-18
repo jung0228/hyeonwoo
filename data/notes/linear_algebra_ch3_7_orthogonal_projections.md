@@ -23,7 +23,7 @@ $n$차원 벡터 $\mathbf{x} \in \mathbb{R}^n$ 은 $n$개의 함수값을 가지
 
 $$\langle u, v \rangle := \int_a^b u(x) v(x) \, dx \quad (\text{Eq 3.37})$$
 
-- 함수 노름(길이): $\|u\| = \sqrt{\langle u, u \rangle} = \sqrt{\int_a^b u(x)^2 \, dx}$
+- 함수 노름(길이): $\Vertu\Vert = \sqrt{\langle u, u \rangle} = \sqrt{\int_a^b u(x)^2 \, dx}$
 - 함수의 직교성: $\langle u, v \rangle = \int_a^b u(x) v(x) \, dx = 0 \iff u \perp v$
 - 힐베르트 공간(Hilbert Space): 이러한 함수 내적이 수렴하고 완비성(Completeness)을 갖추도록 측도론(Measure Theory)을 엄밀히 적용한 무한차원 내적 공간을 힐베르트 공간이라 부릅니다.
 
@@ -69,21 +69,21 @@ $$\pi^2 = \pi \circ \pi = \pi \quad (\text{Definition 3.10})$$
    - 단서: 최단거리로 착지하려면 착지선 오차 벡터 $\mathbf{x} - \lambda \mathbf{b}$ 가 바닥 레일 방향 $\mathbf{b}$ 와 무조건 직각($90^\circ$)이어야 합니다.
    - 수식 전개 (Eq 3.39~3.41):
      $$\langle \mathbf{x} - \lambda \mathbf{b}, \mathbf{b} \rangle = 0 \iff \langle \mathbf{x}, \mathbf{b} \rangle - \lambda \langle \mathbf{b}, \mathbf{b} \rangle = 0$$
-     $$\lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\langle \mathbf{b}, \mathbf{b} \rangle} = \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \quad (\text{Eq 3.40~3.41})$$
-   - 직관: 분자 $\mathbf{b}^\top \mathbf{x}$ 는 두 벡터가 같은 방향으로 얼마나 겹쳐있는지(그림자 크기)를 나타내며, 분모 $\|\mathbf{b}\|^2$ 는 기준 벡터 $\mathbf{b}$ 의 길이 효과를 나누어 순수한 배율만 남겨주는 정규화 역할을 합니다.
-   - 기저 $\mathbf{b}$ 가 단위 벡터($\|\mathbf{b}\|=1$)라면 분모가 1이 되어 좌표는 단순히 $\lambda = \mathbf{b}^\top \mathbf{x}$ 가 됩니다.
+     $$\lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\langle \mathbf{b}, \mathbf{b} \rangle} = \frac{\mathbf{b}^\top \mathbf{x}}{\Vert\mathbf{b}\Vert^2} \quad (\text{Eq 3.40~3.41})$$
+   - 직관: 분자 $\mathbf{b}^\top \mathbf{x}$ 는 두 벡터가 같은 방향으로 얼마나 겹쳐있는지(그림자 크기)를 나타내며, 분모 $\Vert\mathbf{b}\Vert^2$ 는 기준 벡터 $\mathbf{b}$ 의 길이 효과를 나누어 순수한 배율만 남겨주는 정규화 역할을 합니다.
+   - 기저 $\mathbf{b}$ 가 단위 벡터($\Vert\mathbf{b}\Vert=1$)라면 분모가 1이 되어 좌표는 단순히 $\lambda = \mathbf{b}^\top \mathbf{x}$ 가 됩니다.
 
 2. 2단계: 왜 사영 벡터를 $\pi_U(\mathbf{x}) = \lambda \mathbf{b}$ 로 쓰는가?
    - 목적: 1단계에서 구한 배율 $\lambda$ 는 단순한 숫자일 뿐이므로, 실제 공간 상의 위치 좌표(착지점 위치 벡터)로 복원하기 위해 기준 방향 벡터 $\mathbf{b}$ 에 배율 $\lambda$ 를 곱해줍니다.
    - 수식 도출 (Eq 3.42):
-     $$\pi_U(\mathbf{x}) = \lambda \mathbf{b} = \left( \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b}$$
-   - 사영 벡터의 길이: $\|\pi_U(\mathbf{x})\| = |\lambda| \|\mathbf{b}\| = |\cos\omega| \|\mathbf{x}\|$ (삼각법과 완벽 일치, Eq 3.44).
+     $$\pi_U(\mathbf{x}) = \lambda \mathbf{b} = \left( \frac{\mathbf{b}^\top \mathbf{x}}{\Vert\mathbf{b}\Vert^2} \right) \mathbf{b}$$
+   - 사영 벡터의 길이: $\Vert\pi_U(\mathbf{x})\Vert = |\lambda| \Vert\mathbf{b}\Vert = |\cos\omega| \Vert\mathbf{x}\Vert$ (삼각법과 완벽 일치, Eq 3.44).
 
 3. 3단계: 왜 굳이 사영 행렬 $P_\pi = \frac{\mathbf{b}\mathbf{b}^\top}{\mathbf{b}^\top \mathbf{b}}$ 로 변환하는가?
    - 목적: 매번 어떤 데이터 벡터 $\mathbf{x}$ 가 들어올 때마다 일일이 내적하고 나누는 연산을 반복하지 않고, "어떤 벡터든 앞에 곱하기만 하면 레일 위로 즉시 떨어뜨려 주는 만능 기계(선형 변환 행렬)"를 만들기 위함입니다.
    - 수식 결합법칙 변형 (Eq 3.45~3.46):
-     $$\pi_U(\mathbf{x}) = \mathbf{b} \lambda = \mathbf{b} \left( \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \right) = \left( \frac{\mathbf{b} \mathbf{b}^\top}{\|\mathbf{b}\|^2} \right) \mathbf{x}$$
-     $$P_\pi = \frac{\mathbf{b} \mathbf{b}^\top}{\|\mathbf{b}\|^2} = \frac{\mathbf{b} \mathbf{b}^\top}{\mathbf{b}^\top \mathbf{b}} \quad (\text{Rank 1 대칭 행렬, Eq 3.46})$$
+     $$\pi_U(\mathbf{x}) = \mathbf{b} \lambda = \mathbf{b} \left( \frac{\mathbf{b}^\top \mathbf{x}}{\Vert\mathbf{b}\Vert^2} \right) = \left( \frac{\mathbf{b} \mathbf{b}^\top}{\Vert\mathbf{b}\Vert^2} \right) \mathbf{x}$$
+     $$P_\pi = \frac{\mathbf{b} \mathbf{b}^\top}{\Vert\mathbf{b}\Vert^2} = \frac{\mathbf{b} \mathbf{b}^\top}{\mathbf{b}^\top \mathbf{b}} \quad (\text{Rank 1 대칭 행렬, Eq 3.46})$$
 
 - 분모와 분자의 본질적 형태 차이:
   - 분모 $\mathbf{b}^\top \mathbf{b}$ (내적): $(1 \times n) \times (n \times 1) =$ 스칼라 (숫자 하나, 길이의 제곱).
@@ -134,7 +134,7 @@ $$\pi^2 = \pi \circ \pi = \pi \quad (\text{Definition 3.10})$$
   $$\pi_U(\mathbf{x}) = B \boldsymbol{\lambda} = 5 \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} - 3 \begin{bmatrix} 0 \\ 1 \\ 2 \end{bmatrix} = \begin{bmatrix} 5 \\ 2 \\ -1 \end{bmatrix}$$
 
 - 4단계: 사영 오차(재구성 오차, Reconstruction Error) 계산
-  $$\|\mathbf{x} - \pi_U(\mathbf{x})\| = \left\| \begin{bmatrix} 6 \\ 0 \\ 0 \end{bmatrix} - \begin{bmatrix} 5 \\ 2 \\ -1 \end{bmatrix} \right\| = \left\| \begin{bmatrix} 1 \\ -2 \\ 1 \end{bmatrix} \right\| = \sqrt{1^2 + (-2)^2 + 1^2} = \sqrt{6}$$
+  $$\Vert\mathbf{x} - \pi_U(\mathbf{x})\Vert = \left\Vert \begin{bmatrix} 6 \\ 0 \\ 0 \end{bmatrix} - \begin{bmatrix} 5 \\ 2 \\ -1 \end{bmatrix} \right\Vert = \left\Vert \begin{bmatrix} 1 \\ -2 \\ 1 \end{bmatrix} \right\Vert = \sqrt{1^2 + (-2)^2 + 1^2} = \sqrt{6}$$
 
 - 5단계: 사영 행렬 $P_\pi$ 계산
   $$P_\pi = B (B^\top B)^{-1} B^\top = \frac{1}{6} \begin{bmatrix} 5 & 2 & -1 \\ 2 & 2 & 2 \\ -1 & 2 & 5 \end{bmatrix}$$
@@ -149,7 +149,7 @@ $$\mathbf{u}_k := \mathbf{b}_k - \pi_{\text{span}[\mathbf{u}_1, \dots, \mathbf{u
 
 - Example 3.12: $\mathbf{b}_1 = \begin{bmatrix} 2 \\ 0 \end{bmatrix}, \mathbf{b}_2 = \begin{bmatrix} 1 \\ 1 \end{bmatrix} \in \mathbb{R}^2$
   $$\mathbf{u}_1 = \begin{bmatrix} 2 \\ 0 \end{bmatrix}$$
-  $$\mathbf{u}_2 = \mathbf{b}_2 - \frac{\mathbf{u}_1 \mathbf{u}_1^\top}{\|\mathbf{u}_1\|^2} \mathbf{b}_2 = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$$
+  $$\mathbf{u}_2 = \mathbf{b}_2 - \frac{\mathbf{u}_1 \mathbf{u}_1^\top}{\Vert\mathbf{u}_1\Vert^2} \mathbf{b}_2 = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$$
   두 벡터 $\mathbf{u}_1, \mathbf{u}_2$ 는 완벽히 직교합니다 ($\mathbf{u}_1^\top \mathbf{u}_2 = 0$).
 
 
@@ -164,7 +164,7 @@ $$\mathbf{u}_k := \mathbf{b}_k - \pi_{\text{span}[\mathbf{u}_1, \dots, \mathbf{u
 $$\pi_L(\mathbf{x}) = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0) \quad (\text{Eq 3.72})$$
 
 - 어파인 공간까지의 최단 거리:
-  $$d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = d(\mathbf{x} - \mathbf{x}_0, U) \quad (\text{Eq 3.73})$$
+  $$d(\mathbf{x}, L) = \Vert\mathbf{x} - \pi_L(\mathbf{x})\Vert = \Vert\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\Vert = d(\mathbf{x} - \mathbf{x}_0, U) \quad (\text{Eq 3.73})$$
 
 
 ## 🧠 3. 4단계 정밀 개념 해설
@@ -176,7 +176,7 @@ $$\pi_L(\mathbf{x}) = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0) \quad (\te
 
 
 ### 2️⃣ [2단계 왜 쓰는가?]
-- 고차원 데이터의 최적 차원 압축: 고차원 데이터에서 핵심적인 저차원 정보만 추출하고 압축 손실(재구성 오차 $\|\mathbf{x} - \pi_U(\mathbf{x})\|$)을 수학적으로 최소화하기 위해 사용합니다.
+- 고차원 데이터의 최적 차원 압축: 고차원 데이터에서 핵심적인 저차원 정보만 추출하고 압축 손실(재구성 오차 $\Vert\mathbf{x} - \pi_U(\mathbf{x})\Vert$)을 수학적으로 최소화하기 위해 사용합니다.
 - 해가 없는 연립방정식의 최적 근사해 도출: $A\mathbf{x} = \mathbf{b}$ 에서 $\mathbf{b}$ 가 열공간에 없어 해가 존재하지 않을 때, 열공간 위로 직교 정사영된 최단거리 근사해(최소제곱해)를 구하기 위해 사용합니다.
 
 
@@ -190,6 +190,6 @@ $$\pi_L(\mathbf{x}) = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0) \quad (\te
 
 ### 4️⃣ [4단계 실전 AI 연결고리]
 - 선형 회귀 (Linear Regression - Ch 9): 타겟 벡터 $\mathbf{y}$ 를 데이터 특성 행렬 $X$ 의 열공간으로 직교 정사영시켜 최적 가중치 $\mathbf{w}^* = (X^\top X)^{-1} X^\top \mathbf{y}$ 를 구하는 원리 그 자체입니다.
-- PCA (주성분 분석 - Ch 10): 고차원 데이터를 재구성 오차 $\|\mathbf{x} - \pi_U(\mathbf{x})\|^2$ 가 최소가 되도록 주성분 부분공간으로 직교 정사영시키는 알고리즘입니다.
+- PCA (주성분 분석 - Ch 10): 고차원 데이터를 재구성 오차 $\Vert\mathbf{x} - \pi_U(\mathbf{x})\Vert^2$ 가 최소가 되도록 주성분 부분공간으로 직교 정사영시키는 알고리즘입니다.
 - 오토인코더 (Auto-Encoder): 고차원 입력을 저차원 잠재 공간(Latent Space)으로 사영(인코더)하고 다시 복원(디코더)하는 비선형 정사영 확장 모델입니다.
 - SVM 분리 초평면 (Support Vector Machine - Ch 12): 데이터 점들을 어파인 초평면 $L = \{\mathbf{x} \mid \mathbf{w}^\top \mathbf{x} + b = 0\}$ 위로 직교 정사영하여 마진(Margin) 거리를 최대화하는 분류기를 학습합니다.

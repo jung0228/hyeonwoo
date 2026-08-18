@@ -130,7 +130,7 @@ $$A \mathbf{x} = \lambda \mathbf{x} \quad (\text{Eq 4.25})$$
 
 1. $A^\top A$ 의 대칭 반양의 정정성 (Theorem 4.14 & Eq 4.36):
    임의의 행렬 $A \in \mathbb{R}^{m \times n}$ 에 대해 $S = A^\top A$ 는 항상 대칭 반양의 정정 행렬(SPSD)이며, $\text{rk}(A) = n$ 이면 대칭 양의 정정 행렬(SPD)이 됩니다.
-   - 증명: $S^\top = (A^\top A)^\top = A^\top A = S$, 그리고 $\mathbf{x}^\top S \mathbf{x} = \mathbf{x}^\top A^\top A \mathbf{x} = \|A\mathbf{x}\|^2 \ge 0$.
+   - 증명: $S^\top = (A^\top A)^\top = A^\top A = S$, 그리고 $\mathbf{x}^\top S \mathbf{x} = \mathbf{x}^\top A^\top A \mathbf{x} = \VertA\mathbf{x}\Vert^2 \ge 0$.
 
 2. 스펙트럴 정리 (Spectral Theorem: Theorem 4.15):
    실수 대칭 행렬 $A \in \mathbb{R}^{n \times n}$ ($A^\top = A$) 은:
@@ -193,7 +193,7 @@ $A = \begin{bmatrix} 3 & 2 & 2 \\\\ 2 & 3 & 2 \\\\ 2 & 2 & 3 \end{bmatrix}$
 - 심층 신경망 폭발/소실 방지 (Spectral Normalization in GAN & Transformers):
   신경망이 수십~수백 개 층으로 깊어질 때 순전파와 역전파 과정에서 가중치 행렬 $W$ 가 연속적으로 곱해집니다.
   가중치 행렬의 최대 고유값(스펙트럼 반경)이 1보다 크면 거듭제곱 과정에서 기울기 폭발(Gradient Exploding)이 일어나고, 1보다 작으면 기울기 소실(Gradient Vanishing)이 발생합니다.
-  스펙트럴 정규화(Spectral Normalization)는 가중치 행렬을 자신의 최대 고유값(스펙트럼 노름)으로 나누어 $\|W\|_2 = 1$ 로 강제 고정함으로써 심층 생성 모델(GAN, Diffusion)의 학습 안정성을 보장합니다.
+  스펙트럴 정규화(Spectral Normalization)는 가중치 행렬을 자신의 최대 고유값(스펙트럼 노름)으로 나누어 $\VertW\Vert_2 = 1$ 로 강제 고정함으로써 심층 생성 모델(GAN, Diffusion)의 학습 안정성을 보장합니다.
 
 - 그래프 신경망(GNN) 및 분자 신약 개발 (Spectral Graph Convolution & AlphaFold):
   분자 구조, 단백질 3차원 상호작용, 소셜 네트워크와 같은 비유클리드 그래프 데이터는 격자 구조가 없어 일반 CNN 합성곱을 적용할 수 없습니다.

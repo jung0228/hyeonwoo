@@ -71,7 +71,7 @@ $$p(\theta|D_1, D_2) \propto p(D_2|\theta) \cdot p(\theta|D_1)$$
 
 Categorical model에서 MLE = Cross-Entropy 최소화:
 
-$$\text{CE}(q, p) = -\sum_k q_k \log p_k = H(q) + D_{KL}(q \| p)$$
+$$\text{CE}(q, p) = -\sum_k q_k \log p_k = H(q) + D_{KL}(q \Vert p)$$
 
 $q$가 고정이면 CE 최소화 = KL Divergence 최소화
 
