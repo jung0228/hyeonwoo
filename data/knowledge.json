@@ -951,6 +951,26 @@
       "purpose": "2단계 존재 이유: 복잡한 다차원 변환을 독립된 1차원 스케일링으로 분해하고 데이터의 주성분 분산 축 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 비대칭 행렬은 결함행렬/복소근 위험, 대칭행렬은 100% 실수고유값 & 정규직교기저(ONB) 보장.",
       "ai_connection": "4단계 AI 연결: 구글 PageRank 정상상태 고유벡터, PCA 주성분 분석, GNN 인접행렬 스펙트럼, Hessian 곡률 분석."
+    },
+    {
+      "id": "matrix_decomp_ch4_3_cholesky_diagonalization",
+      "label": "4.3 & 4.4 숄레스키 분해와 고유값 대각화",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/matrix_decomp_ch4_3_cholesky_diagonalization.md",
+      "tags": [
+        "Cholesky Decomposition",
+        "Diagonalization",
+        "Eigendecomposition",
+        "Matrix Power",
+        "VAE Reparameterization",
+        "Gaussian Sampling"
+      ],
+      "definition": "1단계 개념: SPD 행렬의 제곱근 분해 A = L L^T 및 고유기저 변환 대각화 A = P D P^-1.",
+      "purpose": "2단계 존재 이유: 다변수 간섭 제거(O(n) 대각 연산화), 다변량 가우시안 난수 생성 및 행렬 거듭제곱/역행렬 초고속 산출.",
+      "tradeoff_insight": "3단계 비판적 맹점: 숄레스키는 SPD 전용 O(n^3/3) 초고속, 고유값 분해는 비결함 정방행렬 전용 O(n^3) 스펙트럼 분석.",
+      "ai_connection": "4단계 AI 연결: VAE Reparameterization Trick z = mu + L eps, 가우시안 프로세스 커널 역행렬, PageRank 장기 수렴 예측."
     }
   ],
   "edges": [
@@ -1488,6 +1508,12 @@
     {
       "source": "matrix_decomp_ch4_1_determinant_trace",
       "target": "matrix_decomp_ch4_2_eigenvalues",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "matrix_decomp_ch4_2_eigenvalues",
+      "target": "matrix_decomp_ch4_3_cholesky_diagonalization",
       "relation": "basis_of",
       "weight": 3
     }
