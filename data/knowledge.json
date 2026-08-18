@@ -807,6 +807,25 @@
       "purpose": "2단계 존재 이유: 공간의 형태 왜곡 없이 방향 전환(기저 변환) 및 수치 선형대수(QR분해) 소거 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: 2D 회전은 교환법칙 성립(가환군), 3D 이상 회전은 순서가 결과에 영향(비가환군).",
       "ai_connection": "4단계 AI 연결: 3D 비전/NeRF 카메라 외부파라미터 R, 로보틱스 기구학, 커널 트릭, PCA 직교사영."
+    },
+    {
+      "id": "linear_algebra_ch3_problems",
+      "label": "📝 3장 해석기하학 연습문제 (3.1~3.10)",
+      "category": "Math Problems",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/linear_algebra_ch3_problems.md",
+      "tags": [
+        "Exercises",
+        "Inner Product Proof",
+        "Normal Equation",
+        "Gram-Schmidt",
+        "Cauchy-Schwarz"
+      ],
+      "definition": "1단계 문제 풀이: MML Chapter 3 (Exercises 3.1 ~ 3.10) 전수 풀이 및 수식 증명.",
+      "purpose": "2단계 존재 이유: 내적 공리, 정사영(Normal Equation), 그람-슈미트, 코시-슈바르츠 부등식 실전 증명 마스터.",
+      "tradeoff_insight": "3단계 비판적 맹점: 비대칭 행렬의 내적 파탄, 비직교 내적에서의 정사영 왜곡, 여사영(id - pi)의 핵과 상 상호교환.",
+      "ai_connection": "4단계 AI 연결: 선형회귀 Pseudo-inverse 유도, 3D 비전 회전 변환, SVM 코시-슈바르츠 마진 최적화."
     }
   ],
   "edges": [
@@ -1221,6 +1240,12 @@
     {
       "source": "linear_algebra_ch3_7_orthogonal_projections",
       "target": "linear_algebra_ch3_9_rotations",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "linear_algebra_ch3_9_rotations",
+      "target": "linear_algebra_ch3_problems",
       "relation": "basis_of",
       "weight": 3
     }
