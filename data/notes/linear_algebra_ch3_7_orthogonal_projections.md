@@ -59,21 +59,35 @@ $$\pi^2 = \pi \circ \pi = \pi \quad (\text{Definition 3.10})$$
 
 ### 📌 2. 1차원 부분공간(직선)으로의 직교 정사영 (Section 3.8.1 & Eq 3.39~3.46)
 
-원점을 지나는 1차원 직선 부분공간 $U = \text{span}[\mathbf{b}]$ 위로 임의의 벡터 $\mathbf{x} \in \mathbb{R}^n$ 을 정사영하는 과정은 다음 3단계로 유도됩니다:
+원점을 지나는 1차원 직선 부분공간 $U = \text{span}[\mathbf{b}]$ 위로 임의의 벡터 $\mathbf{x} \in \mathbb{R}^n$ 을 정사영하는 과정은 "공중에 뜬 점을 바닥 레일 위로 가장 짧은 거리(수직)로 착륙시키는 3단계 과정"으로 유도됩니다:
 
-1. 1단계: 사영 좌표 $\lambda$ 유도
-   - 사영점 $\pi_U(\mathbf{x}) = \lambda \mathbf{b}$ 와 원래 벡터 $\mathbf{x}$ 의 오차 벡터 $\mathbf{x} - \lambda \mathbf{b}$ 는 기저 $\mathbf{b}$ 와 완벽히 수직이어야 합니다 (Eq 3.39):
+
+#### 💡 [왜 수식을 이렇게 3단계로 유도하는가? (직관적 원리 해설)]
+
+1. 1단계: 왜 배율 $\lambda$(스칼라)를 먼저 구하는가?
+   - 목적: 어디에 착지할지 모르는 고차원 벡터 문제를 "기준 벡터 $\mathbf{b}$ 를 몇 배($\lambda$) 늘릴 것인가?"라는 숫자 하나 구하는 문제로 단순화하기 위함입니다.
+   - 단서: 최단거리로 착지하려면 착지선 오차 벡터 $\mathbf{x} - \lambda \mathbf{b}$ 가 바닥 레일 방향 $\mathbf{b}$ 와 무조건 직각($90^\circ$)이어야 합니다.
+   - 수식 전개 (Eq 3.39~3.41):
      $$\langle \mathbf{x} - \lambda \mathbf{b}, \mathbf{b} \rangle = 0 \iff \langle \mathbf{x}, \mathbf{b} \rangle - \lambda \langle \mathbf{b}, \mathbf{b} \rangle = 0$$
-     $$\lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\|\mathbf{b}\|^2} = \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \quad (\text{Eq 3.40~3.41})$$
-   - 만약 기저 $\mathbf{b}$ 가 단위 벡터($\|\mathbf{b}\|=1$)라면 좌표는 단순히 $\lambda = \mathbf{b}^\top \mathbf{x}$ 가 됩니다.
+     $$\lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\langle \mathbf{b}, \mathbf{b} \rangle} = \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \quad (\text{Eq 3.40~3.41})$$
+   - 직관: 분자 $\mathbf{b}^\top \mathbf{x}$ 는 두 벡터가 같은 방향으로 얼마나 겹쳐있는지(그림자 크기)를 나타내며, 분모 $\|\mathbf{b}\|^2$ 는 기준 벡터 $\mathbf{b}$ 의 길이 효과를 나누어 순수한 배율만 남겨주는 정규화 역할을 합니다.
+   - 기저 $\mathbf{b}$ 가 단위 벡터($\|\mathbf{b}\|=1$)라면 분모가 1이 되어 좌표는 단순히 $\lambda = \mathbf{b}^\top \mathbf{x}$ 가 됩니다.
 
-2. 2단계: 사영 벡터 $\pi_U(\mathbf{x})$ 도출
-   $$\pi_U(\mathbf{x}) = \lambda \mathbf{b} = \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \mathbf{b} \quad (\text{Eq 3.42})$$
+2. 2단계: 왜 사영 벡터를 $\pi_U(\mathbf{x}) = \lambda \mathbf{b}$ 로 쓰는가?
+   - 목적: 1단계에서 구한 배율 $\lambda$ 는 단순한 숫자일 뿐이므로, 실제 공간 상의 위치 좌표(착지점 위치 벡터)로 복원하기 위해 기준 방향 벡터 $\mathbf{b}$ 에 배율 $\lambda$ 를 곱해줍니다.
+   - 수식 도출 (Eq 3.42):
+     $$\pi_U(\mathbf{x}) = \lambda \mathbf{b} = \left( \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b}$$
    - 사영 벡터의 길이: $\|\pi_U(\mathbf{x})\| = |\lambda| \|\mathbf{b}\| = |\cos\omega| \|\mathbf{x}\|$ (삼각법과 완벽 일치, Eq 3.44).
 
-3. 3단계: 1차원 사영 행렬 $P_\pi$ 도출
-   $$\pi_U(\mathbf{x}) = \mathbf{b} \lambda = \mathbf{b} \left( \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \right) = \left( \frac{\mathbf{b} \mathbf{b}^\top}{\|\mathbf{b}\|^2} \right) \mathbf{x}$$
-   $$P_\pi = \frac{\mathbf{b} \mathbf{b}^\top}{\|\mathbf{b}\|^2} = \frac{\mathbf{b} \mathbf{b}^\top}{\mathbf{b}^\top \mathbf{b}} \quad (\text{Rank 1 대칭 행렬, Eq 3.46})$$
+3. 3단계: 왜 굳이 사영 행렬 $P_\pi = \frac{\mathbf{b}\mathbf{b}^\top}{\mathbf{b}^\top \mathbf{b}}$ 로 변환하는가?
+   - 목적: 매번 어떤 데이터 벡터 $\mathbf{x}$ 가 들어올 때마다 일일이 내적하고 나누는 연산을 반복하지 않고, "어떤 벡터든 앞에 곱하기만 하면 레일 위로 즉시 떨어뜨려 주는 만능 기계(선형 변환 행렬)"를 만들기 위함입니다.
+   - 수식 결합법칙 변형 (Eq 3.45~3.46):
+     $$\pi_U(\mathbf{x}) = \mathbf{b} \lambda = \mathbf{b} \left( \frac{\mathbf{b}^\top \mathbf{x}}{\|\mathbf{b}\|^2} \right) = \left( \frac{\mathbf{b} \mathbf{b}^\top}{\|\mathbf{b}\|^2} \right) \mathbf{x}$$
+     $$P_\pi = \frac{\mathbf{b} \mathbf{b}^\top}{\|\mathbf{b}\|^2} = \frac{\mathbf{b} \mathbf{b}^\top}{\mathbf{b}^\top \mathbf{b}} \quad (\text{Rank 1 대칭 행렬, Eq 3.46})$$
+
+- 분모와 분자의 본질적 형태 차이:
+  - 분모 $\mathbf{b}^\top \mathbf{b}$ (내적): $(1 \times n) \times (n \times 1) =$ 스칼라 (숫자 하나, 길이의 제곱).
+  - 분자 $\mathbf{b} \mathbf{b}^\top$ (외적): $(n \times 1) \times (1 \times n) =$ $n \times n$ 정방 행렬 (공간 전체를 직선으로 눌러버리는 변환 기계).
 
 
 #### 💡 [Example 3.10: 1차원 직선 정사영 수치 계산 예제]
