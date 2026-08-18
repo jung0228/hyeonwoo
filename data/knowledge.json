@@ -910,6 +910,26 @@
         "Cross-Entropy"
       ],
       "note": "data/notes/information_theory.md"
+    },
+    {
+      "id": "matrix_decomp_ch4_1_determinant_trace",
+      "label": "4.1 행렬식과 대각합 (Determinant & Trace)",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/matrix_decomp_ch4_1_determinant_trace.md",
+      "tags": [
+        "Matrix Decomposition",
+        "Determinant",
+        "Signed Volume",
+        "Laplace Expansion",
+        "Trace",
+        "Characteristic Polynomial"
+      ],
+      "definition": "1단계 개념: 정방행렬의 부호있는 초부피 팽창률 det(A) 및 주대각선 합 tr(A), 특성 다항식 p_A(lambda).",
+      "purpose": "2단계 존재 이유: 가역성(det != 0) 판별, 행렬의 기하학적 부피 스케일 요약 및 고유값 산출 기반 마련.",
+      "tradeoff_insight": "3단계 비판적 맹점: 라플라스 전개 O(n!) 대신 가우스 소거 삼각화 O(n^3) 연산. 대각합은 순환불변 tr(ABC)=tr(BCA).",
+      "ai_connection": "4단계 AI 연결: Normalizing Flows 생성모델 야코비안 행렬식 |det(J)|, 다변량 가우시안 분모 det(Sigma), Trace Trick."
     }
   ],
   "edges": [
@@ -1437,6 +1457,12 @@
       "relation": "comparison",
       "weight": 3,
       "insight": "최대우도추정과 쿨백-라이블러 발산 최소화의 이론적 등가성"
+    },
+    {
+      "source": "linear_algebra_ch3_9_rotations",
+      "target": "matrix_decomp_ch4_1_determinant_trace",
+      "relation": "basis_of",
+      "weight": 3
     }
   ],
   "categories": {
