@@ -992,6 +992,28 @@
       "purpose": "2단계 존재 이유: 정방행렬 한계를 넘어 임의의 m x n 데이터 행렬을 최적 직교 축으로 분해하고 최적 저계수(Low-Rank) 압축 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: Full SVD(100% 보존) vs Truncated SVD(상위 k개 특이값 유지로 O(k(m+n)) 초경량 압축 및 잠재의미 추출).",
       "ai_connection": "4단계 AI 연결: 넷플릭스 Matrix Factorization 추천, Moore-Penrose 의사역행렬 A^+, NLP Latent Semantic Analysis(LSA), 이미지 잡음 제거."
+    },
+    {
+      "id": "matrix_decomp_ch4_6_approx_phylogeny",
+      "label": "4.6~4.8 저계수 근사, 에카르트-영 정리 및 행렬 계통도",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/matrix_decomp_ch4_6_approx_phylogeny.md",
+      "tags": [
+        "Matrix Approximation",
+        "Eckart-Young Theorem",
+        "Spectral Norm",
+        "Matrix Phylogeny",
+        "Spectral Methods",
+        "Tensor Decomposition",
+        "Tucker",
+        "CP"
+      ],
+      "definition": "1단계 개념: SVD Rank-k 외적합 저계수 근사 및 최적오차 보장 에카르트-영 정리(||A - A_k||_2 = sigma_{k+1}), 선형대수 행렬 계통도.",
+      "purpose": "2단계 존재 이유: 거대 데이터의 0.6% 초경량 압축, 노이즈 필터링, 잠재 특징 추출 및 행렬 분류 체계 총망라.",
+      "tradeoff_insight": "3단계 비판적 맹점: 압축률 vs 복원오차 sigma_{k+1} Trade-off (누적 에너지 90~95% 기준). 가역성과 대각화 가능성의 독립성.",
+      "ai_connection": "4단계 AI 연결: LLM LoRA 가중치 압축, 넷플릭스 추천, Isomap/Laplacian Eigenmaps 매니폴드 학습, 고차원 텐서 Tucker/CP 분해."
     }
   ],
   "edges": [
@@ -1541,6 +1563,12 @@
     {
       "source": "matrix_decomp_ch4_3_cholesky_diagonalization",
       "target": "matrix_decomp_ch4_5_svd",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "matrix_decomp_ch4_5_svd",
+      "target": "matrix_decomp_ch4_6_approx_phylogeny",
       "relation": "basis_of",
       "weight": 3
     }
