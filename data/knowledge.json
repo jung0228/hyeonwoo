@@ -826,6 +826,90 @@
       "purpose": "2단계 존재 이유: 내적 공리, 정사영(Normal Equation), 그람-슈미트, 코시-슈바르츠 부등식 실전 증명 마스터.",
       "tradeoff_insight": "3단계 비판적 맹점: 비대칭 행렬의 내적 파탄, 비직교 내적에서의 정사영 왜곡, 여사영(id - pi)의 핵과 상 상호교환.",
       "ai_connection": "4단계 AI 연결: 선형회귀 Pseudo-inverse 유도, 3D 비전 회전 변환, SVM 코시-슈바르츠 마진 최적화."
+    },
+    {
+      "id": "web_agent",
+      "label": "Web Navigation Agent",
+      "category": "Language Model",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "WebVoyager",
+        "Mind2Web",
+        "Browser-use",
+        "DOM Action"
+      ],
+      "note": "data/notes/web_agent.md"
+    },
+    {
+      "id": "agent_memory",
+      "label": "Agent Memory & Workflow",
+      "category": "Language Model",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "AWM",
+        "Synapse",
+        "ReasoningBank",
+        "Experience Retrieval"
+      ],
+      "note": "data/notes/agent_memory.md"
+    },
+    {
+      "id": "long_video_understanding",
+      "label": "Long Video & Temporal Grounding",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "TCVP",
+        "LongVALE",
+        "Momentseeker",
+        "LVMR"
+      ],
+      "note": "data/notes/long_video_understanding.md"
+    },
+    {
+      "id": "streamkv",
+      "label": "StreamKV & Video KV Compression",
+      "category": "Architecture",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Streaming Video KV",
+        "KV Eviction",
+        "Long Context",
+        "Attention Budget"
+      ],
+      "note": "data/notes/streamkv.md"
+    },
+    {
+      "id": "svd",
+      "label": "SVD & Eigendecomposition",
+      "category": "Math & Stats",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Singular Value Decomposition",
+        "Eigenvalues",
+        "Spectral Theorem",
+        "Low Rank"
+      ],
+      "note": "data/notes/svd.md"
+    },
+    {
+      "id": "information_theory",
+      "label": "Information Theory & Entropy",
+      "category": "Math & Stats",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Entropy",
+        "KL Divergence",
+        "Mutual Information",
+        "Cross-Entropy"
+      ],
+      "note": "data/notes/information_theory.md"
     }
   ],
   "edges": [
@@ -1248,6 +1332,111 @@
       "target": "linear_algebra_ch3_problems",
       "relation": "basis_of",
       "weight": 3
+    },
+    {
+      "source": "transformer",
+      "target": "kv_cache",
+      "relation": "uses",
+      "weight": 4,
+      "insight": "Transformer 디코딩 시 이전 토큰의 Key/Value를 캐싱하여 O(N) 연산 절감"
+    },
+    {
+      "source": "cache",
+      "target": "kv_cache",
+      "relation": "basis_of",
+      "weight": 3,
+      "insight": "컴퓨터 시스템의 계층적 캐시 원리를 LLM 추론 메모리에 적용"
+    },
+    {
+      "source": "kv_cache",
+      "target": "streamkv",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "장기 컨텍스트/비디오 처리 시 KV Cache 급증 문제를 해결하기 위한 스트리밍 압축 기법"
+    },
+    {
+      "source": "linear_algebra_ch2_3_solving_systems",
+      "target": "linear_algebra_problems",
+      "relation": "uses",
+      "weight": 3,
+      "insight": "선형방정식계 해법 및 가우스 소거법 실전 문제 풀이"
+    },
+    {
+      "source": "linear_algebra_ch2_6_basis_rank",
+      "target": "linear_algebra_problems",
+      "relation": "uses",
+      "weight": 3,
+      "insight": "기저, 차원, 랭크 정리를 활용한 문제 풀이"
+    },
+    {
+      "source": "llm",
+      "target": "web_agent",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "LLM의 추론 및 함수 호출 능력을 확장하여 웹 환경에서 자율적 행동 수행"
+    },
+    {
+      "source": "web_agent",
+      "target": "agent_memory",
+      "relation": "uses",
+      "weight": 4,
+      "insight": "과거 탐색 궤적과 성공 워크플로우를 저장하고 재사용하는 에이전트 메모리"
+    },
+    {
+      "source": "multimodal",
+      "target": "web_agent",
+      "relation": "enables",
+      "weight": 3,
+      "insight": "DOM 트리뿐 아니라 스크린샷 렌더링 이미지를 시각적으로 이해하고 클릭 좌표 예측"
+    },
+    {
+      "source": "multimodal",
+      "target": "long_video_understanding",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "단일 이미지/텍스트를 넘어 장시간 비디오의 시간적 인과관계와 이벤트를 복합 추론"
+    },
+    {
+      "source": "vision_encoder",
+      "target": "long_video_understanding",
+      "relation": "part_of",
+      "weight": 3,
+      "insight": "프레임 및 비디오 토큰을 추출하는 비전 백본"
+    },
+    {
+      "source": "long_video_understanding",
+      "target": "streamkv",
+      "relation": "uses",
+      "weight": 3,
+      "insight": "장시간 비디오 프레임 처리 시 폭증하는 메모리를 제어하기 위해 KV 압축 활용"
+    },
+    {
+      "source": "linear_algebra_ch2_6_basis_rank",
+      "target": "svd",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "행렬의 랭크와 직교 기저를 기반으로 임의의 행렬을 세 직교 성분으로 분해"
+    },
+    {
+      "source": "svd",
+      "target": "pca",
+      "relation": "basis_of",
+      "weight": 4,
+      "insight": "SVD의 특이값 분해는 주성분 분석(PCA)의 직접적인 수학적 해법"
+    },
+    {
+      "source": "information_theory",
+      "target": "cross_entropy",
+      "relation": "basis_of",
+      "weight": 4,
+      "insight": "섀넌 엔트로피와 KL Divergence 개념에서 유도되는 교차 엔트로피 손실 함수"
+    },
+    {
+      "source": "mle_map",
+      "target": "information_theory",
+      "relation": "comparison",
+      "weight": 3,
+      "insight": "최대우도추정과 쿨백-라이블러 발산 최소화의 이론적 등가성"
     }
   ],
   "categories": {
@@ -1294,15 +1483,50 @@
   },
   "sessions": [
     {
+      "date": "2026-08-10",
+      "topics": [
+        "streamkv",
+        "kv_cache",
+        "transformer"
+      ],
+      "note": "StreamKV 논문 분석 및 LLM 추론 시 KV Cache 병목 최적화 기법 정리"
+    },
+    {
+      "date": "2026-08-12",
+      "topics": [
+        "web_agent",
+        "agent_memory",
+        "llm"
+      ],
+      "note": "Web Agent 서베이 (Mind2Web, WebVoyager) 및 워크플로우 메모리 구조 분석"
+    },
+    {
       "date": "2026-08-14",
       "topics": [
-        "linear_algebra_01_systems_rank",
-        "linear_algebra_06_change_of_basis",
-        "linear_algebra_07_affine_subspaces",
-        "linear_algebra_08_schur_complement",
-        "linear_algebra_problems"
+        "linear_algebra_ch2_1_systems",
+        "linear_algebra_ch2_6_basis_rank",
+        "linear_algebra_problems",
+        "svd"
       ],
-      "note": "선형대수학 8대 마스터 노드 및 10대 문제 풀이집 정복 완료"
+      "note": "선형대수학 8대 마스터 노드, 직교사영 및 SVD 분해 정리"
+    },
+    {
+      "date": "2026-08-16",
+      "topics": [
+        "long_video_understanding",
+        "multimodal",
+        "vision_encoder"
+      ],
+      "note": "LongVALE & Momentseeker 논문 분석 및 TCVP 시간적 이벤트 검색 전략 수립"
+    },
+    {
+      "date": "2026-08-18",
+      "topics": [
+        "information_theory",
+        "cross_entropy",
+        "mle_map"
+      ],
+      "note": "정보이론 기초(엔트로피, KL Divergence) 및 머신러닝 목적함수 정렬"
     }
   ]
 }
