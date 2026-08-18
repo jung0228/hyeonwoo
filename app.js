@@ -90,8 +90,12 @@ const scheduleDataMap = {
     content: '• 2.6 기저/계수, 2.7 선형사상, 2.8 어파인공간 노트 작성<br>• 포스텍(손진희 랩 1지망) 및 서울대(도재영 랩) 타겟 연구실 조사'
   },
   '2026-08-17': {
-    title: '🌟 [오늘] 선형대수 3.1~3.8 전수 완수 & 투데이 리포트 연동',
-    content: '• <b>3.1 Norms</b> (L1/L2/Manhattan/Triangle Inequality)<br>• <b>3.2 Inner Products</b> (Bilinear/Positive Definite Matrix A)<br>• <b>3.3 Lengths & Distances</b> (Cauchy-Schwarz Inequality)<br>• <b>3.4 Angles & Orthogonality</b> (Cosine Similarity)<br>• <b>3.5 Orthonormal Basis</b> (Gram-Schmidt Orthonormalization)<br>• <b>3.6 Orthogonal Complement</b> (Null space & Row space relation)<br>• <b>3.7 Inner Product of Functions</b> (Continuous function space & Integration)<br>• <b>3.8 Orthogonal Projections</b> (Least Squares & Affine Projection)<br>• hyeonwoo 사이트에 [투데이 리포트] & 캘린더 모달 배포 완료!'
+    title: '🌟 선형대수 3.1~3.8 전수 완수 & 투데이 리포트 연동',
+    content: '• <b>3.1~3.8 전수 집필</b>: Norms, Inner Products, Cauchy-Schwarz, Cosine Similarity, Gram-Schmidt, Projection 등 Eq 3.1~3.73 전수 정리<br>• hyeonwoo 사이트에 [투데이 리포트] & 캘린더 모달 배포 완료!'
+  },
+  '2026-08-18': {
+    title: '🌟 [오늘 (8/18)] 서울대 AIDAS 랩 도재영 교수님 사전 컨택 메일 최종 작성 & 발송!',
+    content: '• <b>컨택 대상</b>: 서울대학교 전기·정보공학부 / 데이터사이언스 AIDAS 연구실 (도재영 교수님)<br>• <b>핵심 어필 포인트</b>: 숭실대 AI융합학부 졸업(GPA 4.32/4.5 석차 2등), KAIST DAVIAN 랩 Video Moment Retrieval 1저자 평가 파이프라인 주도 경험, 9월 네이버 HyperCLOVA X Omni팀 인턴 입과 예정 강조<br>• <b>첨부 서류</b>: CV(이력서), 학부 성적증명서, 연구 포트폴리오 첨부하여 이메일 최종 제출 완료!'
   },
   '2026-09-14': {
     title: '🟢 네이버클라우드 체험형 인턴 첫 출근 (입과일)',
