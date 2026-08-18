@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "ai_for_science_and_research",
+      "title": "AI는 과연 연구(Research)를 할 수 있는가: 압축, 정의, 그리고 인간의 몫",
+      "date": "2026-08-18",
+      "author": "정현우",
+      "summary": "IMO 수학 문제를 정복한 AI가 왜 미지의 과학 연구에서는 멈칫하는가. 지능의 본질인 '압축'과 '좋은 정의'를 중심으로 AI 시대 연구자의 존재 이유를 탐구합니다.",
+      "file": "data/columns/ai_for_science_and_research.md",
+      "category": "AI & Philosophy",
+      "readTime": "7 min read"
+    },
+    {
       "id": "ai_data_center_necessity",
       "title": "하이닉스가 그래서 왜 오른건데?",
       "date": "2026-08-14",
