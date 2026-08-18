@@ -179,7 +179,29 @@ $A = \begin{bmatrix} 3 & 2 & 2 \\\\ 2 & 3 & 2 \\\\ 2 & 2 & 3 \end{bmatrix}$
 
 
 ### 4️⃣ [4단계 실전 AI 연결고리]
-- 구글 페이지랭크 (Google PageRank: Example 4.9): 웹페이지 전이 확률 행렬 $A$ 의 최대 고유값 $\lambda = 1$ 에 대응하는 정상 상태 고유벡터 $\mathbf{x}^*$ ($A\mathbf{x}^* = \mathbf{x}^*$) 를 계산하여 전 세계 웹사이트의 중요도 순위를 매깁니다.
-- PCA (주성분 분석 - Ch 10): 데이터 공분산 행렬 $\Sigma = \frac{1}{N}X^\top X$ 에 스펙트럴 정리를 적용하여 가장 큰 고유값에 대응하는 고유벡터 순으로 주성분 기저를 축출합니다.
-- 생물학 신경망 및 그래프 신경망 (GNN: Example 4.7): 그래프 인접 행렬의 고유스펙트럼(Eigenspectrum)을 분석하여 신경망의 연결 구조와 커뮤니티 특성을 파악합니다.
-- Hessian 행렬과 딥러닝 손실함수 곡률: 손실함수의 2차 미분 헤시안 행렬 $H$ 의 고유값이 모두 양수이면 국소 최솟값(Local Minimum)을 보장하며, 최대 고유값은 학습률(Learning Rate) 상한선을 결정합니다.
+- 딥러닝 손실함수 곡률 분석과 최적 학습률 결정 (Hessian Matrix & Learning Rate Bound):
+  딥러닝 손실함수의 2차 편미분 헤시안 행렬 $H$ 의 최대 고유값 $\lambda_{\text{max}}$ 은 손실 평면에서 가장 가파른 협곡의 곡률을 의미합니다.
+  수학적으로 경사하강법이 발산하지 않고 안정적으로 수렴하기 위한 학습률의 이론적 상한선은 $\eta < \frac{2}{\lambda_{\text{max}}}$ 로 결정됩니다.
+  만약 학습률이 이를 초과하면 최대 고유벡터 축 방향으로 기울기가 요동치며 손실값이 무한대로 폭발(Gradient Explosion / NaN)하게 됩니다.
+  또한 헤시안 행렬의 고유값에 음수가 섞여 있을 때, 음의 고유값을 갖는 고유벡터 방향을 탐색하여 안장점(Saddle Point)을 고속으로 탈출합니다.
+
+- 거대 언어 모델(LLM) 경량화 및 파인튜닝 (LoRA & Low-Rank Weight Factorization):
+  GPT-4, LLaMA 등 수십억 개의 매개변수를 갖는 거대 언어 모델을 미세조정(Fine-tuning)할 때 전체 가중치를 갱신하는 것은 메모리상 불가능합니다.
+  가중치 변화량 $\Delta W \in \mathbb{R}^{d \times d}$ 의 고유값/특이값 스펙트럼은 상위 극소수의 축에 정보가 99% 집중되는 거듭제곱 법칙(Power-law decay)을 따릅니다.
+  LoRA(Low-Rank Adaptation)는 이 성질을 활용하여 가장 지배적인 고유벡터 축 $r$개(예: $r=8, 16$)만 축출하여 $\Delta W \approx B A$ ($B \in \mathbb{R}^{d \times r}, A \in \mathbb{R}^{r \times d}$) 로 분해 학습시킴으로써 GPU 메모리를 80% 이상 절감합니다.
+
+- 심층 신경망 폭발/소실 방지 (Spectral Normalization in GAN & Transformers):
+  신경망이 수십~수백 개 층으로 깊어질 때 순전파와 역전파 과정에서 가중치 행렬 $W$ 가 연속적으로 곱해집니다.
+  가중치 행렬의 최대 고유값(스펙트럼 반경)이 1보다 크면 거듭제곱 과정에서 기울기 폭발(Gradient Exploding)이 일어나고, 1보다 작으면 기울기 소실(Gradient Vanishing)이 발생합니다.
+  스펙트럴 정규화(Spectral Normalization)는 가중치 행렬을 자신의 최대 고유값(스펙트럼 노름)으로 나누어 $\|W\|_2 = 1$ 로 강제 고정함으로써 심층 생성 모델(GAN, Diffusion)의 학습 안정성을 보장합니다.
+
+- 그래프 신경망(GNN) 및 분자 신약 개발 (Spectral Graph Convolution & AlphaFold):
+  분자 구조, 단백질 3차원 상호작용, 소셜 네트워크와 같은 비유클리드 그래프 데이터는 격자 구조가 없어 일반 CNN 합성곱을 적용할 수 없습니다.
+  그래프 연결 구조를 나타내는 그래프 라플라시안 행렬 $L = D - A$ 의 고유벡터들은 그래프 공간에서의 푸리에 변환 기저(Fourier Basis) 역할을 수행합니다.
+  GCN(Graph Convolutional Network)은 이 라플라시안 고유벡터 축 위에서 신호 주파수를 필터링하는 방식으로 작동하며, AlphaFold의 단백질 구조 예측 및 신약 후보 물질 발굴 AI의 핵심 엔진으로 활용됩니다.
+
+- 구글 페이지랭크 (Google PageRank: Example 4.9):
+  전 세계 웹페이지 연결 그래프의 전이 확률 행렬 $A$ 의 최대 고유값 $\lambda = 1$ 에 대응하는 마르코프 체인 정상 상태 고유벡터 $\mathbf{x}^*$ ($A\mathbf{x}^* = \mathbf{x}^*$) 를 거듭제곱법(Power Iteration)으로 계산하여 웹사이트의 권위도 랭킹을 매깁니다.
+
+- PCA (주성분 분석 - Ch 10):
+  데이터 공분산 행렬 $\Sigma = \frac{1}{N}X^\top X$ 에 스펙트럴 정리를 적용하여 가장 큰 고유값 순서대로 고유벡터들을 주성분 기저로 채택함으로써 정보 손실을 최소화하는 최적의 저차원 투영 공간을 형성합니다.
