@@ -50,12 +50,26 @@ $$A \mathbf{x} = \lambda \mathbf{x} \quad (\text{Eq 4.25})$$
      $$1 \le \text{기하학적 중복도} \le \text{대수적 중복도}$$
 
 
-### 📌 3. 고유값과 고유벡터의 4대 핵심 대수적 성질
+### 📌 3. 고유값과 고유벡터의 핵심 대수적 성질 및 역행렬 관계
 
-1. 전치 행렬과의 관계: 행렬 $A$ 와 전치 행렬 $A^\top$ 은 고유값이 100% 동일합니다 ($\det(A^\top - \lambda I) = \det((A - \lambda I)^\top) = \det(A - \lambda I)$). 단, 고유벡터는 서로 다를 수 있습니다.
-2. 기저 변환 불변성: 유사 행렬 $B = S^{-1}AS$ 는 $A$ 와 완전히 동일한 고유값 집합을 가집니다.
-3. 대칭 양의 정정 행렬(SPD): 대칭 양의 정정 행렬은 모든 고유값이 항상 엄밀한 양의 실수($\lambda_i > 0$)입니다.
-4. 단위행렬(Identity Matrix: Example 4.4): $I \in \mathbb{R}^{n \times n}$ 은 고유값 $\lambda = 1$ 이 $n$번 중복되며, 모든 $n$개의 표준기저 벡터가 고유벡터가 되어 $E_1 = \mathbb{R}^n$ (대수적 중복도 $n$ = 기하학적 중복도 $n$)이 됩니다.
+1. 역행렬($A^{-1}$)의 고유값과 고유벡터 (가장 중요한 성질!):
+   가역 행렬 $A$ 의 고유값이 $\lambda$ 이고 고유벡터가 $\mathbf{v}$ 라면 ($A\mathbf{v} = \lambda\mathbf{v}$):
+   - $A^{-1}$ 의 고유벡터는 원래와 완전히 동일한 $\mathbf{v}$ 입니다.
+   - $A^{-1}$ 의 고유값은 역수인 $\frac{1}{\lambda}$ 이 됩니다.
+   $$A \mathbf{v} = \lambda \mathbf{v} \iff A^{-1} \mathbf{v} = \frac{1}{\lambda} \mathbf{v}$$
+   - 기하학적 직관: 원래 행렬 $A$ 가 특정 축 $\mathbf{v}$ 방향으로 공간을 $\lambda$ 배 늘렸다면, 역행렬 $A^{-1}$ 은 완벽한 원상복구를 위해 똑같은 축 $\mathbf{v}$ 방향을 $\frac{1}{\lambda}$ 배로 줄여야 하므로 축(고유벡터)은 불변이고 고유값만 역수가 됩니다.
+
+2. 행렬의 거듭제곱($A^k$)과 다항식 행렬 $f(A)$:
+   임의의 정수 $k$ 에 대해 $A^k \mathbf{v} = \lambda^k \mathbf{v}$ 가 성립합니다 (역행렬은 $k = -1$ 인 특수한 경우).
+   - 행렬 다항식: $f(A) = c_m A^m + \dots + c_0 I \implies f(A)\mathbf{v} = f(\lambda)\mathbf{v}$.
+
+3. 전치 행렬과의 관계: 행렬 $A$ 와 전치 행렬 $A^\top$ 은 고유값이 100% 동일합니다 ($\det(A^\top - \lambda I) = \det((A - \lambda I)^\top) = \det(A - \lambda I)$). 단, 고유벡터는 서로 다를 수 있습니다.
+
+4. 기저 변환 불변성: 유사 행렬 $B = S^{-1}AS$ 는 $A$ 와 완전히 동일한 고유값 집합을 가집니다.
+
+5. 대칭 양의 정정 행렬(SPD): 대칭 양의 정정 행렬은 모든 고유값이 항상 엄밀한 양의 실수($\lambda_i > 0$)입니다.
+
+6. 단위행렬(Identity Matrix: Example 4.4): $I \in \mathbb{R}^{n \times n}$ 은 고유값 $\lambda = 1$ 이 $n$번 중복되며, 모든 $n$개의 표준기저 벡터가 고유벡터가 되어 $E_1 = \mathbb{R}^n$ (대수적 중복도 $n$ = 기하학적 중복도 $n$)이 됩니다.
 
 
 ## 2. ⚔️ 고유값 및 고유공간 손풀기 계산 전수 분석 (Example 4.5)
