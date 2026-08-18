@@ -2,7 +2,7 @@
   "columns": [
     {
       "id": "ai_for_science_and_research",
-      "title": "AI는 과연 연구(Research)를 할 수 있는가: 방법론, 실제 사례, 그리고 오토 리서치 아키텍처",
+      "title": "AI가 연구를 할 수 있는가",
       "date": "2026-08-18",
       "author": "정현우",
       "summary": "FunSearch, The AI Scientist, GNoME 등 실제 AI 연구 성공 사례부터 5단계 연구 자동화 파이프라인, 논문 수집·구조화 스키마, 그리고 4대 독창적 아이디어 발굴 벡터까지 집대성한 연구자용 실전 가이드.",
