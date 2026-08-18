@@ -930,6 +930,27 @@
       "purpose": "2단계 존재 이유: 가역성(det != 0) 판별, 행렬의 기하학적 부피 스케일 요약 및 고유값 산출 기반 마련.",
       "tradeoff_insight": "3단계 비판적 맹점: 라플라스 전개 O(n!) 대신 가우스 소거 삼각화 O(n^3) 연산. 대각합은 순환불변 tr(ABC)=tr(BCA).",
       "ai_connection": "4단계 AI 연결: Normalizing Flows 생성모델 야코비안 행렬식 |det(J)|, 다변량 가우시안 분모 det(Sigma), Trace Trick."
+    },
+    {
+      "id": "matrix_decomp_ch4_2_eigenvalues",
+      "label": "4.2 고유값, 고유벡터 및 스펙트럴 정리",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/matrix_decomp_ch4_2_eigenvalues.md",
+      "tags": [
+        "Eigenvalues",
+        "Eigenvectors",
+        "Eigenspace",
+        "Defective Matrix",
+        "Spectral Theorem",
+        "PageRank",
+        "PCA"
+      ],
+      "definition": "1단계 개념: 방향 불변 주축(Ax = lambda x), 고유공간 ker(A - lambda I) 및 대칭행렬 직교분해 스펙트럴 정리.",
+      "purpose": "2단계 존재 이유: 복잡한 다차원 변환을 독립된 1차원 스케일링으로 분해하고 데이터의 주성분 분산 축 도출.",
+      "tradeoff_insight": "3단계 비판적 맹점: 비대칭 행렬은 결함행렬/복소근 위험, 대칭행렬은 100% 실수고유값 & 정규직교기저(ONB) 보장.",
+      "ai_connection": "4단계 AI 연결: 구글 PageRank 정상상태 고유벡터, PCA 주성분 분석, GNN 인접행렬 스펙트럼, Hessian 곡률 분석."
     }
   ],
   "edges": [
@@ -1461,6 +1482,12 @@
     {
       "source": "linear_algebra_ch3_9_rotations",
       "target": "matrix_decomp_ch4_1_determinant_trace",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "matrix_decomp_ch4_1_determinant_trace",
+      "target": "matrix_decomp_ch4_2_eigenvalues",
       "relation": "basis_of",
       "weight": 3
     }
