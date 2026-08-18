@@ -6,7 +6,7 @@
 ## 🌐 0. 선형대수학의 절대적 정점: 왜 "SVD(특이값 분해)"인가?
 
 우리는 앞선 4.4절에서 정방행렬을 대각화하는 고유값 분해($A = PDP^{-1}$)를 배웠습니다.
-하지만 고유값 분해에는 치명적인 한계가 존재합니다:
+하지만 고유값 분해에는 치명적인 3가지 한계가 존재합니다:
 1. 오직 가로세로가 같은 정방행렬($n \times n$)에만 적용할 수 있습니다.
 2. 정방행렬이라도 고유벡터가 부족한 결함 행렬(Defective Matrix)이면 분해가 불가능합니다.
 3. 고유값이 음수이거나 복소수로 튀어나올 수 있습니다.
@@ -36,6 +36,11 @@ $$A = U \Sigma V^\top \quad (\text{Eq 4.64})$$
    - 주대각선 원소 $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r > 0$ 을 특이값(Singular Values)이라 부르며, 항상 0 이상의 실수(Non-negative reals)로 내림차순 정렬됩니다.
    - 나머지 $r+1$ 번째 이후 성분 및 비대각 성분은 모두 $0$ 으로 채워집니다 (Zero padding: Eq 4.65, 4.66).
 
+- $m > n$ 일 때의 $\Sigma$ (행이 더 많은 경우: Eq 4.65):
+  $$\Sigma = \begin{bmatrix} \sigma_1 & 0 & 0 \\\\ 0 & \ddots & 0 \\\\ 0 & 0 & \sigma_n \\\\ 0 & \dots & 0 \\\\ \vdots & \ddots & \vdots \\\\ 0 & \dots & 0 \end{bmatrix} \in \mathbb{R}^{m \times n}$$
+- $m < n$ 일 때의 $\Sigma$ (열이 더 많은 경우: Eq 4.66):
+  $$\Sigma = \begin{bmatrix} \sigma_1 & 0 & 0 & 0 & \dots & 0 \\\\ 0 & \ddots & 0 & \vdots & \ddots & \vdots \\\\ 0 & 0 & \sigma_m & 0 & \dots & 0 \end{bmatrix} \in \mathbb{R}^{m \times n}$$
+
 
 ## 2. ⚔️ Section 4.5.1: SVD의 기하학적 3단계 변환 직관 (Figure 4.8 & 4.9)
 
@@ -47,6 +52,14 @@ SVD는 정의역 $\mathbb{R}^n$ 의 단위 초구(Unit Sphere)를 공역 $\mathb
    회전된 축들을 따라 각각의 특이값 $\sigma_i$ 배만큼 순수하게 늘리거나 줄이며, $n$차원 공간을 $m$차원 공간으로 임베딩(차원 변경)합니다. 단위 구가 $m$차원 타원체로 변형됩니다.
 3. 3단계: $U$ (공역 내 최종 회전 기저 변환):
    팽창된 타원체를 공역 $\mathbb{R}^m$ 의 표준 좌표계에 맞추어 좌특이벡터 $\mathbf{u}_1, \dots, \mathbf{u}_m$ 축 방향으로 회전시킵니다.
+
+
+### 💡 [Example 4.12: 2차원 평면에서 3차원 공간으로의 SVD 기하학적 사상 수치]
+$A = \begin{bmatrix} 1 & -0.8 \\\\ 0 & 1 \\\\ 1 & 0 \end{bmatrix} \in \mathbb{R}^{3 \times 2}$ 의 SVD 수치 전개 (Eq 4.67):
+$$A = U \Sigma V^\top = \begin{bmatrix} -0.79 & 0 & -0.62 \\\\ 0.38 & -0.78 & -0.49 \\\\ -0.48 & -0.62 & 0.62 \end{bmatrix} \begin{bmatrix} 1.62 & 0 \\\\ 0 & 1.0 \\\\ 0 & 0 \end{bmatrix} \begin{bmatrix} -0.78 & 0.62 \\\\ -0.62 & -0.78 \end{bmatrix}^\top$$
+- 2차원 사각 격자점 집합 $X \in \mathbb{R}^2$ 에 $V^\top$ 을 적용하여 회전시킵니다.
+- $\Sigma$ 를 통해 $x_1, x_2$ 축 방향으로 각각 1.62배, 1.0배 팽창시키며 3차원 공간 $\mathbb{R}^3$ ($x_3 = 0$ 평면)으로 매핑합니다.
+- 마지막으로 $U$ 가 3차원 공간 내에서 타원 평면을 최종 회전시킵니다.
 
 
 ## 3. ⚔️ Section 4.5.2: SVD의 수학적 구성 및 유도 증명
@@ -90,6 +103,15 @@ $$A \mathbf{v}_i = \sigma_i \mathbf{u}_i \quad (i = 1, \dots, r) \quad (\text{Eq
 이를 행렬 형태로 묶으면 $A V = U \Sigma$ 가 되며, 우변에 $V^\top$ 을 곱하면 $A = U \Sigma V^\top$ 가 완성됩니다!
 
 
+### 📌 4. SVD와 4대 기본 부분공간 / 영공간(Kernel)의 완벽한 일치
+
+SVD는 행렬 $A$ 의 4대 기본 부분공간(Fundamental Subspaces)의 정규직교기저(ONB)를 동시에 완벽하게 제공합니다:
+1. 열공간(Column Space / $\text{Im}(A)$): 처음 $r$개의 좌특이벡터 $\{\mathbf{u}_1, \dots, \mathbf{u}_r\}$ 가 ONB를 형성합니다.
+2. 행공간(Row Space): 처음 $r$개의 우특이벡터 $\{\mathbf{v}_1, \dots, \mathbf{v}_r\}$ 가 ONB를 형성합니다.
+3. 영공간(Null Space / $\ker(A)$): 나머지 $n-r$개의 우특이벡터 $\{\mathbf{v}_{r+1}, \dots, \mathbf{v}_n\}$ 가 $\ker(A)$ 의 ONB를 형성합니다 ($A\mathbf{v}_i = \mathbf{0}$).
+4. 좌영공간(Left Null Space / $\ker(A^\top)$): 나머지 $m-r$개의 좌특이벡터 $\{\mathbf{u}_{r+1}, \dots, \mathbf{u}_m\}$ 가 $\ker(A^\top)$ 의 ONB를 형성합니다.
+
+
 ## 4. ⚔️ SVD 손풀기 수치 계산 전수 분석 (Example 4.13)
 
 행렬 $A = \begin{bmatrix} 1 & 0 & 1 \\\\ -2 & 1 & 0 \end{bmatrix} \in \mathbb{R}^{2 \times 3}$ 의 SVD 도출 과정:
@@ -130,6 +152,20 @@ $$A \mathbf{v}_i = \sigma_i \mathbf{u}_i \quad (i = 1, \dots, r) \quad (\text{Eq
 1. Full SVD (Eq 4.64): $U \in \mathbb{R}^{m \times m}, \; \Sigma \in \mathbb{R}^{m \times n}, \; V \in \mathbb{R}^{n \times n}$.
 2. Reduced SVD (Thin SVD: Eq 4.89): $m \ge n$ 일 때 0으로 채워진 불필요한 행들을 잘라내어 $U \in \mathbb{R}^{m \times n}, \; \Sigma \in \mathbb{R}^{n \times n}, \; V \in \mathbb{R}^{n \times n}$ 로 표현.
 3. Truncated SVD (저계수 근사: Section 4.6): 상위 $k$개의 특이값만 남겨 $U_k \in \mathbb{R}^{m \times k}, \; \Sigma_k \in \mathbb{R}^{k \times k}, \; V_k^\top \in \mathbb{R}^{k \times n}$ 로 데이터 압축.
+
+
+### 💡 [Example 4.14: 넷플릭스 영화 평점 데이터 SVD 전수 수치 분석]
+3명의 사용자(Ali, Beatrix, Chandra)가 4편의 영화(Star Wars, Blade Runner, Amelie, Delicatessen)를 평가한 평점 행렬 $A \in \mathbb{R}^{4 \times 3}$:
+$$A = U \Sigma V^\top$$
+$$\begin{bmatrix} -0.6710 & 0.0236 & 0.4647 & -0.5774 \\\\ -0.7197 & 0.2054 & -0.4759 & 0.4619 \\\\ -0.0939 & -0.7705 & -0.5268 & -0.3464 \\\\ -0.1515 & -0.6030 & 0.5293 & -0.5774 \end{bmatrix} \begin{bmatrix} 9.6438 & 0 & 0 \\\\ 0 & 6.3639 & 0 \\\\ 0 & 0 & 0.7056 \\\\ 0 & 0 & 0 \end{bmatrix} \begin{bmatrix} -0.7367 & -0.6515 & -0.1811 \\\\ 0.0852 & 0.1762 & -0.9807 \\\\ 0.6708 & -0.7379 & -0.0743 \end{bmatrix}^\top$$
+
+- 1번 잠재 테마 (SF 영화 테마: $\sigma_1 = 9.6438$):
+  - 좌특이벡터 $\mathbf{u}_1$: Star Wars($-0.6710$)와 Blade Runner($-0.7197$)에 절대값이 집중됨 (SF 장르 축).
+  - 우특이벡터 $\mathbf{v}_1$: SF 영화에 높은 평점을 준 Ali($-0.7367$)와 Beatrix($-0.6515$)에 절대값이 집중됨 (SF 매니아 축).
+- 2번 잠재 테마 (프랑스 예술영화 테마: $\sigma_2 = 6.3639$):
+  - 좌특이벡터 $\mathbf{u}_2$: Amelie($-0.7705$)와 Delicatessen($-0.6030$)에 집중됨.
+  - 우특이벡터 $\mathbf{v}_2$: 해당 영화를 선호한 Chandra($-0.9807$)에 집중됨.
+- 해석: 각 영화와 사용자는 이 직교하는 잠재 테마 축들의 선형결합으로 완벽하게 분해됩니다!
 
 
 ## 🧠 6. 4단계 정밀 개념 해설
