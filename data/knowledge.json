@@ -971,6 +971,27 @@
       "purpose": "2단계 존재 이유: 다변수 간섭 제거(O(n) 대각 연산화), 다변량 가우시안 난수 생성 및 행렬 거듭제곱/역행렬 초고속 산출.",
       "tradeoff_insight": "3단계 비판적 맹점: 숄레스키는 SPD 전용 O(n^3/3) 초고속, 고유값 분해는 비결함 정방행렬 전용 O(n^3) 스펙트럼 분석.",
       "ai_connection": "4단계 AI 연결: VAE Reparameterization Trick z = mu + L eps, 가우시안 프로세스 커널 역행렬, PageRank 장기 수렴 예측."
+    },
+    {
+      "id": "matrix_decomp_ch4_5_svd",
+      "label": "4.5 특이값 분해 (Singular Value Decomposition, SVD)",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/matrix_decomp_ch4_5_svd.md",
+      "tags": [
+        "SVD",
+        "Singular Value Decomposition",
+        "Left Singular Vectors",
+        "Right Singular Vectors",
+        "Matrix Factorization",
+        "Recommendation System",
+        "Pseudoinverse"
+      ],
+      "definition": "1단계 개념: 모든 임의의 직사각형 행렬을 두 직교행렬 U, V와 특이값 대각행렬 Sigma로 분해(A = U Sigma V^T).",
+      "purpose": "2단계 존재 이유: 정방행렬 한계를 넘어 임의의 m x n 데이터 행렬을 최적 직교 축으로 분해하고 최적 저계수(Low-Rank) 압축 수행.",
+      "tradeoff_insight": "3단계 비판적 맹점: Full SVD(100% 보존) vs Truncated SVD(상위 k개 특이값 유지로 O(k(m+n)) 초경량 압축 및 잠재의미 추출).",
+      "ai_connection": "4단계 AI 연결: 넷플릭스 Matrix Factorization 추천, Moore-Penrose 의사역행렬 A^+, NLP Latent Semantic Analysis(LSA), 이미지 잡음 제거."
     }
   ],
   "edges": [
@@ -1514,6 +1535,12 @@
     {
       "source": "matrix_decomp_ch4_2_eigenvalues",
       "target": "matrix_decomp_ch4_3_cholesky_diagonalization",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "matrix_decomp_ch4_3_cholesky_diagonalization",
+      "target": "matrix_decomp_ch4_5_svd",
       "relation": "basis_of",
       "weight": 3
     }
