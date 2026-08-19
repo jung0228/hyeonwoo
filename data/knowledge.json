@@ -1014,6 +1014,27 @@
       "purpose": "2단계 존재 이유: 거대 데이터의 0.6% 초경량 압축, 노이즈 필터링, 잠재 특징 추출 및 행렬 분류 체계 총망라.",
       "tradeoff_insight": "3단계 비판적 맹점: 압축률 vs 복원오차 sigma_{k+1} Trade-off (누적 에너지 90~95% 기준). 가역성과 대각화 가능성의 독립성.",
       "ai_connection": "4단계 AI 연결: LLM LoRA 가중치 압축, 넷플릭스 추천, Isomap/Laplacian Eigenmaps 매니폴드 학습, 고차원 텐서 Tucker/CP 분해."
+    },
+    {
+      "id": "vector_calculus_ch5_1_univariate",
+      "label": "5.1 일변수 미분, 테일러 급수와 연쇄 법칙",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/vector_calculus_ch5_1_univariate.md",
+      "tags": [
+        "Vector Calculus",
+        "Derivative",
+        "Taylor Series",
+        "Maclaurin Series",
+        "Chain Rule",
+        "Backpropagation",
+        "Gradient Descent"
+      ],
+      "definition": "1단계 개념: 접선 순간변화율 도함수 df/dx, 국소 다항식 전개 테일러 급수 T_n(x) 및 합성함수 미분 연쇄법칙 (g o f)' = g' f'.",
+      "purpose": "2단계 존재 이유: 비선형 딥러닝 손실함수의 국소 다항식 근사 및 다층 신경망(Deep Layer)의 역전파 그래디언트 전파.",
+      "tradeoff_insight": "3단계 비판적 맹점: 1차 테일러 근사(경사하강법 O(D) 저비용) vs 2차 테일러 근사(뉴턴법 O(D^2~D^3) 곡률 고려 고비용).",
+      "ai_connection": "4단계 AI 연결: PyTorch/JAX 자동미분 역전파(Backprop), 경사하강법(Gradient Descent), L-BFGS, 활성화함수 도함수."
     }
   ],
   "edges": [
@@ -1569,6 +1590,12 @@
     {
       "source": "matrix_decomp_ch4_5_svd",
       "target": "matrix_decomp_ch4_6_approx_phylogeny",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "matrix_decomp_ch4_6_approx_phylogeny",
+      "target": "vector_calculus_ch5_1_univariate",
       "relation": "basis_of",
       "weight": 3
     }
