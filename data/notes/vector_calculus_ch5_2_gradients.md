@@ -1,4 +1,4 @@
-# 📐 5.2 Partial Differentiation and Gradients (편미분과 그래디언트, 다변수 연쇄법칙과 그래디언트 체킹)
+# 📐 5.2 Partial Differentiation and Gradients (편미분과 그래디언트, 야코비안과 다변수 연쇄법칙)
 
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 5.2 전수 분석 & 4단계 정밀 해설 노트
 
@@ -25,11 +25,22 @@ $$\frac{\partial f}{\partial x_i} := \lim_{h \to 0} \frac{f(x_1, \dots, x_{i-1},
 - 핵심 연산 직관: $x_i$ 를 제외한 나머지 모든 $x_j$ ($j \neq i$) 변수들을 평범한 숫자(상수)로 취급하고 5.1절의 일변수 스칼라 미분 공식을 그대로 적용합니다.
 
 
-### 📌 2. 그래디언트(Gradient)의 정의 (Eq 5.40)
+### 📌 2. 그래디언트(Gradient)와 야코비안(Jacobian)의 3단계 진화
 
-모든 편미분 성분들을 가로로 나란히 모아놓은 벡터를 함수 $f$ 의 그래디언트(Gradient) 또는 스칼라 함수의 야코비안(Jacobian) 이라 부릅니다:
+미분은 입력과 출력의 차원에 따라 다음과 같이 3단계로 확장됩니다:
+
+1. 1단계 (일변수 미분): 숫자 1개($x$) 입력 ➡️ 숫자 1개($y$) 출력 $\implies$ 도함수는 스칼라 $\frac{df}{dx}$
+2. 2단계 (그래디언트): 벡터 $n$개($\mathbf{x} \in \mathbb{R}^n$) 입력 ➡️ 숫자 1개($y \in \mathbb{R}$) 출력 $\implies$ 1개의 행벡터 $\nabla f \in \mathbb{R}^{1 \times n}$
+3. 3단계 (야코비안 행렬 $J$): 벡터 $n$개($\mathbf{x} \in \mathbb{R}^n$) 입력 ➡️ 벡터 $m$개($\mathbf{f}(\mathbf{x}) \in \mathbb{R}^m$) 출력 $\implies$ 모든 편미분을 모은 $m \times n$ 행렬 $J \in \mathbb{R}^{m \times n}$
 
 $$\nabla_\mathbf{x} f = \text{grad} f = \frac{df}{d\mathbf{x}} := \begin{bmatrix} \frac{\partial f(\mathbf{x})}{\partial x_1} & \frac{\partial f(\mathbf{x})}{\partial x_2} & \dots & \frac{\partial f(\mathbf{x})}{\partial x_n} \end{bmatrix} \in \mathbb{R}^{1 \times n} \quad (\text{Eq 5.40})$$
+
+출력이 $m$개인 일반 벡터값 함수 $\mathbf{f}(\mathbf{x}) = [f_1(\mathbf{x}), \dots, f_m(\mathbf{x})]^\top$ 에 대한 야코비안 행렬 $J$ 는 각 출력 성분의 그래디언트 행벡터를 위아래로 $m$층으로 쌓아 올린 형태가 됩니다:
+
+$$J = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \frac{\partial f_1}{\partial x_2} & \dots & \frac{\partial f_1}{\partial x_n} \\\\ \frac{\partial f_2}{\partial x_1} & \frac{\partial f_2}{\partial x_2} & \dots & \frac{\partial f_2}{\partial x_n} \\\\ \vdots & \vdots & \ddots & \vdots \\\\ \frac{\partial f_m}{\partial x_1} & \frac{\partial f_m}{\partial x_2} & \dots & \frac{\partial f_m}{\partial x_n} \end{bmatrix} \in \mathbb{R}^{m \times n}$$
+
+- 야코비안의 기하학적 본질: 입력 공간의 미세 변화 $\Delta \mathbf{x}$ 가 주어졌을 때 출력 공간의 미세 변화 $\Delta \mathbf{y}$ 를 계산하는 최적의 국소 1차 선형 변환기입니다:
+  $$\Delta \mathbf{y} \approx J \cdot \Delta \mathbf{x}$$
 
 
 ### 💡 [★ 왜 MML 교재는 그래디언트를 열벡터가 아닌 "행벡터($1 \times n$)"로 정의하는가?]
@@ -113,12 +124,13 @@ $$\text{Relative Error} = \sqrt{\frac{\sum_i (dh_i - df_i)^2}{\sum_i (dh_i + df_
 ### 1️⃣ [1단계 개념 정의]
 - 편미분 ($\frac{\partial f}{\partial x_i}$): $n$차원 다변수 함수에서 특정 변수 $x_i$ 를 제외한 나머지 모든 변수를 상수로 고정하고 계산한 순간 변화율입니다.
 - 그래디언트 ($\nabla f = \frac{df}{d\mathbf{x}} \in \mathbb{R}^{1 \times n}$): 모든 독립변수 방향으로의 편미분 값들을 모아놓은 행벡터이자, 함수값이 가장 가파르게 증가하는 방향(Steepest Ascent)을 가리키는 벡터입니다.
+- 야코비안 행렬 ($J \in \mathbb{R}^{m \times n}$): $n$개 입력과 $m$개 출력 사이의 모든 편미분을 총망라한 행렬이자 국소 선형 변환기($\Delta \mathbf{y} \approx J \Delta \mathbf{x}$)입니다.
 - 다변수 연쇄 법칙 ($\frac{df}{d(s, t)} = \frac{\partial f}{\partial \mathbf{x}} \frac{\partial \mathbf{x}}{\partial (s, t)}$): 합성함수의 그래디언트를 내부/외부 함수의 야코비안 행렬 곱으로 연결하는 규칙입니다.
 
 
 ### 2️⃣ [2단계 왜 쓰는가?]
 - 고차원 손실 곡면의 나침반: 수억 개의 가중치 공간에서 손실함수(Loss)를 가장 빠르게 줄일 수 있는 방향($-\nabla L$)을 단번에 알아내기 위해 사용합니다.
-- 계산의 분할정복: 복잡한 다변수 함수를 $n$개의 독립적인 1차원 스칼라 미분 문제로 쪼개어 단순하게 계산할 수 있습니다.
+- 다차원 레이어 간의 그래디언트 전파: 딥러닝의 다변수 입력과 다변수 출력을 연결하는 각 레이어의 순간 변화율을 야코비안 행렬로 규명하기 위해 사용합니다.
 
 
 ### 3️⃣ [3단계 상황별 직관 & Trade-off]
@@ -129,7 +141,7 @@ $$\text{Relative Error} = \sqrt{\frac{\sum_i (dh_i - df_i)^2}{\sum_i (dh_i + df_
 
 ### 4️⃣ [4단계 실전 AI 연결고리]
 - PyTorch Autograd / Backward 패스:
-  `loss.backward()` 를 호출하면 신경망의 모든 매개변수 $w_i$ 에 대해 $\frac{\partial \text{Loss}}{\partial w_i}$ 를 다변수 연쇄법칙으로 역방향 전파하여 `w.grad` 에 행벡터 형태로 누적합니다.
+  `loss.backward()` 를 호출하면 신경망의 각 레이어 야코비안 행렬들이 연쇄 법칙으로 역방향 곱해지며 매개변수 $w_i$ 에 대해 $\frac{\partial \text{Loss}}{\partial w_i}$ 가 `w.grad` 에 누적됩니다.
 - 경사하강법 가중치 갱신 (SGD & Adam):
   $$w \leftarrow w - \eta \nabla_w \text{Loss}$$
   (그래디언트의 반대 방향으로 학습률 $\eta$ 만큼 이동하여 손실 최소화 달성).
