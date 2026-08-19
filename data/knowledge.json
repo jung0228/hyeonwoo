@@ -1219,6 +1219,51 @@
         "SpatiotemporalSegmentation"
       ],
       "note": "data/notes/paper_virst.md"
+    },
+    {
+      "id": "paper_show_o",
+      "label": "Show-o",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Paper",
+        "ICLR2025",
+        "DiscreteDiffusion",
+        "UnifiedTransformer",
+        "AnyToAny"
+      ],
+      "note": "data/notes/paper_show_o.md"
+    },
+    {
+      "id": "paper_lisa",
+      "label": "LISA",
+      "category": "Multimodal",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "CVPR2024",
+        "ReasoningSegmentation",
+        "SEG_Token",
+        "PixelGrounding"
+      ],
+      "note": "data/notes/paper_lisa.md"
+    },
+    {
+      "id": "paper_mevis",
+      "label": "MeViS",
+      "category": "Multimodal",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "ICCV2023",
+        "CVPR_PVUW",
+        "MotionSegmentation",
+        "VideoBenchmark"
+      ],
+      "note": "data/notes/paper_mevis.md"
     }
   ],
   "edges": [
@@ -1922,6 +1967,41 @@
       "relation": "leads_to",
       "weight": 5,
       "insight": "KAIST DAVIAN 랩 VMR 경험과 서울대 AIDAS 랩 VIRST의 시공간 픽셀 세그멘테이션 통합 연구"
+    },
+    {
+      "source": "paper_show_o",
+      "target": "paper_dynin_omni",
+      "relation": "basis_of",
+      "weight": 5,
+      "insight": "Show-o의 텍스트 AR + 시각 이산 디퓨전 통합 아이디어를 전 모달리티 Unified Masked-Diffusion으로 확장"
+    },
+    {
+      "source": "paper_lisa",
+      "target": "paper_virst",
+      "relation": "basis_of",
+      "weight": 5,
+      "insight": "LISA의 2D [SEG] 토큰 메커니즘을 3차원 비디오 시공간 픽셀 분할 및 오디오 쿼리로 확장"
+    },
+    {
+      "source": "paper_mevis",
+      "target": "paper_virst",
+      "relation": "tested_on",
+      "weight": 5,
+      "insight": "MeViS 모션 기반 비디오 객체 분할 벤치마크에서 SOTA 달성 및 CVPR 2026 PVUW 세계 3위"
+    },
+    {
+      "source": "paper_lisa",
+      "target": "paper_mevis",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "정적 이미지 추론 세그멘테이션에서 동적 비디오 모션 세그멘테이션으로의 과제 확장"
+    },
+    {
+      "source": "paper_show_o",
+      "target": "rq_cross_modal_alignment",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "이산 디퓨전과 Causal LM 간의 통합 어텐션 정렬 연구"
     }
   ],
   "categories": {
@@ -2016,23 +2096,26 @@
     {
       "date": "2026-08-19",
       "topics": [
-        "rq_video_temporal_grounding",
-        "paper_moshi",
         "rq_cross_modal_alignment",
-        "paper_mini_omni2",
-        "contrastive_learning",
-        "paper_emu3",
-        "rq_data_recipe_optimization",
-        "paper_virst",
-        "paper_momentseeker",
-        "paper_qwen2_vl",
-        "clip",
-        "paper_llava",
         "streamkv",
+        "paper_lisa",
+        "paper_mini_omni2",
+        "rq_data_recipe_optimization",
         "paper_dynin_omni",
-        "hcx_omni"
+        "paper_moshi",
+        "paper_emu3",
+        "hcx_omni",
+        "clip",
+        "rq_video_temporal_grounding",
+        "paper_show_o",
+        "paper_llava",
+        "paper_virst",
+        "paper_mevis",
+        "paper_qwen2_vl",
+        "paper_momentseeker",
+        "contrastive_learning"
       ],
-      "note": "2026 서울대 AIDAS 랩 최신 플래그십 논문(Dynin-Omni, VIRST CVPR 2026 Oral) 및 HCX SEED Omni 비교 연구 분석"
+      "note": "2026 최신 옴니모달 & 시공간 세그멘테이션 학술 계보(Show-o, LISA, MeViS ➔ Dynin-Omni, VIRST) 추적 및 심층 그래프화"
     }
   ]
 }
