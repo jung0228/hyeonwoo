@@ -94,8 +94,12 @@ const scheduleDataMap = {
     content: '• <b>3.1~3.8 전수 집필</b>: Norms, Inner Products, Cauchy-Schwarz, Cosine Similarity, Gram-Schmidt, Projection 등 Eq 3.1~3.73 전수 정리<br>• hyeonwoo 사이트에 [투데이 리포트] & 캘린더 모달 배포 완료!'
   },
   '2026-08-18': {
-    title: '🌟 [오늘 (8/18)] 서울대 AIDAS 랩 도재영 교수님 사전 컨택 메일 최종 작성 & 발송!',
+    title: '🌟 서울대 AIDAS 랩 도재영 교수님 사전 컨택 메일 최종 작성 & 발송!',
     content: '• <b>컨택 대상</b>: 서울대학교 전기·정보공학부 / 데이터사이언스 AIDAS 연구실 (도재영 교수님)<br>• <b>핵심 어필 포인트</b>: 숭실대 AI융합학부 졸업(GPA 4.32/4.5 석차 2등), KAIST DAVIAN 랩 Video Moment Retrieval 1저자 평가 파이프라인 주도 경험, 9월 네이버 HyperCLOVA X Omni팀 인턴 입과 예정 강조<br>• <b>첨부 서류</b>: CV(이력서), 학부 성적증명서, 연구 포트폴리오 첨부하여 이메일 최종 제출 완료!'
+  },
+  '2026-08-19': {
+    title: '🌟 [오늘 (8/19)] 수신 이메일함 점검 & D-Day 차감 업데이트',
+    content: '• <b>이메일 점검</b>: Apple Mail 앱 연결 수신함 전수 점검 완료 (도재영 교수님 회신 대기 중)<br>• <b>D-Day 차감</b>: 네이버클라우드 그린팩토리 입과 (D-26), 포스텍 1지망 서류 마감 (D-20)<br>• <b>오늘 목표</b>: MML Chapter 4 Matrix Decompositions (Eigenvalues & SVD) 학습'
   },
   '2026-09-14': {
     title: '🟢 네이버클라우드 체험형 인턴 첫 출근 (입과일)',
