@@ -180,15 +180,18 @@
     },
     {
       "id": "hcx_omni",
-      "label": "HCX SEED Omni 8B",
+      "label": "📄 [Paper/Model] HCX SEED Omni 8B (NAVER Cloud 2024)",
       "category": "Multimodal",
       "confidence": 4,
       "studyCount": 6,
       "tags": [
+        "Paper",
+        "Model",
         "Any-to-Any",
         "Data Recipe",
         "SFT Stages"
-      ]
+      ],
+      "note": "data/notes/hcx_omni.md"
     },
     {
       "id": "vit",
@@ -264,15 +267,18 @@
     },
     {
       "id": "clip",
-      "label": "CLIP",
+      "label": "📄 [Paper] CLIP (Radford et al., 2021)",
       "category": "Multimodal",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
+        "Paper",
+        "ICML2021",
         "Contrastive",
         "Zero-shot",
-        "Image-Text"
-      ]
+        "Vision-Language"
+      ],
+      "note": "data/notes/paper_clip.md"
     },
     {
       "id": "linear_algebra_problems",
@@ -862,6 +868,7 @@
       "confidence": 3,
       "studyCount": 5,
       "tags": [
+        "Concept",
         "TCVP",
         "LongVALE",
         "Momentseeker",
@@ -871,14 +878,15 @@
     },
     {
       "id": "streamkv",
-      "label": "StreamKV & Video KV Compression",
+      "label": "📄 [Paper] StreamKV (Long-Video Streaming KV, ICLR 2025)",
       "category": "Architecture",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
+        "Paper",
+        "ICLR2025",
         "Streaming Video KV",
         "KV Eviction",
-        "Long Context",
         "Attention Budget"
       ],
       "note": "data/notes/streamkv.md"
@@ -1035,6 +1043,92 @@
       "purpose": "2단계 존재 이유: 비선형 딥러닝 손실함수의 국소 다항식 근사 및 다층 신경망(Deep Layer)의 역전파 그래디언트 전파.",
       "tradeoff_insight": "3단계 비판적 맹점: 1차 테일러 근사(경사하강법 O(D) 저비용) vs 2차 테일러 근사(뉴턴법 O(D^2~D^3) 곡률 고려 고비용).",
       "ai_connection": "4단계 AI 연결: PyTorch/JAX 자동미분 역전파(Backprop), 경사하강법(Gradient Descent), L-BFGS, 활성화함수 도함수."
+    },
+    {
+      "id": "contrastive_learning",
+      "label": "대조 학습 (Contrastive Learning)",
+      "category": "Training",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "InfoNCE",
+        "Self-Supervised",
+        "Loss",
+        "Concept"
+      ],
+      "note": "data/notes/contrastive_learning.md"
+    },
+    {
+      "id": "paper_llava",
+      "label": "📄 [Paper] LLaVA (Liu et al., NeurIPS 2023)",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Paper",
+        "NeurIPS2023",
+        "VLM",
+        "Visual Instruction Tuning",
+        "Projection"
+      ],
+      "note": "data/notes/paper_llava.md"
+    },
+    {
+      "id": "paper_momentseeker",
+      "label": "📄 [Paper] Momentseeker (Long-Video Moment Retrieval, CVPR 2025)",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "CVPR2025",
+        "LVMR",
+        "Temporal Grounding",
+        "Video Benchmark"
+      ],
+      "note": "data/notes/paper_momentseeker.md"
+    },
+    {
+      "id": "rq_cross_modal_alignment",
+      "label": "🔭 [RQ] Fine-grained Cross-Modal Alignment",
+      "category": "Multimodal",
+      "confidence": 2,
+      "studyCount": 5,
+      "tags": [
+        "ResearchAgenda",
+        "Alignment",
+        "OpenProblem",
+        "FineGrained"
+      ],
+      "note": "data/notes/rq_cross_modal_alignment.md"
+    },
+    {
+      "id": "rq_video_temporal_grounding",
+      "label": "🔭 [RQ] Streaming Long-Video Temporal Grounding",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "ResearchAgenda",
+        "StreamingVideo",
+        "KVCompression",
+        "DAVIAN_KAIST"
+      ],
+      "note": "data/notes/rq_video_temporal_grounding.md"
+    },
+    {
+      "id": "rq_data_recipe_optimization",
+      "label": "🔭 [RQ] Multimodal Data Mixture Recipe Optimization",
+      "category": "Training",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "ResearchAgenda",
+        "DataRecipe",
+        "TokenMixture",
+        "HCX_Omni"
+      ],
+      "note": "data/notes/rq_data_recipe_optimization.md"
     }
   ],
   "edges": [
@@ -1598,6 +1692,69 @@
       "target": "vector_calculus_ch5_1_univariate",
       "relation": "basis_of",
       "weight": 3
+    },
+    {
+      "source": "contrastive_learning",
+      "target": "clip",
+      "relation": "basis_of",
+      "weight": 5,
+      "insight": "InfoNCE 대조 손실을 웹 스케일 4억 개 이미지-텍스트 쌍에 적용하여 Zero-shot 시각-언어 표현 공간 확립"
+    },
+    {
+      "source": "clip",
+      "target": "paper_llava",
+      "relation": "basis_of",
+      "weight": 5,
+      "insight": "LLaVA는 CLIP ViT 비전 인코더를 고정/조정하고 Linear Projection으로 LLM과 연결하여 Visual Instruction Tuning 개척"
+    },
+    {
+      "source": "paper_llava",
+      "target": "long_video_understanding",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "정적 이미지 VLM 구조를 비디오 프레임 시퀀스로 확장하여 Video-LLaVA 및 시간적 추론 발전"
+    },
+    {
+      "source": "long_video_understanding",
+      "target": "paper_momentseeker",
+      "relation": "tested_on",
+      "weight": 4,
+      "insight": "장시간 비디오 내 특정 사건의 시작/종료 시점을 찾는 초장거리 벤치마크"
+    },
+    {
+      "source": "streamkv",
+      "target": "rq_video_temporal_grounding",
+      "relation": "addresses",
+      "weight": 5,
+      "insight": "장시간 스트리밍 비디오의 KV 메모리 폭증을 해결하고 단일 프레임 단서 유실을 방지하는 핵심 연구 질문"
+    },
+    {
+      "source": "paper_momentseeker",
+      "target": "rq_video_temporal_grounding",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "KAIST DAVIAN 랩 및 LVMR 평가에서 드러난 찰나의 액션 탐색 실패 모드를 해결하기 위한 가설"
+    },
+    {
+      "source": "clip",
+      "target": "rq_cross_modal_alignment",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "CLIP의 Coarse Alignment 한계를 넘어 색상, 위치, 공간 관계 등 세부 속성을 정렬하는 미해결 연구 과제"
+    },
+    {
+      "source": "data_recipe",
+      "target": "rq_data_recipe_optimization",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "멀티모달 훈련 시 텍스트:이미지:비디오 토큰의 최적 믹스 비율을 규명하는 연구 과제"
+    },
+    {
+      "source": "hcx_omni",
+      "target": "rq_data_recipe_optimization",
+      "relation": "addresses",
+      "weight": 5,
+      "insight": "SEED Omni의 3단계 SFT 토큰 레시피(비디오 41.3%)의 수학적/실험적 근거를 탐구"
     }
   ],
   "categories": {
@@ -1688,6 +1845,20 @@
         "mle_map"
       ],
       "note": "정보이론 기초(엔트로피, KL Divergence) 및 머신러닝 목적함수 정렬"
+    },
+    {
+      "date": "2026-08-19",
+      "topics": [
+        "clip",
+        "paper_llava",
+        "streamkv",
+        "paper_momentseeker",
+        "rq_video_temporal_grounding",
+        "rq_cross_modal_alignment",
+        "rq_data_recipe_optimization",
+        "contrastive_learning"
+      ],
+      "note": "지식 그래프 3-Layer 개편 (기초 개념 ➔ 마일스톤 논문 ➔ 연구 아젠다 폐루프 연동)"
     }
   ]
 }
