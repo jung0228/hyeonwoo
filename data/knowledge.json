@@ -1352,6 +1352,20 @@
         "SCM"
       ],
       "note": "data/notes/causal_inference_scm.md"
+    },
+    {
+      "id": "rq_modality_decoupled_moe",
+      "label": "RQ: Modality-Decoupled MoE",
+      "category": "Training",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "ResearchAgenda",
+        "SparseMoE",
+        "ContinualLearning",
+        "CatastrophicForgetting"
+      ],
+      "note": "data/notes/rq_modality_decoupled_moe.md"
     }
   ],
   "edges": [
@@ -2153,6 +2167,20 @@
       "relation": "leads_to",
       "weight": 4,
       "insight": "VIRST의 3D 시공간 세그멘테이션을 능동적 인과 개입으로 승격"
+    },
+    {
+      "source": "hcx_omni",
+      "target": "rq_modality_decoupled_moe",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "새로운 모달리티 추가 시 기존 텍스트 수학 추론 및 음성 억양 파괴를 막는 직교 MoE 라우팅"
+    },
+    {
+      "source": "rq_modality_decoupled_moe",
+      "target": "rq_physical_world_model",
+      "relation": "enables",
+      "weight": 5,
+      "insight": "언어 능력 손실 없이 로봇 물리 액션을 평생 학습하는 기초 인프라"
     }
   ],
   "categories": {
@@ -2247,32 +2275,33 @@
     {
       "date": "2026-08-19",
       "topics": [
-        "paper_lisa",
-        "rq_cross_modal_alignment",
         "paper_cosmos",
-        "paper_qwen2_vl",
-        "contrastive_learning",
-        "clip",
-        "paper_momentseeker",
         "paper_virst",
-        "paper_emu3",
-        "paper_mini_omni2",
-        "rq_video_temporal_grounding",
-        "paper_mevis",
-        "paper_dynin_omni",
-        "paper_llava",
-        "streamkv",
+        "rq_physical_world_model",
         "causal_inference_scm",
         "paper_flow_matching",
-        "rq_physical_world_model",
-        "hamiltonian_mechanics_physics",
         "hcx_omni",
-        "rq_counterfactual_video_causality",
-        "paper_moshi",
+        "contrastive_learning",
+        "rq_data_recipe_optimization",
         "paper_show_o",
-        "rq_data_recipe_optimization"
+        "paper_mini_omni2",
+        "paper_moshi",
+        "clip",
+        "streamkv",
+        "rq_modality_decoupled_moe",
+        "hamiltonian_mechanics_physics",
+        "rq_counterfactual_video_causality",
+        "paper_momentseeker",
+        "paper_qwen2_vl",
+        "paper_emu3",
+        "rq_cross_modal_alignment",
+        "paper_dynin_omni",
+        "paper_lisa",
+        "paper_llava",
+        "rq_video_temporal_grounding",
+        "paper_mevis"
       ],
-      "note": "2026 옴니모달 & 피지컬 AI 4대 난제 완결편 (해밀토니안 역학, 구조적 인과 모델 SCM, Flow Matching 기반 해결책 도출)"
+      "note": "보고 듣고 이해하고 행동하는 차세대 AI의 조건 분석: Modality-Decoupled MoE, Flow Matching의 위상, Embodied World Model 완결편"
     }
   ]
 }
