@@ -1366,6 +1366,27 @@
         "CatastrophicForgetting"
       ],
       "note": "data/notes/rq_modality_decoupled_moe.md"
+    },
+    {
+      "id": "vector_calculus_ch5_2_gradients",
+      "label": "5.2 편미분, 그래디언트와 다변수 연쇄법칙",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/vector_calculus_ch5_2_gradients.md",
+      "tags": [
+        "Vector Calculus",
+        "Partial Derivative",
+        "Gradient",
+        "Jacobian",
+        "Multivariate Chain Rule",
+        "Gradient Checking",
+        "Finite Differences"
+      ],
+      "definition": "1단계 개념: 변수 1개만 변화시키는 편미분 df/dx_i 및 편미분들을 모은 1xn 행벡터 그래디언트 nabla f (가장 가파른 상승 방향).",
+      "purpose": "2단계 존재 이유: 고차원 손실 곡면에서 파라미터를 가장 빠르게 최적화하는 이동 나침반(-nabla L) 및 분할정복 미분.",
+      "tradeoff_insight": "3단계 비판적 맹점: 그래디언트를 행벡터(1xn)로 정의함으로써 야코비안 일반화 및 다변수 연쇄법칙의 전치 없는 완벽한 행렬곱(1xn x nxk) 일치 달성.",
+      "ai_connection": "4단계 AI 연결: PyTorch loss.backward() 역전파 그래디언트 누적, SGD/Adam 가중치 갱신, 수치 유한차분 Gradient Checking."
     }
   ],
   "edges": [
@@ -2181,6 +2202,12 @@
       "relation": "enables",
       "weight": 5,
       "insight": "언어 능력 손실 없이 로봇 물리 액션을 평생 학습하는 기초 인프라"
+    },
+    {
+      "source": "vector_calculus_ch5_1_univariate",
+      "target": "vector_calculus_ch5_2_gradients",
+      "relation": "basis_of",
+      "weight": 3
     }
   ],
   "categories": {
