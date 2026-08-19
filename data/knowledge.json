@@ -1189,6 +1189,36 @@
         "Interruption"
       ],
       "note": "data/notes/paper_mini_omni2.md"
+    },
+    {
+      "id": "paper_dynin_omni",
+      "label": "Dynin-Omni",
+      "category": "Multimodal",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "SNU_AIDAS_2026",
+        "MaskedDiffusion",
+        "OmniModal",
+        "UnifiedArchitecture"
+      ],
+      "note": "data/notes/paper_dynin_omni.md"
+    },
+    {
+      "id": "paper_virst",
+      "label": "VIRST",
+      "category": "Multimodal",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "CVPR2026_Oral",
+        "SNU_AIDAS",
+        "RVOS",
+        "SpatiotemporalSegmentation"
+      ],
+      "note": "data/notes/paper_virst.md"
     }
   ],
   "edges": [
@@ -1864,6 +1894,34 @@
       "relation": "leads_to",
       "weight": 5,
       "insight": "3D M-RoPE를 활용한 초장시간 비디오 인과 관계 추론 및 Temporal Grounding 극대화"
+    },
+    {
+      "source": "hcx_omni",
+      "target": "paper_dynin_omni",
+      "relation": "improves",
+      "weight": 5,
+      "insight": "서울대 AIDAS 랩: Masked-Diffusion 단일 아키텍처로 HCX의 8단계 복잡 파이프라인 및 이해-생성 이원화 병목 해결"
+    },
+    {
+      "source": "long_video_understanding",
+      "target": "paper_virst",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "CVPR 2026 Oral: 단순 시간 구간 탐색을 넘어 비디오 내 객체의 3차원 시공간 픽셀 분할(RVOS) 및 음향 추적 달성"
+    },
+    {
+      "source": "paper_dynin_omni",
+      "target": "paper_virst",
+      "relation": "basis_of",
+      "weight": 4,
+      "insight": "Dynin-Omni 파운데이션 위에서 VIRST 시공간 세그멘테이션 및 피지컬 AI 로보틱스 확장"
+    },
+    {
+      "source": "paper_virst",
+      "target": "rq_video_temporal_grounding",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "KAIST DAVIAN 랩 VMR 경험과 서울대 AIDAS 랩 VIRST의 시공간 픽셀 세그멘테이션 통합 연구"
     }
   ],
   "categories": {
@@ -1958,21 +2016,23 @@
     {
       "date": "2026-08-19",
       "topics": [
-        "clip",
-        "paper_momentseeker",
-        "contrastive_learning",
-        "rq_cross_modal_alignment",
         "rq_video_temporal_grounding",
-        "rq_data_recipe_optimization",
-        "streamkv",
         "paper_moshi",
-        "paper_llava",
+        "rq_cross_modal_alignment",
         "paper_mini_omni2",
-        "paper_qwen2_vl",
+        "contrastive_learning",
         "paper_emu3",
+        "rq_data_recipe_optimization",
+        "paper_virst",
+        "paper_momentseeker",
+        "paper_qwen2_vl",
+        "clip",
+        "paper_llava",
+        "streamkv",
+        "paper_dynin_omni",
         "hcx_omni"
       ],
-      "note": "HCX SEED Omni 4대 병목 분석 및 최신 개선 마일스톤 논문(Moshi, Emu3, Qwen2-VL, Mini-Omni 2) 연구 연계"
+      "note": "2026 서울대 AIDAS 랩 최신 플래그십 논문(Dynin-Omni, VIRST CVPR 2026 Oral) 및 HCX SEED Omni 비교 연구 분석"
     }
   ]
 }
