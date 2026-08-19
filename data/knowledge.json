@@ -1409,6 +1409,29 @@
       "purpose": "2단계 존재 이유: 심층 신경망 레이어 간 선형 변화율 규명, 선형회귀 최소제곱 손실 그래디언트 도출 및 확률분포 변수변환.",
       "tradeoff_insight": "3단계 비판적 맹점: 분자 배치(Numerator Layout mxn) 채택을 통한 연쇄법칙 행렬곱 차원 일관성 유지.",
       "ai_connection": "4단계 AI 연결: 선형회귀 정규방정식 theta* = (Phi^T Phi)^-1 Phi^T y 유도, Normalizing Flows 생성모델, VAE Reparameterization Trick."
+    },
+    {
+      "id": "vector_calculus_ch5_4_matrix_gradients",
+      "label": "5.4~5.5 행렬 미분과 10대 핵심 항등식",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/vector_calculus_ch5_4_matrix_gradients.md",
+      "tags": [
+        "Vector Calculus",
+        "Matrix Derivatives",
+        "Jacobian Tensor",
+        "Flattening",
+        "Matrix Identities",
+        "Trace",
+        "Determinant",
+        "Inverse Matrix",
+        "Quadratic Form"
+      ],
+      "definition": "1단계 개념: 행렬 대 행렬 미분의 4D 야코비안 텐서 J_ijkl, 평탄화(Flattening mn x pq) 및 행렬식/역행렬/이차형식 10대 미분 항등식.",
+      "purpose": "2단계 존재 이유: 수십억 개 딥러닝 가중치 행렬 동시 미분, 다변량 가우시안 MLE 공분산 추정 및 칼만 필터 최적해 도출.",
+      "tradeoff_insight": "3단계 비판적 맹점: 고차원 텐서 수축(Tensor Contraction)의 복잡성을 벡터 공간 동형사상(Flattening)으로 2D 행렬곱 변환.",
+      "ai_connection": "4단계 AI 연결: 다변량 가우시안 MLE Sigma* 유도, 트랜스포머 Attention 가중치 W_Q, W_K 역전파, 릿지 회귀 정규방정식."
     }
   ],
   "edges": [
@@ -2234,6 +2257,12 @@
     {
       "source": "vector_calculus_ch5_2_gradients",
       "target": "vector_calculus_ch5_3_vector_valued",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "vector_calculus_ch5_3_vector_valued",
+      "target": "vector_calculus_ch5_4_matrix_gradients",
       "relation": "basis_of",
       "weight": 3
     }
