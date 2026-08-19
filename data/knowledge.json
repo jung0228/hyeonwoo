@@ -180,7 +180,7 @@
     },
     {
       "id": "hcx_omni",
-      "label": "📄 [Paper/Model] HCX SEED Omni 8B (NAVER Cloud 2024)",
+      "label": "HCX SEED Omni",
       "category": "Multimodal",
       "confidence": 4,
       "studyCount": 6,
@@ -267,7 +267,7 @@
     },
     {
       "id": "clip",
-      "label": "📄 [Paper] CLIP (Radford et al., 2021)",
+      "label": "CLIP",
       "category": "Multimodal",
       "confidence": 3,
       "studyCount": 3,
@@ -878,7 +878,7 @@
     },
     {
       "id": "streamkv",
-      "label": "📄 [Paper] StreamKV (Long-Video Streaming KV, ICLR 2025)",
+      "label": "StreamKV",
       "category": "Architecture",
       "confidence": 3,
       "studyCount": 4,
@@ -1060,7 +1060,7 @@
     },
     {
       "id": "paper_llava",
-      "label": "📄 [Paper] LLaVA (Liu et al., NeurIPS 2023)",
+      "label": "LLaVA",
       "category": "Multimodal",
       "confidence": 3,
       "studyCount": 3,
@@ -1075,7 +1075,7 @@
     },
     {
       "id": "paper_momentseeker",
-      "label": "📄 [Paper] Momentseeker (Long-Video Moment Retrieval, CVPR 2025)",
+      "label": "Momentseeker",
       "category": "Multimodal",
       "confidence": 3,
       "studyCount": 4,
@@ -1090,7 +1090,7 @@
     },
     {
       "id": "rq_cross_modal_alignment",
-      "label": "🔭 [RQ] Fine-grained Cross-Modal Alignment",
+      "label": "RQ: Cross-Modal Alignment",
       "category": "Multimodal",
       "confidence": 2,
       "studyCount": 5,
@@ -1104,7 +1104,7 @@
     },
     {
       "id": "rq_video_temporal_grounding",
-      "label": "🔭 [RQ] Streaming Long-Video Temporal Grounding",
+      "label": "RQ: Video Temporal Grounding",
       "category": "Multimodal",
       "confidence": 3,
       "studyCount": 5,
@@ -1118,7 +1118,7 @@
     },
     {
       "id": "rq_data_recipe_optimization",
-      "label": "🔭 [RQ] Multimodal Data Mixture Recipe Optimization",
+      "label": "RQ: Data Recipe Optimization",
       "category": "Training",
       "confidence": 3,
       "studyCount": 4,
