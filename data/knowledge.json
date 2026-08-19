@@ -1264,6 +1264,64 @@
         "VideoBenchmark"
       ],
       "note": "data/notes/paper_mevis.md"
+    },
+    {
+      "id": "paper_cosmos",
+      "label": "Cosmos",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Paper",
+        "NVIDIA_2026",
+        "WorldModel",
+        "PhysicalAI",
+        "FlowMatching"
+      ],
+      "note": "data/notes/paper_cosmos.md"
+    },
+    {
+      "id": "paper_flow_matching",
+      "label": "Flow Matching",
+      "category": "Generative",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "Theory",
+        "ConsistencyModels",
+        "FastSampling",
+        "VectorField"
+      ],
+      "note": "data/notes/paper_flow_matching.md"
+    },
+    {
+      "id": "rq_physical_world_model",
+      "label": "RQ: Physics 4D World Model",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "ResearchAgenda",
+        "PhysicalAI",
+        "RoboticsWorldModel",
+        "DyninRobotics"
+      ],
+      "note": "data/notes/rq_physical_world_model.md"
+    },
+    {
+      "id": "rq_counterfactual_video_causality",
+      "label": "RQ: Counterfactual Video Causality",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 5,
+      "tags": [
+        "ResearchAgenda",
+        "CausalInference",
+        "SpatiotemporalReasoning",
+        "VIRST"
+      ],
+      "note": "data/notes/rq_counterfactual_video_causality.md"
     }
   ],
   "edges": [
@@ -2002,6 +2060,41 @@
       "relation": "leads_to",
       "weight": 4,
       "insight": "이산 디퓨전과 Causal LM 간의 통합 어텐션 정렬 연구"
+    },
+    {
+      "source": "paper_cosmos",
+      "target": "rq_physical_world_model",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "NVIDIA Cosmos 3의 2D 픽셀 물리 한계를 넘어 로보틱스를 위한 Physics-Grounded 4D World Model 구축"
+    },
+    {
+      "source": "paper_flow_matching",
+      "target": "paper_cosmos",
+      "relation": "basis_of",
+      "weight": 4,
+      "insight": "Flow Matching 직선 궤적을 활용한 초고속 비디오 월드 모델 생성"
+    },
+    {
+      "source": "paper_dynin_omni",
+      "target": "rq_physical_world_model",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "Dynin-Omni 파운데이션을 실시간 50Hz 로봇 제어(Dynin-Robotics)로 확장"
+    },
+    {
+      "source": "paper_virst",
+      "target": "rq_counterfactual_video_causality",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "VIRST의 시공간 픽셀 세그멘테이션을 반사실적 인과 추론으로 승격"
+    },
+    {
+      "source": "paper_flow_matching",
+      "target": "paper_dynin_omni",
+      "relation": "basis_of",
+      "weight": 4,
+      "insight": "마스크드 디퓨전의 다단계 추론 지연을 1-Step Flow Matching으로 압축"
     }
   ],
   "categories": {
@@ -2096,26 +2189,30 @@
     {
       "date": "2026-08-19",
       "topics": [
-        "rq_cross_modal_alignment",
-        "streamkv",
-        "paper_lisa",
         "paper_mini_omni2",
-        "rq_data_recipe_optimization",
-        "paper_dynin_omni",
-        "paper_moshi",
         "paper_emu3",
-        "hcx_omni",
-        "clip",
-        "rq_video_temporal_grounding",
-        "paper_show_o",
-        "paper_llava",
+        "contrastive_learning",
         "paper_virst",
-        "paper_mevis",
-        "paper_qwen2_vl",
+        "paper_dynin_omni",
         "paper_momentseeker",
-        "contrastive_learning"
+        "rq_physical_world_model",
+        "hcx_omni",
+        "rq_cross_modal_alignment",
+        "paper_cosmos",
+        "paper_moshi",
+        "paper_flow_matching",
+        "paper_show_o",
+        "paper_qwen2_vl",
+        "rq_counterfactual_video_causality",
+        "rq_video_temporal_grounding",
+        "clip",
+        "rq_data_recipe_optimization",
+        "paper_lisa",
+        "streamkv",
+        "paper_mevis",
+        "paper_llava"
       ],
-      "note": "2026 최신 옴니모달 & 시공간 세그멘테이션 학술 계보(Show-o, LISA, MeViS ➔ Dynin-Omni, VIRST) 추적 및 심층 그래프화"
+      "note": "2026 학술 최전선 미해결 난제(Physics 4D World Model, Counterfactual Video Causality, Flow Matching) 분석 및 연구 과제 수립"
     }
   ]
 }
