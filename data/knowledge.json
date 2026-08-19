@@ -1129,6 +1129,66 @@
         "HCX_Omni"
       ],
       "note": "data/notes/rq_data_recipe_optimization.md"
+    },
+    {
+      "id": "paper_moshi",
+      "label": "Moshi",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Paper",
+        "Kyutai2024",
+        "FullDuplex",
+        "RealTimeOmni",
+        "SpokenDialogue"
+      ],
+      "note": "data/notes/paper_moshi.md"
+    },
+    {
+      "id": "paper_emu3",
+      "label": "Emu3",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Paper",
+        "BAAI2024",
+        "NextTokenPrediction",
+        "AnyToAny",
+        "UnifiedMultimodal"
+      ],
+      "note": "data/notes/paper_emu3.md"
+    },
+    {
+      "id": "paper_qwen2_vl",
+      "label": "Qwen2-VL",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "Alibaba2024",
+        "DynamicResolution",
+        "MRoPE",
+        "VideoUnderstanding"
+      ],
+      "note": "data/notes/paper_qwen2_vl.md"
+    },
+    {
+      "id": "paper_mini_omni2",
+      "label": "Mini-Omni 2",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 3,
+      "tags": [
+        "Paper",
+        "ICLR2025",
+        "RealTimeInteractive",
+        "OmniModal",
+        "Interruption"
+      ],
+      "note": "data/notes/paper_mini_omni2.md"
     }
   ],
   "edges": [
@@ -1755,6 +1815,55 @@
       "relation": "addresses",
       "weight": 5,
       "insight": "SEED Omni의 3단계 SFT 토큰 레시피(비디오 41.3%)의 수학적/실험적 근거를 탐구"
+    },
+    {
+      "source": "hcx_omni",
+      "target": "paper_moshi",
+      "relation": "improves",
+      "weight": 5,
+      "insight": "Moshi의 Dual-Token Full-Duplex 메커니즘으로 HCX의 턴테이킹 지연 및 단방향 대화 한계 극복"
+    },
+    {
+      "source": "hcx_omni",
+      "target": "paper_emu3",
+      "relation": "improves",
+      "weight": 5,
+      "insight": "Emu3의 순수 Next-Token 통합으로 HCX의 Discrete/Continuous 이원화 병목 해결"
+    },
+    {
+      "source": "hcx_omni",
+      "target": "paper_qwen2_vl",
+      "relation": "improves",
+      "weight": 5,
+      "insight": "Dynamic Resolution 및 Multimodal RoPE로 HCX의 32K 고정 컨텍스트 및 시공간 정렬 왜곡 해결"
+    },
+    {
+      "source": "hcx_omni",
+      "target": "paper_mini_omni2",
+      "relation": "improves",
+      "weight": 4,
+      "insight": "실시간 비디오-음성 인터럽트 스테이트 머신으로 실시간 서비스형 상호작용 구현"
+    },
+    {
+      "source": "paper_moshi",
+      "target": "rq_video_temporal_grounding",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "12.5Hz 저지연 스트리밍 음성 코덱과 비디오 프레임 동기화 연구"
+    },
+    {
+      "source": "paper_emu3",
+      "target": "rq_cross_modal_alignment",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "단일 Next-Token 목적식 하에서의 Cross-modal Alignment 표현 학습 연구"
+    },
+    {
+      "source": "paper_qwen2_vl",
+      "target": "rq_video_temporal_grounding",
+      "relation": "leads_to",
+      "weight": 5,
+      "insight": "3D M-RoPE를 활용한 초장시간 비디오 인과 관계 추론 및 Temporal Grounding 극대화"
     }
   ],
   "categories": {
@@ -1850,15 +1959,20 @@
       "date": "2026-08-19",
       "topics": [
         "clip",
-        "paper_llava",
-        "streamkv",
         "paper_momentseeker",
-        "rq_video_temporal_grounding",
+        "contrastive_learning",
         "rq_cross_modal_alignment",
+        "rq_video_temporal_grounding",
         "rq_data_recipe_optimization",
-        "contrastive_learning"
+        "streamkv",
+        "paper_moshi",
+        "paper_llava",
+        "paper_mini_omni2",
+        "paper_qwen2_vl",
+        "paper_emu3",
+        "hcx_omni"
       ],
-      "note": "지식 그래프 3-Layer 개편 (기초 개념 ➔ 마일스톤 논문 ➔ 연구 아젠다 폐루프 연동)"
+      "note": "HCX SEED Omni 4대 병목 분석 및 최신 개선 마일스톤 논문(Moshi, Emu3, Qwen2-VL, Mini-Omni 2) 연구 연계"
     }
   ]
 }
