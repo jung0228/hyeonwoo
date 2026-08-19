@@ -1387,6 +1387,28 @@
       "purpose": "2단계 존재 이유: 고차원 손실 곡면에서 파라미터를 가장 빠르게 최적화하는 이동 나침반(-nabla L) 및 분할정복 미분.",
       "tradeoff_insight": "3단계 비판적 맹점: 그래디언트를 행벡터(1xn)로 정의함으로써 야코비안 일반화 및 다변수 연쇄법칙의 전치 없는 완벽한 행렬곱(1xn x nxk) 일치 달성.",
       "ai_connection": "4단계 AI 연결: PyTorch loss.backward() 역전파 그래디언트 누적, SGD/Adam 가중치 갱신, 수치 유한차분 Gradient Checking."
+    },
+    {
+      "id": "vector_calculus_ch5_3_vector_valued",
+      "label": "5.3 벡터값 함수의 그래디언트와 야코비안 행렬",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/vector_calculus_ch5_3_vector_valued.md",
+      "tags": [
+        "Vector Calculus",
+        "Vector-Valued Functions",
+        "Jacobian",
+        "Jacobian Determinant",
+        "Change of Variables",
+        "Least-Squares Loss",
+        "Linear Regression",
+        "Normalizing Flows"
+      ],
+      "definition": "1단계 개념: 다변수 벡터 사상 f: R^n -> R^m 의 mxn 편미분 종합행렬 야코비안 J 및 국소 부피 팽창 배율 야코비안 행렬식 |det(J)|.",
+      "purpose": "2단계 존재 이유: 심층 신경망 레이어 간 선형 변화율 규명, 선형회귀 최소제곱 손실 그래디언트 도출 및 확률분포 변수변환.",
+      "tradeoff_insight": "3단계 비판적 맹점: 분자 배치(Numerator Layout mxn) 채택을 통한 연쇄법칙 행렬곱 차원 일관성 유지.",
+      "ai_connection": "4단계 AI 연결: 선형회귀 정규방정식 theta* = (Phi^T Phi)^-1 Phi^T y 유도, Normalizing Flows 생성모델, VAE Reparameterization Trick."
     }
   ],
   "edges": [
@@ -2206,6 +2228,12 @@
     {
       "source": "vector_calculus_ch5_1_univariate",
       "target": "vector_calculus_ch5_2_gradients",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "vector_calculus_ch5_2_gradients",
+      "target": "vector_calculus_ch5_3_vector_valued",
       "relation": "basis_of",
       "weight": 3
     }
