@@ -8,26 +8,33 @@
 우리는 앞선 5.2~5.3절에서 벡터 입력과 벡터 출력에 대한 미분을 배웠습니다.
 하지만 딥러닝과 머신러닝의 파라미터(트랜스포머의 어텐션 가중치 행렬 $W_Q, W_K, W_V$, 선형 회귀의 가중치 행렬 $W$, 가우시안 모델의 공분산 행렬 $\Sigma$)는 대부분 2차원 행렬(Matrix) 형태입니다.
 
+- 왜 행렬 미분을 해야 하는가?: 신경망의 오차를 줄이기 위해 손실함수 $\text{Loss}$ 를 수억 개의 가중치가 모여있는 거대한 행렬 $W$ 로 직접 미분하여 업데이트 방향($\frac{\partial \text{Loss}}{\partial W}$)을 알아내야 하기 때문입니다.
 - 고차원 야코비안 텐서 (Jacobian Tensor): 행렬을 또 다른 행렬로 미분하면 4차원 텐서($\mathbb{R}^{m \times n \times p \times q}$)가 튀어나옵니다.
 - 평탄화(Flattening)와 벡터 공간 동형사상 ($\mathbb{R}^{m \times n} \cong \mathbb{R}^{mn}$): 행렬을 $mn$ 길이의 벡터로 펴면 복잡한 텐서 미분을 표준 2차원 행렬 곱셈으로 단순화하여 연쇄 법칙을 쉽게 적용할 수 있습니다.
 - 머신러닝의 10대 행렬 미분 항등식: 행렬식($\det$), 대각합($\text{tr}$), 역행렬($X^{-1}$), 이차 형식($\mathbf{x}^\top B \mathbf{x}$)의 미분 공식을 암기 수준으로 숙지해야 가우시안 MLE, 칼만 필터, 선형 회귀 정규방정식을 종이 위에서 1초 만에 유도할 수 있습니다.
 
 
-## 1. ⚔️ Section 5.4: Gradients of Matrices (행렬 미분과 야코비안 텐서)
+## 1. ⚔️ Section 5.4: Gradients of Matrices (행렬 미분과 평탄화 기법)
 
 
-### 📌 1. 행렬 미분의 차원과 텐서의 정의
+### 💡 왜 행렬 미분을 하면 차원이 폭발하고, 왜 평탄화(Flattening)를 하는가?
 
-$m \times n$ 행렬 $A$ 를 $p \times q$ 행렬 $B$ 로 미분하면, 편미분들의 집합인 야코비안은 $(m \times n) \times (p \times q)$ 크기의 4차원 텐서(4D Tensor $J$) 가 됩니다:
+1. 차원의 폭발 문제:
+   $m \times n$ 크기의 출력 행렬 $A$ 와 $p \times q$ 크기의 입력 행렬 $B$ 가 있을 때, $A$ 의 모든 원소 $A_{ij}$ 각각을 $B$ 의 모든 원소 $B_{kl}$ 각각으로 미분해야 합니다.
+   이로 인해 총 $(m \times n) \times (p \times q)$ 개의 편미분 값들이 쏟아져 나오며 4차원 초입체 상자인 4차원 텐서(4D Tensor $J_{ijkl}$) 가 생성됩니다.
+2. 평탄화(Flattening)를 통한 해결:
+   4차원 텐서를 손으로 다루는 것은 매우 난해하므로, $m \times n$ 행렬 $A$ 를 1줄짜리 $mn$차원 벡터로 펴고, $p \times q$ 행렬 $B$ 를 1줄짜리 $pq$차원 벡터로 폅니다 ($\mathbb{R}^{m \times n} \cong \mathbb{R}^{mn}$).
+   이렇게 평탄화하면 4차원 텐서 미분이 우리가 잘 아는 $mn \times pq$ 2차원 야코비안 행렬 곱셈으로 깔끔하게 변환되어 연쇄 법칙을 초고속으로 계산할 수 있습니다!
+
+
+### 📌 1. 행렬 미분의 차원과 텐서의 정의 (Eq 5.86~5.87)
 
 $$J_{ijkl} := \frac{\partial A_{ij}}{\partial B_{kl}} \in \mathbb{R}^{m \times n \times p \times q}$$
 
 
 ### 📌 2. 벡터 공간 동형사상과 행렬 평탄화 (Flattening / Vectorization)
 
-행렬 공간 $\mathbb{R}^{m \times n}$ 은 $mn$차원 벡터 공간 $\mathbb{R}^{mn}$ 과 완벽히 일대일 대응(동형사상, Isomorphism)합니다:
-
-1. 행렬 $A \in \mathbb{R}^{m \times n}$ 과 $B \in \mathbb{R}^{p \times q}$ 를 열(Column) 기준으로 길게 쌓아 벡터 $\tilde{\mathbf{a}} \in \mathbb{R}^{mn}, \; \tilde{\mathbf{b}} \in \mathbb{R}^{pq}$ 로 평탄화(Flattening)합니다.
+1. 행렬 $A \in \mathbb{R}^{m \times n}$ 과 $B \in \mathbb{R}^{p \times q}$ 를 열(Column) 기준으로 길게 쌓아 벡터 $\tilde{\mathbf{a}} \in \mathbb{R}^{mn}, \; \tilde{\mathbf{b}} \in \mathbb{R}^{pq}$ 로 평탄화합니다.
 2. 미분을 수행하면 표준 $mn \times pq$ 2차원 야코비안 행렬 $\frac{d\tilde{\mathbf{a}}}{d\tilde{\mathbf{b}}}$ 이 도출됩니다 (Figure 5.7).
 3. 실전 이점: 고차원 텐서 수축(Tensor Contraction)을 고민할 필요 없이, 다변수 연쇄 법칙을 단순한 2차원 행렬 곱셈으로 초고속 처리할 수 있습니다!
 
@@ -50,7 +57,17 @@ $R \in \mathbb{R}^{M \times N}$ 에 대해 $K = f(R) = R^\top R \in \mathbb{R}^{
 
 ## 2. ⚔️ Section 5.5: Useful Identities for Computing Gradients (머신러닝 행렬 미분 10대 핵심 항등식)
 
-머신러닝과 딥러닝 이론 증명에 매일 쓰이는 10대 행렬 미분 항등식입니다 (Eq 5.99~5.108):
+
+### 💡 왜 10대 행렬 미분 공식을 외워야 하는가? (수학 치트키!)
+
+고등학교 미분에서 $(x^3)' = 3x^2$ 공식을 외워 1초 만에 풀었듯이, 행렬 미분에서도 행렬 원소를 일일이 쪼개지 않고 행렬 덩어리를 단번에 1초 만에 미분하는 공식(치트키)이 필요합니다.
+
+| 연산 형태 | 고등학교 일변수 스칼라 미분 | 머신러닝 행렬/벡터 미분 항등식 |
+| :--- | :--- | :--- |
+| 일차식 미분 | $(a x)' = a$ | $\frac{\partial (\mathbf{a}^\top \mathbf{x})}{\partial \mathbf{x}} = \mathbf{a}^\top$ (Eq 5.105) |
+| 이차식 미분 | $(b x^2)' = 2bx$ | $\frac{\partial (\mathbf{x}^\top B \mathbf{x})}{\partial \mathbf{x}} = 2\mathbf{x}^\top B$ (대칭 $B$, Eq 5.107) |
+| 역수(역행렬) 미분 | $(\frac{1}{x})' = -\frac{1}{x^2}$ | $\frac{\partial X^{-1}}{\partial X_{ij}} = -X^{-1} E_{ij} X^{-1}$ (Eq 5.102) |
+| 로그/행렬식 미분 | $(\ln x)' = \frac{1}{x}$ | $\frac{\partial \ln \det(X)}{\partial X} = X^{-1}$ (대칭 $X$) |
 
 ---
 
