@@ -1322,6 +1322,36 @@
         "VIRST"
       ],
       "note": "data/notes/rq_counterfactual_video_causality.md"
+    },
+    {
+      "id": "hamiltonian_mechanics_physics",
+      "label": "해밀토니안 물리 역학 (HNN)",
+      "category": "Math & Stats",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Math",
+        "Physics",
+        "Hamiltonian",
+        "EnergyConservation",
+        "PhaseSpace"
+      ],
+      "note": "data/notes/hamiltonian_mechanics_physics.md"
+    },
+    {
+      "id": "causal_inference_scm",
+      "label": "구조적 인과 모델 (SCM & do-Calculus)",
+      "category": "Math & Stats",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Math",
+        "Causality",
+        "do_calculus",
+        "Counterfactuals",
+        "SCM"
+      ],
+      "note": "data/notes/causal_inference_scm.md"
     }
   ],
   "edges": [
@@ -2095,6 +2125,34 @@
       "relation": "basis_of",
       "weight": 4,
       "insight": "마스크드 디퓨전의 다단계 추론 지연을 1-Step Flow Matching으로 압축"
+    },
+    {
+      "source": "hamiltonian_mechanics_physics",
+      "target": "rq_physical_world_model",
+      "relation": "basis_of",
+      "weight": 5,
+      "insight": "에너지 보존 및 위상 공간 제약을 통해 2D 비디오 월드 모델의 비물리적 픽셀 환각 해결"
+    },
+    {
+      "source": "causal_inference_scm",
+      "target": "rq_counterfactual_video_causality",
+      "relation": "basis_of",
+      "weight": 5,
+      "insight": "펄의 do-연산자를 비디오 VLM에 주입하여 반사실적(What-If) 시공간 픽셀 궤적 추론 달성"
+    },
+    {
+      "source": "hamiltonian_mechanics_physics",
+      "target": "paper_cosmos",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "NVIDIA Cosmos의 통계적 비디오 생성 한계를 물리적 불변량으로 극복"
+    },
+    {
+      "source": "causal_inference_scm",
+      "target": "paper_virst",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "VIRST의 3D 시공간 세그멘테이션을 능동적 인과 개입으로 승격"
     }
   ],
   "categories": {
@@ -2189,30 +2247,32 @@
     {
       "date": "2026-08-19",
       "topics": [
-        "paper_mini_omni2",
-        "paper_emu3",
-        "contrastive_learning",
-        "paper_virst",
-        "paper_dynin_omni",
-        "paper_momentseeker",
-        "rq_physical_world_model",
-        "hcx_omni",
+        "paper_lisa",
         "rq_cross_modal_alignment",
         "paper_cosmos",
-        "paper_moshi",
-        "paper_flow_matching",
-        "paper_show_o",
         "paper_qwen2_vl",
-        "rq_counterfactual_video_causality",
-        "rq_video_temporal_grounding",
+        "contrastive_learning",
         "clip",
-        "rq_data_recipe_optimization",
-        "paper_lisa",
-        "streamkv",
+        "paper_momentseeker",
+        "paper_virst",
+        "paper_emu3",
+        "paper_mini_omni2",
+        "rq_video_temporal_grounding",
         "paper_mevis",
-        "paper_llava"
+        "paper_dynin_omni",
+        "paper_llava",
+        "streamkv",
+        "causal_inference_scm",
+        "paper_flow_matching",
+        "rq_physical_world_model",
+        "hamiltonian_mechanics_physics",
+        "hcx_omni",
+        "rq_counterfactual_video_causality",
+        "paper_moshi",
+        "paper_show_o",
+        "rq_data_recipe_optimization"
       ],
-      "note": "2026 학술 최전선 미해결 난제(Physics 4D World Model, Counterfactual Video Causality, Flow Matching) 분석 및 연구 과제 수립"
+      "note": "2026 옴니모달 & 피지컬 AI 4대 난제 완결편 (해밀토니안 역학, 구조적 인과 모델 SCM, Flow Matching 기반 해결책 도출)"
     }
   ]
 }
