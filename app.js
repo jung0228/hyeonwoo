@@ -42,7 +42,9 @@ const CLUSTER_MAP = {
   'LinearAlgebra':  '선형대수', // 선형대수학 독립 클러스터!
   'Math Problems':  '선형대수', // 선형대수학 연습문제
   'Systems':        '시스템',
-  'Algorithm':      '알고리즘'
+  'Algorithm':      '알고리즘',
+  'Research':       '연구',
+  'Paper':          '연구'
 };
 
 // 노드별 개별 오버라이드 (카테고리 매핑보다 우선)
@@ -52,17 +54,22 @@ const NODE_CLUSTER_OVERRIDE = {
 
 // 헬퍼: 노드의 최종 클러스터 반환
 function getNodeCluster(node) {
+  if (!node) return 'AI';
   if (node.id && node.id.startsWith('linear_algebra')) return '선형대수';
+  if (node.id && (node.id.startsWith('rq_') || node.id.startsWith('paper_'))) return '연구';
+  if (node.tags && (node.tags.includes('Paper') || node.tags.includes('ResearchAgenda') || node.tags.includes('Agenda'))) return '연구';
+  if (['streamkv', 'hcx_omni', 'clip'].includes(node.id)) return '연구';
   return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || 'AI';
 }
 
-// 5개 깔끔한 주요 클러스터 좌표 설정
+// 6개 주요 클러스터 좌표 설정 (수평 배치)
 const CLUSTER_CONFIG = {
   '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.08, cy: 0.48 },
-  '선형대수': { color: '#f59e0b', label: '📐  선형대수학',    cx: 0.28, cy: 0.48 },
-  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.48, cy: 0.48 },
-  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.70, cy: 0.48 },
-  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.90, cy: 0.48 }
+  '선형대수': { color: '#f59e0b', label: '📐  선형대수학',    cx: 0.24, cy: 0.48 },
+  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.40, cy: 0.48 },
+  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.58, cy: 0.48 },
+  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.76, cy: 0.48 },
+  '연구':     { color: '#f43f5e', label: '🔭  연구 & 논문',   cx: 0.92, cy: 0.48 }
 };
 
 // ==========================================
@@ -503,14 +510,14 @@ function initGraph() {
         // Cross-cluster links: long and weak
         const sn = typeof d.source === 'object' ? d.source : nodeMap[d.source];
         const tn = typeof d.target === 'object' ? d.target : nodeMap[d.target];
-        if (sn && tn && CLUSTER_MAP[sn.category] !== CLUSTER_MAP[tn.category])
+        if (sn && tn && getNodeCluster(sn) !== getNodeCluster(tn))
           return 260;
         return 100 - (d.weight || 1) * 10;
       })
       .strength(d => {
         const sn = typeof d.source === 'object' ? d.source : nodeMap[d.source];
         const tn = typeof d.target === 'object' ? d.target : nodeMap[d.target];
-        if (sn && tn && CLUSTER_MAP[sn.category] !== CLUSTER_MAP[tn.category])
+        if (sn && tn && getNodeCluster(sn) !== getNodeCluster(tn))
           return 0.04;
         return 0.28 + (d.weight || 1) * 0.04;
       }))
@@ -793,7 +800,7 @@ async function openNotePanel(nodeData) {
 
   const catColor = knowledgeData.categories[nodeData.category]?.color || '#888';
   const catIcon  = knowledgeData.categories[nodeData.category]?.icon  || '';
-  const cluster  = CLUSTER_MAP[nodeData.category] || '';
+  const cluster  = getNodeCluster(nodeData);
   const clusterColor = CLUSTER_CONFIG[cluster]?.color || catColor;
 
   titleEl.textContent = nodeData.label;
@@ -857,7 +864,7 @@ async function openNotePanel(nodeData) {
         <div class="connected-list">
           ${connected.map(c => {
             const color = knowledgeData.categories[c.node.category]?.color || '#888';
-            const cCluster = CLUSTER_MAP[c.node.category];
+            const cCluster = getNodeCluster(c.node);
             const cClusterCfg = CLUSTER_CONFIG[cCluster];
             return `<div class="connected-item" onclick="focusNode('${c.node.id}');openNotePanel(knowledgeData.nodes.find(n=>n.id==='${c.node.id}'))">
               <span class="connected-dot" style="background:${color}"></span>
@@ -1048,18 +1055,13 @@ function buildClusterGroups() {
   if (!container) return;
 
   // Group nodes by their clusters
-  const grouped = {
-    '시스템': [],
-    'ML': [],
-    'AI': [],
-    '알고리즘': []
-  };
+  const grouped = {};
+  Object.keys(CLUSTER_CONFIG).forEach(k => { grouped[k] = []; });
 
   knowledgeData.nodes.forEach(n => {
     const cluster = getNodeCluster(n);
-    if (grouped[cluster]) {
-      grouped[cluster].push(n);
-    }
+    if (!grouped[cluster]) grouped[cluster] = [];
+    grouped[cluster].push(n);
   });
 
   container.innerHTML = Object.entries(CLUSTER_CONFIG).map(([key, cfg]) => {
