@@ -1454,6 +1454,29 @@
       "purpose": "2단계 존재 이유: 수식 폭발(Symbolic)과 O(N) 비효율(Numerical) 없이 단 1회의 역방향 패스(O(1))로 수억 개 딥러닝 가중치 그래디언트 동시 추출.",
       "tradeoff_insight": "3단계 비판적 맹점: Forward-mode(N << M 입력 작을 때 유리) vs Reverse-mode(N >> M 딥러닝 N개 가중치 최적, 활성화 메모리 O(K) 소모).",
       "ai_connection": "4단계 AI 연결: PyTorch loss.backward() C++ 엔진, LLM 메모리 절약 Gradient Checkpointing, JAX jax.grad / jax.vjp 벡터-야코비안 곱."
+    },
+    {
+      "id": "vector_calculus_ch5_7_hessian_taylor",
+      "label": "5.7~5.8 고계 도함수, 헤시안 행렬과 다변수 테일러 급수",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/vector_calculus_ch5_7_hessian_taylor.md",
+      "tags": [
+        "Vector Calculus",
+        "Higher-Order Derivatives",
+        "Hessian Matrix",
+        "Curvature",
+        "Schwarz Theorem",
+        "Multivariate Taylor Series",
+        "Newton Method",
+        "L-BFGS",
+        "Flat Minima"
+      ],
+      "definition": "1단계 개념: 2계 편도함수 대칭행렬 헤시안 H(곡률 측정기) 및 2차 다변수 테일러 전개 f(x) approx f(x0) + nabla f delta + 1/2 delta^T H delta.",
+      "purpose": "2단계 존재 이유: 1차 기울기의 학습률 민감성 극복, 손실곡면 곡률을 고려해 최적점으로 단번에 점프하는 뉴턴법 2차 최적화.",
+      "tradeoff_insight": "3단계 비판적 맹점: 1차 최적화(SGD O(D) 저비용/진동수렴) vs 2차 최적화(뉴턴법 O(D^3) 역행렬 고비용 -> L-BFGS 준뉴턴법으로 해결).",
+      "ai_connection": "4단계 AI 연결: 뉴턴-랩슨 최적화 x_{t+1} = x_t - H^-1 nabla f, AdaHessian, Flat Minima 일반화 능력 판정."
     }
   ],
   "edges": [
@@ -2291,6 +2314,12 @@
     {
       "source": "vector_calculus_ch5_4_matrix_gradients",
       "target": "vector_calculus_ch5_6_backprop_autodiff",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "vector_calculus_ch5_6_backprop_autodiff",
+      "target": "vector_calculus_ch5_7_hessian_taylor",
       "relation": "basis_of",
       "weight": 3
     }
