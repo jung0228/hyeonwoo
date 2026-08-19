@@ -62,13 +62,13 @@ function getNodeCluster(node) {
   return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || 'AI';
 }
 
-// 6개 주요 클러스터 좌표 설정 (수평 배치)
+// 6개 주요 클러스터 좌표 설정 (수평 배치: 시스템 ➔ 알고리즘 ➔ 선형대수 ➔ 머신러닝 ➔ 딥러닝 ➔ 연구)
 const CLUSTER_CONFIG = {
   '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.08, cy: 0.48 },
-  '선형대수': { color: '#f59e0b', label: '📐  선형대수학',    cx: 0.24, cy: 0.48 },
-  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.40, cy: 0.48 },
-  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.58, cy: 0.48 },
-  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.76, cy: 0.48 },
+  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.24, cy: 0.48 },
+  '선형대수': { color: '#f59e0b', label: '📐  선형대수학',    cx: 0.40, cy: 0.48 },
+  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.56, cy: 0.48 },
+  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.74, cy: 0.48 },
   '연구':     { color: '#f43f5e', label: '🔭  연구 & 논문',   cx: 0.92, cy: 0.48 }
 };
 
