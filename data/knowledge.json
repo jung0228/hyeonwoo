@@ -1432,6 +1432,28 @@
       "purpose": "2단계 존재 이유: 수십억 개 딥러닝 가중치 행렬 동시 미분, 다변량 가우시안 MLE 공분산 추정 및 칼만 필터 최적해 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 고차원 텐서 수축(Tensor Contraction)의 복잡성을 벡터 공간 동형사상(Flattening)으로 2D 행렬곱 변환.",
       "ai_connection": "4단계 AI 연결: 다변량 가우시안 MLE Sigma* 유도, 트랜스포머 Attention 가중치 W_Q, W_K 역전파, 릿지 회귀 정규방정식."
+    },
+    {
+      "id": "vector_calculus_ch5_6_backprop_autodiff",
+      "label": "5.6 역전파 알고리즘과 자동 미분 (Backprop & Autodiff)",
+      "category": "DeepLearning",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/vector_calculus_ch5_6_backprop_autodiff.md",
+      "tags": [
+        "Vector Calculus",
+        "Backpropagation",
+        "Automatic Differentiation",
+        "Computation Graph",
+        "Reverse Mode AD",
+        "Forward Mode AD",
+        "PyTorch Autograd",
+        "Gradient Checkpointing"
+      ],
+      "definition": "1단계 개념: 계산 그래프 기반 연쇄법칙 역방향 동적계획법 전파 역전파(Backpropagation) 및 역방향 모드 자동미분(Reverse-mode AD).",
+      "purpose": "2단계 존재 이유: 수식 폭발(Symbolic)과 O(N) 비효율(Numerical) 없이 단 1회의 역방향 패스(O(1))로 수억 개 딥러닝 가중치 그래디언트 동시 추출.",
+      "tradeoff_insight": "3단계 비판적 맹점: Forward-mode(N << M 입력 작을 때 유리) vs Reverse-mode(N >> M 딥러닝 N개 가중치 최적, 활성화 메모리 O(K) 소모).",
+      "ai_connection": "4단계 AI 연결: PyTorch loss.backward() C++ 엔진, LLM 메모리 절약 Gradient Checkpointing, JAX jax.grad / jax.vjp 벡터-야코비안 곱."
     }
   ],
   "edges": [
@@ -2263,6 +2285,12 @@
     {
       "source": "vector_calculus_ch5_3_vector_valued",
       "target": "vector_calculus_ch5_4_matrix_gradients",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "vector_calculus_ch5_4_matrix_gradients",
+      "target": "vector_calculus_ch5_6_backprop_autodiff",
       "relation": "basis_of",
       "weight": 3
     }
