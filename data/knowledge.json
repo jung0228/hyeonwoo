@@ -1531,6 +1531,30 @@
       "purpose": "2단계 존재 이유: 분류(Cross-Entropy)와 회귀/생성(NLL) 모델 손실함수 수학적 정립 및 잠재변수 소거 주변화(Marginalization).",
       "tradeoff_insight": "3단계 비판적 맹점: 이산 P(X=x) in [0, 1] vs 연속 P(X=x)=0 (측도 0) 및 PDF 밀도값 f(x) > 1 가능성.",
       "ai_connection": "4단계 AI 연결: 딥러닝 분류 Cross-Entropy, VAE/Diffusion NLL 손실함수, 객체검출 Multi-task 학습."
+    },
+    {
+      "id": "probability_ch6_4_summary_stats",
+      "label": "6.4 요약 통계량, 공분산 행렬, 아핀 변환과 독립성",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/probability_ch6_4_summary_stats.md",
+      "tags": [
+        "Probability",
+        "Expected Value",
+        "Mean",
+        "Variance",
+        "Covariance Matrix",
+        "Correlation",
+        "Affine Transformation",
+        "Independence",
+        "Conditional Independence",
+        "Inner Product"
+      ],
+      "definition": "1단계 개념: 기댓값, 평균, 공분산행렬 Sigma (대칭 PSD), 아핀변환 V[Ax+b]=A Sigma A^T 및 통계적/조건부 독립성 수식화.",
+      "purpose": "2단계 존재 이유: 신경망 레이어 패스 후 데이터 퍼짐성 추적, 배치정규화(BN) 및 PCA 주성분분석 공분산 대각화.",
+      "tradeoff_insight": "3단계 비판적 맹점: 무상관 Cov[x, y]=0 != 독립! (선형 관계만 측정 -> y=x^2 비선형 종속이어도 Cov=0 가능).",
+      "ai_connection": "4단계 AI 연결: 배치 정규화(Batch Norm), PCA 주성분 분석, 가우시안 프로세스(GP) 커널 공분산 행렬."
     }
   ],
   "edges": [
@@ -2386,6 +2410,12 @@
     {
       "source": "probability_ch6_1_space_rv",
       "target": "probability_ch6_2_discrete_continuous",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "probability_ch6_2_discrete_continuous",
+      "target": "probability_ch6_4_summary_stats",
       "relation": "basis_of",
       "weight": 3
     }
