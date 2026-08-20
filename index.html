@@ -12,9 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet" />
 
   <!-- D3.js -->
-  <script src="vendor/d3.v7.min.js"></script>
+  <script src="assets/vendor/d3.v7.min.js"></script>
   <!-- marked.js for Markdown -->
-  <script src="vendor/marked.min.js"></script>
+  <script src="assets/vendor/marked.min.js"></script>
   <!-- KaTeX for Math -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -27,7 +27,7 @@
       ]
     })"></script>
 
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
   <!-- Header -->
@@ -47,11 +47,14 @@
         <button class="nav-btn" id="btn-research" data-view="research">
           <span class="nav-icon">🔭</span><span class="nav-label"> Research</span>
         </button>
+        <button class="nav-btn" id="btn-quiz" data-view="quiz">
+          <span class="nav-icon">🧪</span><span class="nav-label"> Quiz</span>
+        </button>
         <button class="nav-btn" id="btn-analytics" data-view="analytics">
           <span class="nav-icon">📊</span><span class="nav-label"> 투데이 리포트</span>
         </button>
-        <button class="nav-btn" id="btn-column" data-view="column">
-          <span class="nav-icon">📰</span><span class="nav-label"> 칼럼</span>
+        <button class="nav-btn" id="btn-chat-toggle" onclick="toggleChatSidebar(true)">
+          <span class="nav-icon">🤖</span><span class="nav-label"> AI 채팅</span>
         </button>
       </nav>
     </div>
@@ -68,6 +71,50 @@
 
   <!-- Main Layout -->
   <main class="main" id="main">
+
+    <!-- ===== AI 학습 어시스턴트 채팅 사이드바 ===== -->
+    <div class="chat-sidebar" id="chat-sidebar">
+      <div class="chat-header">
+        <div class="chat-header-title">
+          <span class="chat-logo">🤖</span>
+          <div>
+            <div class="chat-title">AI 학습 어시스턴트</div>
+            <div class="chat-subtitle">개념 추가 · 질문 · 복습 추천</div>
+          </div>
+        </div>
+        <button class="chat-close-btn" id="chat-close-btn" onclick="toggleChatSidebar(false)" title="채팅 접기 (←)">⟨ 접기</button>
+      </div>
+
+      <div class="chat-status-bar" id="chat-status-bar">
+        <span id="chat-api-status">✅ AI 어시스턴트 준비됨</span>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg assistant">
+          <div class="chat-msg-bubble">
+            안녕하세요! 👋 저는 당신의 지식 지도를 함께 관리하는 AI 어시스턴트입니다.<br /><br />
+            <b>이렇게 써보세요:</b><br />
+            • <span class="chat-hint">"Flash Attention 개념 추가해줘"</span> — 새 개념 노드 + 노트 생성<br />
+            • <span class="chat-hint">"Transformer와 Attention 차이 알려줘"</span> — 질문 + 지식 연결<br />
+            • <span class="chat-hint">"내가 뭘 모르는지 테스트해줘"</span> — 복습/퀴즈 추천<br />
+            • <span class="chat-hint">"연구 질문 정리해줘"</span> — Research 아젠다 제안
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-quick-actions" id="chat-quick-actions">
+        <button class="chat-chip" onclick="sendChatQuick('최근 배운 개념 3개를 복습 퀴즈로 만들어줘')">🧠 복습 퀴즈</button>
+        <button class="chat-chip" onclick="sendChatQuick('내 지식 그래프에서 약한 부분을 분석해줘')">📊 약점 분석</button>
+        <button class="chat-chip" onclick="sendChatQuick('오늘 연구/학습 아젠다를 추천해줘')">🗓️ 오늘 계획</button>
+      </div>
+
+      <div class="chat-input-area">
+        <textarea id="chat-input" class="chat-input" rows="2" placeholder="개념 추가, 질문, 복습 요청... (Enter 전송, Shift+Enter 줄바꿈)"></textarea>
+        <button class="chat-send-btn" id="chat-send-btn" title="전송">➤</button>
+      </div>
+
+    </div>
+    <button class="chat-fab" id="chat-fab" title="AI 어시스턴트 열기">🤖</button>
 
     <!-- ===== VIEW: GRAPH ===== -->
     <div class="view active" id="view-graph">
@@ -131,8 +178,42 @@
     <div class="view" id="view-progress">
       <div class="progress-page">
         <div class="page-header">
-          <h1 class="page-title">개념 현황판</h1>
-          <p class="page-subtitle">클러스터별 학습 진도 및 보완/강점 개념 한눈에 보기</p>
+          <h1 class="page-title">복습 대시보드</h1>
+          <p class="page-subtitle">복습 스케줄에 따라 오늘 할 개념을 추적하고, 지식 수준을 유지하세요</p>
+        </div>
+
+        <!-- 요약 통계 카드 -->
+        <div class="review-stats-row">
+          <div class="review-stat-card due">
+            <div class="review-stat-num" id="stat-due">0</div>
+            <div class="review-stat-label">🔴 오늘 복습할 개념</div>
+          </div>
+          <div class="review-stat-card overdue">
+            <div class="review-stat-num" id="stat-overdue">0</div>
+            <div class="review-stat-label">⏰ 밀린 복습</div>
+          </div>
+          <div class="review-stat-card learning">
+            <div class="review-stat-num" id="stat-learning">0</div>
+            <div class="review-stat-label">📈 학습 중</div>
+          </div>
+          <div class="review-stat-card mastered">
+            <div class="review-stat-num" id="stat-mastered">0</div>
+            <div class="review-stat-label">🏆 숙달됨</div>
+          </div>
+        </div>
+
+        <!-- 오늘 복습 큐 -->
+        <div class="due-review-section">
+          <h2 class="section-title">📅 오늘 복습 큐</h2>
+          <div class="due-review-list" id="due-review-list">
+            <p class="review-empty">복습 스케줄 계산 중...</p>
+          </div>
+        </div>
+
+        <!-- 지식 수준 분포 -->
+        <div class="knowledge-dist-section">
+          <h2 class="section-title">📊 지식 수준 분포</h2>
+          <div class="knowledge-dist-bars" id="knowledge-dist-bars"></div>
         </div>
 
         <!-- 클러스터별 구분 리스트 -->
@@ -153,6 +234,39 @@
         <div class="strong-section">
           <h2 class="section-title">🟢 강점 개념 (자신감 높음)</h2>
           <div class="strong-list" id="strong-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: QUIZ ===== -->
+    <div class="view" id="view-quiz">
+      <div class="quiz-page">
+        <div class="page-header">
+          <h1 class="page-title">개념 테스트</h1>
+          <p class="page-subtitle">AI가 내 지식 수준에 맞는 문제를 내고, 결과로 자신감이 자동 업데이트돼요</p>
+        </div>
+
+        <!-- 퀴즈 본체 -->
+        <div class="quiz-body">
+          <div class="quiz-selector-row">
+            <select id="quiz-topic-select" class="quiz-topic-select">
+              <option value="">-- 복습할 개념을 선택하세요 --</option>
+            </select>
+            <button class="quiz-btn primary" id="quiz-generate-btn" onclick="generateQuiz()">🎯 문제 생성</button>
+          </div>
+
+          <div class="quiz-stage" id="quiz-stage">
+            <div class="quiz-placeholder">
+              <p style="font-size:15px;font-weight:600;color:var(--text)">🧠 개념을 선택하고 문제를 생성해보세요</p>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:6px">문제를 풀면 정답 여부에 따라 해당 개념의 자신감(복습 간격)이 자동으로 갱신됩니다.</p>
+            </div>
+          </div>
+
+          <div class="quiz-result" id="quiz-result" style="display:none">
+            <div class="quiz-result-card" id="quiz-result-card"></div>
+            <button class="quiz-btn primary" style="margin-top:14px" onclick="generateQuiz()">🔁 다음 문제</button>
+            <button class="quiz-btn ghost" style="margin-top:14px" onclick="resetQuiz()">다른 개념 선택</button>
+          </div>
         </div>
       </div>
     </div>
@@ -243,8 +357,6 @@
 
       </div>
     </div>
-
-  </main>
 
   <!-- ===== VIEW: REVIEW ===== -->
     <!-- ===== VIEW: ANALYTICS (투데이 리포트 & 일일 일정 대시보드) ===== -->
@@ -535,6 +647,8 @@
       </div>
     </div>
 
+  </main>
+
     <!-- 📅 Calendar Schedule Detail Modal -->
     <div id="calendar-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75); backdrop-filter:blur(10px); z-index:9999; justify-content:center; align-items:center;">
       <div style="background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:20px; width:90%; max-width:480px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.8); position:relative;">
@@ -556,6 +670,6 @@
   <!-- Search Results Dropdown -->
   <div class="search-results" id="search-results"></div>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>
