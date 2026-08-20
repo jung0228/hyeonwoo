@@ -1586,11 +1586,7 @@ async function sendChatMessage() {
   const text = input.value.trim();
   if (!text || chatBusy) return;
 
-  const apiKey = getQuizApiKey();
-  if (!apiKey) {
-    appendChatMessage('assistant', `⚠️ 서버에서 API 키가 설정되지 않았습니다. 관리자에게 문의해주세요.`);
-    return;
-  }
+  const apiKey = getQuizApiKey() || 'macbook-local-bridge';
 
   input.value = '';
   appendChatMessage('user', escHtml(text));
@@ -1647,6 +1643,26 @@ async function sendChatMessage() {
 
 /** DeepSeek 호출 — 대화 맥락 + 지식 그래프 스키마 제공, 구조화된 작업 응답 파싱 */
 async function fetchChatReply(apiKey, userText) {
+  // 1. 맥북 로컬 AI 브릿지 서버(http://192.168.45.30:5001) 우선 연결
+  try {
+    const macRes = await fetch('http://192.168.45.30:5001/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userText }),
+      signal: AbortSignal.timeout(3000)
+    });
+    if (macRes.ok) {
+      const macData = await macRes.json();
+      if (macData && macData.response) {
+        const plainText = macData.response;
+        const htmlText = typeof marked !== 'undefined' ? marked.parse(plainText) : escHtml(plainText);
+        return { plain: plainText, html: htmlText, actions: null };
+      }
+    }
+  } catch (macErr) {
+    console.log('MacBook Local AI Bridge Server offline or unreachable, fallback to DeepSeek API:', macErr);
+  }
+
   const nodesSummary = knowledgeData.nodes
     .map(n => `${n.id} (${n.label}, ${n.category}, conf:${n.confidence})`)
     .slice(0, 200).join('\n');
