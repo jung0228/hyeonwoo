@@ -1643,13 +1643,14 @@ async function sendChatMessage() {
 
 /** DeepSeek 호출 — 대화 맥락 + 지식 그래프 스키마 제공, 구조화된 작업 응답 파싱 */
 async function fetchChatReply(apiKey, userText) {
-  // 1. 맥북 로컬 AI 브릿지 서버(http://192.168.45.30:5001) 우선 연결
+  // 1. 라즈베리 파이 / 맥북 브릿지 프록시 (포트 5001) 연결
+  const bridgeHost = window.location.hostname || '192.168.45.119';
   try {
-    const macRes = await fetch('http://192.168.45.30:5001/api/chat', {
+    const macRes = await fetch(`http://${bridgeHost}:5001/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: userText }),
-      signal: AbortSignal.timeout(3000)
+      signal: AbortSignal.timeout(10000)
     });
     if (macRes.ok) {
       const macData = await macRes.json();
@@ -1660,7 +1661,7 @@ async function fetchChatReply(apiKey, userText) {
       }
     }
   } catch (macErr) {
-    console.log('MacBook Local AI Bridge Server offline or unreachable, fallback to DeepSeek API:', macErr);
+    console.log('AI Bridge Server offline or unreachable, fallback to DeepSeek API:', macErr);
   }
 
   const nodesSummary = knowledgeData.nodes

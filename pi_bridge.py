@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MacBook Local AI Bridge Server (Real LLM Integration - Pure Python Standard Library)
-Port: 5001
-Connects Raspberry Pi web UI (http://hyeonwoo.local) directly to MacBook Knowledge Base & DeepSeek/Gemini AI Engine.
+Raspberry Pi AI Bridge Proxy & Fallback Server (Port 5001)
 """
 
 import os
@@ -69,11 +67,7 @@ def search_relevant_notes(query):
         
     return "\n\n".join(results)
 
-def call_llm_api(user_message, context_str):
-    api_key = get_api_key()
-    if not api_key:
-        return "⚠️ 로컬 AI 서버에 API 키가 설정되지 않았습니다."
-
+def call_deepseek_fallback(user_message, context_str):
     system_prompt = (
         "당신은 대학원 입시 및 AI/ML 연구를 준비 중인 사용자 '현우'의 든든하고 명쾌한 1대1 AI 튜터 '제미니(Gemini)'입니다.\n"
         "격식 있고 친절한 경어체(~합니다, ~입니다)를 사용하여 답변하세요.\n"
@@ -93,6 +87,10 @@ def call_llm_api(user_message, context_str):
         "max_tokens": 1500
     }
 
+    api_key = get_api_key()
+    if not api_key:
+        return "⚠️ API 키가 설정되지 않았습니다."
+
     req = urllib.request.Request(
         "https://api.deepseek.com/chat/completions",
         data=json.dumps(payload).encode("utf-8"),
@@ -108,10 +106,10 @@ def call_llm_api(user_message, context_str):
             res_data = json.loads(response.read().decode("utf-8"))
             return res_data["choices"][0]["message"]["content"]
     except Exception as e:
-        print(f"LLM API Call Error: {e}")
-        return f"안녕하세요! 제미니 AI 튜터입니다. 질문해주신 '{user_message}'에 관해 맥북 지식베이스 탐색 결과를 정리해드릴게요!\n\n{context_str}"
+        print(f"DeepSeek Fallback Error: {e}")
+        return f"안녕하세요 현우님! 제미니 AI 튜터입니다. 질문해주신 '{user_message}'에 관한 답변입니다."
 
-class BridgeRequestHandler(BaseHTTPRequestHandler):
+class PiBridgeHandler(BaseHTTPRequestHandler):
     def _send_cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
@@ -128,38 +126,50 @@ class BridgeRequestHandler(BaseHTTPRequestHandler):
             self._send_cors_headers()
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
-            count = len(glob.glob(os.path.join(NOTES_DIR, "*.md")))
-            response = {"status": "ok", "host": "MacBook-Pro", "notes_count": count, "llm_ready": bool(get_api_key())}
-            self.wfile.write(json.dumps(response, ensure_ascii=False).encode("utf-8"))
+            self.wfile.write(json.dumps({"status": "ok", "host": "RaspberryPi-Proxy"}, ensure_ascii=False).encode("utf-8"))
         else:
             self.send_response(404)
             self.end_headers()
 
     def do_POST(self):
         if self.path == "/api/chat":
-            content_length = int(self.headers.get("Content-Length", 0))
-            post_data = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else "{}"
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length) if length > 0 else b"{}"
             
             try:
-                data = json.loads(post_data)
+                data = json.loads(body.decode("utf-8"))
             except Exception:
                 data = {}
                 
-            user_message = data.get("message", "").strip()
-            print(f"\n📥 [Received Query from Raspberry Pi]: '{user_message}'")
+            user_msg = data.get("message", "").strip()
+            print(f"\n📥 [Pi Bridge Query]: '{user_msg}'")
+
+            # 1. Try MacBook Local Server first (IP: 192.168.45.30)
+            mac_success = False
+            try:
+                mac_req = urllib.request.Request(
+                    "http://192.168.45.30:5001/api/chat",
+                    data=body,
+                    headers={"Content-Type": "application/json"},
+                    method="POST"
+                )
+                with urllib.request.urlopen(mac_req, timeout=10) as mac_res:
+                    mac_data = mac_res.read()
+                    print("✅ MacBook Server Response Received!")
+                    self.send_response(200)
+                    self._send_cors_headers()
+                    self.send_header("Content-Type", "application/json; charset=utf-8")
+                    self.end_headers()
+                    self.wfile.write(mac_data)
+                    return
+            except Exception as mac_err:
+                print(f"⚠️ MacBook Server offline or unreachable ({mac_err}). Using Pi Fallback LLM...")
+
+            # 2. Fallback to DeepSeek API with valid key on Pi
+            context = search_relevant_notes(user_msg)
+            answer = call_deepseek_fallback(user_msg, context)
             
-            if not user_message:
-                res_payload = {"response": "질문을 입력해 주세요!"}
-            else:
-                context = search_relevant_notes(user_message)
-                llm_reply = call_llm_api(user_message, context)
-                res_payload = {
-                    "response": llm_reply,
-                    "context_found": bool(context)
-                }
-                    
-            print(f"📤 [AI Gemini Response Sent]: {res_payload['response'][:80]}...")
-            
+            res_payload = {"response": answer, "context_found": bool(context)}
             self.send_response(200)
             self._send_cors_headers()
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -170,13 +180,9 @@ class BridgeRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
 def run(port=5001):
-    server_address = ("0.0.0.0", port)
-    httpd = HTTPServer(server_address, BridgeRequestHandler)
-    print(f"🚀 MacBook Real LLM AI Bridge Server running on http://0.0.0.0:{port} ...")
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\nStopping MacBook Local AI Bridge Server.")
+    server = HTTPServer(("0.0.0.0", port), PiBridgeHandler)
+    print(f"🚀 Raspberry Pi AI Proxy Server running on port {port}...")
+    server.serve_forever()
 
 if __name__ == "__main__":
     run(5001)
