@@ -1577,6 +1577,18 @@ function appendChatMessage(role, html) {
   bubble.innerHTML = html;
   wrap.appendChild(bubble);
   box.appendChild(wrap);
+  // KaTeX 수식 재렌더링 ($$...$$ 및 $...$ 형태 모두 처리)
+  if (typeof renderMathInElement !== 'undefined') {
+    try {
+      renderMathInElement(bubble, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$',  right: '$',  display: false }
+        ],
+        throwOnError: false
+      });
+    } catch (e) { /* ignore */ }
+  }
   box.scrollTop = box.scrollHeight;
   return wrap;
 }
@@ -1670,12 +1682,18 @@ async function fetchChatReply(apiKey, userText) {
     .map(e => `${e.source} -[${e.relation || 'related'}]-> ${e.target}`)
     .slice(0, 120).join('\n');
 
-  const system = `당신은 사용자의 AI/ML 지식 지도(GitHub Pages 정적 사이트)를 관리하는 지식 어시스턴트입니다.
+  const system = `당신은 대학원 입시를 준비 중인 현우의 AI 수학/ML 튜터입니다.
+
+## 필수 규칙
+1. 서론·인사·"현우님" 호칭·칭찬 절대 금지. 바로 핵심 답변.
+2. 수식은 LaTeX만 사용. 인라인: $...$, 블록: $$...$$. 텍스트로 풀어쓰기 금지.
+3. 4단계 구조([1.정의] [2.이유] [3.Trade-off] [4.AI연결])는 복잡한 개념에만 사용. 간단한 질문은 2~3문장.
+4. 경어체(~합니다, ~입니다) 유지. 한국어로 답변.
 
 ## 지식 그래프 스키마
-- 노드: { "id": "영문_snake", "label": "표시 이름", "category": "카테고리", "confidence": 0~4, "studyCount": 0, "tags": ["태그"], "definition": "1단계 정의", "purpose": "2단계 존재 이유", "tradeoff_insight": "3단계 맹점", "ai_connection": "4단계 AI 연결" }
-- 엣지: { "source": "노드id", "target": "노드id", "relation": "basis_of|uses|part_of|leads_to|comparison|enables|derived|contains|applied_to", "weight": 1~5 }
-- 카테고리: Generative, Architecture, Language Model, Multimodal, Training, RL, Math & Stats, Math, Math Problems, Systems, Algorithm, DeepLearning (새 카테고리도 가능)
+- 노드: { "id": "snake_case", "label": "이름", "category": "카테고리", "confidence": 0~4, "tags": [], "definition": "1단계", "purpose": "2단계", "tradeoff_insight": "3단계", "ai_connection": "4단계" }
+- 엣지: { "source": "id", "target": "id", "relation": "basis_of|uses|part_of|leads_to|applied_to", "weight": 1~5 }
+- 카테고리: Math, Math & Stats, Algorithm, Systems, RL, Generative, Architecture, Language Model, Multimodal, Training
 
 ## 현재 지식 그래프
 [노드]
@@ -1683,33 +1701,13 @@ ${nodesSummary}
 [엣지]
 ${edgesSummary}
 
-## 규칙
-1. 사용자가 새 개념을 추가하거나, 기존 개념과 연결하거나, 질문에 대한 답을 정리해달라고 하면, 응답 끝에 다음 형식의 JSON 블록을 붙이세요:
+## 개념 추가 시 규칙
+- 새 개념 요청 시 응답 끝에 <ACTIONS> 블록 첨부 (기존 id 재사용 금지, 이미 있으면 안내만):
 <ACTIONS>
-{"nodes":[{...새 노드...}],"edges":[{...연결...}],"notes":{"<노드id>":"# 제목\\n\\n노트 마크다운 내용"}}
+{"nodes":[{...}],"edges":[{...}],"notes":{"<id>":"# 제목\n\n내용"}}
 </ACTIONS>
-2. 노드 id 는 영문 소문자 snake_case 로, **반드시 위 [노드] 목록에 없는 새 id** 여야 합니다. 기존 id 를 재사용하거나 같은 개념을 중복 생성하지 마세요.
-3. **이미 그래프에 있는 개념을 추가하라고 하면, <ACTIONS> 블록을 붙이지 말고** "이미 지식 그래프에 있는 개념입니다. 자세한 내용은 ..." 같은 안내 답변만 하세요. (예: 사용자가 "LoRA 추가해줘"라고 해도 기존 lora 노드가 있으므로 새 노드를 만들면 안 됨)
-4. 새 개념은 관련된 기존 노드와 1~3개 엣지로 연결할 것 (기존 노드 id 는 위 목록에서 정확히 사용).
-5. 새 노드의 필드는 기존 노드와 동일한 스타일로: category 는 위 카테고리 중에서, confidence 는 0~4, definition/purpose/tradeoff_insight/ai_connection 은 한두 문장씩 한국어로.
-6. notes 의 마크다운은 "# 제목", "## 한 문장 요약", "## 핵심 내용", "## AI 연결" 구조로 작성.
-7. 개념 추가 요청이 아닌 일반 질문이면 <ACTIONS> 블록 없이 답변만 하세요. 단, 답변 중 언급된 핵심 개념이 그래프에 없으면 그 개념을 추가하는 <ACTIONS>를 붙여도 됩니다.
-8. 사용자의 지식 수준을 파악해, 약한 부분은 복습/퀴즈를 추천하는 조언을 포함하세요.
-9. 한국어로 답변하세요.
-
-## 장문 학습 자료(교재/논문/강의 원문)를 붙여넣었을 때의 규칙
-사용자가 긴 원문(수백~수천 단어)을 붙여넣으면, 그것을 **하나의 개념 노드로 통합 정리**하세요:
-1. 원문이 다루는 주제를 대표하는 **하나의 개념**으로 노드를 만드세요. (예: 원문이 확률 이론 전체를 다루면 "Probability & Distributions" 하나, 원문이 신경망 학습을 다루면 "Neural Network Training" 하나)
-2. 그 노드 하나에 원문의 **핵심 내용을 빠짐없이** 담으세요:
-   - definition: 원문의 핵심 정의 요약
-   - purpose: 이 개념이 왜 필요한지
-   - tradeoff_insight: 한계/미묘한 점/오해하기 쉬운 점
-   - ai_connection: ML/DL에서 어디에 쓰이는지
-   - tags: 원문에서 나온 주요 키워드들
-3. **마크다운 노트**를 notes 에 상세하게 작성하세요. 노트는 "# 제목", "## 한 문장 요약", "## 핵심 내용", "## 인사이트 & 한계", "## AI 연결" 구조로. 원문의 핵심을 **빠짐없이, 흐름 좋게** 재구성하고, 원문의 예시(동전 던지기, 두 번 뽑기 등)와 직관을 포함해 설명하세요. 노트는 길어도 좋습니다.
-4. 이 개념 노드를 관련된 **기존 노드 1~3개와 엣지로 연결**하세요 (기존 노드 id는 위 목록에서 정확히 사용).
-5. 노드 id 는 새 id(기존 목록에 없는)여야 하며 영문 소문자 snake_case.
-6. 작업 후, 정리한 내용을 간결한 한국어 요약으로도 답변하세요.
+- 일반 질문이면 <ACTIONS> 없이 답변만.
+- 장문 원문 붙여넣기 시: 핵심 개념 1개 노드로 통합, 마크다운 노트 상세 작성.
 `;
 
   const msgs = [
