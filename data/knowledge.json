@@ -1509,6 +1509,28 @@
       "purpose": "2단계 존재 이유: 데이터/모델/예측의 불확실성을 실수 범위([0, 1])의 확률적 체계로 정량화하여 자동화된 추론 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: 빈도주의(고정 참값 모수, 대용량 데이터 MLE) vs 베이지안(모수도 확률변수, 사전분포 prior 결합 MAP).",
       "ai_connection": "4단계 AI 연결: 최대우도추정(MLE), 최대 사후확률 추정(MAP), 신경망 Softmax 확률 출력, VAE/Flows 생성모델."
+    },
+    {
+      "id": "probability_ch6_2_discrete_continuous",
+      "label": "6.2 이산 및 연속 확률분포 (PMF, PDF, CDF)",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/probability_ch6_2_discrete_continuous.md",
+      "tags": [
+        "Probability",
+        "PMF",
+        "PDF",
+        "CDF",
+        "Joint Probability",
+        "Marginal Probability",
+        "Conditional Probability",
+        "Uniform Distribution"
+      ],
+      "definition": "1단계 개념: 타겟공간 T에 따른 이산확률질량함수(PMF) P(X=x) 및 연속확률밀도함수(PDF) f(x), 누적분포함수(CDF) F(x)와 주변화 연산.",
+      "purpose": "2단계 존재 이유: 분류(Cross-Entropy)와 회귀/생성(NLL) 모델 손실함수 수학적 정립 및 잠재변수 소거 주변화(Marginalization).",
+      "tradeoff_insight": "3단계 비판적 맹점: 이산 P(X=x) in [0, 1] vs 연속 P(X=x)=0 (측도 0) 및 PDF 밀도값 f(x) > 1 가능성.",
+      "ai_connection": "4단계 AI 연결: 딥러닝 분류 Cross-Entropy, VAE/Diffusion NLL 손실함수, 객체검출 Multi-task 학습."
     }
   ],
   "edges": [
@@ -2358,6 +2380,12 @@
     {
       "source": "vector_calculus_ch5_7_hessian_taylor",
       "target": "probability_ch6_1_space_rv",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "probability_ch6_1_space_rv",
+      "target": "probability_ch6_2_discrete_continuous",
       "relation": "basis_of",
       "weight": 3
     }
