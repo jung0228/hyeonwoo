@@ -214,8 +214,8 @@ body {
   opacity: 1;
   pointer-events: all;
 }
-/* Research 및 Column 뷰만 세로 스크롤 허용 */
-#view-research, #view-column {
+/* Research, Column, Progress(복습 대시보드), Quiz 뷰는 세로 스크롤 허용 */
+#view-research, #view-column, #view-progress, #view-quiz {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
@@ -1953,3 +1953,456 @@ body {
   }
 }
 
+
+/* ============================================================
+   REVIEW DASHBOARD (Progress 탭) & QUIZ (개념 테스트) UI
+   ============================================================ */
+
+/* ---- Review stats row ---- */
+.review-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.review-stat-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  transition: transform .2s ease, border-color .2s ease;
+}
+.review-stat-card:hover { transform: translateY(-2px); border-color: var(--border-accent); }
+.review-stat-card.due { border-left: 3px solid #f87171; }
+.review-stat-card.overdue { border-left: 3px solid #fb923c; }
+.review-stat-card.learning { border-left: 3px solid #38bdf8; }
+.review-stat-card.mastered { border-left: 3px solid #34d399; }
+.review-stat-num { font-size: 30px; font-weight: 800; color: var(--text-primary); line-height: 1.1; }
+.review-stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+
+/* ---- Due review list ---- */
+.due-review-section, .knowledge-dist-section {
+  margin-bottom: 28px;
+}
+.due-review-list { display: flex; flex-direction: column; gap: 10px; }
+.due-review-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: border-color .2s ease, background .2s ease;
+}
+.due-review-item:hover { border-color: var(--border-accent); background: var(--bg-glass-hover); }
+.due-review-left { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; min-width: 0; }
+.due-review-icon { font-size: 20px; }
+.due-review-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.due-review-conf { font-size: 12px; color: var(--accent-yellow); margin-left: 6px; letter-spacing: 1px; }
+.due-review-meta { font-size: 11px; margin-top: 2px; opacity: .8; }
+.due-review-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.due-review-date {
+  font-size: 12px; font-weight: 600; color: var(--accent-blue);
+  background: rgba(56,189,248,.12); border: 1px solid rgba(56,189,248,.3);
+  padding: 3px 9px; border-radius: 20px;
+}
+.due-review-date.overdue { color: #fb923c; background: rgba(251,146,60,.12); border-color: rgba(251,146,60,.35); }
+.review-empty { font-size: 13px; color: var(--text-muted); padding: 10px 0; }
+
+/* ---- Knowledge distribution bars ---- */
+.knowledge-dist-bars {
+  display: flex; align-items: flex-end; gap: 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px 14px;
+  min-height: 150px;
+}
+.dist-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.dist-bar-num { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.dist-bar-track {
+  width: 100%; max-width: 46px; height: 90px;
+  background: rgba(255,255,255,.04);
+  border-radius: 8px; overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.dist-bar-fill { width: 100%; border-radius: 8px; transition: height .5s ease; min-height: 2px; }
+.dist-bar-label { font-size: 11px; font-weight: 600; }
+
+/* ---- Quiz page ---- */
+.quiz-page { max-width: 860px; margin: 0 auto; padding: 28px 20px 60px; }
+.quiz-setup-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.quiz-setup-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px; cursor: pointer;
+  font-size: 14px; font-weight: 700; color: var(--text-primary);
+}
+.quiz-api-status { font-size: 12px; font-weight: 600; color: #f87171; }
+.quiz-setup-body { padding: 0 18px 18px; border-top: 1px solid var(--border); padding-top: 14px; }
+.quiz-body { margin-top: 4px; }
+.quiz-selector-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.quiz-topic-select {
+  flex: 1; min-width: 260px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.quiz-topic-select:focus { outline: none; border-color: var(--accent-purple); }
+.quiz-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text-primary);
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  transition: all .2s ease;
+  white-space: nowrap;
+}
+.quiz-btn:hover { border-color: var(--accent-purple); transform: translateY(-1px); }
+.quiz-btn.primary {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  border: none;
+  color: #fff;
+}
+.quiz-btn.primary:hover { filter: brightness(1.15); }
+.quiz-btn.ghost { background: transparent; }
+.quiz-btn.small { padding: 6px 12px; font-size: 12px; }
+
+.quiz-stage { margin-bottom: 24px; }
+.quiz-placeholder {
+  text-align: center;
+  padding: 48px 20px;
+  background: var(--bg-glass);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+}
+.quiz-question-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+}
+.quiz-q-badge {
+  display: inline-block;
+  font-size: 12px; font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+.quiz-question-text { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.55; margin-bottom: 20px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s ease;
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--accent-purple); background: var(--bg-3); }
+.quiz-option:disabled { cursor: default; opacity: .75; }
+.quiz-option.correct { border-color: #34d399 !important; background: rgba(52,211,153,.12) !important; }
+.quiz-option.wrong { border-color: #f87171 !important; background: rgba(248,113,113,.12) !important; }
+.quiz-option-letter {
+  width: 26px; height: 26px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-3);
+  font-size: 12px; font-weight: 800;
+  color: var(--accent-blue);
+}
+
+/* ---- Quiz result ---- */
+.quiz-result-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 24px;
+}
+.quiz-result-head { font-size: 19px; font-weight: 800; }
+.quiz-result-head.ok { color: #34d399; }
+.quiz-result-head.no { color: #f87171; }
+.quiz-result-expl {
+  font-size: 14px; color: var(--text-secondary);
+  line-height: 1.65;
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,.03);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent-purple);
+}
+.quiz-result-score { margin-top: 16px; }
+.quiz-score-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  color: #0b0f17;
+  font-size: 12.5px; font-weight: 800;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.quiz-score-btn:hover { transform: scale(1.06); filter: brightness(1.15); }
+.quiz-local-note {
+  background: rgba(255,255,255,.03);
+  border-radius: 12px;
+  padding: 16px 18px;
+  max-height: 340px;
+  overflow-y: auto;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.quiz-local-note h1, .quiz-local-note h2, .quiz-local-note h3 { font-size: 15px; margin: 10px 0 6px; color: var(--text-primary); }
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .review-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .due-review-item { flex-direction: column; align-items: flex-start; }
+  .due-review-right { width: 100%; justify-content: space-between; }
+}
+
+/* ============================================================
+   AI LEARNING ASSISTANT — 채팅 사이드바
+   ============================================================ */
+.chat-fab {
+  position: fixed;
+  left: 18px;
+  bottom: 22px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, .4);
+  z-index: 90;
+  transition: transform .2s ease, opacity .2s ease;
+}
+.chat-fab:hover { transform: scale(1.08); }
+.chat-fab.hidden { opacity: 0; pointer-events: none; transform: scale(.7); }
+
+.chat-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 380px;
+  max-width: 92vw;
+  background: rgba(10, 14, 22, .97);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .28s cubic-bezier(.4, 0, .2, 1);
+  box-shadow: 20px 0 60px rgba(0, 0, 0, .5);
+}
+.chat-sidebar.open { transform: translateX(0); }
+
+/* 채팅이 열리면 헤더와 메인 콘텐츠가 사이드바 폭만큼 오른쪽으로 밀림 (겹침 방지) */
+.header, .main {
+  transition: margin-left .28s cubic-bezier(.4, 0, .2, 1);
+}
+body.chat-open .header,
+body.chat-open .main {
+  margin-left: 380px;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.chat-header-title { display: flex; align-items: center; gap: 10px; }
+.chat-logo { font-size: 26px; }
+.chat-title { font-size: 15px; font-weight: 800; color: var(--text-primary); }
+.chat-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.chat-close-btn {
+  background: none; border: 1px solid var(--border); color: var(--text-muted);
+  font-size: 12px; font-weight: 600; cursor: pointer; padding: 6px 12px; border-radius: 10px;
+  transition: all .15s ease; white-space: nowrap;
+}
+.chat-close-btn:hover { color: var(--text-primary); border-color: var(--accent-purple); background: var(--bg-glass-hover); }
+
+/* 채팅이 열릴 때 뒤 콘텐츠를 덮는 반투명 오버레이 */
+.chat-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 10, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease;
+  z-index: 94;
+}
+.chat-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.chat-status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, .02);
+  border-bottom: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.chat-status-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-secondary); font-size: 11px;
+  padding: 3px 10px; border-radius: 20px; cursor: pointer;
+}
+.chat-status-btn:hover { border-color: var(--accent-purple); color: var(--text-primary); }
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-msg { display: flex; }
+.chat-msg.user { justify-content: flex-end; }
+.chat-msg.assistant { justify-content: flex-start; }
+.chat-msg-bubble {
+  max-width: 88%;
+  padding: 11px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  overflow-wrap: break-word;
+}
+.chat-msg.user .chat-msg-bubble {
+  background: linear-gradient(135deg, var(--accent-purple), #6d5ae0);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-msg.assistant .chat-msg-bubble {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.chat-msg-bubble code {
+  background: rgba(255, 255, 255, .08);
+  padding: 1px 5px; border-radius: 4px;
+  font-size: 11.5px;
+}
+.chat-msg-bubble pre {
+  background: rgba(0, 0, 0, .4);
+  padding: 10px; border-radius: 8px;
+  overflow-x: auto; font-size: 11.5px;
+}
+.chat-hint {
+  background: rgba(56, 189, 248, .12);
+  color: var(--accent-blue);
+  padding: 1px 6px; border-radius: 6px;
+  font-size: 12px;
+}
+.chat-thinking { color: var(--text-muted); }
+
+.chat-quick-actions {
+  display: flex; gap: 8px; padding: 0 16px 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.chat-chip {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.chat-chip:hover { border-color: var(--accent-purple); color: var(--text-primary); }
+
+.chat-input-area {
+  display: flex; gap: 8px; align-items: flex-end;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.chat-input {
+  flex: 1;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 13px;
+  padding: 10px 12px;
+  resize: none;
+  line-height: 1.5;
+  font-family: inherit;
+}
+.chat-input:focus { outline: none; border-color: var(--accent-purple); }
+.chat-input::placeholder { color: var(--text-muted); }
+.chat-send-btn {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: #fff; font-size: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: filter .15s ease;
+}
+.chat-send-btn:hover { filter: brightness(1.15); }
+
+.chat-settings-pop {
+  position: absolute;
+  left: 12px; right: 12px; bottom: 84px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-accent);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .6);
+  z-index: 5;
+}
+.chat-settings-title { font-size: 13px; font-weight: 800; color: var(--text-primary); }
+.chat-api-input {
+  width: 100%;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 12.5px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+.chat-api-input:focus { outline: none; border-color: var(--accent-purple); }
+
+@media (max-width: 768px) {
+  .chat-sidebar { width: 100vw; max-width: 100vw; }
+  /* 모바일: 화면이 좁아 밀 수 없으므로 덮는 방식 (원복) */
+  body.chat-open .header,
+  body.chat-open .main {
+    margin-left: 0;
+  }
+}

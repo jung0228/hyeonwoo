@@ -135,7 +135,7 @@ cd 논문폴더 && grep -rh "label\\|caption" fig_tex/*.tex
 
 ## 이 저장소에서 적용할 때의 해석
 
-- 새 논문을 포스트로 만들 때는 먼저 `papers/<논문폴더>`에서 원문과 Figure를 읽는다.
+- 새 논문을 포스트로 만들 때는 먼저 `content/papers/<논문폴더>`에서 원문과 Figure를 읽는다.
 - 결과물은 `blog/posts/md/<slug>.md`에 저장한다.
 - 이미지 자산은 `blog/posts/img/<slug>/`에 모은다.
 - 글 스타일은 기존 포스트들처럼 "문제 제기 → 핵심 아이디어 → 방법 → 결과 → 의미" 흐름을 기본으로 하되, 위 구조 패턴을 우선한다.

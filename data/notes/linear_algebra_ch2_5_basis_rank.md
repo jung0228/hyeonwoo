@@ -1,5 +1,7 @@
 # 📐 2.5 & 2.6 Linear Independence, Basis and Rank (선형 독립, 기저, 계수)
 
+> ⚠️ **이전 초안(요약본)입니다.** 상세 버전은 [linear_algebra_ch2_5_linear_independence.md](linear_algebra_ch2_5_linear_independence.md) (2.5) 및 [linear_algebra_ch2_6_basis_rank.md](linear_algebra_ch2_6_basis_rank.md) (2.6)을 참조하세요.
+
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.5 & 2.6 완전 해부
 
 

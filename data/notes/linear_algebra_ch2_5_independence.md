@@ -1,5 +1,7 @@
 # 📐 2.5 Linear Independence (선형 독립)
 
+> ⚠️ **이전 초안입니다.** 최신 상세 버전은 [linear_algebra_ch2_5_linear_independence.md](linear_algebra_ch2_5_linear_independence.md)를 참조하세요.
+
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.5 완전 해부
 
 

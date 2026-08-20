@@ -10,6 +10,24 @@ AI/ML 개념을 인터랙티브하게 탐색하고, 학습 현황을 추적하�
 - 🗓️ **Activity Heatmap** — GitHub 잔디 스타일 학습 기록
 - 📊 **Progress Tracker** — 주제별 자신감 레벨 & 약점 발견
 
+## 폴더 구조
+
+```
+hyeonwoo/
+├── index.html / app.js / style.css   ← 사이트 코어 (코드)
+├── assets/                           ← 정적 자원 (vendor, img, cv.pdf)
+├── data/                             ← 사이트 데이터 (knowledge.json, notes/, columns/)
+├── blog/                             ← 블로그 (build.js + posts/)
+├── content/                          ← 연구/학습 자료
+│   ├── papers/                       ← 논문 원문/LaTeX 소스
+│   ├── research_notes/               ← 연구 노트
+│   ├── references/                   ← 참고 자료 (PDF, 스크립트)
+│   ├── awards/                       ← 수상 실적
+│   └── docs/                         ← 문서/방법론
+├── scripts/                          ← 검증/도구 스크립트
+└── .agents/                          ← AI 에이전트 설정
+```
+
 ## 로컬 실행
 
 ```bash

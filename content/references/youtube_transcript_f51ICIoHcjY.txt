@@ -1,0 +1,347 @@
+[0.1s] So, Deepseek just open sourced their own
+[2.3s] harness. It's called Deep Seek Harness.
+[4.4s] Think of Claude Code for Claude. This is
+[6.2s] Deepseek Harness for Deepseek. And it
+[8.1s] has become the fastest growing repo
+[10.0s] ever. We're at 167,000 stars in under a
+[13.9s] week. Now, the thing you keep hearing
+[15.2s] with this harness is that everything is
+[17.8s] a plugin. And this can get kind of
+[19.4s] confusing because we already have
+[20.9s] plugins in other harnesses like Claude
+[22.9s] Code and Codeex. oftentimes those look
+[25.0s] like skills or MCPs or CLIs, these
+[27.2s] different outside tools. We can tack on
+[29.4s] to the harness itself. How is Deepseek
+[31.8s] harness any different? Well, the Deep
+[33.7s] Seek harness allows us to actually edit
+[36.4s] and change the harness itself in ways
+[38.8s] you just can't do with these other
+[40.6s] harnesses. And big picture, what
+[42.3s] Deepseek is really trying to sell you is
+[44.4s] the infinitely customizable harness that
+[46.6s] can be somewhat self-improving in
+[48.8s] certain respects. It can write its own
+[50.4s] plugins for its own harness that could
+[52.6s] be custom to whatever it is you're
+[54.2s] trying to do. And so the response to
+[56.0s] this has been an exploding ecosystem of
+[58.5s] DeepSeek harness plugins that you can
+[60.7s] attach to whatever your build looks
+[62.4s] like. On top of that, this is something
+[63.9s] we can make completely local. We can use
+[65.9s] this with any sort of model we want. So
+[67.8s] there's a lot to work with here. But the
+[69.9s] big question becomes, does this live up
+[71.9s] to the hype? Is this new harness
+[73.6s] actually worth 167,000 stars in a
+[76.9s] handful of days? especially if you're
+[78.3s] someone who's already using Cloud Code
+[80.2s] or Codeex. Well, that's exactly what
+[81.9s] we're going to talk about today. And I'm
+[83.5s] also going to break down how this thing
+[85.0s] actually works so you can make an
+[86.2s] informed decision about whether you
+[88.0s] should move to this harness. Now, first
+[89.8s] let's talk about installing this thing.
+[91.1s] If you just search for the Deepseek
+[92.5s] harness on GitHub, you will find this
+[94.5s] page. To install it, you'll just run
+[96.1s] this command in the terminal and it's
+[97.6s] going to bring up a web UI that looks
+[100.0s] just like this. Now, this setup should
+[101.8s] be pretty familiar as it follows pretty
+[103.3s] much all the conventions of all the
+[104.7s] other harnesses. Over there on the lefth
+[106.6s] hand side we have our workspaces which
+[108.2s] is just the folders. Underneath here
+[109.9s] you'll have your different chat windows.
+[111.8s] Right up front we have our prompt
+[113.3s] window. Again you can choose your
+[115.4s] workspace and then we have a series of
+[117.8s] modes we can choose from. So we have
+[119.4s] standard mode, PTC mode, minimal mode
+[121.8s] and creator mode. So standard mode
+[123.6s] exactly what it sounds like. It's
+[125.3s] standard. This is like what you do if
+[126.7s] you're inside a cloud code. PTC mode is
+[128.9s] all about multi-step tasks. So in
+[131.0s] standard mode, if you wanted it to do a
+[132.6s] bunch of tool calls, it would do those
+[134.1s] tool calls one by one. In PTC mode,
+[137.1s] instead it would create a script where
+[139.4s] it runs all the tools essentially in one
+[142.0s] go. The idea is if you're doing like
+[143.6s] complex tasks, this will reduce some of
+[145.5s] the context bloat that you get when
+[147.0s] you're just calling the tools one by
+[148.2s] one. We then have minimal mode. That's
+[149.8s] for very simple tasks. And then lastly,
+[152.0s] we have creator mode. And we'll touch on
+[153.8s] that later, but creator mode is where
+[155.7s] you can create your own plugins for this
+[158.0s] harness. We press this plus button. We
+[160.0s] have a number of different slash
+[161.2s] commands. Again, some of these should be
+[162.7s] familiar to you. Things like compact,
+[164.6s] things like goal. I then have a
+[166.9s] permissions for readon, workspace,
+[168.8s] write, and full access. And then lastly,
+[171.0s] we have our model in our effort. Now,
+[172.9s] remember this is an open source tool.
+[174.5s] You don't have to use deepseeek for
+[176.0s] this. In my case, I'm not using the
+[179.0s] Deepseek API. I'm using open router. So,
+[181.0s] I have access to, you know, essentially
+[182.6s] every single model out there. Now, in
+[184.2s] order to set that up, I'm going to come
+[185.5s] down and go to settings.
+[187.9s] Going to go to models. And then you just
+[190.0s] add a provider and insert your API key.
+[192.6s] Over here in general, just sort of your
+[194.2s] standard stuff. One thing I'll mention
+[195.7s] is the enter behavior while busy. This
+[197.6s] is similar to what we see in codec. So
+[199.1s] if it is executing some sort of tool
+[200.9s] call, you can have it by default be Q or
+[203.1s] steer. So if it's on Q, it's going to
+[204.6s] wait till it's done doing what it's
+[206.3s] doing before it takes your next message
+[208.0s] versus steer. That's where it's going to
+[209.8s] finish its current tool call and then
+[211.6s] bring in your additional message. Next
+[213.4s] we have plugins. So over here on the
+[215.0s] plug-in list, this is essentially every
+[216.8s] single thing you can do inside of the
+[218.4s] DeepC harness specified as a plugin. And
+[221.6s] then we have the plug-in configuration,
+[223.5s] which shows us things we can actually
+[225.6s] edit inside of the harness itself. Like
+[227.4s] when we look at something like the agent
+[228.7s] loop, this is literally like a core part
+[231.2s] of the plumbing of the DeepC harness
+[233.9s] that you can begin to edit just in terms
+[235.6s] of parallel tool calls. And you can go
+[237.1s] deeper with these sort of edits using
+[238.6s] creator mode. This is the difference
+[240.2s] between deep sea harness and cloud code.
+[242.2s] Claude Code, you can sort of approximate
+[244.7s] a lot of these changes that we make at
+[246.3s] the harness level inside of the Deep
+[247.8s] Seek harness with things like skills and
+[249.7s] hooks, but you aren't changing the
+[251.4s] actual plumbing under the hood. You can
+[254.0s] do that here. But on the flip side, with
+[255.8s] all this customizability comes some
+[257.7s] annoyances. For example, like the web
+[259.6s] search. If you want to be able to use
+[260.8s] web search out of the box, you need to
+[262.3s] provide the DeepSeek API key. Well, if
+[265.0s] you don't have that and you're using
+[266.3s] some sort of other model, well, you now
+[268.2s] need to find a plugin that allows you to
+[270.2s] do web search with with essentially any
+[272.2s] model. For example, I installed this
+[274.9s] free search plugin, which allows me to
+[277.0s] use things like Bing or Duck.Go for my
+[279.1s] web search. So, I found this plugin on
+[281.0s] GitHub. Again, there is a huge exploding
+[283.1s] library of different DeepSeek harness
+[285.0s] plugins and simply follow the
+[286.5s] instructions to install it. Now, does
+[288.4s] that seem somewhat sketchy that I'm
+[290.1s] installing some random Chinese plugin?
+[291.8s] Well, first of all, I actually had
+[293.2s] Claude Code take a look at it to make
+[294.6s] sure it wasn't sketchy. But two, this
+[296.7s] whole idea of sketchy plugins is
+[298.2s] something you want to pay attention to
+[299.6s] and is a major sort of red flag with the
+[302.4s] whole Deep Sea Caress concept because as
+[304.7s] of right now, out of the box, remember
+[306.3s] this is in developer preview. Every
+[307.9s] single plugin you add to Deep Sea
+[309.4s] Carness gets full shell access and full
+[311.7s] access to your entire file system. So,
+[313.8s] like if you install a random plugin into
+[316.9s] Deep Sea Caress, again, this is very
+[318.2s] reminiscent to like when Open Call first
+[320.2s] came onto the scene, be wary. Make sure
+[323.1s] you know what you're doing because if
+[324.5s] there is a bad actor that has some sort
+[326.6s] of sketchy plugin that can take a look
+[328.1s] at your API keys because it will
+[329.4s] essentially have permission to do so,
+[331.2s] you can be in a bad spot. So, just be
+[333.1s] careful there. Hopefully, this is
+[334.6s] something that changes. And again, that
+[335.8s] is one of the differences between
+[337.6s] DeepSeek and Cloud Code. Now, let's say
+[339.6s] I want to install a plugin. great
+[341.4s] resource right now is the awesome DeepS
+[343.2s] harness plug-in page on GitHub which has
+[345.8s] a huge curated list of a bunch of
+[347.4s] different ones. Let's say I'm looking
+[348.9s] for UI enhancements because again since
+[351.0s] we can edit the harness itself, we can
+[352.6s] do things like change what the actual
+[354.2s] user interface looks like. Let's say I
+[356.4s] want to add an effort slider. Well, then
+[358.5s] brings me to that GitHub page and then I
+[360.6s] just follow the instructions for the
+[362.1s] install, which in this case is just
+[363.9s] running this command inside of the
+[365.9s] terminal. So, I run the command. I then
+[368.2s] restart the Deep Seek harness and I now
+[371.1s] have this effort level slider. Now, one
+[373.3s] thing you're going to see on a lot of
+[374.5s] people's sort of like pages and content
+[376.2s] related to this Deep Seek Harness and
+[377.4s] plugins is the idea that when I there's
+[379.0s] like a built-in hot reload system for
+[380.9s] the plugins where you don't have to
+[381.9s] restart the harness. That is kind of
+[383.6s] sort of true. It depends on the plugin
+[385.3s] itself. For certain plugins like the one
+[386.8s] you saw here, yes, you do need to
+[388.6s] restart the harness and it takes like 2
+[390.6s] seconds. But that's as easy as
+[393.1s] installing plugins is. Now, if I want to
+[395.4s] create my own plugin, which I think is
+[397.0s] the big cell for this thing, is I'm just
+[398.5s] going to go into creator mode, and I'm
+[400.5s] just going to describe the type of
+[401.7s] plugin I want to create. So, let's keep
+[403.8s] it kind of simple here with the UI and
+[406.1s] say, I want you to create a plugin that
+[411.4s] changes the UI color scheme to look like
+[415.8s] the Matrix with the falling asy
+[420.8s] characters
+[423.1s] in the background.
+[425.9s] can't type.
+[429.4s] So, another thing I want to point out
+[431.0s] here as it begins creating its own
+[433.4s] plugin. So, right here at the bottom, we
+[435.9s] get a little more information than you
+[437.1s] might necessarily get with other
+[438.1s] harnesses. I can see things like the
+[439.9s] cash hit percentage. I can see the input
+[441.7s] and output tokens. I can see my tokens
+[443.6s] per second. All this cool stuff. Also,
+[446.3s] in terms of what I actually see on the
+[448.2s] screen here, I think it goes a little
+[449.4s] bit more in depth than where we see uh
+[451.4s] what other models show us, right?
+[452.9s] context injection. I can see the actual
+[455.8s] system prompt itself. And what's really
+[457.7s] cool is this thing up here called the
+[459.0s] trajectory where I get like deep insight
+[461.8s] into everything that is happening like
+[463.6s] the user, the context, the assistant,
+[465.3s] the tools. If I click on these things, I
+[467.4s] can get even more information, right? A
+[469.4s] summary, a preview, raw source. And this
+[474.5s] is like way more insight and way more
+[476.6s] visibility than a harness like cloud
+[478.0s] code is going to give you. So, in the
+[480.1s] situations where you're having to do a
+[481.4s] lot of troubleshooting, like where is
+[482.6s] stuff actually going wrong? Well, this
+[484.5s] is where I can find it. And if you see
+[486.2s] this thing called Cordis all over the
+[487.9s] place, well, this harness at its core,
+[490.2s] the kernel, the engine of this thing is
+[492.9s] this program called Cordis. This is what
+[495.4s] it all runs on. And so, Cordis is like
+[497.7s] just this chassis of the car and the
+[500.5s] plugins is the engine and all these
+[501.9s] other things we're putting on it. Now,
+[503.0s] you also have the ability to download
+[504.4s] the entire session log, which goes into
+[505.9s] a zip folder. And that is going to show
+[507.8s] you all this inside of JSON. And I can
+[509.7s] also break it down by turns and calls
+[511.1s] and all this stuff. So, that's the other
+[513.5s] big cell for this harness that I think
+[514.9s] it does better than anything else is the
+[516.6s] insights to what's actually going on
+[518.3s] under the hood. And the second thing is
+[520.6s] this this idea of custom plugins that
+[523.7s] affect the harness. Because again, take
+[525.5s] this to like its extreme once this thing
+[527.8s] is actually pretty flushed out. Well,
+[529.6s] imagine changing how the harness works
+[531.8s] at its most base level so that it is
+[534.8s] perfect for your particular problems.
+[537.4s] Again, we try to approximate that in
+[539.0s] things like cloud code and codeex with
+[540.6s] skills and hooks and really you see that
+[543.0s] with dynamic workflows, but this lets
+[544.9s] you get extremely granular. So, here's a
+[547.2s] look at what it created. Obviously, this
+[548.6s] is ugly as sin, but this silly example
+[550.9s] shows you how easy it is to create
+[552.7s] custom plugins that affect the harness
+[554.6s] itself. Now, one thing to note when you
+[556.7s] create custom plugins, it doesn't save
+[559.2s] it. It's not permanent. You have to tell
+[560.9s] it that you want it to be saved. So,
+[563.0s] that is just a prompt to say, "Hey, I
+[564.7s] want to save this plugin or I want to
+[566.0s] save this plugin with a toggle,
+[567.2s] something to that effect, or else you're
+[568.8s] going to lose it at the end of the
+[570.5s] session." So, that's the DeepS harness
+[573.0s] in a nutshell. Again, the two big cells
+[575.0s] here are the custom plugins, the fact
+[576.5s] that we can edit the harness at an
+[578.0s] extremely base foundational level, and I
+[581.0s] would say this trajectory, right? the
+[582.7s] ability to actually get really deep with
+[585.2s] what the AI system is actually doing
+[587.4s] under the hood when we're giving it
+[589.0s] prompts and things of that nature. We
+[590.4s] just don't have that same level of
+[592.3s] control with any other harness. Plus,
+[594.5s] the fact that it's open source and it
+[595.9s] can be fully local, all that is great as
+[597.6s] well. So, with all that being said,
+[599.1s] should you leave Cloud Code? Should you
+[600.6s] leave Codeex and jump ship to the Deep
+[602.5s] Sea Caress? M probably not. Don't get me
+[606.0s] wrong, I think the Deep Sea Caress is
+[607.4s] awesome. I'm glad they didn't try to
+[609.0s] just create a Claude Code clone or
+[611.0s] create another harness that looks like
+[612.3s] everything else out there. This
+[613.8s] everything is a plug-in approach. And
+[615.7s] the fact that it's extremely
+[616.8s] customizable is awesome. And the dream
+[620.3s] of this, you know, self-improving
+[622.9s] harness that can create its own plugins
+[624.4s] and adjust itself to your task sounds
+[626.6s] awesome in theory, but in reality, I
+[629.8s] don't know if it's ever going to
+[631.1s] actually happen. And maybe it will, but
+[632.8s] not today. And there's also the question
+[634.8s] of like, is it worth it to do something
+[637.4s] like that? Is it really moving the
+[638.9s] needle so much to have this custom
+[640.6s] harness for your problem? And is it also
+[642.9s] worth the time and energy to get to that
+[644.7s] place? Maybe, maybe not, maybe
+[647.4s] eventually will. Either way, today I
+[650.2s] think it's tough to say it's really a
+[651.7s] step above claw code at any sense. But
+[654.1s] it's free. It's open source. It's fully
+[655.9s] local. So why not use it? Why not tinker
+[658.0s] with it and give it a shot? Because we
+[659.9s] can use both of these things. We aren't
+[661.2s] stuck with any one tool. And in general,
+[663.8s] we should definitely be tool agnostic.
+[665.8s] So definitely try it out. Let me know
+[668.2s] what you think. As always, make sure to
+[669.8s] check out Chase AI Plus if you want to
+[671.2s] get your hands on my Cloud Code
+[672.6s] Masterass. And besides that, I'll see
+[675.0s] you

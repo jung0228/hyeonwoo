@@ -1,5 +1,7 @@
 # 📐 2.7 & 2.8 Linear Mappings & Affine Spaces (선형사상과 어파인 공간)
 
+> ⚠️ **이전 초안(요약본)입니다.** 상세 버전은 [linear_algebra_ch2_7_linear_mappings.md](linear_algebra_ch2_7_linear_mappings.md) (2.7) 및 [linear_algebra_ch2_8_affine_spaces.md](linear_algebra_ch2_8_affine_spaces.md) (2.8)을 참조하세요.
+
 > POSTECH 대학원 지정 교재 《MML (Mathematics for Machine Learning)》 Section 2.7 & 2.8 완전 해부
 
 

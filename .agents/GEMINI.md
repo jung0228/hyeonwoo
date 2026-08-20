@@ -226,4 +226,4 @@ git commit -m "📝 내용 설명"
 git push origin main
 ```
 
-코드 파일(app.js, style.css, index.html, vendor/)은 **절대 수정하지 않습니다.**
+코드 파일(app.js, style.css, index.html, assets/vendor/)은 **절대 수정하지 않습니다.**

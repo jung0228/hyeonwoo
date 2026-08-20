@@ -23,7 +23,8 @@ ALLOWED_CATEGORIES = {
     "Systems",
     "Algorithm",
     "Math",
-    "Math Problems"
+    "Math Problems",
+    "DeepLearning"
 }
 
 def verify():
@@ -104,7 +105,44 @@ def verify():
     total_nodes = len(nodes)
     completion_rate = (existing_notes_count / total_nodes * 100) if total_nodes > 0 else 0
     print(f"• 상세 노트 작성 현황: {existing_notes_count}/{total_nodes} ({completion_rate:.1f}%)\n")
-    
+
+    # 6. 고아 파일 검사 (notes 디렉토리에 있지만 어떤 노드에도 연결되지 않은 .md 파일)
+    notes_dir = os.path.join(base_dir, "data", "notes")
+    orphan_files = []
+    convention_hits = []  # note 필드는 없지만 파일명 규칙(data/notes/<node_id>.md)으로 존재하는 파일
+    if os.path.isdir(notes_dir):
+        for root, dirs, files in os.walk(notes_dir):
+            for fname in files:
+                if not fname.endswith(".md"):
+                    continue
+                rel_path = os.path.relpath(os.path.join(root, fname), base_dir)
+                # 어떤 노드의 note 필드가 이 파일을 가리키는지 확인
+                referenced = any(
+                    n.get("note") and os.path.normpath(n["note"]) == os.path.normpath(rel_path)
+                    for n in nodes
+                )
+                if referenced:
+                    continue
+                # 파일명 규칙(data/notes/<node_id>.md)과 일치하는 노드가 있는지 확인
+                note_id = fname[:-3]
+                matching_node = next((n for n in nodes if n["id"] == note_id), None)
+                if matching_node and not matching_node.get("note"):
+                    convention_hits.append((matching_node["id"], matching_node.get("label", note_id), rel_path))
+                else:
+                    orphan_files.append(rel_path)
+
+    if convention_hits:
+        print(f"💡 [note 필드 미지정 - 파일명 규칙으로 존재] ({len(convention_hits)}개):")
+        for nid, lbl, nf in convention_hits:
+            print(f"   • {lbl} (`{nf}`) — knowledge.json의 해당 노드에 `\"note\": \"{nf}\"` 추가 권장")
+        print()
+
+    if orphan_files:
+        print(f"🗂️ [고아 노트 파일 - 어떤 노드에도 연결 안 됨] ({len(orphan_files)}개):")
+        for nf in orphan_files:
+            print(f"   - {nf}")
+        print()
+
     # Results
     if critical_errors:
         print(f"❌ [치명적 오류 - 그래프 연결 깨짐] ({len(critical_errors)}개):")

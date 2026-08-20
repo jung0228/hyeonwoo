@@ -229,17 +229,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   if (!knowledgeData.sessions) knowledgeData.sessions = [];
 
+  // 사용자 커스텀 데이터(AI 어시스턴트가 추가한 개념/엣지/노트) 병합
+  mergeCustomData();
+
   initNav();
   initSearch();
   initGraph();
-  initHeatmap();
+  safeInit('initHeatmap', initHeatmap);
   initProgress();
   initResearch();
   initCopyButtons();
-  initReview();
-  initColumn();
+  safeInit('initReview', initReview);
+  safeInit('initColumn', initColumn);
+  safeInit('initChat', initChat);
   updateStatsBadge();
 });
+
+/* 하나의 init 실패가 전체 초기화를 막지 않도록 안전 실행 */
+function safeInit(name, fn) {
+  try { fn(); }
+  catch (e) { console.warn(`[init] ${name} 실패 (무시):`, e); }
+}
 
 /* ── Copy Plain Text Helper ── */
 function initCopyButtons() {
@@ -364,6 +374,9 @@ function switchView(view) {
   }
   if (view === 'progress') {
     initProgress(); // Re-render lists with the latest localStorage/json data
+  }
+  if (view === 'quiz') {
+    initQuiz();
   }
   if (view === 'column') {
     initColumn();
@@ -791,6 +804,19 @@ function dragEnd(event, d) {
 /* ============================================================
    NOTE PANEL
    ============================================================ */
+/** 채팅/외부 onclick 용: nodeId 로 노트 열기 + 그래프로 이동 */
+function openNote(nodeId) {
+  const node = knowledgeData.nodes.find(n => n.id === nodeId);
+  if (!node) { alert('노드를 찾을 수 없습니다: ' + nodeId); return; }
+  switchView('graph');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-graph').classList.add('active');
+  setTimeout(() => {
+    try { focusNode(nodeId); } catch (e) {}
+    openNotePanel(node);
+  }, 250);
+}
+
 async function openNotePanel(nodeData) {
   currentNodeId = nodeData.id;
   const panel   = document.getElementById('note-panel');
@@ -817,6 +843,27 @@ async function openNotePanel(nodeData) {
 
   let content = '';
   try {
+    // AI 어시스턴트가 만든 커스텀 노트가 있으면 우선 표시
+    const customNote = getCustomNote(nodeData.id);
+    if (customNote) {
+      let md = customNote;
+      window.currentNoteRawMd = md;
+      const mathBlocks = [];
+      const safeMd = md.replace(/\$\$([\s\S]*?)\$\$|\$([^\$\n]+?)\$/g, (match, displayMath, inlineMath) => {
+        const isDisplay = match.startsWith('$$');
+        const content = isDisplay ? displayMath : inlineMath;
+        const placeholder = `MATHBLOCK${mathBlocks.length}END`;
+        mathBlocks.push({ match, isDisplay, content });
+        return placeholder;
+      });
+      let html = marked.parse(safeMd);
+      mathBlocks.forEach((item, idx) => {
+        const placeholder = `MATHBLOCK${idx}END`;
+        html = html.replace(new RegExp(placeholder, 'g'), item.match);
+      });
+      content = `<div class="note-content">${html}</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--accent-blue);opacity:.7">📌 AI 어시스턴트가 생성한 노트 (이 브라우저에 저장됨)</div>`;
+    } else {
     const notePath = nodeData.note ? (nodeData.note.startsWith('data/notes/') ? nodeData.note : `data/notes/${nodeData.note}`) : `data/notes/${nodeData.id}.md`;
     const res = await fetch(notePath);
     if (res.ok) {
@@ -850,6 +897,7 @@ async function openNotePanel(nodeData) {
         <p><strong>${nodeData.label}</strong>에 대한 노트가 아직 없어요.</p>
         <p style="font-size:12px;color:var(--text-muted)">data/notes/${nodeData.id}.md 파일을 만들어 채워 주세요!</p>
       </div>`;
+    }
     }
   } catch {
     content = `<div class="note-placeholder" style="min-height:200px"><p>노트를 불러올 수 없습니다.</p></div>`;
@@ -929,6 +977,7 @@ function initHeatmap() {
 function buildCalendarHeatmap() {
   const grid     = document.getElementById('heatmap-grid');
   const monthsEl = document.getElementById('heatmap-months');
+  if (!grid || !monthsEl) return; // heatmap 컨테이너가 없는 레이아웃에서는 건너뜀
   grid.innerHTML = ''; monthsEl.innerHTML = '';
 
   const sessionMap = {};
@@ -1044,10 +1093,215 @@ function formatDate(date) {
 /* ============================================================
    PROGRESS VIEW
    ============================================================ */
+/* ============================================================
+   REVIEW TRACKING (SM-2 스타일 복습 스케줄러)
+   - localStorage: hyeonwoo_review_v1
+   - 각 노드: { interval(일), ease, due(date), reps, lastScore }
+   - confidence 0~4 를 SM-2 quality 로 매핑해 간격 갱신
+   ============================================================ */
+const REVIEW_STORAGE_KEY = 'hyeonwoo_review_v1';
+let reviewState = {};
+
+function loadReviewState() {
+  try {
+    reviewState = JSON.parse(localStorage.getItem(REVIEW_STORAGE_KEY)) || {};
+  } catch (e) { reviewState = {}; }
+}
+
+function saveReviewState() {
+  localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviewState));
+}
+
+function todayStr(offsetDays = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+/** 노드의 복습 상태 가져오기 (없으면 초기화) */
+function getReviewState(node) {
+  let st = reviewState[node.id];
+  if (!st) {
+    // 첫 등장: confidence 기반으로 첫 복습일 설정
+    const conf = node.confidence ?? 0;
+    // 자신감이 낮을수록 빨리 복습
+    const firstInterval = [1, 2, 4, 7, 14][conf] || 1;
+    st = {
+      interval: firstInterval,
+      ease: 2.5,
+      due: todayStr(firstInterval),
+      reps: node.studyCount || 0,
+      lastScore: null,
+      started: todayStr()
+    };
+    reviewState[node.id] = st;
+    saveReviewState();
+  }
+  return st;
+}
+
+/** SM-2 스타일로 복습 후 상태 갱신. score: 0(모름)~4(완벽) */
+function applyReviewResult(node, score) {
+  const st = getReviewState(node);
+  const q = score; // 0~4
+
+  let newInterval;
+  if (q < 2) {
+    // 실패: 간격 리셋, 빠르게 다시
+    st.interval = 1;
+    st.ease = Math.max(1.3, st.ease - 0.2);
+    newInterval = 1;
+  } else {
+    if (st.reps === 0) newInterval = 1;
+    else if (st.reps === 1) newInterval = 3;
+    else newInterval = Math.round(st.interval * st.ease);
+    st.interval = newInterval;
+    st.ease = Math.max(1.3, st.ease + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
+  }
+
+  st.reps = (st.reps || 0) + 1;
+  st.lastScore = q;
+  st.due = todayStr(newInterval);
+
+  // confidence 도 함께 업데이트 (지식 수준 반영)
+  node.confidence = q;
+  node.studyCount = st.reps;
+  saveReviewState();
+  saveKnowledgeData();
+  return st;
+}
+
+/** 복습 대상 (due <= 오늘, confidence < 4) */
+function getDueNodes() {
+  const today = todayStr();
+  return knowledgeData.nodes
+    .filter(n => {
+      const st = reviewState[n.id];
+      if (!st) return false;
+      return st.due <= today && (n.confidence ?? 0) < 4;
+    })
+    .sort((a, b) => {
+      const da = reviewState[a.id].due, db = reviewState[b.id].due;
+      return da.localeCompare(db) || (a.confidence - b.confidence);
+    });
+}
+
+function getOverdueCount() {
+  const today = todayStr();
+  return Object.values(reviewState).filter(st => st.due < today).length;
+}
+
+/* ============================================================
+   PROGRESS VIEW — 복습 대시보드
+   ============================================================ */
 function initProgress() {
+  loadReviewState();
+  buildReviewStats();
+  buildDueReviewList();
+  buildKnowledgeDist();
   buildClusterGroups();
   buildWeakSpots();
   buildStrongList();
+}
+
+function buildReviewStats() {
+  const today = todayStr();
+  let due = 0, learning = 0, mastered = 0;
+  knowledgeData.nodes.forEach(n => {
+    const conf = n.confidence ?? 0;
+    const st = reviewState[n.id];
+    if (conf >= 4) { mastered++; return; }
+    if (st && st.due <= today) { due++; return; }
+    if (conf >= 2) learning++;
+    else due++; // 자신감 낮고 아직 스케줄 없는 것도 복습 대상
+  });
+  document.getElementById('stat-due').textContent = due;
+  document.getElementById('stat-overdue').textContent = getOverdueCount();
+  document.getElementById('stat-learning').textContent = learning;
+  document.getElementById('stat-mastered').textContent = mastered;
+}
+
+function buildDueReviewList() {
+  const container = document.getElementById('due-review-list');
+  if (!container) return;
+
+  // 스케줄이 아직 없는(복습 시작 전) 개념도 자신감 낮은 순으로 포함
+  const today = todayStr();
+  const candidates = knowledgeData.nodes.filter(n => {
+    const conf = n.confidence ?? 0;
+    if (conf >= 4) return false;
+    const st = reviewState[n.id];
+    if (st) return st.due <= today;
+    return true; // 아직 복습 안 한 개념
+  }).sort((a, b) => {
+    const sa = reviewState[a.id]?.due, sb = reviewState[b.id]?.due;
+    if (sa && sb) return sa.localeCompare(sb);
+    if (sa) return 1; if (sb) return -1;
+    return (a.confidence - b.confidence);
+  }).slice(0, 12);
+
+  if (!candidates.length) {
+    container.innerHTML = `<p class="review-empty">🎉 오늘 복습할 개념이 없습니다. 그래프에서 새 개념을 학습해보세요!</p>`;
+    return;
+  }
+
+  container.innerHTML = candidates.map(n => {
+    const color = knowledgeData.categories[n.category]?.color || '#888';
+    const icon  = knowledgeData.categories[n.category]?.icon  || '◉';
+    const st = reviewState[n.id];
+    const dueLabel = st ? (st.due < today ? `밀림 (${st.due})` : st.due === today ? '오늘' : st.due) : '시작 전';
+    const confLabel = CONFIDENCE_STARS[n.confidence] || '';
+    return `
+      <div class="due-review-item" data-id="${n.id}">
+        <div class="due-review-left" onclick="focusNode('${n.id}');switchView('graph');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-graph').classList.add('active')">
+          <span class="due-review-icon" style="color:${color}">${icon}</span>
+          <div>
+            <div class="due-review-name">${n.label} <span class="due-review-conf">${confLabel}</span></div>
+            <div class="due-review-meta" style="color:${color}">${n.category} · 복습 ${st ? st.reps : 0}회</div>
+          </div>
+        </div>
+        <div class="due-review-right">
+          <span class="due-review-date ${st && st.due < today ? 'overdue' : ''}">${dueLabel}</span>
+          <button class="quiz-btn small" onclick="quickReview('${n.id}')">복습 완료</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/** 복습 큐에서 빠른 복습: 자신감 중간값(3)으로 간격 갱신 */
+function quickReview(nodeId) {
+  const node = knowledgeData.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+  // 노트 열고 스스로 체크 후 3점 처리
+  if (confirm(`「${node.label}」 복습을 완료했나요?\n\n노트가 열립니다. 확인 후 OK를 누르면 복습 간격이 갱신됩니다.`)) {
+    openNotePanel(node);
+    applyReviewResult(node, 3);
+    initProgress();
+  }
+}
+
+function buildKnowledgeDist() {
+  const container = document.getElementById('knowledge-dist-bars');
+  if (!container) return;
+  const dist = [0, 0, 0, 0, 0];
+  knowledgeData.nodes.forEach(n => {
+    dist[Math.min(4, Math.max(0, n.confidence ?? 0))]++;
+  });
+  const total = knowledgeData.nodes.length || 1;
+  const labels = ['모름', '기초', '중급', '심화', '숙달'];
+  const colors = ['#64748b', '#f59e0b', '#38bdf8', '#a78bfa', '#34d399'];
+  container.innerHTML = dist.map((cnt, i) => `
+    <div class="dist-bar-col">
+      <div class="dist-bar-num">${cnt}</div>
+      <div class="dist-bar-track">
+        <div class="dist-bar-fill" style="height:${Math.round(cnt / total * 100)}%;background:${colors[i]}"></div>
+      </div>
+      <div class="dist-bar-label" style="color:${colors[i]}">${labels[i]}</div>
+    </div>
+  `).join('');
 }
 
 function buildClusterGroups() {
@@ -1120,6 +1374,657 @@ function buildStrongList() {
       <div class="spot-category" style="color:${color}">${n.category}</div>
     </div>`;
   }).join('') || '<p style="color:var(--text-muted);font-size:13px;padding: 10px 0;">아직 심화 자신감 개념이 등록되지 않았습니다.</p>';
+}
+
+/* ============================================================
+   AI LEARNING ASSISTANT — 채팅 사이드바
+   - DeepSeek API 로 대화 + 구조화된 작업(개념/엣지/노트 추가) 실행
+   - 커스텀 데이터는 localStorage 에 저장 → 지식 그래프에 병합
+   ============================================================ */
+const CUSTOM_DATA_KEY = 'hyeonwoo_custom_v1';
+const CHAT_HISTORY_KEY = 'hyeonwoo_chat_history_v1';
+let chatHistory = [];
+let chatBusy = false;
+
+/* ---------- 커스텀 데이터 (AI가 추가한 개념/엣지/노트) ---------- */
+function loadCustomData() {
+  try {
+    return JSON.parse(localStorage.getItem(CUSTOM_DATA_KEY)) || { nodes: [], edges: [], notes: {} };
+  } catch (e) { return { nodes: [], edges: [], notes: {} }; }
+}
+
+function saveCustomData(cd) {
+  localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(cd));
+}
+
+/** knowledgeData 에 커스텀 데이터를 병합 (중복 id 는 커스텀이 우선) */
+function mergeCustomData() {
+  const cd = loadCustomData();
+  if (!cd.nodes.length && !cd.edges.length) return;
+
+  // 커스텀 노드: 이미 있으면 덮어쓰기, 없으면 추가
+  const existingIds = new Set(knowledgeData.nodes.map(n => n.id));
+  cd.nodes.forEach(cn => {
+    if (existingIds.has(cn.id)) {
+      const idx = knowledgeData.nodes.findIndex(n => n.id === cn.id);
+      knowledgeData.nodes[idx] = { ...knowledgeData.nodes[idx], ...cn };
+    } else {
+      knowledgeData.nodes.push(cn);
+      existingIds.add(cn.id);
+    }
+  });
+
+  // 커스텀 엣지: 같은 source/target/relation 중복 방지
+  const edgeKey = e => `${e.source}|${e.target}|${e.relation || ''}`;
+  const existingEdges = new Set(knowledgeData.edges.map(edgeKey));
+  cd.edges.forEach(ce => {
+    if (!existingEdges.has(edgeKey(ce))) {
+      knowledgeData.edges.push(ce);
+      existingEdges.add(edgeKey(ce));
+    }
+  });
+
+  // 커스텀 카테고리 색상 보장
+  cd.nodes.forEach(cn => {
+    if (cn.category && !knowledgeData.categories[cn.category]) {
+      const palette = ['#38bdf8', '#a78bfa', '#34d399', '#f472b6', '#fb923c', '#fbbf24', '#06b6d4', '#818cf8'];
+      const hash = [...cn.category].reduce((a, c) => a + c.charCodeAt(0), 0);
+      knowledgeData.categories[cn.category] = { color: palette[hash % palette.length], icon: '📌' };
+    }
+  });
+}
+
+/** 커스텀 노트 가져오기 (없으면 null) */
+function getCustomNote(nodeId) {
+  const cd = loadCustomData();
+  return cd.notes && cd.notes[nodeId] ? cd.notes[nodeId] : null;
+}
+
+/** AI가 생성한 작업 실행: {nodes:[], edges:[], notes:{}, message:""} */
+function applyAIActions(actions) {
+  const cd = loadCustomData();
+  const results = { nodes: 0, edges: 0, notes: 0, skipped: 0 };
+
+  const existingIds = new Set(knowledgeData.nodes.map(n => n.id));
+  const firstNewNodeId = [];
+
+  (actions.nodes || []).forEach(n => {
+    if (!n.id || !n.label) return;
+    // 이미 그래프에 있는 노드 id면 중복 추가하지 않음
+    if (existingIds.has(n.id) || cd.nodes.some(cn => cn.id === n.id)) {
+      results.skipped++;
+      return;
+    }
+    cd.nodes.push(n);
+    results.nodes++;
+    firstNewNodeId.push(n.id);
+  });
+  (actions.edges || []).forEach(e => {
+    if (!e.source || !e.target) return;
+    // 양쪽 노드가 실제로 존재하는지 확인
+    const srcExists = existingIds.has(e.source) || cd.nodes.some(cn => cn.id === e.source);
+    const tgtExists = existingIds.has(e.target) || cd.nodes.some(cn => cn.id === e.target);
+    if (!srcExists || !tgtExists) return;
+    cd.edges.push(e);
+    results.edges++;
+  });
+  (actions.notes || {}).forEach || Object.entries(actions.notes || {}).forEach(([nodeId, md]) => {
+    if (!md) return;
+    cd.notes[nodeId] = md;
+    results.notes++;
+  });
+
+  if (results.nodes || results.edges || results.notes) {
+    saveCustomData(cd);
+    mergeCustomData();
+    // 그래프 재렌더 + 통계 갱신
+    if (typeof initGraph === 'function') {
+      try { initGraph(); } catch (e) { console.warn('graph refresh:', e); }
+    }
+    updateStatsBadge();
+    // 새 노드가 있으면 그래프 뷰로 이동 + 해당 노드 하이라이트
+    if (firstNewNodeId.length) {
+      setTimeout(() => {
+        try { focusNode(firstNewNodeId[0]); } catch (e) { console.warn('focusNode:', e); }
+      }, 600);
+    }
+  }
+  return results;
+}
+
+/* ---------- 채팅 UI ---------- */
+function initChat() {
+  const fab = document.getElementById('chat-fab');
+  const sendBtn = document.getElementById('chat-send-btn');
+  const input = document.getElementById('chat-input');
+
+  fab.addEventListener('click', () => toggleChatSidebar(true));
+  sendBtn.addEventListener('click', () => sendChatMessage());
+  input.addEventListener('keydown', e => {
+    // 한글/일본어 IME 조합 중 Enter는 글자 확정이므로 전송으로 처리하지 않음
+    if (e.isComposing || e.keyCode === 229) return;
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+
+  updateChatApiStatus();
+  loadChatHistory();
+}
+
+/** 채팅 사이드바 열기/접기 — open: true 열기, false 접기 */
+function toggleChatSidebar(open) {
+  const sidebar = document.getElementById('chat-sidebar');
+  const fab = document.getElementById('chat-fab');
+  const input = document.getElementById('chat-input');
+
+  // body에 chat-open 클래스를 토글 → main 콘텐츠가 오른쪽으로 밀림
+  if (open) {
+    sidebar.classList.add('open');
+    document.body.classList.add('chat-open');
+    fab.classList.add('hidden');
+    setTimeout(() => input && input.focus(), 250);
+  } else {
+    sidebar.classList.remove('open');
+    document.body.classList.remove('chat-open');
+    fab.classList.remove('hidden');
+  }
+}
+
+function loadChatHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '[]');
+    if (saved.length && saved.length <= 40) chatHistory = saved;
+  } catch (e) { chatHistory = []; }
+
+  // 저장된 대화를 화면에 복원
+  const box = document.getElementById('chat-messages');
+  if (!box) return;
+  // 초기 안내 메시지는 유지, 이후 메시지만 복원
+  chatHistory.forEach(m => {
+    const role = m.role === 'user' ? 'user' : 'assistant';
+    appendChatMessage(role, escHtml(m.content));
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+function saveChatHistory() {
+  try {
+    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(chatHistory.slice(-40)));
+  } catch (e) {}
+}
+
+function updateChatApiStatus() {
+  // 관리자가 코드에 넣은 기본 키를 사용 (방문자는 변경 불가)
+  const el = document.getElementById('chat-api-status');
+  if (!el) return;
+  el.textContent = '✅ AI 어시스턴트 준비됨';
+  el.style.color = '#34d399';
+}
+
+function sendChatQuick(text) {
+  document.getElementById('chat-input').value = text;
+  sendChatMessage();
+}
+
+function appendChatMessage(role, html) {
+  const box = document.getElementById('chat-messages');
+  const wrap = document.createElement('div');
+  wrap.className = `chat-msg ${role}`;
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-msg-bubble';
+  bubble.innerHTML = html;
+  wrap.appendChild(bubble);
+  box.appendChild(wrap);
+  box.scrollTop = box.scrollHeight;
+  return wrap;
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || chatBusy) return;
+
+  const apiKey = getQuizApiKey();
+  if (!apiKey) {
+    appendChatMessage('assistant', `⚠️ 서버에서 API 키가 설정되지 않았습니다. 관리자에게 문의해주세요.`);
+    return;
+  }
+
+  input.value = '';
+  appendChatMessage('user', escHtml(text));
+  const thinking = appendChatMessage('assistant', `<span class="chat-thinking">🤔 생각 중...</span>`);
+  chatBusy = true;
+
+  try {
+    let reply = await fetchChatReply(apiKey, text);
+    // 개념 추가/정리 요청인데 AI가 <ACTIONS>를 안 붙였으면 한 번 더 강제 요청
+    const isAddRequest = /(추가|개념|정리|노트|만들어줘|등록|넣어)/.test(text);
+    if (isAddRequest && !reply.actions) {
+      const forced = await fetchChatReply(apiKey,
+        `방금 요청(${text.slice(0, 60)}...)에 대한 답변에 <ACTIONS> 블록이 빠졌습니다. ` +
+        `꼭 <ACTIONS> 블록으로 새 개념 노드(이미 있는 개념이면 안내만)를 반환하세요.`);
+      if (forced.actions) reply = forced;
+    }
+    thinking.querySelector('.chat-msg-bubble').innerHTML = reply.html;
+    chatHistory.push({ role: 'user', content: text });
+    chatHistory.push({ role: 'assistant', content: reply.plain });
+    saveChatHistory();
+
+    // AI 작업 실행
+    if (reply.actions && (reply.actions.nodes?.length || reply.actions.edges?.length || reply.actions.notes)) {
+      const r = applyAIActions(reply.actions);
+      const parts = [];
+      if (r.nodes) parts.push(`개념 ${r.nodes}개`);
+      if (r.edges) parts.push(`연결 ${r.edges}개`);
+      if (r.notes) parts.push(`노트 ${r.notes}개`);
+
+      if (r.nodes === 0 && r.edges === 0 && r.notes === 0) {
+        // 중복 등으로 추가된 게 없음
+        appendChatMessage('assistant',
+          `ℹ️ <b>이미 그래프에 있는 개념이라 추가하지 않았어요.</b><br/>
+           <span style="font-size:12px;color:var(--text-muted)">${escHtml(reply.plain.slice(0, 200))}</span>`);
+      } else {
+        const newNodeId = (reply.actions.nodes || []).find(n => n.id)?.id || '';
+        appendChatMessage('assistant',
+          `✅ <b>지식 그래프에 반영 완료!</b> (${parts.join(', ')})
+           <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">
+             📌 이 내용은 이 브라우저(localStorage)에 저장되어 있어요.<br/>
+             💾 영구 저장하려면: <button class="quiz-btn small" onclick="exportCustomData()">💾 파일로 저장 (JSON)</button>
+             &nbsp;또는 <button class="quiz-btn small ghost" onclick="openNote('${newNodeId}')">📄 그래프에서 보기</button>
+           </div>`);
+      }
+    }
+  } catch (e) {
+    console.error('Chat failed:', e);
+    thinking.querySelector('.chat-msg-bubble').innerHTML =
+      `❌ 오류가 발생했습니다: ${escHtml(e.message || e)}<br/><span style="font-size:12px;color:var(--text-muted)">네트워크나 API 키를 확인해주세요.</span>`;
+  } finally {
+    chatBusy = false;
+  }
+}
+
+/** DeepSeek 호출 — 대화 맥락 + 지식 그래프 스키마 제공, 구조화된 작업 응답 파싱 */
+async function fetchChatReply(apiKey, userText) {
+  const nodesSummary = knowledgeData.nodes
+    .map(n => `${n.id} (${n.label}, ${n.category}, conf:${n.confidence})`)
+    .slice(0, 200).join('\n');
+  const edgesSummary = knowledgeData.edges
+    .map(e => `${e.source} -[${e.relation || 'related'}]-> ${e.target}`)
+    .slice(0, 120).join('\n');
+
+  const system = `당신은 사용자의 AI/ML 지식 지도(GitHub Pages 정적 사이트)를 관리하는 지식 어시스턴트입니다.
+
+## 지식 그래프 스키마
+- 노드: { "id": "영문_snake", "label": "표시 이름", "category": "카테고리", "confidence": 0~4, "studyCount": 0, "tags": ["태그"], "definition": "1단계 정의", "purpose": "2단계 존재 이유", "tradeoff_insight": "3단계 맹점", "ai_connection": "4단계 AI 연결" }
+- 엣지: { "source": "노드id", "target": "노드id", "relation": "basis_of|uses|part_of|leads_to|comparison|enables|derived|contains|applied_to", "weight": 1~5 }
+- 카테고리: Generative, Architecture, Language Model, Multimodal, Training, RL, Math & Stats, Math, Math Problems, Systems, Algorithm, DeepLearning (새 카테고리도 가능)
+
+## 현재 지식 그래프
+[노드]
+${nodesSummary}
+[엣지]
+${edgesSummary}
+
+## 규칙
+1. 사용자가 새 개념을 추가하거나, 기존 개념과 연결하거나, 질문에 대한 답을 정리해달라고 하면, 응답 끝에 다음 형식의 JSON 블록을 붙이세요:
+<ACTIONS>
+{"nodes":[{...새 노드...}],"edges":[{...연결...}],"notes":{"<노드id>":"# 제목\\n\\n노트 마크다운 내용"}}
+</ACTIONS>
+2. 노드 id 는 영문 소문자 snake_case 로, **반드시 위 [노드] 목록에 없는 새 id** 여야 합니다. 기존 id 를 재사용하거나 같은 개념을 중복 생성하지 마세요.
+3. **이미 그래프에 있는 개념을 추가하라고 하면, <ACTIONS> 블록을 붙이지 말고** "이미 지식 그래프에 있는 개념입니다. 자세한 내용은 ..." 같은 안내 답변만 하세요. (예: 사용자가 "LoRA 추가해줘"라고 해도 기존 lora 노드가 있으므로 새 노드를 만들면 안 됨)
+4. 새 개념은 관련된 기존 노드와 1~3개 엣지로 연결할 것 (기존 노드 id 는 위 목록에서 정확히 사용).
+5. 새 노드의 필드는 기존 노드와 동일한 스타일로: category 는 위 카테고리 중에서, confidence 는 0~4, definition/purpose/tradeoff_insight/ai_connection 은 한두 문장씩 한국어로.
+6. notes 의 마크다운은 "# 제목", "## 한 문장 요약", "## 핵심 내용", "## AI 연결" 구조로 작성.
+7. 개념 추가 요청이 아닌 일반 질문이면 <ACTIONS> 블록 없이 답변만 하세요. 단, 답변 중 언급된 핵심 개념이 그래프에 없으면 그 개념을 추가하는 <ACTIONS>를 붙여도 됩니다.
+8. 사용자의 지식 수준을 파악해, 약한 부분은 복습/퀴즈를 추천하는 조언을 포함하세요.
+9. 한국어로 답변하세요.
+
+## 장문 학습 자료(교재/논문/강의 원문)를 붙여넣었을 때의 규칙
+사용자가 긴 원문(수백~수천 단어)을 붙여넣으면, 그것을 **하나의 개념 노드로 통합 정리**하세요:
+1. 원문이 다루는 주제를 대표하는 **하나의 개념**으로 노드를 만드세요. (예: 원문이 확률 이론 전체를 다루면 "Probability & Distributions" 하나, 원문이 신경망 학습을 다루면 "Neural Network Training" 하나)
+2. 그 노드 하나에 원문의 **핵심 내용을 빠짐없이** 담으세요:
+   - definition: 원문의 핵심 정의 요약
+   - purpose: 이 개념이 왜 필요한지
+   - tradeoff_insight: 한계/미묘한 점/오해하기 쉬운 점
+   - ai_connection: ML/DL에서 어디에 쓰이는지
+   - tags: 원문에서 나온 주요 키워드들
+3. **마크다운 노트**를 notes 에 상세하게 작성하세요. 노트는 "# 제목", "## 한 문장 요약", "## 핵심 내용", "## 인사이트 & 한계", "## AI 연결" 구조로. 원문의 핵심을 **빠짐없이, 흐름 좋게** 재구성하고, 원문의 예시(동전 던지기, 두 번 뽑기 등)와 직관을 포함해 설명하세요. 노트는 길어도 좋습니다.
+4. 이 개념 노드를 관련된 **기존 노드 1~3개와 엣지로 연결**하세요 (기존 노드 id는 위 목록에서 정확히 사용).
+5. 노드 id 는 새 id(기존 목록에 없는)여야 하며 영문 소문자 snake_case.
+6. 작업 후, 정리한 내용을 간결한 한국어 요약으로도 답변하세요.
+`;
+
+  const msgs = [
+    { role: 'system', content: system },
+    ...chatHistory.slice(-10),
+    { role: 'user', content: userText }
+  ];
+
+  const res = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: msgs,
+      temperature: 0.6,
+      max_tokens: 4000
+    })
+  });
+
+  if (!res.ok) {
+    let detail = `HTTP ${res.status}`;
+    try { detail = (await res.json()).error?.message || detail; } catch (e) {}
+    throw new Error(detail);
+  }
+
+  const data = await res.json();
+  const content = data.choices?.[0]?.message?.content || '';
+
+  // <ACTIONS> 블록 파싱
+  let actions = null;
+  const m = content.match(/<ACTIONS>([\s\S]*?)<\/ACTIONS>/);
+  if (m) {
+    try {
+      actions = JSON.parse(m[1].trim());
+    } catch (e) {
+      console.warn('ACTIONS 파싱 실패:', m[1].slice(0, 200), e);
+    }
+  }
+  const html = marked.parse(content.replace(/<ACTIONS>[\s\S]*?<\/ACTIONS>/g, ''));
+
+  return { html, plain: content.replace(/<ACTIONS>[\s\S]*?<\/ACTIONS>/g, '').trim(), actions };
+}
+
+/** 커스텀 데이터 내보내기 — 사용자가 knowledge.json / data/notes/ 에 반영할 수 있게 */
+function exportCustomData() {
+  const cd = loadCustomData();
+  if (!cd.nodes.length && !cd.edges.length && Object.keys(cd.notes).length === 0) {
+    alert('내보낼 커스텀 데이터가 없습니다.');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(cd, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'custom_knowledge_export.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  appendChatMessage('assistant',
+    `💾 <b>파일로 저장되었습니다!</b> (custom_knowledge_export.json)<br/>
+     <span style="font-size:12px;color:var(--text-muted)">
+     영구 반영하려면 이 JSON의 nodes/edges를 <code>data/knowledge.json</code>에, notes를 <code>data/notes/&lt;id&gt;.md</code>로 옮기면 됩니다.</span>`);
+}
+
+/* ============================================================
+   QUIZ VIEW — DeepSeek API 기반 개념 테스트
+   ============================================================ */
+const QUIZ_STORAGE_KEY = 'hyeonwoo_quiz_history_v1';
+let quizTopicNode = null;
+
+// 🔐 관리자 키: 라즈베리 파이 서버에서 이 코드로만 키를 관리.
+//    방문자는 UI에서 키를 볼 수도, 바꿀 수도 없습니다.
+const DEFAULT_DEEPSEEK_API_KEY = localStorage.getItem('DEEPSEEK_API_KEY') || '';
+
+function getQuizApiKey() {
+  return DEFAULT_DEEPSEEK_API_KEY;
+}
+
+function initQuiz() {
+  // 개념 선택 드롭다운 채우기 (복습 필요한 것 우선)
+  const select = document.getElementById('quiz-topic-select');
+  if (!select || select.options.length > 1) return;
+
+  loadReviewState();
+  const today = todayStr();
+  const sorted = [...knowledgeData.nodes].sort((a, b) => {
+    const sa = reviewState[a.id]?.due, sb = reviewState[b.id]?.due;
+    const aDue = (sa && sa <= today) || !sa ? 0 : 1;
+    const bDue = (sb && sb <= today) || !sb ? 0 : 1;
+    if (aDue !== bDue) return aDue - bDue;
+    return (a.confidence ?? 0) - (b.confidence ?? 0);
+  });
+
+  select.innerHTML = '<option value="">-- 복습할 개념을 선택하세요 --</option>' +
+    sorted.map(n => {
+      const conf = CONFIDENCE_STARS[n.confidence] || '';
+      const dueMark = reviewState[n.id] && reviewState[n.id].due <= today ? ' 🔴' : '';
+      return `<option value="${n.id}">${n.label} (${n.category}) ${conf}${dueMark}</option>`;
+    }).join('');
+}
+
+async function generateQuiz() {
+  const select = document.getElementById('quiz-topic-select');
+  const id = select.value;
+  if (!id) { alert('먼저 테스트할 개념을 선택하세요.'); return; }
+
+  quizTopicNode = knowledgeData.nodes.find(n => n.id === id);
+  if (!quizTopicNode) return;
+
+  const stage = document.getElementById('quiz-stage');
+  const resultBox = document.getElementById('quiz-result');
+  resultBox.style.display = 'none';
+  stage.innerHTML = `<div class="quiz-placeholder"><p style="font-size:14px;color:var(--text)">⏳ 문제 생성 중... <span style="color:var(--text-muted)">(「${quizTopicNode.label}」 기준)</span></p></div>`;
+
+  const apiKey = getQuizApiKey();
+  if (!apiKey) {
+    // API 키 없으면 로컬 모드: 노트 기반 셀프 체크
+    renderLocalQuiz(stage);
+    return;
+  }
+
+  try {
+    const q = await fetchQuizQuestion(apiKey, quizTopicNode);
+    renderQuizQuestion(stage, q);
+  } catch (e) {
+    console.error('Quiz generation failed:', e);
+    stage.innerHTML = `
+      <div class="quiz-placeholder">
+        <p style="font-size:14px;font-weight:600;color:#f87171">❌ 문제 생성 실패</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px">${escHtml(e.message || e)}</p>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:6px">API 키가 올바른지, 네트워크가 정상인지 확인해보세요. API 없이도 <b>로컬 노트 모드</b>로 진행할 수 있습니다.</p>
+        <button class="quiz-btn primary" style="margin-top:12px" onclick="renderLocalQuiz(document.getElementById('quiz-stage'))">📄 로컬 노트 모드로 진행</button>
+      </div>`;
+  }
+}
+
+/** DeepSeek API (OpenAI 호환) 로 객관식 문제 1개 생성 */
+async function fetchQuizQuestion(apiKey, node) {
+  // 노트 내용 로드 (문맥 제공)
+  let noteText = '';
+  try {
+    const res = await fetch(`data/notes/${node.id}.md`);
+    if (res.ok) noteText = (await res.text()).slice(0, 3000);
+  } catch (e) { /* ignore */ }
+
+  const tags = (node.tags || []).join(', ');
+  const system = `당신은 ${node.category} 분야를 가르치는 튜터입니다. 사용자의 지식 수준을 정확히 테스트하는 단일 객관식 문제를 만듭니다.`;
+
+  const prompt = `개념: ${node.label}
+카테고리: ${node.category}
+태그: ${tags || '없음'}
+사용자 자신감: ${node.confidence}/4
+${noteText ? `참고 노트:\n${noteText}` : ''}
+
+위 개념에 대한 객관식 문제를 하나 생성하세요. 지식 수준이 낮으면(0~1) 기초 개념을, 높으면(3~4) 심화/미묘한 차이를 묻는 문제를 내세요.
+반드시 아래 JSON 형식으로만 응답하세요 (다른 텍스트 금지):
+{"question":"문제 본문","options":["선택지 A","선택지 B","선택지 C","선택지 D"],"answer":0,"explanation":"정답 해설"}
+
+- options는 4개, answer는 정답 인덱스(0~3)
+- explanation은 2~3문장으로 개념을 설명
+- 문제는 한국어로 작성`;
+
+  const res = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 600
+    })
+  });
+
+  if (!res.ok) {
+    let detail = `HTTP ${res.status}`;
+    try { detail = (await res.json()).error?.message || detail; } catch (e) {}
+    throw new Error(detail);
+  }
+
+  const data = await res.json();
+  const content = data.choices?.[0]?.message?.content || '';
+  // JSON 코드 블록 제거 후 파싱
+  const cleaned = content.replace(/```json|```/g, '').trim();
+  const parsed = JSON.parse(cleaned);
+  if (!parsed.question || !Array.isArray(parsed.options) || parsed.options.length < 2) {
+    throw new Error('API 응답 형식이 올바르지 않습니다. 다시 시도해주세요.');
+  }
+  return parsed;
+}
+
+function renderQuizQuestion(stage, q) {
+  const node = quizTopicNode;
+  const color = knowledgeData.categories[node.category]?.color || '#888';
+  const icon  = knowledgeData.categories[node.category]?.icon  || '◉';
+  window.__currentQuiz = q; // answerQuiz 에서 사용
+
+  const options = q.options.map((opt, i) =>
+    `<button class="quiz-option" data-idx="${i}" onclick="answerQuiz(this, ${i})">
+       <span class="quiz-option-letter">${String.fromCharCode(65 + i)}</span>
+       <span>${escHtml(opt)}</span>
+     </button>`
+  ).join('');
+
+  stage.innerHTML = `
+    <div class="quiz-question-card">
+      <div class="quiz-q-badge" style="color:${color};border-color:${color}44;background:${color}12">
+        ${icon} ${node.category} · ${node.label} · 자신감 ${node.confidence}/4
+      </div>
+      <div class="quiz-question-text">${escHtml(q.question)}</div>
+      <div class="quiz-options" id="quiz-options">${options}</div>
+    </div>`;
+  stage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function answerQuiz(btn, idx) {
+  const node = quizTopicNode;
+  if (!node) return;
+  const quizData = window.__currentQuiz || {};
+  const isCorrect = idx === quizData.answer;
+
+  // 모든 옵션 비활성화
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.disabled = true;
+    const oi = parseInt(o.dataset.idx);
+    if (oi === quizData.answer) o.classList.add('correct');
+    if (oi === idx && !isCorrect) o.classList.add('wrong');
+  });
+
+  // 결과 카드 표시
+  const resultBox = document.getElementById('quiz-result');
+  const card = document.getElementById('quiz-result-card');
+  const color = knowledgeData.categories[node.category]?.color || '#888';
+  card.innerHTML = `
+    <div class="quiz-result-head ${isCorrect ? 'ok' : 'no'}">
+      ${isCorrect ? '✅ 정답입니다!' : '❌ 오답입니다.'}
+    </div>
+    <div class="quiz-result-expl">${escHtml(quizData.explanation || '')}</div>
+    <div class="quiz-result-score">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:8px">이 문제를 얼마나 잘 풀었나요? (복습 간격에 반영)</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${[0,1,2,3,4].map(s => `
+          <button class="quiz-score-btn" style="background:${['#64748b','#f59e0b','#38bdf8','#a78bfa','#34d399'][s]}" onclick="rateQuiz(${s})">
+            ${s}점 ${['모름','힘들','애매','거의','완벽'][s]}
+          </button>`).join('')}
+      </div>
+    </div>`;
+  resultBox.style.display = 'block';
+
+  // 자동 채점: 정답이면 3~4점, 오답이면 1~2점 기본값
+  window.__pendingScore = isCorrect ? 4 : 1;
+  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function rateQuiz(score) {
+  const node = quizTopicNode;
+  if (!node) return;
+  applyReviewResult(node, score);
+  // 퀴즈 기록 저장
+  const hist = JSON.parse(localStorage.getItem(QUIZ_STORAGE_KEY) || '[]');
+  hist.push({ id: node.id, date: todayStr(), score, correct: score >= 3 });
+  localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(hist.slice(-200)));
+
+  document.getElementById('quiz-result-card').innerHTML = `
+    <div class="quiz-result-head ok">✅ 반영 완료</div>
+    <p style="font-size:14px;color:var(--text);margin-top:10px">
+      「${node.label}」 자신감: <b>${node.confidence}/4</b> (복습 ${node.studyCount}회)<br>
+      <span style="font-size:12px;color:var(--text-muted)">다음 복습: ${reviewState[node.id]?.due || '-'}</span>
+    </p>`;
+}
+
+/** 로컬 노트 모드: API 없이 노트 읽고 셀프 평가 */
+async function renderLocalQuiz(stage) {
+  const node = quizTopicNode;
+  if (!node) return;
+  stage.innerHTML = `<div class="quiz-placeholder"><p style="font-size:14px;color:var(--text)">⏳ 노트 로드 중...</p></div>`;
+  let md = `### ${node.label}\n\n개념 노트가 없습니다.`;
+  try {
+    const res = await fetch(`data/notes/${node.id}.md`);
+    if (res.ok) md = await res.text();
+  } catch (e) {}
+  const color = knowledgeData.categories[node.category]?.color || '#888';
+  stage.innerHTML = `
+    <div class="quiz-question-card">
+      <div class="quiz-q-badge" style="color:${color};border-color:${color}44;background:${color}12">
+        ${node.category} · ${node.label} · 노트 기반 셀프 체크
+      </div>
+      <div class="quiz-local-note">${marked.parse(md)}</div>
+      <p style="font-size:13px;color:var(--text-muted);margin:12px 0 10px">노트를 읽고, 이 개념을 얼마나 기억하고 이해했는지 스스로 평가하세요.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${[0,1,2,3,4].map(s => `
+          <button class="quiz-score-btn" style="background:${['#64748b','#f59e0b','#38bdf8','#a78bfa','#34d399'][s]}" onclick="rateLocalQuiz(${s})">
+            ${s}점 ${['모름','힘들','애매','거의','완벽'][s]}
+          </button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function rateLocalQuiz(score) {
+  const node = quizTopicNode;
+  if (!node) return;
+  applyReviewResult(node, score);
+  document.getElementById('quiz-result-card').innerHTML = `
+    <div class="quiz-result-head ok">✅ 반영 완료</div>
+    <p style="font-size:14px;color:var(--text);margin-top:10px">
+      「${node.label}」 자신감: <b>${node.confidence}/4</b> (복습 ${node.studyCount}회)<br>
+      <span style="font-size:12px;color:var(--text-muted)">다음 복습: ${reviewState[node.id]?.due || '-'}</span>
+    </p>`;
+  document.getElementById('quiz-result').style.display = 'block';
+  document.getElementById('quiz-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetQuiz() {
+  document.getElementById('quiz-stage').innerHTML = `
+    <div class="quiz-placeholder">
+      <p style="font-size:15px;font-weight:600;color:var(--text)">🧠 개념을 선택하고 문제를 생성해보세요</p>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:6px">문제를 풀면 정답 여부에 따라 해당 개념의 자신감(복습 간격)이 자동으로 갱신됩니다.</p>
+    </div>`;
+  document.getElementById('quiz-result').style.display = 'none';
+  document.getElementById('quiz-topic-select').selectedIndex = 0;
+  quizTopicNode = null;
+}
+
+function escHtml(str) {
+  return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 /* ============================================================
@@ -1368,11 +2273,16 @@ function initReview() {
 }
 
 function restartReview() {
-  document.getElementById('review-done').classList.remove('visible');
-  document.getElementById('review-card').style.display = 'block';
-  document.getElementById('review-rating').style.display = 'flex';
-  document.getElementById('review-card').classList.remove('flipped');
-  document.getElementById('review-rating').classList.remove('visible');
+  const doneEl = document.getElementById('review-done');
+  const cardEl = document.getElementById('review-card');
+  const ratingEl = document.getElementById('review-rating');
+  // Review 뷰가 없는 레이아웃에서는 건너뜀
+  if (!doneEl || !cardEl || !ratingEl) return;
+  doneEl.classList.remove('visible');
+  cardEl.style.display = 'block';
+  ratingEl.style.display = 'flex';
+  cardEl.classList.remove('flipped');
+  ratingEl.classList.remove('visible');
 
   // Prepare queue
   let list = [...knowledgeData.nodes];

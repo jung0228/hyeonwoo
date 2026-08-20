@@ -36,7 +36,7 @@ hyeonwoo/
 }
 ```
 
-**카테고리**: `Generative` / `Architecture` / `Language Model` / `Multimodal` / `Training` / `RL` / `Math & Stats` / `Systems` / `Algorithm`
+**카테고리**: `Generative` / `Architecture` / `Language Model` / `Multimodal` / `Training` / `RL` / `Math & Stats` / `Systems` / `Algorithm` / `Math` / `Math Problems` / `DeepLearning`
 
 **자신감(confidence)**: `0`모름 → `1`기초 → `2`중급 → `3`고급 → `4`전문가
 
