@@ -37,8 +37,8 @@ const CLUSTER_MAP = {
   'Multimodal':     'AI',       // 딥러닝
   'Training':       'AI',       // 딥러닝
   'RL':             'ML',       // 기본 RL은 머신러닝
-  'Math & Stats':   'ML',       // 확률/통계
-  'Math':           '선형대수', // 선형대수학 독립 클러스터!
+  'Math & Stats':   '선형대수', // 수학 & 확률 통계 (노란색)
+  'Math':           '선형대수', // 수학 (노란색)
   'LinearAlgebra':  '선형대수', // 선형대수학 독립 클러스터!
   'Math Problems':  '선형대수', // 선형대수학 연습문제
   'Systems':        '시스템',
@@ -55,11 +55,11 @@ const NODE_CLUSTER_OVERRIDE = {
 // 헬퍼: 노드의 최종 클러스터 반환
 function getNodeCluster(node) {
   if (!node) return 'AI';
-  if (node.id && node.id.startsWith('linear_algebra')) return '선형대수';
+  if (node.id && (node.id.startsWith('linear_algebra') || node.id.startsWith('probability_') || node.id.startsWith('mml_') || node.id.startsWith('math_'))) return '선형대수';
   if (node.id && (node.id.startsWith('rq_') || node.id.startsWith('paper_'))) return '연구';
   if (node.tags && (node.tags.includes('Paper') || node.tags.includes('ResearchAgenda') || node.tags.includes('Agenda'))) return '연구';
   if (['streamkv', 'hcx_omni', 'clip'].includes(node.id)) return '연구';
-  return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || 'AI';
+  return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || '선형대수';
 }
 
 // 6개 주요 클러스터 좌표 설정 (수평 배치: 시스템 ➔ 알고리즘 ➔ 선형대수 ➔ 머신러닝 ➔ 딥러닝 ➔ 연구)
@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       'Multimodal':     { color: '#a78bfa', icon: '👁️' },
       'Training':       { color: '#a78bfa', icon: '⚙️' },
       'RL':             { color: '#34d399', icon: '🤖' },
-      'Math & Stats':   { color: '#34d399', icon: '📊' },
-      'Math':           { color: '#34d399', icon: '📐' },
+      'Math & Stats':   { color: '#f59e0b', icon: '📊' },
+      'Math':           { color: '#f59e0b', icon: '📐' },
       'Systems':        { color: '#ef4444', icon: '💻' },
       'Algorithm':      { color: '#06b6d4', icon: '🔢' }
     };
