@@ -1650,6 +1650,29 @@
       "purpose": "2단계 존재 이유: 역변환 샘플링 난수 생성 및 딥러닝 가역 신경망(Invertible NN) 생성 모델의 정확한 밀도(Exact Likelihood) 추정.",
       "tradeoff_insight": "3단계 비판적 맹점: VAE/GAN(밀도 산출 불가, 차원변화 자유) vs 노말라이징 플로우(정확한 밀도 ln p(x) 산출 가능, 가역성 및 차원유지 제약).",
       "ai_connection": "4단계 AI 연결: 노말라이징 플로우 (Normalizing Flows - RealNVP, Glow), 역변환 샘플링 (Inverse Transform Sampling), 정보기하학 (Information Geometry)."
+    },
+    {
+      "id": "mml_ch6_exercises",
+      "label": "MML Chapter 6 연습문제 전수 풀이 (Ex 6.1 ~ 6.13)",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/mml_ch6_exercises.md",
+      "tags": [
+        "Probability",
+        "MML Exercises",
+        "Kalman Filter Derivation",
+        "Raw-Score Variance Proof",
+        "Pairwise Variance Proof",
+        "Bayes Theorem Problem",
+        "Gaussian Product Proof",
+        "Iterated Expectations",
+        "Inverse Transform Proof"
+      ],
+      "definition": "1단계 개념: MML Ch 6 연습문제 6.1~6.13 전수 풀이 (주변/조건부확률 수치계산, GMM모드, 칼만필터 수식유도, 분산공식 증명, 지수족 변환, 가우시안 곱 증명, 확률적분변환 증명).",
+      "purpose": "2단계 존재 이유: 대학원 구술/필기 전공면접 백지 수식 유도 및 칼만필터, 베이지안 추론, 숄레스키 난수 생성을 수식으로 완벽히 정복.",
+      "tradeoff_insight": "3단계 비판적 맹점: 단순 수식 암기 vs 원본 확률 공리(Kolmogorov/Bayes) 및 선형 아핀 변환(Covariance propagation) 인과관계 통찰.",
+      "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, 나이브 베이즈, 딥러닝 손실함수."
     }
   ],
   "edges": [
@@ -2543,6 +2566,12 @@
       "target": "probability_ch6_7_change_of_variables",
       "relation": "basis_of",
       "weight": 3
+    },
+    {
+      "source": "probability_ch6_7_change_of_variables",
+      "target": "mml_ch6_exercises",
+      "relation": "applied_to",
+      "weight": 4
     }
   ],
   "categories": {
