@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MacBook Local AI Bridge Server (Real LLM Integration - Pure Python Standard Library)
+MacBook Real Google Gemini AI Bridge Server (Pure Python Standard Library)
 Port: 5001
-Connects Raspberry Pi web UI (http://hyeonwoo.local) directly to MacBook Knowledge Base & DeepSeek/Gemini AI Engine.
+Connects Raspberry Pi web UI (http://hyeonwoo.local) directly to MacBook Knowledge Base & Official Google AI Engine.
 """
 
 import os
@@ -18,14 +18,14 @@ NOTES_DIR = os.path.join(BASE_DIR, "data", "notes")
 KNOWLEDGE_FILE = os.path.join(BASE_DIR, "data", "knowledge.json")
 KEY_FILE = os.path.expanduser("~/.hyeonwoo_key")
 
-def get_api_key():
+def get_gemini_api_key():
     if os.path.exists(KEY_FILE):
         try:
             with open(KEY_FILE, "r", encoding="utf-8") as f:
                 return f.read().strip()
         except Exception:
             pass
-    return os.environ.get("DEEPSEEK_API_KEY", "")
+    return os.environ.get("GEMINI_API_KEY", "")
 
 def search_relevant_notes(query):
     """Search data/notes/*.md and data/knowledge.json for relevant context."""
@@ -69,47 +69,50 @@ def search_relevant_notes(query):
         
     return "\n\n".join(results)
 
-def call_llm_api(user_message, context_str):
-    api_key = get_api_key()
+def call_gemini_api(user_message, context_str):
+    api_key = get_gemini_api_key()
     if not api_key:
-        return "⚠️ 로컬 AI 서버에 API 키가 설정되지 않았습니다."
+        return "⚠️ 로컬 AI 서버에 Google Gemini API 키가 설정되지 않았습니다."
 
     system_prompt = (
-        "당신은 대학원 입시 및 AI/ML 연구를 준비 중인 사용자 '현우'의 든든하고 명쾌한 1대1 AI 튜터 '제미니(Gemini)'입니다.\n"
+        "당신은 대학원 입시 및 AI/ML 연구를 준비 중인 사용자 '현우'의 든든하고 명쾌한 1대1 원조 Google AI 튜터 '제미니(Gemini)'입니다.\n"
         "격식 있고 친절한 경어체(~합니다, ~입니다)를 사용하여 답변하세요.\n"
         "사용자가 인사를 하거나 일반 대화를 나누면 반갑고 위트 있게 대화하고,\n"
         "개념이나 수식, 알고리즘을 물어보면 제공된 맥락 노트를 기반으로 4단계 구조([1. 명확한 개념 정의] ➡️ [2. 왜 쓰는가?] ➡️ [3. 상황별 직관/Trade-off] ➡️ [4. 실전 AI 연결])를 활용해 명쾌하게 설명하세요."
     )
 
-    prompt = f"## 참고 지식베이스 맥락:\n{context_str}\n\n## 사용자 메시지:\n{user_message}" if context_str else f"## 사용자 메시지:\n{user_message}"
+    full_text = f"{system_prompt}\n\n## 참고 지식베이스 맥락:\n{context_str}\n\n## 사용자 질문:\n{user_message}" if context_str else f"{system_prompt}\n\n## 사용자 질문:\n{user_message}"
 
-    payload = {
-        "model": "deepseek-chat",
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt}
-        ],
-        "temperature": 0.7,
-        "max_tokens": 1500
-    }
+    candidate_models = ["gemma-4-31b-it", "gemini-flash-latest"]
+    
+    for m in candidate_models:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={api_key}"
+        payload = {
+            "contents": [
+                {"parts": [{"text": full_text}]}
+            ],
+            "generationConfig": {
+                "temperature": 0.7,
+                "maxOutputTokens": 2048
+            }
+        }
 
-    req = urllib.request.Request(
-        "https://api.deepseek.com/chat/completions",
-        data=json.dumps(payload).encode("utf-8"),
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
-        },
-        method="POST"
-    )
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
 
-    try:
-        with urllib.request.urlopen(req, timeout=15) as response:
-            res_data = json.loads(response.read().decode("utf-8"))
-            return res_data["choices"][0]["message"]["content"]
-    except Exception as e:
-        print(f"LLM API Call Error: {e}")
-        return f"안녕하세요! 제미니 AI 튜터입니다. 질문해주신 '{user_message}'에 관해 맥북 지식베이스 탐색 결과를 정리해드릴게요!\n\n{context_str}"
+        try:
+            with urllib.request.urlopen(req, timeout=12) as response:
+                res_data = json.loads(response.read().decode("utf-8"))
+                return res_data["candidates"][0]["content"]["parts"][0]["text"]
+        except Exception as e:
+            print(f"Model {m} failed ({e}), trying next model...")
+            continue
+
+    return f"안녕하세요 현우님! 원조 Google Gemini AI 튜터입니다. 질문해주신 '{user_message}'에 관해 맥북 노트를 정리해드릴게요!\n\n{context_str}"
 
 class BridgeRequestHandler(BaseHTTPRequestHandler):
     def _send_cors_headers(self):
@@ -129,7 +132,7 @@ class BridgeRequestHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             count = len(glob.glob(os.path.join(NOTES_DIR, "*.md")))
-            response = {"status": "ok", "host": "MacBook-Pro", "notes_count": count, "llm_ready": bool(get_api_key())}
+            response = {"status": "ok", "host": "MacBook-Pro-Gemini", "notes_count": count, "gemini_ready": bool(get_gemini_api_key())}
             self.wfile.write(json.dumps(response, ensure_ascii=False).encode("utf-8"))
         else:
             self.send_response(404)
@@ -152,13 +155,13 @@ class BridgeRequestHandler(BaseHTTPRequestHandler):
                 res_payload = {"response": "질문을 입력해 주세요!"}
             else:
                 context = search_relevant_notes(user_message)
-                llm_reply = call_llm_api(user_message, context)
+                gemini_reply = call_gemini_api(user_message, context)
                 res_payload = {
-                    "response": llm_reply,
+                    "response": gemini_reply,
                     "context_found": bool(context)
                 }
                     
-            print(f"📤 [AI Gemini Response Sent]: {res_payload['response'][:80]}...")
+            print(f"📤 [Official Google Gemini Response Sent]: {res_payload['response'][:80]}...")
             
             self.send_response(200)
             self._send_cors_headers()
@@ -172,7 +175,7 @@ class BridgeRequestHandler(BaseHTTPRequestHandler):
 def run(port=5001):
     server_address = ("0.0.0.0", port)
     httpd = HTTPServer(server_address, BridgeRequestHandler)
-    print(f"🚀 MacBook Real LLM AI Bridge Server running on http://0.0.0.0:{port} ...")
+    print(f"🚀 MacBook Official Google Gemini AI Bridge Server running on http://0.0.0.0:{port} ...")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
