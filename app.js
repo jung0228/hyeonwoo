@@ -1643,25 +1643,24 @@ async function sendChatMessage() {
 
 /** DeepSeek 호출 — 대화 맥락 + 지식 그래프 스키마 제공, 구조화된 작업 응답 파싱 */
 async function fetchChatReply(apiKey, userText) {
-  // 1. 라즈베리 파이 / 맥북 브릿지 프록시 (포트 5001) 연결
-  const bridgeHost = window.location.hostname || '192.168.45.119';
+  // 1. 라즈베리 파이 통합 AI 브릿지 (/api/chat) 호출
   try {
-    const macRes = await fetch(`http://${bridgeHost}:5001/api/chat`, {
+    const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: userText }),
-      signal: AbortSignal.timeout(10000)
+      signal: AbortSignal.timeout(15000)
     });
-    if (macRes.ok) {
-      const macData = await macRes.json();
-      if (macData && macData.response) {
-        const plainText = macData.response;
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.response) {
+        const plainText = data.response;
         const htmlText = typeof marked !== 'undefined' ? marked.parse(plainText) : escHtml(plainText);
         return { plain: plainText, html: htmlText, actions: null };
       }
     }
-  } catch (macErr) {
-    console.log('AI Bridge Server offline or unreachable, fallback to DeepSeek API:', macErr);
+  } catch (err) {
+    console.log('Server /api/chat error:', err);
   }
 
   const nodesSummary = knowledgeData.nodes
