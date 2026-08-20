@@ -1603,6 +1603,31 @@
       "purpose": "2단계 존재 이유: 베이즈 정리 및 선형회귀 사후분포 해석적(Closed-form) 계산, 칼만 필터 및 VAE 샘플링 수식화.",
       "tradeoff_insight": "3단계 비판적 맹점: 단일 가우시안(단봉 Unimodal 한계) vs 가우시안 혼합 모델(GMM - 다봉 Multimodal 복잡 분포 표현).",
       "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, GMM 밀도추정."
+    },
+    {
+      "id": "probability_ch6_6_conjugacy_exponential",
+      "label": "6.6 공액 사전분포, 충분통계량과 지수 족 (Exponential Family)",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/probability_ch6_6_conjugacy_exponential.md",
+      "tags": [
+        "Probability",
+        "Bernoulli",
+        "Binomial",
+        "Beta",
+        "Conjugate Prior",
+        "Beta-Binomial",
+        "Sufficient Statistics",
+        "Fisher-Neyman",
+        "Exponential Family",
+        "Log-Partition",
+        "Sigmoid Derivation"
+      ],
+      "definition": "1단계 개념: 공액사전분포(Conjugate Prior) p(theta|y) in Family F, 피셔-네이만 충분통계량 phi(x) 및 지수족 p(x|theta)=h(x)exp(theta^T phi(x) - A(theta))와 로지스틱 시그모이드 수식 유도.",
+      "purpose": "2단계 존재 이유: 스트리밍 데이터 베이즈 파라미터 0초 덧셈 갱신, 유한차원 충분통계량 및 로그 우도 볼록성(Concavity)으로 전역 최적해 보장.",
+      "tradeoff_insight": "3단계 비판적 맹점: 계산의 닫힘성(Closed-form) 대가로 복잡한 현실 다봉 분포 표현 제약 (비공액 MCMC/VI 필요).",
+      "ai_connection": "4단계 AI 연결: 로지스틱 회귀 시그모이드(Sigmoid), 다중 분류 소프트맥스(Softmax), 토픽 모델링(LDA Dirichlet)."
     }
   ],
   "edges": [
@@ -2482,6 +2507,12 @@
     {
       "source": "probability_ch6_4_summary_stats",
       "target": "probability_ch6_5_gaussian",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "probability_ch6_5_gaussian",
+      "target": "probability_ch6_6_conjugacy_exponential",
       "relation": "basis_of",
       "weight": 3
     }
