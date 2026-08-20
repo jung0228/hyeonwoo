@@ -1628,6 +1628,28 @@
       "purpose": "2단계 존재 이유: 스트리밍 데이터 베이즈 파라미터 0초 덧셈 갱신, 유한차원 충분통계량 및 로그 우도 볼록성(Concavity)으로 전역 최적해 보장.",
       "tradeoff_insight": "3단계 비판적 맹점: 계산의 닫힘성(Closed-form) 대가로 복잡한 현실 다봉 분포 표현 제약 (비공액 MCMC/VI 필요).",
       "ai_connection": "4단계 AI 연결: 로지스틱 회귀 시그모이드(Sigmoid), 다중 분류 소프트맥스(Softmax), 토픽 모델링(LDA Dirichlet)."
+    },
+    {
+      "id": "probability_ch6_7_change_of_variables",
+      "label": "6.7 & 6.8 변수 변환 기법, 야코비안 행렬식과 노말라이징 플로우",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/probability_ch6_7_change_of_variables.md",
+      "tags": [
+        "Probability",
+        "Change of Variables",
+        "Inverse Transform",
+        "Probability Integral Transform",
+        "Jacobian Determinant",
+        "Normalizing Flows",
+        "Information Geometry",
+        "KL Divergence"
+      ],
+      "definition": "1단계 개념: 분포함수법 F_Y(y)=F_X(U^-1(y)), 확률적분변환 Y=F_X(X)~U[0,1] 및 다변량 변수변환 f(y)=f_x(U^-1(y))|det(dU^-1/dy)| 야코비안 부피보정 공식.",
+      "purpose": "2단계 존재 이유: 역변환 샘플링 난수 생성 및 딥러닝 가역 신경망(Invertible NN) 생성 모델의 정확한 밀도(Exact Likelihood) 추정.",
+      "tradeoff_insight": "3단계 비판적 맹점: VAE/GAN(밀도 산출 불가, 차원변화 자유) vs 노말라이징 플로우(정확한 밀도 ln p(x) 산출 가능, 가역성 및 차원유지 제약).",
+      "ai_connection": "4단계 AI 연결: 노말라이징 플로우 (Normalizing Flows - RealNVP, Glow), 역변환 샘플링 (Inverse Transform Sampling), 정보기하학 (Information Geometry)."
     }
   ],
   "edges": [
@@ -2513,6 +2535,12 @@
     {
       "source": "probability_ch6_5_gaussian",
       "target": "probability_ch6_6_conjugacy_exponential",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "probability_ch6_6_conjugacy_exponential",
+      "target": "probability_ch6_7_change_of_variables",
       "relation": "basis_of",
       "weight": 3
     }
