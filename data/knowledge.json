@@ -1579,6 +1579,30 @@
       "purpose": "2단계 존재 이유: 관측 데이터 y로부터 가려진 잠재 변수/파라미터 x의 사후 확률분포(Posterior)를 역방향으로 정밀 추정.",
       "tradeoff_insight": "3단계 비판적 맹점: 점추정(MAP/MLE 정보 손실) vs 전체 사후분포(Full Posterior - 적분 p(y) 난해하나 불확실성에 극도로 로버스트).",
       "ai_connection": "4단계 AI 연결: 나이브 베이즈 분류기, VAE 변분 추론(ELBO), 베이지안 최적화, 베이지안 딥러닝 가중치 사후분포."
+    },
+    {
+      "id": "probability_ch6_5_gaussian",
+      "label": "6.5 가우시안 정규분포 (Multivariate Gaussian & Conditionals)",
+      "category": "Math",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/probability_ch6_5_gaussian.md",
+      "tags": [
+        "Probability",
+        "Gaussian Distribution",
+        "Normal Distribution",
+        "Multivariate Gaussian",
+        "Schur Complement",
+        "Kalman Filter",
+        "Gaussian Process",
+        "Cholesky Sampling",
+        "Reparameterization Trick",
+        "GMM"
+      ],
+      "definition": "1단계 개념: 다변량 가우시안 PDF N(mu, Sigma), 주변/조건부 분포 닫힘성 p(x|y)=N(mu_{x|y}, Sigma_{x|y}) 및 숄레스키 샘플링 y=Lx+mu.",
+      "purpose": "2단계 존재 이유: 베이즈 정리 및 선형회귀 사후분포 해석적(Closed-form) 계산, 칼만 필터 및 VAE 샘플링 수식화.",
+      "tradeoff_insight": "3단계 비판적 맹점: 단일 가우시안(단봉 Unimodal 한계) vs 가우시안 혼합 모델(GMM - 다봉 Multimodal 복잡 분포 표현).",
+      "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, GMM 밀도추정."
     }
   ],
   "edges": [
@@ -2452,6 +2476,12 @@
     {
       "source": "probability_ch6_3_bayes_theorem",
       "target": "probability_ch6_4_summary_stats",
+      "relation": "basis_of",
+      "weight": 3
+    },
+    {
+      "source": "probability_ch6_4_summary_stats",
+      "target": "probability_ch6_5_gaussian",
       "relation": "basis_of",
       "weight": 3
     }
