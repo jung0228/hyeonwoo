@@ -239,7 +239,7 @@ Suppose $b(t) = 1/t_0$ for $0 \le t \le t_0$, and $0$ otherwise.
 (b) What is the corresponding polynomial?
 
 **[쉬운 직관 가이드 (How to understand)]**
-- **시불변 시스템(LTI)**: 오늘 소리치든 10분 뒤 소리치든 똑같이 반응하는 시스템입니다. (기계 성능이 시간에 따라 변치 않음)
+- **시불변 시스템(LTI)**: 오늘 소리치든 10분 뒤 소리치든 똑같이 반응하는 시스템입니다. (시간에 따라 기계 성질이 변치 않음)
 - **출제 의도**: 신호처리 분야의 "이동평균 필터(Boxcar filter)"가 나중에 배울 FFT(고속 푸리에 변환) 다항식 곱셈과 완벽히 동치라는 교양/배경지식 연결 문제.
 
 **[해설 및 증명]**
@@ -249,17 +249,22 @@ Suppose $b(t) = 1/t_0$ for $0 \le t \le t_0$, and $0$ otherwise.
 
 ---
 
-### 📌 Exercise 2.7 (Unity의 $n$제곱근의 합과 곱)
+### 📌 Exercise 2.7 (Unity의 $n$제곱근의 합과 곱 - 직관 가이드 & 증명)
 **[원문]**
 What is the sum of the $n$th roots of unity? What is their product if $n$ is odd? If $n$ is even?
 
-**[해설 및 증명]**
+**[쉬운 직관 가이드 (How to understand)]**
+- **피자 4등분 동서남북 직관**: $n=4$ (4제곱근) 일 때 $1, -1, i, -i$ 4개 점이 복소평면 원 위에 완벽한 4등분 대칭으로 찍힙니다.
+- **합이 0인 이유**: 동서남북 4개 방향에서 똑같은 힘으로 끌어당기면 서로의 힘이 상쇄되어 정중앙(0)이 되는 것과 같습니다.
+- **곱이 $(-1)^{n-1}$ 인 이유**: $(1) \times (-1) \times (i) \times (-i) = -1$ 처럼 $n$이 짝수일 땐 $-1$, 홀수일 땐 $1$이 됩니다.
+
+**[엄밀한 증명]**
 - $n$제곱근의 집합: $\omega^k = e^{i 2\pi k / n} \quad (k=0, 1, \dots, n-1)$
 - **합 (Sum)**: $\sum_{k=0}^{n-1} \omega^k = \frac{\omega^n - 1}{\omega - 1} = \frac{1 - 1}{\omega - 1} = \mathbf{0}$
 - **곱 (Product)**:
   $$\prod_{k=0}^{n-1} e^{i 2\pi k / n} = \exp\left( i \frac{2\pi}{n} \sum_{k=0}^{n-1} k \right) = \exp\left( i \frac{2\pi}{n} \frac{n(n-1)}{2} \right) = e^{i \pi (n-1)} = (-1)^{n-1}$$
-  - $n$이 홀수(Odd)일 때: $(-1)^{\text{even}} = \mathbf{1}$
-  - $n$이 짝수(Even)일 때: $(-1)^{\text{odd}} = \mathbf{-1}$
+  - $n$이 **홀수(Odd)**일 때: $(-1)^{\text{even}} = \mathbf{1}$
+  - $n$이 **짝수(Even)**일 때: $(-1)^{\text{odd}} = \mathbf{-1}$
 
 ---
 
