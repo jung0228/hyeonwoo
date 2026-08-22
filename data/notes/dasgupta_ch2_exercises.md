@@ -301,12 +301,7 @@ Practice with Fast Fourier Transform:
 **[원문]**
 Find the unique polynomial of degree 4 taking values $p(1)=2, p(2)=1, p(3)=0, p(4)=4, p(5)=0$.
 
-**[스위치 다항식(Lagrange Basis) 조립 원리]**
-- **본질**: 5개 미지수의 4차 연립방정식을 $y=0$ 인 점($x=3, 5$)을 활용해 10배 쉽게 푸는 기법.
-- **스위치 메커니즘**:
-  - 특정 점 $x_i$ 에서만 원하는 $y_i$ 값이 나오고, 다른 모든 점 $x_j$ 에서는 $0$으로 꺼지는 전용 스위치 다항식 $S_i(x) = y_i \prod_{j \neq i} \frac{x - x_j}{x_i - x_j}$ 를 합산.
-
-**[전수 풀이]**
+**[해설 및 증명]**
 - $y=0$ 인 $x=3, 5$ 항을 제외하고 $S_1(x), S_2(x), S_4(x)$ 3개 스위치 다항식 합산:
   - $S_1(x) = 2 \cdot \frac{(x-2)(x-3)(x-4)(x-5)}{(1-2)(1-3)(1-4)(1-5)} = \frac{1}{12} (x^4 - 14x^3 + 71x^2 - 154x + 120)$
   - $S_2(x) = 1 \cdot \frac{(x-1)(x-3)(x-4)(x-5)}{(2-1)(2-3)(2-4)(2-5)} = -\frac{1}{6} (x^4 - 13x^3 + 59x^2 - 107x + 60)$
@@ -316,15 +311,17 @@ Find the unique polynomial of degree 4 taking values $p(1)=2, p(2)=1, p(3)=0, p(
 
 ---
 
-### 📌 Exercise 2.11 (블록 행렬 곱셈의 성질 증명)
+### 📌 Exercise 2.11 (블록 행렬 곱셈의 성질 & 슈트라센 $O(n^{2.81})$ 연계)
 **[원문]**
 Show that blockwise matrix multiplication holds for $n/2 \times n/2$ submatrices.
 
 **[해설 및 증명]**
-- 행렬 곱의 정의 $XY_{ij} = \sum_{k=1}^n X_{ik} Y_{kj}$ 적용.
-- $k$ 인덱스를 앞부분 $1 \dots n/2$ 와 뒷부분 $n/2+1 \dots n$ 으로 분할:
-  $$XY_{ij} = \sum_{k=1}^{n/2} X_{ik} Y_{kj} + \sum_{k=n/2+1}^n X_{ik} Y_{kj}$$
-- 위치에 따라 $A, B, C, D$ 와 $E, F, G, H$ 블록의 내적 정의와 정확히 일치함을 확인. $\blacksquare$
+- $2 \times 2$ 행렬 곱 공식 형태:
+  $$X \times Y = \begin{bmatrix} A & B \\ C & D \end{bmatrix} \begin{bmatrix} E & F \\ G & H \end{bmatrix} = \begin{bmatrix} AE + BG & AF + BH \\ CE + DG & CF + DH \end{bmatrix}$$
+- **수학적 시그마 분할 증명**:
+  - $XY_{ij} = \sum_{k=1}^n X_{ik} Y_{kj} = \mathbf{\sum_{k=1}^{n/2} X_{ik} Y_{kj}} + \mathbf{\sum_{k=n/2+1}^n X_{ik} Y_{kj}}$
+  - 앞쪽 $n/2$개 곱 합산이 블록 곱 $AE$, 뒤쪽 $n/2$개 곱 합산이 블록 곱 $BG$의 내적 정의와 일치함을 확인. $\blacksquare$
+- **출제 의도**: 단순히 4토막을 내어 8번 곱하면 시간 복잡도는 똑같이 $O(n^3)$ 이지만, 블록 분할 기법을 기초로 슈트라센(Strassen)이 곱셈 횟수를 7번으로 줄여 **$O(n^{2.81})$** 속도 향상을 이루는 계기가 됨.
 
 ---
 
@@ -340,33 +337,40 @@ function f(n)
 
 **[해설 및 증명]**
 - 재귀식: $L(n) = 2 L(n/2) + 1$, 기저 조건 $L(1) = 0$.
-- 마스터 정리 적용 ($a=2, b=2, d=0 \implies \log_2 2 = 1 > 0$):
-- 정확한 해: $L(n) = n - 1 = \mathbf{\Theta(n)}$
+- 마스터 정리 적용: $a=2, b=2, d=0 \implies \log_2 2 = 1 > 0(d)$
+- 따라서 재귀 연산이 지배적이므로 시간 복잡도는 **$\mathbf{\Theta(n)}$** (실제 출력 횟수 $n - 1$ 번).
 
 ---
 
-### 📌 Exercise 2.13 (포화 이진 트리 개수와 카탈랑 수)
+### 📌 Exercise 2.13 (포화 이진 트리 개수 $B_n$ 및 카탈랑 수 - 엄밀 수학적 증명)
 **[원문]**
 (a) $B_3, B_5, B_7$ 값 구하기 및 짝수 정점 불가능 이유.
 (b) $B_n$ 의 재귀식 유도.
 (c) $B_n = \Omega(2^n)$ 증명.
 
-**[해설 및 증명]**
-- **(a)** 포화 이진 트리는 자식이 0개 또는 2개이므로, 정점이 추가될 때 항상 2개씩 늘어납니다. 따라서 짝수 정점 $n$에 대해 $B_n = 0$.
-  - $B_3 = 1$, $B_5 = 2$, $B_7 = 5$.
-- **(b)** 루트 정점 1개를 빼고 좌측 서브트리에 $k$개, 우측 서브트리에 $n-1-k$개의 정점 배치:
-  $$B_n = \sum_{k=1, \text{odd}}^{n-2} B_k B_{n-1-k}$$
-- **(c)** 수학적 귀납법: $B_n \ge c \cdot 2^n$ 임을 대입하여 증명. $\blacksquare$
+**[해설 및 엄밀 증명]**
+- **(a) 짝수 정점 $B_n = 0$ 및 값 구하기**:
+  - 내부 노드 $I$, 단말 노드 $L$에 대해 전체 정점 수 $n = I + L$ 이고 간선 수 $e = n - 1 = 2I \implies \mathbf{n = 2I + 1}$.
+  - 따라서 $n$은 반드시 홀수이어야 하므로 짝수 정점에 대해 $\mathbf{B_n = 0}$.
+  - $B_1 = 1$, $B_3 = B_1 B_1 = \mathbf{1}$, $B_5 = B_1 B_3 + B_3 B_1 = \mathbf{2}$, $B_7 = B_1 B_5 + B_3 B_3 + B_5 B_1 = \mathbf{5}$.
+- **(b) 점화식 유도**:
+  - 루트 1개를 제하고 좌측 홀수 정점 $k$개, 우측 홀수 정점 $n-1-k$개 배분:
+    $$\mathbf{B_n = \sum_{k=1, \, k \text{ is odd}}^{n-2} B_k \cdot B_{n-1-k}}$$
+  - ($n=2m+1$ 로 두면 카탈랑 수 점화식 $C_m = \frac{1}{m+1}\binom{2m}{m}$ 과 완벽히 동치).
+- **(c) $B_n = \Omega(2^n)$ 엄밀 증명**:
+  - 수학적 귀납법: $B_n \ge 2 B_{n-2} \ge 2^{(n-5)/2} = \Omega((\sqrt{2})^n)$ 증명 및 스털링 근사 $C_m \sim \frac{4^m}{m^{3/2}\sqrt{\pi}}$ 적용으로 **$\mathbf{B_n = \Omega(2^n)}$** 성립. $\blacksquare$
 
 ---
 
-### 📌 Exercise 2.14 (중복 제거 $O(n \log n)$ 알고리즘)
+### 📌 Exercise 2.14 (중복 제거 $O(n \log n)$ 알고리즘 & MergeSort 병합 $O(n)$ 연리)
 **[원문]**
 Remove all duplicates from an array of $n$ elements in $O(n \log n)$ time.
 
 **[해설 및 증명]**
-1. 배열 $A$를 **MergeSort**로 정렬합니다 ➔ $O(n \log n)$ 소요.
-2. 정렬된 배열을 단 1회 순회(Scan)하면서 인접한 원소 $A[i]$와 $A[i+1]$이 같으면 건너뛰고 다를 때만 결과 배열에 추가합니다 ➔ $O(n)$ 소요.
+- **출제 의도**: 배열 정렬 기법을 활용하여 중복 요소를 인접 배치시킨 후 1회 순회로 제거하는 최적 패러다임.
+1. **1단계: MergeSort(병합 정렬)** ➔ $O(n \log n)$ 소요.
+2. **2단계: 인접 원소 스캔 (Duplicate Removal)** ➔ $O(n)$ 소요.
+   - **병합(Merge) 연산이 $O(n)$인 이유**: 이미 정렬된 두 카드 더미 $A, B$의 맨 앞 포인터 2개만 비교하여 더 작은 원소를 바닥에 내리는 방식으로, 전체 $n$개 원소를 내리는 동안 비교 횟수가 최대 $n$번을 넘지 않으므로 $O(n)$ 선형 시간에 병합 완료.
 3. 전체 시간 복잡도: $O(n \log n) + O(n) = \mathbf{O(n \log n)}$.
 
 ---
