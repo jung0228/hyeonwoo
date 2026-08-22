@@ -38,29 +38,34 @@ $$X_L Y_R + X_R Y_L = (X_L + X_R)(Y_L + Y_R) - X_L Y_L - X_R Y_R$$
 
 ### 📌 2. 분할 정복(Divide-and-Conquer)의 3단계 기본 구조
 분할 정복은 큰 문제를 한 번에 풀지 않고, 동일한 유형의 더 작은 문제들로 쪼개어 해결하는 알고리즘 설계 패러다임입니다:
-1. **Divide (분할)**: 크기가 $n$인 입력 문제를 크기가 더 작은 $b$분의 $1$ 크인 서브문제 $a$개로 분할합니다.
+1. **Divide (분할)**: 크기가 $n$인 입력 문제를 크기가 더 작은 $b$분의 $1$ 크기인 서브문제 $a$개로 분할합니다.
 2. **Conquer (정복)**: 서브문제들을 재귀적(Recursion)으로 해결합니다. 문제 크기가 충분히 작아지면 기저 조건(Base Case)에서 직접 구합니다.
 3. **Combine (병합)**: 서브문제들의 해를 합쳐 원래 문제의 최종 답을 만듭니다.
 
 ---
 
-### 📌 3. 점상복잡도 분석 1: 마스터 정리 (Master Theorem)
-재귀식(Recurrence Relation) 형태가 $T(n) = a T(n/b) + O(n^d)$ 꼴일 때, 재귀 트리를 일일이 그리지 않고 **시간복잡도를 0초 만에 판별하는 핵심 정리**입니다.
+### 📌 3. 점상복잡도 분석 1: 마스터 정리 (Master Theorem) - "치트키 공식"
+재귀식 형태가 $T(n) = a T(n/b) + O(n^d)$ 꼴일 때 (입력 크기가 비율 $n/b$ 로 줄어들 때만 적용 가능), 재귀 트리를 일일이 그리지 않고 **시간복잡도를 0초 만에 판별하는 공식**입니다.
 
 - **$a$**: 분할되는 서브문제의 개수 ($a \ge 1$)
 - **$b$**: 입력 크기가 줄어드는 비율 ($b > 1$)
 - **$O(n^d)$**: 분할 및 병합 단계에 드는 추가 연산량 ($d \ge 0$)
 
-$$\text{임계값 } \log_b a \text{ 와 추가 연산 차수 } d \text{ 를 비교하여 3가지 케이스로 판별:}$$
+$$\text{하위 재귀 호출 부하 } \log_b a \text{ 와 병합 연산 차수 } d \text{ 의 시소 비교:}$$
 
-$$T(n) = \begin{cases} O(n^d) & \text{if } d > \log_b a \;\; (\text{분할/병합 연산이 지배적}) \\\\ O(n^d \log n) & \text{if } d = \log_b a \;\; (\text{모든 레벨의 연산량이 동일}) \\\\ O(n^{\log_b a}) & \text{if } d < \log_b a \;\; (\text{재귀 호출 연산이 지배적}) \end{cases}$$
+$$T(n) = \begin{cases} O(n^d) & \text{if } d > \log_b a \;\; (\text{병합 연산이 지배적}) \\\\ O(n^d \log n) & \text{if } d = \log_b a \;\; (\text{재귀와 병합의 연산량이 동등}) \\\\ O(n^{\log_b a}) & \text{if } d < \log_b a \;\; (\text{재귀 호출 연산이 지배적}) \end{cases}$$
 
 ---
 
-### 📌 4. 점상복잡도 분석 2: 재귀식 전개법 (Substitution / Unrolling)
-마스터 정리를 적용할 수 없는 형태(예: $T(n) = T(n-1) + O(1)$, $T(n) = T(\sqrt{n}) + 1$ 등)를 다루는 범용적 해법입니다.
+### 📌 4. 점상복잡도 분석 2: 재귀식 전개법 (Substitution / Unrolling) - "정석 대입법"
+마스터 정리를 적용할 수 없는 형태(예: $T(n) = T(n-1) + O(1)$, $T(n) = T(\sqrt{n}) + 1$ 등 문제 크기가 비율이 아니라 $1$씩 줄어들거나 루트가 씌워질 때)를 다루는 범용적 정석 해법입니다.
 
 - **원리**: 재귀식을 1단계, 2단계, 3단계 직접 대입 전개하여 **$k$번째 일반항**을 도출한 뒤, 기저 조건(Base Case, 예: $T(1)$)에 도달하는 $k$ 값을 대입하여 시간복잡도를 유도합니다.
+
+| 구분 | 마스터 정리 (Master Theorem) | 직접 대입법 (Substitution) |
+| :--- | :--- | :--- |
+| **특징** | 공식 대입으로 즉시 완료 | 3~4번 풀어헤쳐 규칙 도출 |
+| **적용 조건** | $n$이 **비율($n/2, n/3$)**로 줄어들 때만 적용 | $n-1, n-2, \sqrt{n}$ 등 **모든 재귀식** 가능 |
 
 ---
 
@@ -196,19 +201,33 @@ What are the running times of the three algorithms? Which one should you choose?
 
 ---
 
-### 📌 Exercise 2.5 (11가지 재귀식의 $\Theta$ 바운드 풀이)
-**[원문 & 해설]**
-- **(a)** $T(n) = 2T(n/3) + 1$: $a=2, b=3, d=0 \implies \log_3 2 > 0 \implies \mathbf{\Theta(n^{\log_3 2})}$
-- **(b)** $T(n) = 5T(n/4) + n$: $a=5, b=4, d=1 \implies \log_4 5 > 1 \implies \mathbf{\Theta(n^{\log_4 5})}$
-- **(c)** $T(n) = 7T(n/7) + n$: $a=7, b=7, d=1 \implies \log_7 7 = 1 = d \implies \mathbf{\Theta(n \log n)}$
-- **(d)** $T(n) = 9T(n/3) + n$: $a=9, b=3, d=1 \implies \log_3 9 = 2 > 1 \implies \mathbf{\Theta(n^2)}$
-- **(e)** $T(n) = 8T(n/2) + n^3$: $a=8, b=2, d=3 \implies \log_2 8 = 3 = d \implies \mathbf{\Theta(n^3 \log n)}$
-- **(f)** $T(n) = 49T(n/25) + n^{3/2} \log n$: $a=49, b=25 \implies \log_{25} 49 = \log_5 7 \approx 1.209$. $d = 1.5 > 1.209 \implies \mathbf{\Theta(n^{3/2} \log n)}$
-- **(g)** $T(n) = T(n-1) + 2$: $T(n) = T(0) + 2n \implies \mathbf{\Theta(n)}$
-- **(h)** $T(n) = T(n-1) + n^c$: $T(n) = \sum_{i=1}^n i^c = \mathbf{\Theta(n^{c+1})}$
-- **(i)** $T(n) = T(n-1) + c^n \, (c>1)$: 등비수열의 합 $\sum_{i=1}^n c^i = \mathbf{\Theta(c^n)}$
-- **(j)** $T(n) = 2T(n-1) + 1$: $T(n) = 2^n - 1 \implies \mathbf{\Theta(2^n)}$
-- **(k)** $T(n) = T(\sqrt{n}) + 1$: $m = \log n$ 치환 시 $S(m) = S(m/2) + 1 \implies S(m) = \Theta(\log m) \implies \mathbf{\Theta(\log \log n)}$
+### 📌 Exercise 2.5 (11가지 재귀식의 $\Theta$ 바운드 1:1 풀이)
+**[원문]**
+Solve the following recurrence relations and give a $\Theta$ bound for each of them.
+
+**[11개 문항 전수 풀이]**
+- **(a) $T(n) = 2T(n/3) + 1$**:
+  - 마스터 정리: $a=2, b=3, d=0 \implies \log_3 2 > 0 \implies \mathbf{\Theta(n^{\log_3 2})}$
+- **(b) $T(n) = 5T(n/4) + n$**:
+  - 마스터 정리: $a=5, b=4, d=1 \implies \log_4 5 > 1 \implies \mathbf{\Theta(n^{\log_4 5})}$
+- **(c) $T(n) = 7T(n/7) + n$**:
+  - 마스터 정리: $a=7, b=7, d=1 \implies \log_7 7 = 1 = d \implies \mathbf{\Theta(n \log n)}$
+- **(d) $T(n) = 9T(n/3) + n$**:
+  - 마스터 정리: $a=9, b=3, d=1 \implies \log_3 9 = 2 > 1 \implies \mathbf{\Theta(n^2)}$
+- **(e) $T(n) = 8T(n/2) + n^3$**:
+  - 마스터 정리: $a=8, b=2, d=3 \implies \log_2 8 = 3 = d \implies \mathbf{\Theta(n^3 \log n)}$
+- **(f) $T(n) = 49T(n/25) + n^{3/2} \log n$**:
+  - 마스터 정리: $a=49, b=25 \implies \log_{25} 49 = \log_5 7 \approx 1.209 < 1.5(d) \implies \mathbf{\Theta(n^{3/2} \log n)}$
+- **(g) $T(n) = T(n-1) + 2$**:
+  - 직접 대입전개: $T(n) = T(0) + 2n \implies \mathbf{\Theta(n)}$
+- **(h) $T(n) = T(n-1) + n^c$**:
+  - 직접 대입전개: $T(n) = \sum_{i=1}^n i^c \implies \mathbf{\Theta(n^{c+1})}$
+- **(i) $T(n) = T(n-1) + c^n \quad (c>1)$**:
+  - 직접 대입전개: 등비수열 합 $\sum_{i=1}^n c^i \implies \mathbf{\Theta(c^n)}$
+- **(j) $T(n) = 2T(n-1) + 1$**:
+  - 직접 대입전개: $T(n) = 2^n - 1 \implies \mathbf{\Theta(2^n)}$
+- **(k) $T(n) = T(\sqrt{n}) + 1$**:
+  - 치환법: $m = \log n \implies S(m) = S(m/2) + 1 = \Theta(\log m) \implies \mathbf{\Theta(\log \log n)}$
 
 ---
 
