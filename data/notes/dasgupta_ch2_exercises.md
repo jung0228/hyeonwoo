@@ -38,7 +38,7 @@ $$X_L Y_R + X_R Y_L = (X_L + X_R)(Y_L + Y_R) - X_L Y_L - X_R Y_R$$
 
 ### 📌 2. 분할 정복(Divide-and-Conquer)의 3단계 기본 구조
 분할 정복은 큰 문제를 한 번에 풀지 않고, 동일한 유형의 더 작은 문제들로 쪼개어 해결하는 알고리즘 설계 패러다임입니다:
-1. **Divide (분할)**: 크기가 $n$인 입력 문제를 크기가 더 작은 $b$분의 $1$ 크기인 서브문제 $a$개로 분할합니다.
+1. **Divide (분할)**: 크기가 $n$인 입력 문제를 크기가 더 작은 $b$분의 $1$ 크인 서브문제 $a$개로 분할합니다.
 2. **Conquer (정복)**: 서브문제들을 재귀적(Recursion)으로 해결합니다. 문제 크기가 충분히 작아지면 기저 조건(Base Case)에서 직접 구합니다.
 3. **Combine (병합)**: 서브문제들의 해를 합쳐 원래 문제의 최종 답을 만듭니다.
 
@@ -64,8 +64,8 @@ $$T(n) = \begin{cases} O(n^d) & \text{if } d > \log_b a \;\; (\text{병합 연�
 
 | 구분 | 마스터 정리 (Master Theorem) | 직접 대입법 (Substitution) |
 | :--- | :--- | :--- |
-| **특징** | 공식 대입으로 즉시 완료 | 3~4번 풀어헤쳐 규칙 도출 |
-| **적용 조건** | $n$이 **비율($n/2, n/3$)**로 줄어들 때만 적용 | $n-1, n-2, \sqrt{n}$ 등 **모든 재귀식** 가능 |
+| **특징** | 공식 대입으로 0초 만에 판별 완료 | 3~4번 직접 대입해서 규칙 도출 |
+| **적용 조건** | $n$이 **비율($n/2, n/3$)**로 줄어들 때만 적용 가능 | $n-1, n-2, \sqrt{n}$ 등 **모든 재귀식** 가능 |
 
 ---
 
@@ -231,16 +231,21 @@ Solve the following recurrence relations and give a $\Theta$ bound for each of t
 
 ---
 
-### 📌 Exercise 2.6 (선형 시불변 시스템과 임펄스 응답)
+### 📌 Exercise 2.6 (선형 시불변 시스템과 임펄스 응답 - 개념 가이드 & 다항식 표현)
 **[원문]**
-$b(t) = 1/t_0$ for $0 \le t \le t_0$, else $0$.
+A linear time-invariant system has the input-output relationship $y(t) = \int b(\tau) x(t - \tau) d\tau$.
+Suppose $b(t) = 1/t_0$ for $0 \le t \le t_0$, and $0$ otherwise.
 (a) Describe in words the effect of this system.
 (b) What is the corresponding polynomial?
 
+**[쉬운 직관 가이드 (How to understand)]**
+- **시불변 시스템(LTI)**: 오늘 소리치든 10분 뒤 소리치든 똑같이 반응하는 시스템입니다. (기계 성능이 시간에 따라 변치 않음)
+- **출제 의도**: 신호처리 분야의 "이동평균 필터(Boxcar filter)"가 나중에 배울 FFT(고속 푸리에 변환) 다항식 곱셈과 완벽히 동치라는 교양/배경지식 연결 문제.
+
 **[해설 및 증명]**
-- **(a)** 서술적 의미: 입력 신호를 구간 $[0, t_0]$ 동안 이동 평균(Moving Average)하여 평단화(Smoothing)하는 **박스카 필터(Boxcar / Low-pass filter)** 입니다.
-- **(b)** 다항식 표현: 연속 신호를 이산화하면 항의 계수가 모두 $1/t_0$ 이고 차수가 $0$부터 $m = t_0/\Delta t$ 까지인 다항식:
-  $$B(x) = \frac{1}{t_0} \sum_{i=0}^m x^i = \frac{1}{t_0} \frac{x^{m+1} - 1}{x - 1}$$
+- **(a) 서술적 의미**: 입력 신호를 구간 $[0, t_0]$ 동안 이동 평균(Moving Average)하여 뾰족한 잡음을 평단화(Smoothing)하는 **이동평균 저역통과 필터(Low-pass Smoothing Filter)** 입니다.
+- **(b) 다항식 표현**: 연속 신호를 이산화하면 계수가 모두 $1/t_0$ 이고 차수가 $0$부터 $m = t_0/\Delta t$ 까지인 다항식이 됩니다:
+  $$\mathbf{B(x) = \frac{1}{t_0} \sum_{i=0}^m x^i = \frac{1}{t_0} (1 + x + x^2 + \dots + x^m)}$$
 
 ---
 
