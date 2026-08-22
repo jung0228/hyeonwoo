@@ -131,21 +131,29 @@ Show that for any positive integer $n$ and any base $b$, there must be some powe
 
 ---
 
-### 📌 Exercise 2.3 (재귀식 전개법)
+### 📌 Exercise 2.3 (재귀식 전개 대입 해설)
 **[원문]**
+Section 2.2 describes a method for solving recurrence relations which is based on analyzing the recursion tree... Another method is to expand out the recurrence a few times.
 (a) $T(n) = 3T(n/2) + O(n)$ 에 대해 $k$번째 일반항과 $k$ 대입값을 구하시오.
 (b) $T(n) = T(n - 1) + O(1)$ 을 전개법으로 푸시오.
 
 **[해설 및 증명]**
-- **(a)** $T(n) \le 3 T(n/2) + c n$
-  - 1단계: $3(3 T(n/4) + c n/2) + c n = 3^2 T(n/2^2) + c n (1 + 3/2)$
-  - 2단계: $3^3 T(n/2^3) + c n (1 + 3/2 + (3/2)^2)$
-  - **$k$번째 일반항**: $T(n) \le 3^k T(n/2^k) + c n \sum_{i=0}^{k-1} (3/2)^i = 3^k T(n/2^k) + 2 c n ((3/2)^k - 1)$
-  - $k = \log_2 n$ 대입 시 $2^k = n, 3^k = 3^{\log_2 n} = n^{\log_2 3}$:
-    $$T(n) \le n^{\log_2 3} T(1) + 2 c n (n^{\log_2 3 - 1} - 1) = \mathbf{O(n^{\log_2 3}) \approx O(n^{1.585})}$$
+- **(a) $T(n) \le 3 T(n/2) + c n$ 대입 유도**:
+  - **1차 대입**: $T(n/2)$ 자리에 $3T(n/4) + cn/2$ 대입
+    $$T(n) \le 3(3T(n/4) + cn/2) + cn = 3^2 T(n/2^2) + cn(1 + 3/2)$$
+  - **2차 대입**: $T(n/4)$ 자리에 $3T(n/8) + cn/4$ 대입
+    $$T(n) \le 3^2 (3T(n/8) + cn/4) + cn(1 + 3/2) = 3^3 T(n/2^3) + cn(1 + 3/2 + (3/2)^2)$$
+  - **$k$번째 일반항**:
+    $$T(n) \le 3^k T(n/2^k) + cn \sum_{i=0}^{k-1} \left(\frac{3}{2}\right)^i = 3^k T(n/2^k) + 2cn \left(\left(\frac{3}{2}\right)^k - 1\right)$$
+  - **종료 조건**: $2^k = n \implies k = \log_2 n$ 대입 시 $3^k = 3^{\log_2 n} = n^{\log_2 3}$:
+    $$T(n) \le n^{\log_2 3} T(1) + 2cn (n^{\log_2 3 - 1} - 1) = \mathbf{O(n^{\log_2 3}) \approx O(n^{1.585})}$$
 
-- **(b)** $T(n) \le T(n-1) + c \le T(n-2) + 2c \le \dots \le T(n-k) + k c$
-  - $k = n - 1$ 대입 시: $T(n) \le T(1) + (n-1) c = \mathbf{O(n)}$
+- **(b) $T(n) \le T(n-1) + c$ 대입 유도**:
+  - 1차 대입: $T(n) \le (T(n-2) + c) + c = T(n-2) + 2c$
+  - 2차 대입: $T(n) \le (T(n-3) + c) + 2c = T(n-3) + 3c$
+  - **$k$번째 일반항**: $T(n) \le T(n-k) + kc$
+  - **종료 조건**: $n - k = 1 \implies k = n - 1$ 대입 시:
+    $$T(n) \le T(1) + (n-1)c = \mathbf{O(n)}$$
 
 ---
 
