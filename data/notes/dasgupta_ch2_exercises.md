@@ -362,7 +362,7 @@ function f(n)
 
 ---
 
-### 📌 Exercise 2.14 (중복 제거 $O(n \log n)$ 알고리즘 & MergeSort 병합 $O(n)$ 연리)
+### 📌 Exercise 2.14 (중복 제거 $O(n \log n)$ 알고리즘 & MergeSort 병합 $O(n)$ 원리)
 **[원문]**
 Remove all duplicates from an array of $n$ elements in $O(n \log n)$ time.
 
@@ -375,32 +375,39 @@ Remove all duplicates from an array of $n$ elements in $O(n \log n)$ time.
 
 ---
 
-### 📌 Exercise 2.15 (In-place Split 연산 구현)
+### 📌 Exercise 2.15 (In-place Split 연산 구현 - 네덜란드 국기 알고리즘)
 **[원문]**
 Implement the QuickSelect split operation in place (without extra memory).
 
-**[해설 및 증명]**
-- **3-Way Partitioning (Dutch National Flag Algorithm)**:
-  - 투 포인터 $low=1, mid=1, high=n$ 설정.
-  - $mid \le high$ 인 동안:
-    - $A[mid] < v$ 이면: `swap(A[low], A[mid])`, $low++, mid++$
-    - $A[mid] == v$ 이면: $mid++$
-    - $A[mid] > v$ 이면: `swap(A[mid], A[high])`, $high--$
-  - 메모리 추가 할당 없이 $O(n)$ 시간에 제자리 정렬 완료. $\blacksquare$
+**[쉬운 직관 가이드 (Dutch National Flag Algorithm)]**
+- **출제 의도**: 피벗(Pivot) $v$와 동일한 중복 값이 다수일 때 QuickSelect 성능 저하를 방지하기 위해, 추가 메모리 0바이트(In-place)로 배열을 **[ `< v` | `== v` | `> v` ]** 3구역으로 제자리 분할하는 알고리즘.
+- **포인터 3개 연산 메커니즘**:
+  - `low = 0, mid = 0, high = n - 1`
+  - `mid <= high` 인 동안 $n$번 단 1회 스캔:
+    1. `A[mid] < v`: `swap(A[low], A[mid])`, `low++, mid++` (작은 놈은 왼쪽 구석으로)
+    2. `A[mid] == v`: `mid++` (같은 놈은 가운데 두고 진행)
+    3. `A[mid] > v`: `swap(A[mid], A[high])`, `high--` (큰 놈은 오른쪽 구석으로)
+
+**[시간 및 공간 복잡도]**
+- 공간 복잡도: **In-place $O(1)$** (추가 메모리 미사용)
+- 시간 복잡도: 단 1회 순회 **$O(n)$** $\blacksquare$
 
 ---
 
-### 📌 Exercise 2.16 (무한 배열 탐색)
+### 📌 Exercise 2.16 (무한 배열 탐색 - Exponential Search 지수 탐색)
 **[원문]**
 Find position of $x$ in an infinite sorted array $A$ filled with $\infty$ after $n$ elements in $O(\log n)$ time.
 
-**[해설 및 증명]**
-1. **Exponential Search (지수적 범주 탐색)**:
-   - 인덱스 $i = 1$ 로 시작하여 $A[i] < x$ 이고 $A[i] \neq \infty$ 인 동안 $i = 2i$ 로 2배씩 늘립니다.
-   - 탐색 중단 지점 $i$ 는 $n < i \le 2n$ 범위에 도달하며, 이 단계는 $O(\log n)$ 걸립니다.
-2. **Binary Search (이진 탐색)**:
-   - 구간 $[i/2, i]$ 내에서 일반 이진 탐색을 수행합니다 ➔ $O(\log n)$ 소요.
-3. 총 시간 복잡도: $O(\log n) + O(\log n) = \mathbf{O(\log n)}$.
+**[쉬운 직관 가이드 & 2단계 풀이]**
+- **출제 의도**: 배열의 끝 $n$의 위치를 알 수 없는 무한 배열에서 이진 탐색(Binary Search)의 상한(High boundary)을 지수적 탐색으로 먼저 확보한 후 이진 탐색을 수행하는 기법.
+1. **1단계: 지수적 범주 탐색 (Exponential Search)**:
+   - 인덱스 $i = 1$부터 시작하여 $i = 2, 4, 8, 16 \dots$ 로 2배씩 껑충 뜁니다.
+   - $A[i] \ge x$ 이거나 $A[i] = \infty$ 가 되는 지점에서 스톱합니다.
+   - $n$ 근처까지 2배씩 접근하므로 탐색 중단 지점까지 횟수는 **$O(\log n)$**.
+2. **2단계: 이진 탐색 (Binary Search)**:
+   - 탐색이 중단된 구간 $[i/2, i]$ 는 무조건 $x$를 포함하는 유한한 구간입니다.
+   - 이 구간 안에서 일반 이진 탐색을 실행 ➔ **$O(\log n)$**.
+3. **전체 시간 복잡도**: $O(\log n) + O(\log n) = \mathbf{O(\log n)}$ $\blacksquare$
 
 ---
 
