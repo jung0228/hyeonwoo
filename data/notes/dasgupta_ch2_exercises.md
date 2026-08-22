@@ -238,10 +238,6 @@ Suppose $b(t) = 1/t_0$ for $0 \le t \le t_0$, and $0$ otherwise.
 (a) Describe in words the effect of this system.
 (b) What is the corresponding polynomial?
 
-**[쉬운 직관 가이드 (How to understand)]**
-- **시불변 시스템(LTI)**: 오늘 소리치든 10분 뒤 소리치든 똑같이 반응하는 시스템입니다. (시간에 따라 기계 성질이 변치 않음)
-- **출제 의도**: 신호처리 분야의 "이동평균 필터(Boxcar filter)"가 나중에 배울 FFT(고속 푸리에 변환) 다항식 곱셈과 완벽히 동치라는 교양/배경지식 연결 문제.
-
 **[해설 및 증명]**
 - **(a) 서술적 의미**: 입력 신호를 구간 $[0, t_0]$ 동안 이동 평균(Moving Average)하여 뾰족한 잡음을 평단화(Smoothing)하는 **이동평균 저역통과 필터(Low-pass Smoothing Filter)** 입니다.
 - **(b) 다항식 표현**: 연속 신호를 이산화하면 계수가 모두 $1/t_0$ 이고 차수가 $0$부터 $m = t_0/\Delta t$ 까지인 다항식이 됩니다:
@@ -253,12 +249,7 @@ Suppose $b(t) = 1/t_0$ for $0 \le t \le t_0$, and $0$ otherwise.
 **[원문]**
 What is the sum of the $n$th roots of unity? What is their product if $n$ is odd? If $n$ is even?
 
-**[쉬운 직관 가이드 (How to understand)]**
-- **피자 4등분 동서남북 직관**: $n=4$ (4제곱근) 일 때 $1, -1, i, -i$ 4개 점이 복소평면 원 위에 완벽한 4등분 대칭으로 찍힙니다.
-- **합이 0인 이유**: 동서남북 4개 방향에서 똑같은 힘으로 끌어당기면 서로의 힘이 상쇄되어 정중앙(0)이 되는 것과 같습니다.
-- **곱이 $(-1)^{n-1}$ 인 이유**: $(1) \times (-1) \times (i) \times (-i) = -1$ 처럼 $n$이 짝수일 땐 $-1$, 홀수일 땐 $1$이 됩니다.
-
-**[엄밀한 증명]**
+**[해설 및 증명]**
 - $n$제곱근의 집합: $\omega^k = e^{i 2\pi k / n} \quad (k=0, 1, \dots, n-1)$
 - **합 (Sum)**: $\sum_{k=0}^{n-1} \omega^k = \frac{\omega^n - 1}{\omega - 1} = \frac{1 - 1}{\omega - 1} = \mathbf{0}$
 - **곱 (Product)**:
@@ -268,22 +259,40 @@ What is the sum of the $n$th roots of unity? What is their product if $n$ is odd
 
 ---
 
-### 📌 Exercise 2.8 (FFT 계산 연습)
+### 📌 Exercise 2.8 (FFT 고정 대입점 원리 & (a), (b) 전수 상세 계산)
 **[원문]**
-(a) $(1, 0, 0, 0)$의 FFT 및 역FFT 원본 수열 구하기 ($\omega = -i$).
-(b) $(1, 0, 1, -1)$의 FFT 구하기.
+Practice with Fast Fourier Transform:
+(a) What is the FFT of $(1, 0, 0, 0)$? What is the un-normalized Inverse FFT of $(1, 0, 0, 0)$?
+(b) What is the FFT of $(1, 0, 1, -1)$?
 
-**[해설 및 증명]**
-- **(a)** $n=4, \omega = e^{-i 2\pi / 4} = -i$.
-  - $A(\omega^k) = \sum_{j=0}^3 a_j \omega^{jk} = a_0 = 1$. 따라서 FFT 결과는 $\mathbf{(1, 1, 1, 1)}$.
-  - 역FFT로 $(1, 0, 0, 0)$이 나오는 원본 수열은 $\frac{1}{4} \sum_{k=0}^3 \omega^{-jk} = \mathbf{(1/4, 1/4, 1/4, 1/4)}$.
-- **(b)** $(1, 0, 1, -1)$:
-  - $f(x) = 1 + x^2 - x^3$
-  - $f(\omega^0) = f(1) = 1 + 1 - 1 = \mathbf{1}$
-  - $f(\omega^1) = f(-i) = 1 + (-i)^2 - (-i)^3 = 1 - 1 - i = \mathbf{-i}$
-  - $f(\omega^2) = f(-1) = 1 + 1 - (-1) = \mathbf{3}$
-  - $f(\omega^3) = f(i) = 1 + i^2 - i^3 = 1 - 1 + i = \mathbf{i}$
-  - 최종 FFT 결과: $\mathbf{(1, -i, 3, i)}$
+**[쉬운 직관 원리: 고정 대입점과 확장성]**
+1. **$n=4$ 개짜리 수열의 FFT 대입점 고정 원리**:
+   - 데이터 개수가 4개이면 복소수 단위원($360^\circ$)을 **4등분한 동서남북 4개 점**으로 대입점 $x$가 완벽히 고정됩니다:
+     $$\omega^0 = \mathbf{1}, \quad \omega^1 = \mathbf{-i}, \quad \omega^2 = \mathbf{-1}, \quad \omega^3 = \mathbf{i}$$
+2. **데이터 개수가 $n=2, 4, 8, 16$ 로 늘어날 때 고정점의 변화**:
+   - $n=2$ (2등분): $1, -1$
+   - $n=4$ (4등분): $1, -i, -1, i$
+   - $n=8$ (8등분): $1, \frac{\sqrt{2}}{2}-\frac{\sqrt{2}}{2}i, -i, -\frac{\sqrt{2}}{2}-\frac{\sqrt{2}}{2}i, -1, -\frac{\sqrt{2}}{2}+\frac{\sqrt{2}}{2}i, i, \frac{\sqrt{2}}{2}+\frac{\sqrt{2}}{2}i$
+
+**[(a)번 수열 $(1, 0, 0, 0)$ 전수 상세 풀이]**
+- 입력 수열 $(a_0, a_1, a_2, a_3) = (1, 0, 0, 0)$ 을 다항식으로 변환:
+  $$A(x) = 1 + 0x + 0x^2 + 0x^3 = \mathbf{1} \quad (\text{상수 다항식})$$
+- 뒤의 $x$ 항들이 $0$으로 모두 날아가 $x$에 상관없이 무조건 $1$이 됩니다:
+  - $A(1) = 1$
+  - $A(-i) = 1$
+  - $A(-1) = 1$
+  - $A(i) = 1$
+- **(a) 정답**: FFT 결과 = $\mathbf{(1, 1, 1, 1)}$ (역FFT 원본 수열 = $(1/4, 1/4, 1/4, 1/4)$)
+
+**[(b)번 수열 $(1, 0, 1, -1)$ 전수 상세 풀이]**
+- 입력 수열 $(a_0, a_1, a_2, a_3) = (1, 0, 1, -1)$ 을 다항식으로 변환:
+  $$\mathbf{f(x) = 1 + 0x + 1x^2 - 1x^3 = 1 + x^2 - x^3}$$
+- 4개의 고정점 $(1, -i, -1, i)$ 를 $x$ 자리에 각각 대입:
+  1. $x = 1$ 대입: $f(1) = 1 + (1)^2 - (1)^3 = 1 + 1 - 1 = \mathbf{1}$
+  2. $x = -i$ 대입: $f(-i) = 1 + (-i)^2 - (-i)^3 = 1 + (-1) - (i) = \mathbf{-i}$
+  3. $x = -1$ 대입: $f(-1) = 1 + (-1)^2 - (-1)^3 = 1 + 1 - (-1) = \mathbf{3}$
+  4. $x = i$ 대입: $f(i) = 1 + (i)^2 - (i)^3 = 1 + (-1) - (-i) = \mathbf{i}$
+- **(b) 정답**: 결괏값을 순서대로 나열 ➔ $\mathbf{(1, -i, 3, i)}$
 
 ---
 
