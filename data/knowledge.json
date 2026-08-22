@@ -1673,6 +1673,27 @@
       "purpose": "2단계 존재 이유: 대학원 구술/필기 전공면접 백지 수식 유도 및 칼만필터, 베이지안 추론, 숄레스키 난수 생성을 수식으로 완벽히 정복.",
       "tradeoff_insight": "3단계 비판적 맹점: 단순 수식 암기 vs 원본 확률 공리(Kolmogorov/Bayes) 및 선형 아핀 변환(Covariance propagation) 인과관계 통찰.",
       "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, 나이브 베이즈, 딥러닝 손실함수."
+    },
+    {
+      "id": "dasgupta_ch2_exercises",
+      "label": "Dasgupta Ch2 분할 정복 연습문제 전수 풀이 (Ex 2.1 ~ 2.32)",
+      "category": "Algorithm",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/dasgupta_ch2_exercises.md",
+      "tags": [
+        "Algorithm",
+        "Divide and Conquer",
+        "Master Theorem",
+        "Karatsuba",
+        "FFT",
+        "QuickSort",
+        "Closest Pair"
+      ],
+      "definition": "1단계 개념: Dasgupta Ch 2 분할 정복 연습문제 2.1~2.32 전수 풀이 (카라츠바 곱셈, 재귀식 전개법, 마스터 정리, FFT 다항식 곱셈, In-place Split, Closest Pair 등).",
+      "purpose": "2단계 존재 이유: 대학원 알고리즘 지필/구술 시험 대비 및 분할 정복 시간복잡도(Recurrence Relation) 증명 체계 완성.",
+      "tradeoff_insight": "3단계 비판적 맹점: 마스터 정리 적용 가능 여부(T(n)=T(n-1)+O(1) 등 마스터 정리 불가능 형태 분별).",
+      "ai_connection": "4단계 AI 연결: FFT(Fast Fourier Transform - 시계열/신호 처리 및 Transformer 컨볼루션 연산 속도 향상), QuickSelect(상위 k개 피처 추출)."
     }
   ],
   "edges": [
@@ -2572,6 +2593,12 @@
       "target": "mml_ch6_exercises",
       "relation": "applied_to",
       "weight": 4
+    },
+    {
+      "source": "dasgupta_ch2_exercises",
+      "target": "mml_ch6_exercises",
+      "relation": "applied_to",
+      "weight": 3
     }
   ],
   "categories": {
