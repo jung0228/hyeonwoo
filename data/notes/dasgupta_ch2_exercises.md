@@ -38,7 +38,7 @@ $$X_L Y_R + X_R Y_L = (X_L + X_R)(Y_L + Y_R) - X_L Y_L - X_R Y_R$$
 
 ### 📌 2. 분할 정복(Divide-and-Conquer)의 3단계 기본 구조
 분할 정복은 큰 문제를 한 번에 풀지 않고, 동일한 유형의 더 작은 문제들로 쪼개어 해결하는 알고리즘 설계 패러다임입니다:
-1. **Divide (분할)**: 크기가 $n$인 입력 문제를 크기가 더 작은 $b$분의 $1$ 크기인 서브문제 $a$개로 분할합니다.
+1. **Divide (분할)**: 크기가 $n$인 입력 문제를 크기가 더 작은 $b$분의 $1$ 크인 서브문제 $a$개로 분할합니다.
 2. **Conquer (정복)**: 서브문제들을 재귀적(Recursion)으로 해결합니다. 문제 크기가 충분히 작아지면 기저 조건(Base Case)에서 직접 구합니다.
 3. **Combine (병합)**: 서브문제들의 해를 합쳐 원래 문제의 최종 답을 만듭니다.
 
@@ -157,20 +157,42 @@ Section 2.2 describes a method for solving recurrence relations which is based o
 
 ---
 
-### 📌 Exercise 2.4 (알고리즘 A, B, C 시간복잡도 비교)
+### 📌 Exercise 2.4 (알고리즘 A, B, C 시간복잡도 전개 및 비교)
 **[원문]**
-Algorithm A: 5개의 크기 $n/2$ 서브문제, 병합시간 $O(n)$.
-Algorithm B: 2개의 크기 $n-1$ 서브문제, 병합시간 $O(1)$.
-Algorithm C: 9개의 크기 $n/3$ 서브문제, 병합시간 $O(n^2)$.
+Suppose you are choosing between the following three algorithms:
+- Algorithm A solves problems of size $n$ by dividing them into five subproblems of size $n/2$, recursively solving each subproblem, and then combining the solutions in $O(n)$ time.
+- Algorithm B solves problems of size $n$ by recursively solving two subproblems of size $n-1$ and then combining the solutions in $O(1)$ time.
+- Algorithm C solves problems of size $n$ by dividing them into nine subproblems of size $n/3$, recursively solving each subproblem, and then combining the solutions in $O(n^2)$ time.
+What are the running times of the three algorithms? Which one should you choose?
 
-**[해설 및 증명]**
-- **Algorithm A**: $T_A(n) = 5 T(n/2) + O(n)$. 마스터 정리 적용 ($a=5, b=2, d=1$).
-  - $\log_2 5 \approx 2.32 > 1 = d \implies T_A(n) = \mathbf{O(n^{\log_2 5}) \approx O(n^{2.32})}$
-- **Algorithm B**: $T_B(n) = 2 T(n-1) + O(1)$. 재귀 트리로 풀면 깊이 $n$에서 노드 수가 $2^n$개.
-  - $T_B(n) = \mathbf{O(2^n)}$ (지수 시간)
-- **Algorithm C**: $T_C(n) = 9 T(n/3) + O(n^2)$. 마스터 정리 적용 ($a=9, b=3, d=2$).
-  - $\log_3 9 = 2 = d \implies T_C(n) = \mathbf{O(n^2 \log n)}$
-- **최종 선택**: 차수가 가장 낮은 **Algorithm C ($O(n^2 \log n)$)** 가 가장 빠르므로 Algorithm C를 선택합니다.
+**[해설 및 전개 풀이]**
+
+1. **Algorithm A 풀이**:
+   - 재귀식: $T_A(n) = 5T_A(n/2) + O(n)$
+   - 마스터 정리 파라미터: $a = 5, b = 2, d = 1$
+   - $\log_b a = \log_2 5 \approx 2.3219 > 1(d)$
+   - **결과**: 재귀 연산이 지배적이므로 마스터 정리 Case 3 적용:
+     $$\mathbf{T_A(n) = O(n^{\log_2 5}) \approx O(n^{2.32})}$$
+
+2. **Algorithm B 풀이**:
+   - 재귀식: $T_B(n) = 2T_B(n-1) + O(1)$
+   - 문제 크기가 1씩 줄어들므로 마스터 정리 적용 불가 ➔ 직접 대입 전개:
+     - 1차 대입: $T(n) = 2(2T(n-2) + c) + c = 2^2 T(n-2) + c(1 + 2)$
+     - 2차 대입: $T(n) = 2^2 (2T(n-3) + c) + c(1 + 2) = 2^3 T(n-3) + c(1 + 2 + 2^2)$
+     - $k$번째 일반항: $T(n) = 2^k T(n-k) + c(2^k - 1)$
+     - $k = n-1$ 대입 시:
+     $$\mathbf{T_B(n) = 2^{n-1} T(1) + c(2^{n-1} - 1) = O(2^n)}$$
+
+3. **Algorithm C 풀이**:
+   - 재귀식: $T_C(n) = 9T_C(n/3) + O(n^2)$
+   - 마스터 정리 파라미터: $a = 9, b = 3, d = 2$
+   - $\log_b a = \log_3 9 = 2 = d$
+   - **결과**: 재귀 연산과 병합 연산의 무게가 동일하므로 마스터 정리 Case 2 적용:
+     $$\mathbf{T_C(n) = O(n^2 \log n)}$$
+
+**[최종 비교 및 선택]**
+- 세 알고리즘의 성장의 차수 비교: $n^2 \log n < n^{2.32} \ll 2^n$
+- **결론**: 가장 적은 시간 복잡도를 가진 **Algorithm C ($O(n^2 \log n)$)** 를 선택해야 합니다.
 
 ---
 
