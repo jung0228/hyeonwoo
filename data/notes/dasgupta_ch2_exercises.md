@@ -411,9 +411,127 @@ Find position of $x$ in an infinite sorted array $A$ filled with $\infty$ after 
 
 ---
 
-### 📌 Exercise 2.17 (고정점 $A[i] = i$ 찾기)
+### 📌 Exercise 2.17 (고정점 $A[i] = i$ 찾기 - 인터랙티브 시각화 시뮬레이터 내장)
 [원문]
 Find if there exists $i$ such that $A[i] = i$ in a sorted array of distinct integers in $O(\log n)$ time.
+
+[인터랙티브 동적 시각화 시뮬레이터]
+<div id="fixed-point-sim" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 20px; margin: 18px 0; color: #f8fafc; font-family: Pretendard, sans-serif;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+    <div>
+      <span style="font-size: 1.1rem; font-weight: 700; color: #38bdf8;">🎬 O(log n) 고정점(Fixed Point) 이진 탐색 시뮬레이터</span>
+      <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 2px;">정렬된 서로 다른 정수 배열에서 Low, Mid, High 포인터가 이동하며 고정점을 찾는 과정을 실시간 확인합니다.</p>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button onclick="window.simStepPrev()" id="sim-prev-btn" style="background:#334155; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem;">◀ 이전 단계</button>
+      <button onclick="window.simStepNext()" id="sim-next-btn" style="background:#0284c7; color:#fff; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:700; font-size:0.85rem;">다음 단계 ▶</button>
+      <button onclick="window.simReset()" style="background:#475569; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:0.85rem;">↺ 리셋</button>
+    </div>
+  </div>
+
+  <div id="sim-status-box" style="background:rgba(30,41,59,0.8); border-left: 4px solid #38bdf8; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 0.9rem; line-height: 1.5;">
+    준비 완료: [다음 단계 ▶] 버튼을 눌러 탐색을 시작하세요!
+  </div>
+
+  <div id="sim-array-container" style="display: flex; gap: 8px; justify-content: center; overflow-x: auto; padding: 12px 0 20px 0;">
+    <!-- Rendered dynamically -->
+  </div>
+
+  <div style="display:flex; justify-content:center; gap: 20px; font-size: 0.8rem; color:#94a3b8; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+    <span><span style="display:inline-block; width:12px; height:12px; background:#38bdf8; border-radius:3px; vertical-align:middle;"></span> Low 포인터</span>
+    <span><span style="display:inline-block; width:12px; height:12px; background:#f59e0b; border-radius:3px; vertical-align:middle;"></span> Mid 검사점</span>
+    <span><span style="display:inline-block; width:12px; height:12px; background:#ec4899; border-radius:3px; vertical-align:middle;"></span> High 포인터</span>
+    <span><span style="display:inline-block; width:12px; height:12px; background:#10b981; border-radius:3px; vertical-align:middle;"></span> 발견된 고정점 A[i]=i</span>
+    <span><span style="display:inline-block; width:12px; height:12px; background:#334155; opacity:0.4; border-radius:3px; vertical-align:middle;"></span> 탈락 구간 (Search Pruned)</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  const arr = [-10, -5, 0, 3, 7, 9, 12, 17];
+  let step = 0;
+  const history = [
+    { low: 0, high: 7, mid: 3, status: "초기 상태: 전체 구간 [Low=0, High=7] 탐색 시작! 중간 인덱스 Mid = (0+7)/2 = 3 검사", found: false, eliminated: [] },
+    { low: 0, high: 7, mid: 3, status: "검사 완료: A[3] = 3 이므로 A[mid] == mid 발견! (0초만에 고정점 Index 3 발견 성공!)", found: true, eliminated: [] }
+  ];
+
+  // More detailed step for explanation: let's do a 4-step example with target at index 5 or index 4
+  const arr2 = [-4, -1, 0, 2, 4, 7, 10, 15]; // Fixed point at 4: A[4]=4
+  const steps = [
+    { low: 0, high: 7, mid: 3, status: "Step 1: 전체 범위 [Low=0, High=7] 에서 중간 Mid=3 확인 ➔ A[3] = 2. 값(2) < 인덱스(3) 이므로 왼쪽 절반 [0~3] 전격 탈락!", found: false, elim: [0,1,2,3] },
+    { low: 4, high: 7, mid: 5, status: "Step 2: 우측 구간 [Low=4, High=7] 로 축소! 중간 Mid=5 확인 ➔ A[5] = 7. 값(7) > 인덱스(5) 이므로 오른쪽 절반 [5~7] 전격 탈락!", found: false, elim: [0,1,2,3,5,6,7] },
+    { low: 4, high: 4, mid: 4, status: "Step 3: 남은 구간 [Low=4, High=4] 확인 ➔ A[4] = 4 ! (인덱스와 값이 일치하는 고정점 발견 성공!)", found: true, elim: [0,1,2,3,5,6,7] }
+  ];
+
+  window.simStepIndex = 0;
+  window.renderSim = function() {
+    const s = steps[window.simStepIndex];
+    const container = document.getElementById('sim-array-container');
+    const statusBox = document.getElementById('sim-status-box');
+    if (!container || !statusBox) return;
+
+    statusBox.innerHTML = `<strong>[탐색 단계 ${window.simStepIndex + 1}/${steps.length}]</strong> ${s.status}`;
+
+    container.innerHTML = arr2.map((val, idx) => {
+      const isElim = s.elim.includes(idx) && !(s.found && idx === s.mid);
+      const isMid = idx === s.mid;
+      const isLow = idx === s.low;
+      const isHigh = idx === s.high;
+      const isFixedPoint = s.found && idx === s.mid;
+
+      let border = "1px solid rgba(255,255,255,0.2)";
+      let bg = "#1e293b";
+      let opacity = "1";
+
+      if (isFixedPoint) {
+        bg = "#059669";
+        border = "2px solid #10b981";
+      } else if (isMid) {
+        bg = "#d97706";
+        border = "2px solid #f59e0b";
+      } else if (isElim) {
+        bg = "#0f172a";
+        opacity = "0.3";
+      }
+
+      let pointerBadges = [];
+      if (isLow) pointerBadges.push('<span style="background:#38bdf8;color:#000;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">L</span>');
+      if (isMid) pointerBadges.push('<span style="background:#f59e0b;color:#000;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">M</span>');
+      if (isHigh) pointerBadges.push('<span style="background:#ec4899;color:#fff;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">H</span>');
+
+      return `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px; opacity:${opacity}; transition:all 0.3s ease;">
+          <div style="font-size:0.75rem; color:#94a3b8; font-weight:600;">i=${idx}</div>
+          <div style="width:48px; height:52px; background:${bg}; border:${border}; border-radius:8px; display:flex; justify-content:center; align-items:center; font-size:1.1rem; font-weight:700; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
+            ${val}
+          </div>
+          <div style="font-size:0.75rem; color:${val===idx?'#10b981':'#64748b'}; font-weight:600;">D=${val-idx}</div>
+          <div style="min-height:16px; display:flex; gap:2px;">${pointerBadges.join('')}</div>
+        </div>
+      `;
+    }).join('');
+  };
+
+  window.simStepNext = function() {
+    if (window.simStepIndex < steps.length - 1) {
+      window.simStepIndex++;
+      window.renderSim();
+    }
+  };
+  window.simStepPrev = function() {
+    if (window.simStepIndex > 0) {
+      window.simStepIndex--;
+      window.renderSim();
+    }
+  };
+  window.simReset = function() {
+    window.simStepIndex = 0;
+    window.renderSim();
+  };
+
+  setTimeout(window.renderSim, 100);
+})();
+</script>
 
 [해설 및 증명]
 - 변형된 이진 탐색(Binary Search):

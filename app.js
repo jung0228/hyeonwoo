@@ -973,6 +973,14 @@ async function openNotePanel(nodeData) {
 
   bodyEl.innerHTML = content + connectedHtml;
 
+  // Execute dynamic interactive scripts in note markdown
+  bodyEl.querySelectorAll('script').forEach(oldScript => {
+    const newScript = document.createElement('script');
+    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+    oldScript.parentNode.replaceChild(newScript, oldScript);
+  });
+
   if (window.renderMathInElement) {
     renderMathInElement(bodyEl, {
       output: 'html',
