@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "ai_unsolved_open_problems_2026",
+      "title": "뻔하지만 아무도 풀지 못한 AI의 5대 미해결 과제",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "화려한 데모 뒤에 숨겨진 5가지 거대한 핵심 미해결 질문(암기와 진짜 추론의 경계 상실, 비디오 생성의 물리 법칙 불이해 환각, 장기 과제 롤백 불가, 진짜 교차 모달리티 인과성 부재, 학습 데이터 인과 역추적 및 Machine Unlearning 불가능)에 대한 정밀 해부 칼럼.",
+      "file": "data/columns/ai_unsolved_open_problems_2026.md",
+      "category": "AI Open Problems & Philosophy",
+      "readTime": "11 min read"
+    },
+    {
       "id": "ai_conference_macro_trends_2026",
       "title": "2026 AI 학회 총결산: 패러다임의 대전환",
       "date": "2026-08-23",
