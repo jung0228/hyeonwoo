@@ -77,12 +77,11 @@ function getNodeCluster(node) {
 
 // 6개 주요 클러스터 좌표 설정 (수평 배치: 시스템 ➔ 알고리즘 ➔ 선형대수 ➔ 머신러닝 ➔ 딥러닝 ➔ 연구)
 const CLUSTER_CONFIG = {
-  '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.08, cy: 0.48 },
-  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.24, cy: 0.48 },
-  '선형대수': { color: '#f59e0b', label: '📐  Mathematics for Machine Learning (MML)', cx: 0.42, cy: 0.48 },
-  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.56, cy: 0.48 },
-  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.74, cy: 0.48 },
-  '연구':     { color: '#f43f5e', label: '🔭  연구 & 논문',   cx: 0.92, cy: 0.48 }
+  '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.10, cy: 0.48 },
+  '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.28, cy: 0.48 },
+  '선형대수': { color: '#f59e0b', label: '📐  Mathematics for Machine Learning (MML)', cx: 0.48, cy: 0.48 },
+  'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.70, cy: 0.48 },
+  'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.88, cy: 0.48 }
 };
 
 // ==========================================
@@ -519,7 +518,7 @@ function initGraph() {
   const nodes = knowledgeData.nodes.map(n => {
     const clusterName = getNodeCluster(n);
     const cc = CLUSTER_CONFIG[clusterName];
-    const jitter = () => (Math.random() - 0.5) * 130;
+    const jitter = () => (Math.random() - 0.5) * 220;
     return {
       ...n,
       cluster: clusterName,
@@ -2162,11 +2161,11 @@ async function initResearchGraph() {
 
   // Define 5 Research Sub-cluster Centers
   const RESEARCH_SUB_CLUSTERS = {
-    'omni': { label: '✨ Omni-modal & Unified', color: '#f43f5e', cx: 0.22, cy: 0.35, ids: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni'] },
-    'spatial': { label: '🎭 Spatiotemporal & RVOS', color: '#ec4899', cx: 0.50, cy: 0.28, ids: ['paper_virst', 'paper_lisa', 'paper_mevis', 'paper_momentseeker'] },
-    'video': { label: '📹 Long Video & Memory', color: '#fb923c', cx: 0.78, cy: 0.35, ids: ['paper_qwen2_vl', 'streamkv', 'clip', 'paper_llava'] },
-    'physical': { label: '🤖 Physical AI & World Model', color: '#38bdf8', cx: 0.32, cy: 0.72, ids: ['paper_cosmos', 'paper_flow_matching'] },
-    'rq': { label: '🔭 현우의 핵심 연구 과제 (RQ)', color: '#a78bfa', cx: 0.68, cy: 0.72, ids: ['rq_physical_world_model', 'rq_counterfactual_video_causality', 'rq_modality_decoupled_moe', 'rq_cross_modal_alignment', 'rq_video_temporal_grounding', 'rq_data_recipe_optimization'] }
+    'omni': { label: '✨ Omni-modal & Unified', color: '#f43f5e', cx: 0.18, cy: 0.24, ids: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni'] },
+    'video': { label: '📹 Long Video & Memory', color: '#fb923c', cx: 0.50, cy: 0.20, ids: ['paper_qwen2_vl', 'streamkv', 'clip', 'paper_llava'] },
+    'spatial': { label: '🎭 Spatiotemporal & RVOS', color: '#ec4899', cx: 0.82, cy: 0.24, ids: ['paper_virst', 'paper_lisa', 'paper_mevis', 'paper_momentseeker'] },
+    'physical': { label: '🤖 Physical AI & World Model', color: '#38bdf8', cx: 0.22, cy: 0.76, ids: ['paper_cosmos', 'paper_flow_matching'] },
+    'rq': { label: '🔭 현우의 핵심 연구 과제 (RQ)', color: '#a78bfa', cx: 0.78, cy: 0.76, ids: ['rq_physical_world_model', 'rq_counterfactual_video_causality', 'rq_modality_decoupled_moe', 'rq_cross_modal_alignment', 'rq_video_temporal_grounding', 'rq_data_recipe_optimization'] }
   };
 
   const getSubCluster = (nid) => {
@@ -2176,7 +2175,7 @@ async function initResearchGraph() {
     return 'rq';
   };
 
-  const jitter = () => (Math.random() - 0.5) * 130;
+  const jitter = () => (Math.random() - 0.5) * 220;
   const nodes = researchNodes.map(n => {
     const sub = getSubCluster(n.id);
     const cfg = RESEARCH_SUB_CLUSTERS[sub];
@@ -2229,12 +2228,12 @@ async function initResearchGraph() {
   researchSimulation = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(links)
       .id(d => d.id)
-      .distance(d => 100 - (d.weight || 1) * 10)
-      .strength(d => 0.28 + (d.weight || 1) * 0.04))
-    .force('charge', d3.forceManyBody().strength(-220))
-    .force('collide', d3.forceCollide().radius(d => getNodeRadius(d) + 14))
+      .distance(d => 180 - (d.weight || 1) * 12)
+      .strength(d => 0.25 + (d.weight || 1) * 0.04))
+    .force('charge', d3.forceManyBody().strength(-600))
+    .force('collide', d3.forceCollide().radius(d => getNodeRadius(d) + 38))
     .force('cluster', clusterForce(nodes, W, H, RESEARCH_SUB_CLUSTERS, 'subCluster'))
-    .alphaDecay(0.025);
+    .alphaDecay(0.020);
 
   // Render Links (100% Identical Styling to initGraph)
   const linkGroup = researchG.append('g').attr('class', 'links');
