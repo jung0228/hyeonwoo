@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "automated_research_world_class_blueprint_2026",
+      "title": "연구의 자동화: 손 안 대고 코 풀며 월클급 연구자가 되는 법",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "연구자 본인이 노가다 코딩과 실험에서 해방되어 연구 총괄 감독관이 되는 5단계 자율 연구 파이프라인(가설 생성, 코드 자동화, GPU 자율 학습, 자가 디버깅, 논문 자동 작성) 구축법과 1인 연구실로 월클급 톱티어 연구 실적을 쏟아내는 실전 메타 전략 칼럼.",
+      "file": "data/columns/automated_research_world_class_blueprint_2026.md",
+      "category": "Autonomous Research & World-Class Strategy",
+      "readTime": "16 min read"
+    },
+    {
       "id": "everyday_life_automation_blueprint_2026",
       "title": "일상의 모든 일을 자동화하기 위한 4대 핵심 연구 청사진",
       "date": "2026-08-23",
