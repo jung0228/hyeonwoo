@@ -240,7 +240,8 @@ git push origin main
 3. **무지성 반복 시도 금지 (Analyze Before Retrying)**:
    - 실패한 명령이나 탭 조정을 원인 분석 없이 똑같이 재시도하지 않는다.
 4. **실증 검증 없는 성공 선언 금지 (Verify Before Claiming Success)**:
-   - 파일 수정만으로 "완료했다"고 말하지 않으며, `git diff`, HTML 주석 닫힘 검사, `curl -I` 200 OK 수치적 검증 후 성공을 선언한다.
+   - 파일 수정만으로 "완료했다"고 말하지 않으며, 반드시 터미널에서 `node -c app.js` (문법 검증), `.git/hooks/pre-commit` 실행, `curl -I` 200 OK 수치적 검증을 통과한 뒤에만 성공을 선언한다.
+   - `node -c app.js` 에러가 발생하면 어떤 경우에도 완료 보고를 올릴 수 없다.
 5. **레이아웃 스코프 격리 & 사이드 이펙트 방지 (Preserve Isolation)**:
    - 새로운 UI/탭 추가 시 기존 탭의 `display`, `position`, `flex` 레이아웃에 충돌이나 밀림 현상이 없는지 사전에 점검한다.
 6. **작업 완료 후 무조건 Git 동기화**:
