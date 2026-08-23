@@ -2734,12 +2734,14 @@ function renderColumnRack() {
   const grid = document.getElementById('newspaper-grid');
   if (!grid) return;
   
-  if (columnsData.length === 0) {
+  const colItems = columnsData.filter(c => c.tab === 'column' || !c.tab);
+
+  if (colItems.length === 0) {
     grid.innerHTML = '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center">아직 발행된 칼럼이 없습니다.</p>';
     return;
   }
 
-  grid.innerHTML = columnsData.map(col => {
+  grid.innerHTML = colItems.map(col => {
     return `
       <div class="newspaper-card" onclick="openColumnReader('${col.id}')">
         <span class="npc-category">${col.category}</span>
