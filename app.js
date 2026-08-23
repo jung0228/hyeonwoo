@@ -2712,8 +2712,9 @@ async function initColumn() {
     dateEl.textContent = d.toLocaleDateString('ko-KR', options).toUpperCase();
   }
 
-  // Render newspaper shelf cards
+  // Render both column and auto-research newspaper shelf cards
   renderColumnRack();
+  renderAutoResearchRack();
 
   // Close button overlay bind
   const closeBtn = document.getElementById('reader-close-btn');
