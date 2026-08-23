@@ -114,7 +114,7 @@
     <button class="chat-fab" id="chat-fab" title="AI 어시스턴트 열기">🤖</button>
 
     <!-- ===== VIEW: GRAPH ===== -->
-    <div class="view active" id="view-graph">
+    <div class="view active" id="view-graph" style="display: flex;">
       <div class="graph-container" id="graph-container">
         <!-- Graph Legend (토글) -->
         <button class="legend-toggle-btn" id="legend-toggle-btn" title="카테고리 보기/숨기기">🏷️</button>
@@ -146,26 +146,6 @@
 
         <!-- Tooltip -->
         <div class="node-tooltip" id="node-tooltip"></div>
-      </div>
-
-      <!-- Note Panel Backdrop (모바일) -->
-      <div class="note-panel-backdrop" id="note-panel-backdrop" onclick="closeNotePanel()"></div>
-
-      <!-- Note Panel -->
-      <div class="note-panel" id="note-panel">
-        <div class="note-panel-header">
-          <div class="note-panel-title" id="note-panel-title">개념을 클릭하세요</div>
-          <div class="note-panel-meta" id="note-panel-meta"></div>
-          <button class="copy-text-btn" id="copy-note-btn" title="블로그/카페 복사용 (배경색 없이 순수 텍스트만 복사)">📋 블로그용 복사</button>
-          <button class="note-close" id="note-close">×</button>
-        </div>
-        <div class="note-panel-body" id="note-panel-body">
-          <div class="note-placeholder">
-            <div class="note-placeholder-icon">👆</div>
-            <p>그래프에서 개념 노드를 클릭하면<br />여기에 노트가 표시됩니다.</p>
-            <p class="note-placeholder-hint">엣지(선)에는 개념 간 연결 인사이트가 있어요!</p>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -207,16 +187,24 @@
     </div>
 
     <!-- ===== VIEW: RESEARCH (DEDICATED RESEARCH KNOWLEDGE GRAPH VIEW) ===== -->
-    <div class="view" id="view-research">
+    <div class="view" id="view-research" style="display: flex;">
       <div class="graph-container" id="research-graph-container">
+        <!-- Category Legend (토글) -->
+        <button class="legend-toggle-btn" id="research-legend-toggle-btn" onclick="const l=document.getElementById('research-legend');l.style.display=l.style.display==='none'?'block':'none'" title="카테고리 보기/숨기기">🏷️</button>
+        <div class="legend" id="research-legend" style="display:none">
+          <div class="legend-title">카테고리 <button class="legend-close-btn" onclick="document.getElementById('research-legend').style.display='none'">×</button></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#f43f5e"></span> 📄 Paper</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ec4899"></span> 🔭 Research Agenda</div>
+        </div>
+
         <!-- Confidence Legend -->
         <div class="confidence-legend">
           <div class="confidence-legend-title">자신감</div>
           <div class="confidence-legend-items">
-            <span class="cl-item"><span class="cl-dot" style="opacity:0.25"></span> 아이디어</span>
-            <span class="cl-item"><span class="cl-dot" style="opacity:0.5"></span> 탐색 중</span>
-            <span class="cl-item"><span class="cl-dot" style="opacity:0.75"></span> 활발함</span>
-            <span class="cl-item"><span class="cl-dot" style="opacity:1"></span> 숙달됨</span>
+            <span class="cl-item"><span class="cl-dot" style="opacity:0.25"></span> 모름</span>
+            <span class="cl-item"><span class="cl-dot" style="opacity:0.5"></span> 기초</span>
+            <span class="cl-item"><span class="cl-dot" style="opacity:0.75"></span> 중급</span>
+            <span class="cl-item"><span class="cl-dot" style="opacity:1"></span> 심화</span>
           </div>
         </div>
 
@@ -232,6 +220,26 @@
 
         <!-- Tooltip -->
         <div class="node-tooltip" id="research-node-tooltip"></div>
+      </div>
+    </div>
+
+    <!-- Note Panel Backdrop (모바일) -->
+    <div class="note-panel-backdrop" id="note-panel-backdrop" onclick="closeNotePanel()"></div>
+
+    <!-- Note Panel (Shared across views) -->
+    <div class="note-panel" id="note-panel">
+      <div class="note-panel-header">
+        <div class="note-panel-title" id="note-panel-title">개념을 클릭하세요</div>
+        <div class="note-panel-meta" id="note-panel-meta"></div>
+        <button class="copy-text-btn" id="copy-note-btn" title="블로그/카페 복사용 (배경색 없이 순수 텍스트만 복사)">📋 블로그용 복사</button>
+        <button class="note-close" id="note-close">×</button>
+      </div>
+      <div class="note-panel-body" id="note-panel-body">
+        <div class="note-placeholder">
+          <div class="note-placeholder-icon">👆</div>
+          <p>그래프에서 노드를 클릭하면<br />여기에 상세 노트가 표시됩니다.</p>
+          <p class="note-placeholder-hint">엣지(선)에는 관련 연결 인사이트가 포함되어 있습니다.</p>
+        </div>
       </div>
     </div>
 

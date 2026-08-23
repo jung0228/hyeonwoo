@@ -1,4 +1,54 @@
 {
+  "categories": {
+    "Generative": {
+      "color": "#a78bfa",
+      "icon": "✨"
+    },
+    "Architecture": {
+      "color": "#818cf8",
+      "icon": "🏗️"
+    },
+    "Language Model": {
+      "color": "#c084fc",
+      "icon": "📝"
+    },
+    "Multimodal": {
+      "color": "#fb923c",
+      "icon": "🎭"
+    },
+    "RL": {
+      "color": "#34d399",
+      "icon": "🎮"
+    },
+    "Training": {
+      "color": "#e879f9",
+      "icon": "⚙️"
+    },
+    "Systems": {
+      "color": "#ef4444",
+      "icon": "💻"
+    },
+    "Algorithm": {
+      "color": "#06b6d4",
+      "icon": "🔢"
+    },
+    "Math & Stats": {
+      "color": "#4ade80",
+      "icon": "📐"
+    },
+    "Math Problems": {
+      "color": "#facc15",
+      "icon": "📝"
+    },
+    "Paper": {
+      "color": "#f43f5e",
+      "icon": "📄"
+    },
+    "Research Agenda": {
+      "color": "#ec4899",
+      "icon": "🔭"
+    }
+  },
   "nodes": [
     {
       "id": "vae",
@@ -197,22 +247,6 @@
       "nodeType": "concept"
     },
     {
-      "id": "hcx_omni",
-      "label": "HCX SEED Omni",
-      "category": "Paper",
-      "confidence": 4,
-      "studyCount": 6,
-      "tags": [
-        "Paper",
-        "Model",
-        "Any-to-Any",
-        "Data Recipe",
-        "SFT Stages"
-      ],
-      "note": "data/notes/hcx_omni.md",
-      "nodeType": "paper"
-    },
-    {
       "id": "vit",
       "label": "ViT",
       "category": "Architecture",
@@ -290,22 +324,6 @@
       ],
       "note": "data/notes/kv_cache.md",
       "nodeType": "concept"
-    },
-    {
-      "id": "clip",
-      "label": "CLIP",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 3,
-      "tags": [
-        "Paper",
-        "ICML2021",
-        "Contrastive",
-        "Zero-shot",
-        "Vision-Language"
-      ],
-      "note": "data/notes/paper_clip.md",
-      "nodeType": "paper"
     },
     {
       "id": "linear_algebra_problems",
@@ -951,22 +969,6 @@
       "nodeType": "concept"
     },
     {
-      "id": "streamkv",
-      "label": "StreamKV",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "ICLR2025",
-        "Streaming Video KV",
-        "KV Eviction",
-        "Attention Budget"
-      ],
-      "note": "data/notes/streamkv.md",
-      "nodeType": "paper"
-    },
-    {
       "id": "svd",
       "label": "SVD & Eigendecomposition",
       "category": "Math & Stats",
@@ -1143,289 +1145,6 @@
       "nodeType": "concept"
     },
     {
-      "id": "paper_llava",
-      "label": "LLaVA",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 3,
-      "tags": [
-        "Paper",
-        "NeurIPS2023",
-        "VLM",
-        "Visual Instruction Tuning",
-        "Projection"
-      ],
-      "note": "data/notes/paper_llava.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_momentseeker",
-      "label": "Momentseeker",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "CVPR2025",
-        "LVMR",
-        "Temporal Grounding",
-        "Video Benchmark"
-      ],
-      "note": "data/notes/paper_momentseeker.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "rq_cross_modal_alignment",
-      "label": "RQ: Cross-Modal Alignment",
-      "category": "Research Agenda",
-      "confidence": 2,
-      "studyCount": 5,
-      "tags": [
-        "ResearchAgenda",
-        "Alignment",
-        "OpenProblem",
-        "FineGrained"
-      ],
-      "note": "data/notes/rq_cross_modal_alignment.md",
-      "nodeType": "research"
-    },
-    {
-      "id": "rq_video_temporal_grounding",
-      "label": "RQ: Video Temporal Grounding",
-      "category": "Research Agenda",
-      "confidence": 3,
-      "studyCount": 5,
-      "tags": [
-        "ResearchAgenda",
-        "StreamingVideo",
-        "KVCompression",
-        "DAVIAN_KAIST"
-      ],
-      "note": "data/notes/rq_video_temporal_grounding.md",
-      "nodeType": "research"
-    },
-    {
-      "id": "rq_data_recipe_optimization",
-      "label": "RQ: Data Recipe Optimization",
-      "category": "Research Agenda",
-      "confidence": 3,
-      "studyCount": 4,
-      "tags": [
-        "ResearchAgenda",
-        "DataRecipe",
-        "TokenMixture",
-        "HCX_Omni"
-      ],
-      "note": "data/notes/rq_data_recipe_optimization.md",
-      "nodeType": "research"
-    },
-    {
-      "id": "paper_moshi",
-      "label": "Moshi",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 3,
-      "tags": [
-        "Paper",
-        "Kyutai2024",
-        "FullDuplex",
-        "RealTimeOmni",
-        "SpokenDialogue"
-      ],
-      "note": "data/notes/paper_moshi.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_emu3",
-      "label": "Emu3",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 3,
-      "tags": [
-        "Paper",
-        "BAAI2024",
-        "NextTokenPrediction",
-        "AnyToAny",
-        "UnifiedMultimodal"
-      ],
-      "note": "data/notes/paper_emu3.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_qwen2_vl",
-      "label": "Qwen2-VL",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "Alibaba2024",
-        "DynamicResolution",
-        "MRoPE",
-        "VideoUnderstanding"
-      ],
-      "note": "data/notes/paper_qwen2_vl.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_mini_omni2",
-      "label": "Mini-Omni 2",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 3,
-      "tags": [
-        "Paper",
-        "ICLR2025",
-        "RealTimeInteractive",
-        "OmniModal",
-        "Interruption"
-      ],
-      "note": "data/notes/paper_mini_omni2.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_dynin_omni",
-      "label": "Dynin-Omni",
-      "category": "Paper",
-      "confidence": 4,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "SNU_AIDAS_2026",
-        "MaskedDiffusion",
-        "OmniModal",
-        "UnifiedArchitecture"
-      ],
-      "note": "data/notes/paper_dynin_omni.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_virst",
-      "label": "VIRST",
-      "category": "Paper",
-      "confidence": 4,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "CVPR2026_Oral",
-        "SNU_AIDAS",
-        "RVOS",
-        "SpatiotemporalSegmentation"
-      ],
-      "note": "data/notes/paper_virst.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_show_o",
-      "label": "Show-o",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 3,
-      "tags": [
-        "Paper",
-        "ICLR2025",
-        "DiscreteDiffusion",
-        "UnifiedTransformer",
-        "AnyToAny"
-      ],
-      "note": "data/notes/paper_show_o.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_lisa",
-      "label": "LISA",
-      "category": "Paper",
-      "confidence": 4,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "CVPR2024",
-        "ReasoningSegmentation",
-        "SEG_Token",
-        "PixelGrounding"
-      ],
-      "note": "data/notes/paper_lisa.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_mevis",
-      "label": "MeViS",
-      "category": "Paper",
-      "confidence": 4,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "ICCV2023",
-        "CVPR_PVUW",
-        "MotionSegmentation",
-        "VideoBenchmark"
-      ],
-      "note": "data/notes/paper_mevis.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_cosmos",
-      "label": "Cosmos",
-      "category": "Paper",
-      "confidence": 3,
-      "studyCount": 3,
-      "tags": [
-        "Paper",
-        "NVIDIA_2026",
-        "WorldModel",
-        "PhysicalAI",
-        "FlowMatching"
-      ],
-      "note": "data/notes/paper_cosmos.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "paper_flow_matching",
-      "label": "Flow Matching",
-      "category": "Paper",
-      "confidence": 4,
-      "studyCount": 4,
-      "tags": [
-        "Paper",
-        "Theory",
-        "ConsistencyModels",
-        "FastSampling",
-        "VectorField"
-      ],
-      "note": "data/notes/paper_flow_matching.md",
-      "nodeType": "paper"
-    },
-    {
-      "id": "rq_physical_world_model",
-      "label": "RQ: Physics 4D World Model",
-      "category": "Research Agenda",
-      "confidence": 3,
-      "studyCount": 5,
-      "tags": [
-        "ResearchAgenda",
-        "PhysicalAI",
-        "RoboticsWorldModel",
-        "DyninRobotics"
-      ],
-      "note": "data/notes/rq_physical_world_model.md",
-      "nodeType": "research"
-    },
-    {
-      "id": "rq_counterfactual_video_causality",
-      "label": "RQ: Counterfactual Video Causality",
-      "category": "Research Agenda",
-      "confidence": 3,
-      "studyCount": 5,
-      "tags": [
-        "ResearchAgenda",
-        "CausalInference",
-        "SpatiotemporalReasoning",
-        "VIRST"
-      ],
-      "note": "data/notes/rq_counterfactual_video_causality.md",
-      "nodeType": "research"
-    },
-    {
       "id": "hamiltonian_mechanics_physics",
       "label": "해밀토니안 물리 역학 (HNN)",
       "category": "Math & Stats",
@@ -1456,21 +1175,6 @@
       ],
       "note": "data/notes/causal_inference_scm.md",
       "nodeType": "concept"
-    },
-    {
-      "id": "rq_modality_decoupled_moe",
-      "label": "RQ: Modality-Decoupled MoE",
-      "category": "Research Agenda",
-      "confidence": 3,
-      "studyCount": 5,
-      "tags": [
-        "ResearchAgenda",
-        "SparseMoE",
-        "ContinualLearning",
-        "CatastrophicForgetting"
-      ],
-      "note": "data/notes/rq_modality_decoupled_moe.md",
-      "nodeType": "research"
     },
     {
       "id": "vector_calculus_ch5_2_gradients",
@@ -1903,18 +1607,6 @@
       "relation": "input_to"
     },
     {
-      "source": "multimodal",
-      "target": "hcx_omni",
-      "weight": 4,
-      "relation": "instantiated_as"
-    },
-    {
-      "source": "data_recipe",
-      "target": "hcx_omni",
-      "weight": 4,
-      "relation": "key_component"
-    },
-    {
       "source": "vit",
       "target": "vision_encoder",
       "weight": 3,
@@ -1927,22 +1619,10 @@
       "relation": "is_a"
     },
     {
-      "source": "clip",
-      "target": "multimodal",
-      "weight": 3,
-      "relation": "enables"
-    },
-    {
       "source": "lora",
       "target": "sft",
       "weight": 2,
       "relation": "enables_efficient"
-    },
-    {
-      "source": "sft",
-      "target": "hcx_omni",
-      "weight": 3,
-      "relation": "used_in"
     },
     {
       "source": "linear_algebra_ch2_1_systems",
@@ -2241,13 +1921,6 @@
       "insight": "컴퓨터 시스템의 계층적 캐시 원리를 LLM 추론 메모리에 적용"
     },
     {
-      "source": "kv_cache",
-      "target": "streamkv",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "장기 컨텍스트/비디오 처리 시 KV Cache 급증 문제를 해결하기 위한 스트리밍 압축 기법"
-    },
-    {
       "source": "linear_algebra_ch2_3_solving_systems",
       "target": "linear_algebra_problems",
       "relation": "uses",
@@ -2295,13 +1968,6 @@
       "relation": "part_of",
       "weight": 3,
       "insight": "프레임 및 비디오 토큰을 추출하는 비전 백본"
-    },
-    {
-      "source": "long_video_understanding",
-      "target": "streamkv",
-      "relation": "uses",
-      "weight": 3,
-      "insight": "장시간 비디오 프레임 처리 시 폭증하는 메모리를 제어하기 위해 KV 압축 활용"
     },
     {
       "source": "linear_algebra_ch2_6_basis_rank",
@@ -2366,258 +2032,6 @@
       "target": "vector_calculus_ch5_1_univariate",
       "relation": "basis_of",
       "weight": 3
-    },
-    {
-      "source": "contrastive_learning",
-      "target": "clip",
-      "relation": "basis_of",
-      "weight": 5,
-      "insight": "InfoNCE 대조 손실을 웹 스케일 4억 개 이미지-텍스트 쌍에 적용하여 Zero-shot 시각-언어 표현 공간 확립"
-    },
-    {
-      "source": "clip",
-      "target": "paper_llava",
-      "relation": "basis_of",
-      "weight": 5,
-      "insight": "LLaVA는 CLIP ViT 비전 인코더를 고정/조정하고 Linear Projection으로 LLM과 연결하여 Visual Instruction Tuning 개척"
-    },
-    {
-      "source": "paper_llava",
-      "target": "long_video_understanding",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "정적 이미지 VLM 구조를 비디오 프레임 시퀀스로 확장하여 Video-LLaVA 및 시간적 추론 발전"
-    },
-    {
-      "source": "long_video_understanding",
-      "target": "paper_momentseeker",
-      "relation": "tested_on",
-      "weight": 4,
-      "insight": "장시간 비디오 내 특정 사건의 시작/종료 시점을 찾는 초장거리 벤치마크"
-    },
-    {
-      "source": "streamkv",
-      "target": "rq_video_temporal_grounding",
-      "relation": "addresses",
-      "weight": 5,
-      "insight": "장시간 스트리밍 비디오의 KV 메모리 폭증을 해결하고 단일 프레임 단서 유실을 방지하는 핵심 연구 질문"
-    },
-    {
-      "source": "paper_momentseeker",
-      "target": "rq_video_temporal_grounding",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "KAIST DAVIAN 랩 및 LVMR 평가에서 드러난 찰나의 액션 탐색 실패 모드를 해결하기 위한 가설"
-    },
-    {
-      "source": "clip",
-      "target": "rq_cross_modal_alignment",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "CLIP의 Coarse Alignment 한계를 넘어 색상, 위치, 공간 관계 등 세부 속성을 정렬하는 미해결 연구 과제"
-    },
-    {
-      "source": "data_recipe",
-      "target": "rq_data_recipe_optimization",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "멀티모달 훈련 시 텍스트:이미지:비디오 토큰의 최적 믹스 비율을 규명하는 연구 과제"
-    },
-    {
-      "source": "hcx_omni",
-      "target": "rq_data_recipe_optimization",
-      "relation": "addresses",
-      "weight": 5,
-      "insight": "SEED Omni의 3단계 SFT 토큰 레시피(비디오 41.3%)의 수학적/실험적 근거를 탐구"
-    },
-    {
-      "source": "hcx_omni",
-      "target": "paper_moshi",
-      "relation": "improves",
-      "weight": 5,
-      "insight": "Moshi의 Dual-Token Full-Duplex 메커니즘으로 HCX의 턴테이킹 지연 및 단방향 대화 한계 극복"
-    },
-    {
-      "source": "hcx_omni",
-      "target": "paper_emu3",
-      "relation": "improves",
-      "weight": 5,
-      "insight": "Emu3의 순수 Next-Token 통합으로 HCX의 Discrete/Continuous 이원화 병목 해결"
-    },
-    {
-      "source": "hcx_omni",
-      "target": "paper_qwen2_vl",
-      "relation": "improves",
-      "weight": 5,
-      "insight": "Dynamic Resolution 및 Multimodal RoPE로 HCX의 32K 고정 컨텍스트 및 시공간 정렬 왜곡 해결"
-    },
-    {
-      "source": "hcx_omni",
-      "target": "paper_mini_omni2",
-      "relation": "improves",
-      "weight": 4,
-      "insight": "실시간 비디오-음성 인터럽트 스테이트 머신으로 실시간 서비스형 상호작용 구현"
-    },
-    {
-      "source": "paper_moshi",
-      "target": "rq_video_temporal_grounding",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "12.5Hz 저지연 스트리밍 음성 코덱과 비디오 프레임 동기화 연구"
-    },
-    {
-      "source": "paper_emu3",
-      "target": "rq_cross_modal_alignment",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "단일 Next-Token 목적식 하에서의 Cross-modal Alignment 표현 학습 연구"
-    },
-    {
-      "source": "paper_qwen2_vl",
-      "target": "rq_video_temporal_grounding",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "3D M-RoPE를 활용한 초장시간 비디오 인과 관계 추론 및 Temporal Grounding 극대화"
-    },
-    {
-      "source": "hcx_omni",
-      "target": "paper_dynin_omni",
-      "relation": "improves",
-      "weight": 5,
-      "insight": "서울대 AIDAS 랩: Masked-Diffusion 단일 아키텍처로 HCX의 8단계 복잡 파이프라인 및 이해-생성 이원화 병목 해결"
-    },
-    {
-      "source": "long_video_understanding",
-      "target": "paper_virst",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "CVPR 2026 Oral: 단순 시간 구간 탐색을 넘어 비디오 내 객체의 3차원 시공간 픽셀 분할(RVOS) 및 음향 추적 달성"
-    },
-    {
-      "source": "paper_dynin_omni",
-      "target": "paper_virst",
-      "relation": "basis_of",
-      "weight": 4,
-      "insight": "Dynin-Omni 파운데이션 위에서 VIRST 시공간 세그멘테이션 및 피지컬 AI 로보틱스 확장"
-    },
-    {
-      "source": "paper_virst",
-      "target": "rq_video_temporal_grounding",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "KAIST DAVIAN 랩 VMR 경험과 서울대 AIDAS 랩 VIRST의 시공간 픽셀 세그멘테이션 통합 연구"
-    },
-    {
-      "source": "paper_show_o",
-      "target": "paper_dynin_omni",
-      "relation": "basis_of",
-      "weight": 5,
-      "insight": "Show-o의 텍스트 AR + 시각 이산 디퓨전 통합 아이디어를 전 모달리티 Unified Masked-Diffusion으로 확장"
-    },
-    {
-      "source": "paper_lisa",
-      "target": "paper_virst",
-      "relation": "basis_of",
-      "weight": 5,
-      "insight": "LISA의 2D [SEG] 토큰 메커니즘을 3차원 비디오 시공간 픽셀 분할 및 오디오 쿼리로 확장"
-    },
-    {
-      "source": "paper_mevis",
-      "target": "paper_virst",
-      "relation": "tested_on",
-      "weight": 5,
-      "insight": "MeViS 모션 기반 비디오 객체 분할 벤치마크에서 SOTA 달성 및 CVPR 2026 PVUW 세계 3위"
-    },
-    {
-      "source": "paper_lisa",
-      "target": "paper_mevis",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "정적 이미지 추론 세그멘테이션에서 동적 비디오 모션 세그멘테이션으로의 과제 확장"
-    },
-    {
-      "source": "paper_show_o",
-      "target": "rq_cross_modal_alignment",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "이산 디퓨전과 Causal LM 간의 통합 어텐션 정렬 연구"
-    },
-    {
-      "source": "paper_cosmos",
-      "target": "rq_physical_world_model",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "NVIDIA Cosmos 3의 2D 픽셀 물리 한계를 넘어 로보틱스를 위한 Physics-Grounded 4D World Model 구축"
-    },
-    {
-      "source": "paper_flow_matching",
-      "target": "paper_cosmos",
-      "relation": "basis_of",
-      "weight": 4,
-      "insight": "Flow Matching 직선 궤적을 활용한 초고속 비디오 월드 모델 생성"
-    },
-    {
-      "source": "paper_dynin_omni",
-      "target": "rq_physical_world_model",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "Dynin-Omni 파운데이션을 실시간 50Hz 로봇 제어(Dynin-Robotics)로 확장"
-    },
-    {
-      "source": "paper_virst",
-      "target": "rq_counterfactual_video_causality",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "VIRST의 시공간 픽셀 세그멘테이션을 반사실적 인과 추론으로 승격"
-    },
-    {
-      "source": "paper_flow_matching",
-      "target": "paper_dynin_omni",
-      "relation": "basis_of",
-      "weight": 4,
-      "insight": "마스크드 디퓨전의 다단계 추론 지연을 1-Step Flow Matching으로 압축"
-    },
-    {
-      "source": "hamiltonian_mechanics_physics",
-      "target": "rq_physical_world_model",
-      "relation": "basis_of",
-      "weight": 5,
-      "insight": "에너지 보존 및 위상 공간 제약을 통해 2D 비디오 월드 모델의 비물리적 픽셀 환각 해결"
-    },
-    {
-      "source": "causal_inference_scm",
-      "target": "rq_counterfactual_video_causality",
-      "relation": "basis_of",
-      "weight": 5,
-      "insight": "펄의 do-연산자를 비디오 VLM에 주입하여 반사실적(What-If) 시공간 픽셀 궤적 추론 달성"
-    },
-    {
-      "source": "hamiltonian_mechanics_physics",
-      "target": "paper_cosmos",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "NVIDIA Cosmos의 통계적 비디오 생성 한계를 물리적 불변량으로 극복"
-    },
-    {
-      "source": "causal_inference_scm",
-      "target": "paper_virst",
-      "relation": "leads_to",
-      "weight": 4,
-      "insight": "VIRST의 3D 시공간 세그멘테이션을 능동적 인과 개입으로 승격"
-    },
-    {
-      "source": "hcx_omni",
-      "target": "rq_modality_decoupled_moe",
-      "relation": "leads_to",
-      "weight": 5,
-      "insight": "새로운 모달리티 추가 시 기존 텍스트 수학 추론 및 음성 억양 파괴를 막는 직교 MoE 라우팅"
-    },
-    {
-      "source": "rq_modality_decoupled_moe",
-      "target": "rq_physical_world_model",
-      "relation": "enables",
-      "weight": 5,
-      "insight": "언어 능력 손실 없이 로봇 물리 액션을 평생 학습하는 기초 인프라"
     },
     {
       "source": "vector_calculus_ch5_1_univariate",
@@ -2710,56 +2124,6 @@
       "weight": 3
     }
   ],
-  "categories": {
-    "Generative": {
-      "color": "#a78bfa",
-      "icon": "✨"
-    },
-    "Architecture": {
-      "color": "#818cf8",
-      "icon": "🏗️"
-    },
-    "Language Model": {
-      "color": "#c084fc",
-      "icon": "📝"
-    },
-    "Multimodal": {
-      "color": "#fb923c",
-      "icon": "🎭"
-    },
-    "RL": {
-      "color": "#34d399",
-      "icon": "🎮"
-    },
-    "Training": {
-      "color": "#e879f9",
-      "icon": "⚙️"
-    },
-    "Systems": {
-      "color": "#ef4444",
-      "icon": "💻"
-    },
-    "Algorithm": {
-      "color": "#06b6d4",
-      "icon": "🔢"
-    },
-    "Math & Stats": {
-      "color": "#4ade80",
-      "icon": "📐"
-    },
-    "Math Problems": {
-      "color": "#facc15",
-      "icon": "📝"
-    },
-    "Paper": {
-      "color": "#f43f5e",
-      "icon": "📄"
-    },
-    "Research Agenda": {
-      "color": "#ec4899",
-      "icon": "🔭"
-    }
-  },
   "sessions": [
     {
       "date": "2026-08-10",

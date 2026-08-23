@@ -166,9 +166,14 @@ function refreshYesterdayQuiz() {
    ============================================================ */
 document.addEventListener('DOMContentLoaded', async () => {
   // Always fetch latest knowledge.json first to prevent stale localStorage cache issues
+  let researchKnowledgeData = null;
   try {
-    const res = await fetch('data/knowledge.json');
-    knowledgeData = await res.json();
+    const [res1, res2] = await Promise.all([
+      fetch('data/knowledge.json'),
+      fetch('data/research_knowledge.json')
+    ]);
+    knowledgeData = await res1.json();
+    window.researchKnowledgeData = await res2.json();
     localStorage.setItem('hyeonwoo_knowledge_v1', JSON.stringify(knowledgeData));
   } catch (e) {
     console.error('Failed to fetch data/knowledge.json, checking localStorage:', e);
@@ -2105,10 +2110,9 @@ function initResearchGraph() {
     .append('path').attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', 'rgba(244,63,94,0.3)');
 
-  // Filter research & paper nodes
-  const researchNodes = knowledgeData.nodes.filter(n =>
-    n.nodeType === 'paper' || n.nodeType === 'research' || getNodeCluster(n) === '연구'
-  );
+  // Load research nodes from window.researchKnowledgeData or fallback
+  const researchDataSrc = window.researchKnowledgeData || knowledgeData;
+  const researchNodes = researchDataSrc.nodes || [];
   const researchNodeIds = new Set(researchNodes.map(n => n.id));
 
   // Define 5 Research Sub-cluster Centers
@@ -2139,7 +2143,8 @@ function initResearchGraph() {
     };
   });
 
-  const links = knowledgeData.edges
+  const researchEdgesSrc = (window.researchKnowledgeData && window.researchKnowledgeData.edges) || knowledgeData.edges;
+  const links = researchEdgesSrc
     .filter(e => researchNodeIds.has(e.source) && researchNodeIds.has(e.target))
     .map(e => ({
       source: e.source, target: e.target,
