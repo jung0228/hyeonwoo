@@ -34,78 +34,12 @@
       "tab": "column"
     },
     {
-      "id": "ai_conference_macro_trends_2026",
-      "title": "2026 AI 학회 총결산: 패러다임의 대전환, 인공지능은 어디로 가고 있는가",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "최근 서울 코엑스에서 사상 최대 규모(23,918편 제출)로 개최된 **ICML 2026**, 덴버의 **CVPR 2026**, 브라질의 **ICLR 2026**을 관통하는 거대한 학술적 흐름은 명확합니다. 지난 수년간 AI 업계를 지배했던 *\"모델 크기와 데이터양만 무작정 키우면 된다\"*는 식의 단순 스케일링 법칙(Br...",
-      "file": "data/auto_research/ai_conference_macro_trends_2026.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "ai_grand_research_vision_2026",
-      "title": "거대한 세상의 흐름과 AI 연구의 블루오션: 무엇을 연구해야 대박이 나는가",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "지난 10년(2015~2025)의 인공지능 열풍은 **\"인간이 인터넷에 남겨놓은 2D 텍스트와 이미지의 패턴을 복사(Copy)하는 시대\"**였습니다. 하지만 우리가 살고 있는 실제 세상의 99.9%는 인터넷 글귀가 아니라 **3D 공간, 4D 시간축, 물리적 질량, 마찰력, 생명공학적 반응**으로 이루어져 있습니다....",
-      "file": "data/auto_research/ai_grand_research_vision_2026.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "ai_unsolved_open_problems_2026",
-      "title": "뻔하지만 아직 아무도 풀지 못한 AI의 5대 핵심 미해결 과제",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "최근 SORA, DeepSeek-R1, Gemini, D4RT 등 겉보기에 화려한 생성형 AI 데모와 높은 벤치마크 점수가 쏟아지고 있습니다. 하지만 AI 연구자로서 껍데기를 한 겹 벗겨내고 들어가 보면, **\"겉으로는 너무나 당연하고 뻔해 보이지만, 실제로는 현대 인공지능이 근본적으로 단 1%도 해결하지 못한 5가지 거...",
-      "file": "data/auto_research/ai_unsolved_open_problems_2026.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "auto_research_agent_orchestration_2026",
-      "title": "1인 연구자를 위한 24시간 자율 AI 에이전트 오케스트레이션 설계",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "기존의 단순 LLM 프롬프팅은 단발성 답변에 그치지만, **자율 에이전트 오케스트레이션(Agent Orchestration)**은 가설 수립, 논문 파싱, 코드 구현, GPU 파이프라인 관리, 에러 디버깅을 하나의 자율 루프로 묶어줍니다....",
-      "file": "data/auto_research/auto_research_agent_orchestration_2026.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "automated_research_world_class_blueprint_2026",
-      "title": "연구의 자동화: 손 안 대고 코 풀며 월클급 연구자가 되는 법",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "전통적인 AI 연구자는 가설 설정부터 코드 작성, GPU 실험 돌리기, 버그 수정, 텐서보드 로그 분석, 논문 마크다운/LaTeX 작성까지 **모든 과정을 수동(Manual Labor)으로 수행**했습니다. 이 방식으로는 1년에 논문 2~3편을 쓰는 것이 물리적 한계였습니다....",
-      "file": "data/auto_research/automated_research_world_class_blueprint_2026.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
       "id": "autonomous_research_loop_guide_2026",
       "title": "24시간 자율 연구 루프 엔진: 5단계 오케스트레이션 실전 가이드",
       "date": "2026-08-23",
       "author": "정현우",
       "summary": "연구 자동화 시스템은 인간의 개입 없이 24시간 백그라운드에서 다음 5단계 루프를 스스로 순환합니다:...",
       "file": "data/auto_research/autonomous_research_loop_guide_2026.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "everyday_life_automation_blueprint_2026",
-      "title": "일상의 모든 일을 자동화하기 위한 4대 핵심 연구 청사진",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "인간이 하루 24시간 동안 수행하는 모든 일은 크게 3가지 차원으로 나뉩니다:...",
-      "file": "data/auto_research/everyday_life_automation_blueprint_2026.md",
       "category": "Autonomous Research Engine",
       "readTime": "10 min read",
       "tab": "auto-research"
@@ -122,56 +56,12 @@
       "tab": "auto-research"
     },
     {
-      "id": "paper_direct_backtrack_spotlight",
-      "title": "[SOTA 논문집필 완료] DiReCT-Backtrack: 방향성 어텐션 구속 및 인과 롤백을 통한 에이전트 오차 0% 복구",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "장기 수행 에이전트(Embodied Agent)는 50단계 이상의 연속 액션을 수행할 때 1단계의 작은 오차가 복리로 누적되어 90% 이상 과제 실패로 직행합니다....",
-      "file": "data/auto_research/paper_direct_backtrack_spotlight.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "self_debugging_code_loop_architecture",
-      "title": "PyTorch 모델 생성부터 Traceback 자가 디버깅까지: 실패율 0% 루프 설계",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "연구 자동화 루프가 중단되는 가장 큰 이유는 코드 실행 중 발생하는 `CUDA Out of Memory`, `Dimension Mismatch`, `NaN Loss`와 같은 런타임 에러입니다....",
-      "file": "data/auto_research/self_debugging_code_loop_architecture.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
       "id": "tcvp_2_0_upgrade_blueprint",
       "title": "TCVP 2.0 논문 개조 청사진: 2026 SOTA 수식을 붙여 톱티어 학회를 뚫는 완벽 와꾸",
       "date": "2026-08-23",
       "author": "정현우",
       "summary": "- 유튜브의 타임스탬프 댓글(Timestamped Comments, 예: \"07:22 ㅋㅋㅋ\")을 활용하여 **현실적이고 사용자 직관에 부합하는 Video Moment Retrieval (VMR) 데이터셋 자동 생성 파이프라인**....",
       "file": "data/auto_research/tcvp_2_0_upgrade_blueprint.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "zero_gpu_high_impact_research_2026",
-      "title": "GPU 0대로 톱티어 학회를 뚫는 저비용 고효율(개꿀) AI 연구 전략",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "구글, 메타, OpenAI는 수만 대의 H100 GPU를 태우며 거대 파운데이션 모델을 사전 학습(Pre-training)합니다. 1인 연구자나 중소 연구실이 무식하게 GPU 연산량으로 빅테크와 겨루는 것은 승산이 없는 싸움입니다....",
-      "file": "data/auto_research/zero_gpu_high_impact_research_2026.md",
-      "category": "Autonomous Research Engine",
-      "readTime": "10 min read",
-      "tab": "auto-research"
-    },
-    {
-      "id": "zero_gpu_paper_generation_methodology",
-      "title": "GPU 연산 리소스 없이 SOTA 논문을 파싱하고 실험을 자동화하는 방법",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "많은 사람들이 빅테크의 천문학적 GPU 클러스터 없이는 인공지능 연구가 불가능하다고 오해합니다. 하지만 **표현 공학(Representation Engineering), 어텐션 액티베이션 투영(DiReCT), 심볼릭 인과 롤백(CSR)** 같은 최신 SOTA 기법들은 **사전 학습(Pre-training)이나 거대 연산...",
-      "file": "data/auto_research/zero_gpu_paper_generation_methodology.md",
       "category": "Autonomous Research Engine",
       "readTime": "10 min read",
       "tab": "auto-research"
