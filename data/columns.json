@@ -5,10 +5,10 @@
       "title": "집에서 노트북 1대로 월클급 AI 연구를 수행하는 완벽 방법론",
       "date": "2026-08-23",
       "author": "정현우",
-      "summary": "빅테크의 GPU 연산량 싸움을 피하고 개인 노트북 한 대만으로 세계 최고 권위 학회(ICML, NeurIPS, ICLR, CVPR)를 뚫는 5대 마스터 방법론(사전학습 0원 전략, 벤치마크 선점, 가중치 뇌수술 수식, 자율 연구 파이프라인, MCTS 탐색 최적화)을 집대성한 단 하나의 완벽한 시스템 가이드.",
+      "summary": "빅테크의 GPU 연산량 싸움을 피하고 개인 노트북 한 대만으로 세계 최고 권위 학회(ICML, NeurIPS, ICLR, CVPR)를 뚫는 5대 마스터 방법론(사전학습 0원 RepE, 벤치마크 선점, ROME/SpinQuant/StreamKV 가중치 수술, The AI Scientist 자율 파이프라인, rStar MCTS 탐색 최적화)을 집대성한 단 하나의 완벽한 시스템 가이드 v2.0.",
       "file": "data/columns/laptop_world_class_research_methodology.md",
       "category": "Master Research Methodology",
-      "readTime": "15 min read"
+      "readTime": "16 min read"
     },
     {
       "id": "university_in_a_box_ai_learning",
