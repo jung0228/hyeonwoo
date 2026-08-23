@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "everyday_life_automation_blueprint_2026",
+      "title": "일상의 모든 일을 자동화하기 위한 4대 핵심 연구 청사진",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "인간의 일상(물리 노동, 디지털 지식 노동, 사회적 조율)을 100% 자동화하기 위해 해결해야 할 4대 거대한 장벽과 이를 무너뜨릴 4대 핵심 블루오션 연구 주제(Open-World 촉각 제어, 초장기 개인 지식 메모리, 예외 인과 롤백, 엣지-클라우드 협력 추론) 심층 분석 칼럼.",
+      "file": "data/columns/everyday_life_automation_blueprint_2026.md",
+      "category": "Life Automation & Embodied AI",
+      "readTime": "15 min read"
+    },
+    {
       "id": "ai_grand_research_vision_2026",
       "title": "거대한 세상의 흐름과 AI 연구의 블루오션",
       "date": "2026-08-23",
