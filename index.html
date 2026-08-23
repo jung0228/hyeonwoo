@@ -206,99 +206,33 @@
       </div>
     </div>
 
-    <!-- ===== VIEW: RESEARCH ===== -->
-    <div class="view" id="view-research">
-      <div class="research-page">
-
-        <!-- Hero -->
-        <div class="research-hero">
-          <div class="research-hero-label">🔭 Research Vision</div>
-          <div class="research-tagline" id="research-tagline"
-            contenteditable="true" spellcheck="false"
-            data-placeholder="나는 어떤 세상을 만들고 싶은가"></div>
-          <div class="research-save-indicator" id="research-save-indicator">저장됨 ✓</div>
-        </div>
-
-        <!-- Sections: 세로 풀스크린 -->
-        <div class="research-sections">
-
-          <div class="rsb" data-key="worldview">
-            <div class="rsb-header">
-              <span class="rsb-num">01</span>
-              <span class="rsb-icon">🌊</span>
-              <span class="rsb-title">세상의 흐름</span>
-              <div class="rsb-line"></div>
+    <!-- ===== VIEW: RESEARCH (DEDICATED RESEARCH CLUSTERS HUB) ===== -->
+    <div class="view" id="view-research" style="padding: 24px; overflow-y: auto; height: calc(100vh - 70px);">
+      <div class="research-page-clean">
+        <!-- Research Header Banner -->
+        <div class="page-header" style="margin-bottom: 28px; background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.25); border-radius: 16px; padding: 22px 26px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <h1 class="page-title" style="color: #f43f5e; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span>🔭</span> Research Clusters & Paper Matrix
+              </h1>
+              <p class="page-subtitle" style="color: #cbd5e1; font-size: 0.95rem;">
+                정현우의 멀티모달 & 피지컬 AI 핵심 연구 계보 및 개방형 연구 과제 지형도
+              </p>
             </div>
-            <div class="rsb-body" id="section-worldview"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="세상이 어떻게 흘러가고 있는지 적어보세요...&#10;어떤 기술적·사회적 전환이 일어나고 있는가?"></div>
-          </div>
-
-          <div class="rsb" data-key="need">
-            <div class="rsb-header">
-              <span class="rsb-num">02</span>
-              <span class="rsb-icon">❗</span>
-              <span class="rsb-title">사회적 필요</span>
-              <div class="rsb-line"></div>
+            <div style="display: flex; gap: 10px;">
+              <span style="background: rgba(244, 63, 94, 0.2); border: 1px solid rgba(244, 63, 94, 0.4); color: #f43f5e; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
+                📄 SOTA 논문 16편
+              </span>
+              <span style="background: rgba(236, 72, 153, 0.2); border: 1px solid rgba(236, 72, 153, 0.4); color: #ec4899; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
+                🔭 미해결 RQ 6개
+              </span>
             </div>
-            <div class="rsb-body" id="section-need"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="그 흐름 속에서 사람들이 겪는 문제는 무엇인가?&#10;어떤 필요가 아직 해결되지 않았는가?"></div>
           </div>
-
-          <div class="rsb" data-key="value">
-            <div class="rsb-header">
-              <span class="rsb-num">03</span>
-              <span class="rsb-icon">💡</span>
-              <span class="rsb-title">가치 창출</span>
-              <div class="rsb-line"></div>
-            </div>
-            <div class="rsb-body" id="section-value"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="그 문제를 해결할 때 어떤 가치가 생기는가?&#10;누가, 어떻게 그 가치로 자본을 만드는가?"></div>
-          </div>
-
-          <div class="rsb" data-key="research">
-            <div class="rsb-header">
-              <span class="rsb-num">04</span>
-              <span class="rsb-icon">🔬</span>
-              <span class="rsb-title">연구 과제</span>
-              <div class="rsb-line"></div>
-            </div>
-            <div class="rsb-body" id="section-research"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="그래서 내가 풀어야 할 연구 질문은 무엇인가?&#10;어떤 방법론으로 접근할 것인가?"></div>
-          </div>
-
         </div>
 
-        <!-- Research Agenda -->
-        <div class="research-agenda-section">
-          <div class="agenda-header">
-            <h2 class="agenda-title">🗒️ 연구 아젠다</h2>
-            <button class="agenda-add-btn" id="agenda-add-btn" onclick="addAgendaItem()">+ 추가</button>
-          </div>
-          <div class="agenda-list" id="agenda-list"></div>
-        </div>
-
-        <!-- Dedicated Research Cluster & Paper Matrix Hub -->
-        <div class="research-cluster-hub-section" style="margin-top: 36px;">
-          <div class="agenda-header" style="margin-bottom: 16px; display: flex; align-items: baseline; gap: 12px;">
-            <h2 class="agenda-title" style="color: #f43f5e; font-size: 1.4rem;">🔬 연구 & 논문 클러스터 Hub</h2>
-            <span style="font-size: 13px; color: var(--text-muted);">마일스톤 논문 16편 및 현우의 미해결 연구 과제 매트릭스</span>
-          </div>
-          <div class="research-cluster-hub-container" id="research-cluster-hub-container"></div>
-        </div>
-
-        <!-- Keywords -->
-        <div class="research-keywords-section">
-          <div class="keywords-header">
-            <h2 class="keywords-title">🏷️ 핵심 키워드</h2>
-            <button class="keyword-add-btn" onclick="addKeyword()">+ 추가</button>
-          </div>
-          <div class="keywords-cloud" id="keywords-cloud"></div>
-        </div>
-
+        <!-- Dedicated Research Cluster Container -->
+        <div class="research-cluster-hub-container" id="research-cluster-hub-container"></div>
       </div>
     </div>
 

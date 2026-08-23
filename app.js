@@ -2073,24 +2073,7 @@ async function initResearch() {
 }
 
 function renderResearch() {
-  // Tagline
-  const tl = document.getElementById('research-tagline');
-  if (tl) tl.textContent = researchData.tagline || '';
-
-  // Flow card sections
-  const keys = ['worldview', 'need', 'value', 'research'];
-  keys.forEach(key => {
-    const el = document.getElementById(`section-${key}`);
-    if (el) el.textContent = researchData.sections?.[key] || '';
-  });
-
-  // Agenda
-  renderAgendaList();
-
-  // Keywords
-  renderKeywords();
-
-  // Dedicated Research Cluster Hub
+  // Dedicated Research Cluster Hub Page
   renderResearchClusterHub();
 }
 
