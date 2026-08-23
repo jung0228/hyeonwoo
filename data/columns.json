@@ -1,64 +1,14 @@
 {
   "columns": [
     {
-      "id": "zero_gpu_high_impact_research_2026",
-      "title": "GPU 0대로 톱티어 학회를 뚫는 저비용 고효율(개꿀) AI 연구 전략",
+      "id": "laptop_world_class_research_methodology",
+      "title": "집에서 노트북 1대로 월클급 AI 연구를 수행하는 완벽 방법론",
       "date": "2026-08-23",
       "author": "정현우",
-      "summary": "빅테크의 GPU 물량 공세를 피하고 개인용 GPU 1대 또는 CPU만으로 ICML/NeurIPS/ICLR 톱티어 학회를 뚫는 5대 저비용·고효율(High-ROI 개꿀) 연구 프론티어(PTQ 경량화, 메커니스틱 지식 편집, 데이터 정제 수식, 미해결 인과 벤치마크 정의, 에이전트 MCTS 탐색 최적화) 정밀 가이드 칼럼.",
-      "file": "data/columns/zero_gpu_high_impact_research_2026.md",
-      "category": "Low-GPU Research Strategy",
-      "readTime": "14 min read"
-    },
-    {
-      "id": "automated_research_world_class_blueprint_2026",
-      "title": "연구의 자동화: 손 안 대고 코 풀며 월클급 연구자가 되는 법",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "연구자 본인이 노가다 코딩과 실험에서 해방되어 연구 총괄 감독관이 되는 5단계 자율 연구 파이프라인(가설 생성, 코드 자동화, GPU 자율 학습, 자가 디버깅, 논문 자동 작성) 구축법과 1인 연구실로 월클급 톱티어 연구 실적을 쏟아내는 실전 메타 전략 칼럼.",
-      "file": "data/columns/automated_research_world_class_blueprint_2026.md",
-      "category": "Autonomous Research & World-Class Strategy",
-      "readTime": "16 min read"
-    },
-    {
-      "id": "everyday_life_automation_blueprint_2026",
-      "title": "일상의 모든 일을 자동화하기 위한 4대 핵심 연구 청사진",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "인간의 일상(물리 노동, 디지털 지식 노동, 사회적 조율)을 100% 자동화하기 위해 해결해야 할 4대 거대한 장벽과 이를 무너뜨릴 4대 핵심 블루오션 연구 주제(Open-World 촉각 제어, 초장기 개인 지식 메모리, 예외 인과 롤백, 엣지-클라우드 협력 추론) 심층 분석 칼럼.",
-      "file": "data/columns/everyday_life_automation_blueprint_2026.md",
-      "category": "Life Automation & Embodied AI",
+      "summary": "빅테크의 GPU 연산량 싸움을 피하고 개인 노트북 한 대만으로 세계 최고 권위 학회(ICML, NeurIPS, ICLR, CVPR)를 뚫는 5대 마스터 방법론(사전학습 0원 전략, 벤치마크 선점, 가중치 뇌수술 수식, 자율 연구 파이프라인, MCTS 탐색 최적화)을 집대성한 단 하나의 완벽한 시스템 가이드.",
+      "file": "data/columns/laptop_world_class_research_methodology.md",
+      "category": "Master Research Methodology",
       "readTime": "15 min read"
-    },
-    {
-      "id": "ai_grand_research_vision_2026",
-      "title": "거대한 세상의 흐름과 AI 연구의 블루오션",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "왜 인공지능 연구가 텍스트를 넘어 4D 물리 세계와 인과 추론으로 가야 하는가? 현재의 핵심 기술적 병목과 대학원 및 연구 인생에서 대박(High-ROI)을 낼 수 있는 4대 블루오션 연구 주제(Physics-Informed Latent, Causal Rollback Agent, Decoupled MoE, Counterfactual Video) 심층 가이드.",
-      "file": "data/columns/ai_grand_research_vision_2026.md",
-      "category": "Research Strategy & Vision",
-      "readTime": "14 min read"
-    },
-    {
-      "id": "ai_unsolved_open_problems_2026",
-      "title": "뻔하지만 아무도 풀지 못한 AI의 5대 미해결 과제",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "화려한 데모 뒤에 숨겨진 5가지 거대한 핵심 미해결 질문(암기와 진짜 추론의 경계 상실, 비디오 생성의 물리 법칙 불이해 환각, 장기 과제 롤백 불가, 진짜 교차 모달리티 인과성 부재, 학습 데이터 인과 역추적 및 Machine Unlearning 불가능)에 대한 정밀 해부 칼럼.",
-      "file": "data/columns/ai_unsolved_open_problems_2026.md",
-      "category": "AI Open Problems & Philosophy",
-      "readTime": "11 min read"
-    },
-    {
-      "id": "ai_conference_macro_trends_2026",
-      "title": "2026 AI 학회 총결산: 패러다임의 대전환",
-      "date": "2026-08-23",
-      "author": "정현우",
-      "summary": "ICML 2026, CVPR 2026, ICLR 2026 최신 톱티어 학회를 관통하는 4대 거대한 패러다임 대전환(Next-Token 한계 극복과 GRPO 추론, 4D D4RT 물리 세계 모델, Any-to-Any 옴니모달, 고품질 데이터 레시피 & SLM 경량화)에 대한 심층 총결산 칼럼.",
-      "file": "data/columns/ai_conference_macro_trends_2026.md",
-      "category": "AI Research Trends",
-      "readTime": "12 min read"
     },
     {
       "id": "university_in_a_box_ai_learning",
