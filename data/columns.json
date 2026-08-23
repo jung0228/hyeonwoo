@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "tcvp_2_0_upgrade_blueprint",
+      "title": "TCVP 2.0 논문 개조 청사진: 2026 SOTA 수식을 붙여 톱티어 뚫기",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "정현우 연구자의 TCVP 논문(유튜브 타임스탬프 댓글 기반 VMR 파이프라인)을 2026 ICML/CVPR SOTA 수식(DiReCT 어텐션 투영, CSR 인과 롤백, O-Voxel 3D 쿼리)으로 전면 개조하는 완벽 구조(와꾸) 및 100% 구현 타당성 검증 칼럼.",
+      "file": "data/columns/tcvp_2_0_upgrade_blueprint.md",
+      "category": "Paper Upgrade & Feasibility",
+      "readTime": "12 min read"
+    },
+    {
       "id": "paper_direct_backtrack_spotlight",
       "title": "[SOTA 논문집필 완료] DiReCT-Backtrack: 에이전트 오차 0% 롤백",
       "date": "2026-08-23",
