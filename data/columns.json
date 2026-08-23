@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "zero_gpu_high_impact_research_2026",
+      "title": "GPU 0대로 톱티어 학회를 뚫는 저비용 고효율(개꿀) AI 연구 전략",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "빅테크의 GPU 물량 공세를 피하고 개인용 GPU 1대 또는 CPU만으로 ICML/NeurIPS/ICLR 톱티어 학회를 뚫는 5대 저비용·고효율(High-ROI 개꿀) 연구 프론티어(PTQ 경량화, 메커니스틱 지식 편집, 데이터 정제 수식, 미해결 인과 벤치마크 정의, 에이전트 MCTS 탐색 최적화) 정밀 가이드 칼럼.",
+      "file": "data/columns/zero_gpu_high_impact_research_2026.md",
+      "category": "Low-GPU Research Strategy",
+      "readTime": "14 min read"
+    },
+    {
       "id": "automated_research_world_class_blueprint_2026",
       "title": "연구의 자동화: 손 안 대고 코 풀며 월클급 연구자가 되는 법",
       "date": "2026-08-23",
