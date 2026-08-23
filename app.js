@@ -385,17 +385,32 @@ function initNav() {
 
 // ✅ VIEW LIFECYCLE REGISTRY (Modular View Handling)
 const VIEW_LIFECYCLE = {
-  graph:    { onShow: () => { if (typeof simulation !== 'undefined' && simulation) simulation.alpha(0.1).restart(); } },
-  research: { onShow: () => { setTimeout(initResearchGraph, 50); } },
-  quiz:     { onShow: () => { if (typeof initQuiz === 'function') initQuiz(); } },
-  column:   { onShow: () => { if (typeof initColumn === 'function') initColumn(); } },
-  analytics:{ onShow: () => { if (typeof initAnalytics === 'function') initAnalytics(); } }
+  graph:          { onShow: () => { if (typeof simulation !== 'undefined' && simulation) simulation.alpha(0.1).restart(); } },
+  research:       { onShow: () => { setTimeout(initResearchGraph, 50); } },
+  'auto-research':{ onShow: () => { console.log('🤖 Auto-Research view active'); } },
+  quiz:           { onShow: () => { if (typeof initQuiz === 'function') initQuiz(); } },
+  column:         { onShow: () => { if (typeof initColumn === 'function') initColumn(); } },
+  analytics:      { onShow: () => { if (typeof initAnalytics === 'function') initAnalytics(); } }
 };
 
 function switchView(viewName) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    if (v.id === 'view-auto-research' || v.id === 'view-column') {
+      v.style.display = 'none';
+    }
+  });
   const targetView = document.getElementById(`view-${viewName}`);
-  if (targetView) targetView.classList.add('active');
+  if (targetView) {
+    targetView.classList.add('active');
+    if (viewName === 'auto-research') {
+      targetView.style.display = 'block';
+    } else if (viewName === 'column') {
+      targetView.style.display = 'block';
+    } else if (viewName === 'graph' || viewName === 'research') {
+      targetView.style.display = 'flex';
+    }
+  }
   
   VIEW_LIFECYCLE[viewName]?.onShow?.();
 }
