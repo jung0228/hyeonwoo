@@ -416,33 +416,33 @@ Find position of $x$ in an infinite sorted array $A$ filled with $\infty$ after 
 Find if there exists $i$ such that $A[i] = i$ in a sorted array of distinct integers in $O(\log n)$ time.
 
 [인터랙티브 동적 시각화 시뮬레이터]
-<div id="fixed-point-sim" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 20px; margin: 18px 0; color: #f8fafc; font-family: Pretendard, sans-serif;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+<div id="fixed-point-sim" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(56,189,248,0.3); border-radius: 10px; padding: 12px 14px; margin: 12px 0; color: #f8fafc; font-family: Pretendard, sans-serif;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
     <div>
-      <span style="font-size: 1.1rem; font-weight: 700; color: #38bdf8;">🎬 O(log n) 고정점(Fixed Point) 이진 탐색 시뮬레이터</span>
-      <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 2px;">정렬된 서로 다른 정수 배열에서 Low, Mid, High 포인터가 이동하며 고정점을 찾는 과정을 실시간 확인합니다.</p>
+      <span style="font-size: 0.9rem; font-weight: 700; color: #38bdf8;">🎬 O(log n) 고정점(Fixed Point) 이진 탐색 시뮬레이터</span>
+      <p style="font-size: 0.72rem; color: #94a3b8; margin-top: 1px;">정렬된 서로 다른 정수 배열에서 Low, Mid, High 포인터가 이동하며 고정점을 찾는 과정을 실시간 확인합니다.</p>
     </div>
-    <div style="display:flex; gap:8px;">
-      <button onclick="window.simStepPrev()" id="sim-prev-btn" style="background:#334155; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem;">◀ 이전 단계</button>
-      <button onclick="window.simStepNext()" id="sim-next-btn" style="background:#0284c7; color:#fff; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:700; font-size:0.85rem;">다음 단계 ▶</button>
-      <button onclick="window.simReset()" style="background:#475569; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:0.85rem;">↺ 리셋</button>
+    <div style="display:flex; gap:6px;">
+      <button onclick="window.simStepPrev()" id="sim-prev-btn" style="background:#334155; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:600; font-size:0.75rem;">◀ 이전</button>
+      <button onclick="window.simStepNext()" id="sim-next-btn" style="background:#0284c7; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer; font-weight:700; font-size:0.75rem;">다음 ▶</button>
+      <button onclick="window.simReset()" style="background:#475569; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">↺ 리셋</button>
     </div>
   </div>
 
-  <div id="sim-status-box" style="background:rgba(30,41,59,0.8); border-left: 4px solid #38bdf8; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 0.9rem; line-height: 1.5;">
-    준비 완료: [다음 단계 ▶] 버튼을 눌러 탐색을 시작하세요!
+  <div id="sim-status-box" style="background:rgba(30,41,59,0.8); border-left: 3px solid #38bdf8; padding: 6px 10px; border-radius: 4px; margin-bottom: 10px; font-size: 0.78rem; line-height: 1.4;">
+    준비 완료: [다음 ▶] 버튼을 눌러 탐색을 시작하세요!
   </div>
 
-  <div id="sim-array-container" style="display: flex; gap: 8px; justify-content: center; overflow-x: auto; padding: 12px 0 20px 0;">
+  <div id="sim-array-container" style="display: flex; gap: 6px; justify-content: center; overflow-x: auto; padding: 6px 0 10px 0;">
     <!-- Rendered dynamically -->
   </div>
 
-  <div style="display:flex; justify-content:center; gap: 20px; font-size: 0.8rem; color:#94a3b8; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
-    <span><span style="display:inline-block; width:12px; height:12px; background:#38bdf8; border-radius:3px; vertical-align:middle;"></span> Low 포인터</span>
-    <span><span style="display:inline-block; width:12px; height:12px; background:#f59e0b; border-radius:3px; vertical-align:middle;"></span> Mid 검사점</span>
-    <span><span style="display:inline-block; width:12px; height:12px; background:#ec4899; border-radius:3px; vertical-align:middle;"></span> High 포인터</span>
-    <span><span style="display:inline-block; width:12px; height:12px; background:#10b981; border-radius:3px; vertical-align:middle;"></span> 발견된 고정점 A[i]=i</span>
-    <span><span style="display:inline-block; width:12px; height:12px; background:#334155; opacity:0.4; border-radius:3px; vertical-align:middle;"></span> 탈락 구간 (Search Pruned)</span>
+  <div style="display:flex; justify-content:center; gap: 14px; font-size: 0.7rem; color:#94a3b8; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 6px;">
+    <span><span style="display:inline-block; width:8px; height:8px; background:#38bdf8; border-radius:2px; vertical-align:middle;"></span> Low</span>
+    <span><span style="display:inline-block; width:8px; height:8px; background:#f59e0b; border-radius:2px; vertical-align:middle;"></span> Mid</span>
+    <span><span style="display:inline-block; width:8px; height:8px; background:#ec4899; border-radius:2px; vertical-align:middle;"></span> High</span>
+    <span><span style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:2px; vertical-align:middle;"></span> 발견 고정점 A[i]=i</span>
+    <span><span style="display:inline-block; width:8px; height:8px; background:#334155; opacity:0.4; border-radius:2px; vertical-align:middle;"></span> 탈락 구간</span>
   </div>
 </div>
 

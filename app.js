@@ -992,13 +992,13 @@ async function openNotePanel(nodeData) {
         if (isMid) badges.push('<span style="background:#f59e0b;color:#000;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">M</span>');
         if (isHigh) badges.push('<span style="background:#ec4899;color:#fff;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">H</span>');
         return `
-          <div style="display:flex; flex-direction:column; align-items:center; gap:4px; opacity:${opacity}; transition:all 0.3s ease;">
-            <div style="font-size:0.75rem; color:#94a3b8; font-weight:600;">i=${idx}</div>
-            <div style="width:48px; height:52px; background:${bg}; border:${border}; border-radius:8px; display:flex; justify-content:center; align-items:center; font-size:1.1rem; font-weight:700; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px; opacity:${opacity}; transition:all 0.3s ease;">
+            <div style="font-size:0.68rem; color:#94a3b8; font-weight:600;">i=${idx}</div>
+            <div style="width:36px; height:38px; background:${bg}; border:${border}; border-radius:6px; display:flex; justify-content:center; align-items:center; font-size:0.88rem; font-weight:700; color:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
               ${val}
             </div>
-            <div style="font-size:0.75rem; color:${val===idx?'#10b981':'#64748b'}; font-weight:600;">D=${val-idx}</div>
-            <div style="min-height:16px; display:flex; gap:2px;">${badges.join('')}</div>
+            <div style="font-size:0.65rem; color:${val===idx?'#10b981':'#64748b'}; font-weight:600;">D=${val-idx}</div>
+            <div style="min-height:12px; display:flex; gap:1px;">${badges.join('')}</div>
           </div>
         `;
       }).join('');
