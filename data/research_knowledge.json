@@ -440,6 +440,22 @@
       ],
       "note": "data/notes/paper_autonomous_top_tier_2026.md",
       "nodeType": "paper"
+    },
+    {
+      "id": "note_modality_gating_vs_cross_attention",
+      "label": "Modality Gating vs Cross-Attention (25-26)",
+      "category": "Research",
+      "confidence": 5,
+      "studyCount": 8,
+      "tags": [
+        "ResearchNote",
+        "ModalityGating",
+        "CrossAttention",
+        "TextBias",
+        "ViCA2026"
+      ],
+      "note": "data/notes/research_modality_gating_vs_cross_attention_2026.md",
+      "nodeType": "research"
     }
   ],
   "edges": [
@@ -781,6 +797,13 @@
       "relation": "uses",
       "weight": 5,
       "insight": "Causal State Rollback (CSR) 수식을 반사실적 비디오 인과 롤백에 직접 적용"
+    },
+    {
+      "source": "note_modality_gating_vs_cross_attention",
+      "target": "rq_modality_decoupled_moe",
+      "relation": "enables",
+      "weight": 5,
+      "insight": "Cross-Attention의 Text Bias 한계를 극복하는 Modality Gating 핵심 이론"
     }
   ]
 }
