@@ -750,7 +750,7 @@
     {
       "id": "bias_variance",
       "label": "Bias-Variance Tradeoff",
-      "category": "Training",
+      "category": "RL",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -763,7 +763,7 @@
     {
       "id": "ensemble",
       "label": "Ensemble (Bagging/Boosting)",
-      "category": "Training",
+      "category": "RL",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1179,7 +1179,7 @@
     {
       "id": "causal_inference_scm",
       "label": "구조적 인과 모델 (SCM & do-Calculus)",
-      "category": "Training",
+      "category": "RL",
       "confidence": 4,
       "studyCount": 4,
       "tags": [

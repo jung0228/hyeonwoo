@@ -49,7 +49,11 @@ const CLUSTER_MAP = {
 
 // 노드별 개별 오버라이드 (카테고리 매핑보다 우선)
 const NODE_CLUSTER_OVERRIDE = {
-  'rlhf': 'AI'   // RLHF는 LLM alignment → 딥러닝 쪽
+  'rl_basic': 'ML',
+  'rlhf': 'ML',
+  'bias_variance': 'ML',
+  'ensemble': 'ML',
+  'causal_inference_scm': 'ML'
 };
 
 // 헬퍼: 노드의 최종 클러스터 반환
