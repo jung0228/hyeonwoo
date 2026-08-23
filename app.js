@@ -981,6 +981,56 @@ async function openNotePanel(nodeData) {
     oldScript.parentNode.replaceChild(newScript, oldScript);
   });
 
+  // Native fallback initializer for Exercise 2.17 Fixed Point Simulator
+  const simContainer = bodyEl.querySelector('#fixed-point-sim');
+  if (simContainer) {
+    const arr2 = [-4, -1, 0, 2, 4, 7, 10, 15];
+    const steps = [
+      { low: 0, high: 7, mid: 3, status: "Step 1: 전체 범위 [Low=0, High=7] 에서 중간 Mid=3 확인 ➔ A[3] = 2. 값(2) < 인덱스(3) 이므로 왼쪽 절반 [0~3] 전격 탈락!", found: false, elim: [0,1,2,3] },
+      { low: 4, high: 7, mid: 5, status: "Step 2: 우측 구간 [Low=4, High=7] 로 축소! 중간 Mid=5 확인 ➔ A[5] = 7. 값(7) > 인덱스(5) 이므로 오른쪽 절반 [5~7] 전격 탈락!", found: false, elim: [0,1,2,3,5,6,7] },
+      { low: 4, high: 4, mid: 4, status: "Step 3: 남은 구간 [Low=4, High=4] 확인 ➔ A[4] = 4 ! (인덱스와 값이 일치하는 고정점 발견 성공!)", found: true, elim: [0,1,2,3,5,6,7] }
+    ];
+    let simIdx = 0;
+    const renderSim = function() {
+      const s = steps[simIdx];
+      const arrBox = simContainer.querySelector('#sim-array-container');
+      const statBox = simContainer.querySelector('#sim-status-box');
+      if (!arrBox || !statBox) return;
+      statBox.innerHTML = `<strong>[탐색 단계 ${simIdx + 1}/${steps.length}]</strong> ${s.status}`;
+      arrBox.innerHTML = arr2.map((val, idx) => {
+        const isElim = s.elim.includes(idx) && !(s.found && idx === s.mid);
+        const isMid = idx === s.mid;
+        const isLow = idx === s.low;
+        const isHigh = idx === s.high;
+        const isFixed = s.found && idx === s.mid;
+        let border = "1px solid rgba(255,255,255,0.2)";
+        let bg = "#1e293b";
+        let opacity = "1";
+        if (isFixed) { bg = "#059669"; border = "2px solid #10b981"; }
+        else if (isMid) { bg = "#d97706"; border = "2px solid #f59e0b"; }
+        else if (isElim) { bg = "#0f172a"; opacity = "0.3"; }
+        let badges = [];
+        if (isLow) badges.push('<span style="background:#38bdf8;color:#000;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">L</span>');
+        if (isMid) badges.push('<span style="background:#f59e0b;color:#000;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">M</span>');
+        if (isHigh) badges.push('<span style="background:#ec4899;color:#fff;font-size:9px;font-weight:800;padding:1px 4px;border-radius:3px;">H</span>');
+        return `
+          <div style="display:flex; flex-direction:column; align-items:center; gap:4px; opacity:${opacity}; transition:all 0.3s ease;">
+            <div style="font-size:0.75rem; color:#94a3b8; font-weight:600;">i=${idx}</div>
+            <div style="width:48px; height:52px; background:${bg}; border:${border}; border-radius:8px; display:flex; justify-content:center; align-items:center; font-size:1.1rem; font-weight:700; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
+              ${val}
+            </div>
+            <div style="font-size:0.75rem; color:${val===idx?'#10b981':'#64748b'}; font-weight:600;">D=${val-idx}</div>
+            <div style="min-height:16px; display:flex; gap:2px;">${badges.join('')}</div>
+          </div>
+        `;
+      }).join('');
+    };
+    window.simStepNext = function() { if (simIdx < steps.length - 1) { simIdx++; renderSim(); } };
+    window.simStepPrev = function() { if (simIdx > 0) { simIdx--; renderSim(); } };
+    window.simReset = function() { simIdx = 0; renderSim(); };
+    renderSim();
+  }
+
   if (window.renderMathInElement) {
     renderMathInElement(bodyEl, {
       output: 'html',
