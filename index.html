@@ -206,90 +206,32 @@
       </div>
     </div>
 
-    <!-- ===== VIEW: RESEARCH ===== -->
+    <!-- ===== VIEW: RESEARCH (DEDICATED RESEARCH KNOWLEDGE GRAPH VIEW) ===== -->
     <div class="view" id="view-research">
-      <div class="research-page">
-
-        <!-- Hero -->
-        <div class="research-hero">
-          <div class="research-hero-label">🔭 Research Vision</div>
-          <div class="research-tagline" id="research-tagline"
-            contenteditable="true" spellcheck="false"
-            data-placeholder="나는 어떤 세상을 만들고 싶은가"></div>
-          <div class="research-save-indicator" id="research-save-indicator">저장됨 ✓</div>
+      <div class="graph-container" id="research-graph-container">
+        <!-- Confidence Legend -->
+        <div class="confidence-legend">
+          <div class="confidence-legend-title">자신감</div>
+          <div class="confidence-legend-items">
+            <span class="cl-item"><span class="cl-dot" style="opacity:0.25"></span> 아이디어</span>
+            <span class="cl-item"><span class="cl-dot" style="opacity:0.5"></span> 탐색 중</span>
+            <span class="cl-item"><span class="cl-dot" style="opacity:0.75"></span> 활발함</span>
+            <span class="cl-item"><span class="cl-dot" style="opacity:1"></span> 숙달됨</span>
+          </div>
         </div>
 
-        <!-- Sections: 세로 풀스크린 -->
-        <div class="research-sections">
-
-          <div class="rsb" data-key="worldview">
-            <div class="rsb-header">
-              <span class="rsb-num">01</span>
-              <span class="rsb-icon">🌊</span>
-              <span class="rsb-title">세상의 흐름</span>
-              <div class="rsb-line"></div>
-            </div>
-            <div class="rsb-body" id="section-worldview"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="세상이 어떻게 흘러가고 있는지 적어보세요...&#10;어떤 기술적·사회적 전환이 일어나고 있는가?"></div>
-          </div>
-
-          <div class="rsb" data-key="need">
-            <div class="rsb-header">
-              <span class="rsb-num">02</span>
-              <span class="rsb-icon">❗</span>
-              <span class="rsb-title">사회적 필요</span>
-              <div class="rsb-line"></div>
-            </div>
-            <div class="rsb-body" id="section-need"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="그 흐름 속에서 사람들이 겪는 문제는 무엇인가?&#10;어떤 필요가 아직 해결되지 않았는가?"></div>
-          </div>
-
-          <div class="rsb" data-key="value">
-            <div class="rsb-header">
-              <span class="rsb-num">03</span>
-              <span class="rsb-icon">💡</span>
-              <span class="rsb-title">가치 창출</span>
-              <div class="rsb-line"></div>
-            </div>
-            <div class="rsb-body" id="section-value"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="그 문제를 해결할 때 어떤 가치가 생기는가?&#10;누가, 어떻게 그 가치로 자본을 만드는가?"></div>
-          </div>
-
-          <div class="rsb" data-key="research">
-            <div class="rsb-header">
-              <span class="rsb-num">04</span>
-              <span class="rsb-icon">🔬</span>
-              <span class="rsb-title">연구 과제</span>
-              <div class="rsb-line"></div>
-            </div>
-            <div class="rsb-body" id="section-research"
-              contenteditable="true" spellcheck="false"
-              data-placeholder="그래서 내가 풀어야 할 연구 질문은 무엇인가?&#10;어떤 방법론으로 접근할 것인가?"></div>
-          </div>
-
+        <!-- Graph Controls -->
+        <div class="graph-controls">
+          <button class="ctrl-btn" id="btn-research-zoom-in" title="확대">+</button>
+          <button class="ctrl-btn" id="btn-research-zoom-out" title="축소">−</button>
+          <button class="ctrl-btn" id="btn-research-zoom-reset" title="초기화">⊙</button>
         </div>
 
-        <!-- Research Agenda -->
-        <div class="research-agenda-section">
-          <div class="agenda-header">
-            <h2 class="agenda-title">🗒️ 연구 아젠다</h2>
-            <button class="agenda-add-btn" id="agenda-add-btn" onclick="addAgendaItem()">+ 추가</button>
-          </div>
-          <div class="agenda-list" id="agenda-list"></div>
-        </div>
+        <!-- D3 SVG -->
+        <svg id="research-graph-svg"></svg>
 
-        <!-- Keywords -->
-        <div class="research-keywords-section">
-          <div class="keywords-header">
-            <h2 class="keywords-title">🏷️ 핵심 키워드</h2>
-            <button class="keyword-add-btn" onclick="addKeyword()">+ 추가</button>
-          </div>
-          <div class="keywords-cloud" id="keywords-cloud"></div>
-        </div>
-
+        <!-- Tooltip -->
+        <div class="node-tooltip" id="research-node-tooltip"></div>
       </div>
     </div>
 
