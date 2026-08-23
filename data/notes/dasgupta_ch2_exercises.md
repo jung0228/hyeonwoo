@@ -544,190 +544,227 @@ Find if there exists $i$ such that $A[i] = i$ in a sorted array of distinct inte
 ---
 
 ### 📌 Exercise 2.18 (이진 탐색의 하한 $\Omega(\log n)$ 증명)
-[원문]
-Show that any comparison-based search algorithm takes $\Omega(\log n)$ steps.
+[원문 핵심]
+정렬된 배열 $A[1 \dots n]$ 에서 대소 비교($A[i] \le z$?)만을 사용하는 모든 탐색 알고리즘은 최악의 경우 최소 $\Omega(\log n)$ 단계가 걸림을 증명하시오.
 
-[해설 및 증명]
-- 결정 트리(Decision Tree) 모델: 크기 $n$인 배열에서 찾을 수 있는 결과의 가짓수는 $n+1$개 (각 인덱스 $1 \dots n$ 또는 없음).
-- 높이가 $h$인 이진 결정 트리가 가질 수 있는 최대 리프 노드 수는 $2^h$개입니다.
-- $2^h \ge n+1 \implies h \ge \log_2(n+1)$
-- 따라서 최소 비교 횟수는 $\mathbf{\Omega(\log n)}$ 입니다. $\blacksquare$
+[30초 직관]
+스무고개 게임 원리: 질문 1번(대소 비교)마다 후보군이 최대 절반($1/2$)으로만 줄어듭니다. $n+1$가지 가능한 결과(각 인덱스 또는 없음)를 구별하려면 질문 횟수(트리 높이 $h$)는 $2^h \ge n+1$ 을 만족해야 하므로 최소 $\log_2(n+1)$ 단계가 필요합니다.
+
+[단계별 정밀 풀이]
+1. 결정 트리(Decision Tree) 모델: 탐색 결과의 경우의 수는 총 $n+1$개 (인덱스 $1 \dots n$ 또는 미존재).
+2. 높이 $h$인 이진 트리가 가질 수 있는 최대 리프 노드 수 $L = 2^h$.
+3. $2^h \ge n+1 \implies h \ge \log_2(n+1)$.
+4. 따라서 최악의 경우 비교 횟수는 최소 $\mathbf{\Omega(\log n)}$ 입니다. $\blacksquare$
 
 ---
 
 ### 📌 Exercise 2.19 ($k$-way 병합 알고리즘)
-[원문]
-Merge $k$ sorted arrays of size $n$ into a single sorted array of $kn$ elements.
+[원문 핵심]
+크기 $n$인 정렬된 배열 $k$개를 하나의 정렬된 배열($kn$개)로 병합하는 (a) 순차 병합과 (b) 분할 정복 병합의 시간 복잡도를 분석하시오.
 
-[해설 및 증명]
-- (a) 순차 병합:
-  - 1-2번째 병합: $2n$, 3번째 병합: $3n \dots k$번째 병합: $kn$.
-  - 총 시간: $\sum_{i=2}^k i n = n \left( \frac{k(k+1)}{2} - 1 \right) = \mathbf{O(k^2 n)}$
-- (b) 분할 정복 병합 (또는 최소 힙 활용):
-  - $k$개 배열을 2개씩 짝지어 병합하는 토너먼트 방식 적용 (깊이 $\log k$).
-  - 각 레벨당 전체 원소 수 $kn$을 병합하므로 $O(kn)$ 작업 소요.
-  - 총 시간 복잡도: $\mathbf{O(kn \log k)}$.
+[30초 직관]
+눈덩이 굴리기 vs 토너먼트 대진표:
+- (a) 순차 병합: 이미 커진 눈덩이에 작은 배열을 하나씩 더하면 뒤로 갈수록 비효율적 ➔ $O(k^2 n)$.
+- (b) 분할 정복: $k$개 배열을 2개씩 짝지어 토너먼트로 병합하면 깊이 $\log k$에 해결 ➔ $O(kn \log k)$.
+
+[단계별 정밀 풀이]
+1. (a) 순차 병합:
+   - 1~2번째 병합 $2n$, 3번째 병합 $3n \dots k$번째 병합 $kn$.
+   - 총 시간: $\sum_{i=2}^k i n = n \left( \frac{k(k+1)}{2} - 1 \right) = \mathbf{O(k^2 n)}$.
+2. (b) 분할 정복 병합 (또는 최소 힙 활용):
+   - $k$개 배열을 2개씩 짝지어 병합하는 트리 깊이 $\log_2 k$.
+   - 각 레벨당 전체 원소 $kn$개를 병합하므로 레벨당 $O(kn)$ 소요.
+   - 총 시간 복잡도: $\mathbf{O(kn \log k)}$.
 
 ---
 
 ### 📌 Exercise 2.20 (선형 시간 정렬과 $\Omega(n \log n)$ 하한)
-[원문]
-Sort array in $O(n + M)$ time ($M = \max x_i - \min x_i$). Why doesn't $\Omega(n \log n)$ bound apply?
+[원문 핵심]
+범위 $M = \max x_i - \min x_i$ 일 때 $O(n + M)$ 정렬이 가능함을 보이고, 이것이 비교 정렬 하한선 $\Omega(n \log n)$ 과 모순되지 않는 이유를 서술하시오.
 
-[해설 및 증명]
-- Counting Sort (계수 정렬) 알고리즘을 사용하면 크기 $M+1$의 카운팅 배열을 이용해 $O(n + M)$ 시간에 정렬할 수 있습니다.
-- 하한이 적용되지 않는 이유: $\Omega(n \log n)$ 하한은 오직 원소 간의 비교(Comparison-based)만을 사용하는 정렬에만 적용됩니다. 계수 정렬은 비교 연산을 하지 않고 값의 인덱스 직접 참조(Direct Indexing)를 사용하는 비비교 정렬(Non-comparison sort)이기 때문입니다.
+[30초 직관]
+계수 정렬(Counting Sort)의 인덱스 직접 주소 지정: 원소끼리 대소를 비교하지 않고 숫자 값을 메모리 인덱스로 바로 꽂아 넣기 때문에 비교 정렬의 결정 트리 제약을 받지 않습니다.
+
+[단계별 정밀 풀이]
+1. $O(n + M)$ 정렬: 크기 $M+1$의 카운팅 배열을 만들어 빈도수를 센 후 순차 출력하는 계수 정렬 수행 ➔ $O(n + M)$.
+2. 하한 미적용 이유: $\Omega(n \log n)$ 하한은 오직 원소 간의 대소 비교(Comparison-based)만을 사용하는 알고리즘에만 적용됩니다. 계수 정렬은 비비교 정렬(Non-comparison sort)이므로 하한을 우회합니다.
 
 ---
 
 ### 📌 Exercise 2.21 (중앙값, 평균, 그리고 로버스트 통계)
-[원문]
+[원문 핵심]
 (a) 중앙값 $\mu_1$이 $\sum |x_i - \mu|$ 를 최소화함을 증명.
 (b) 평균 $\mu_2$가 $\sum (x_i - \mu)^2$ 를 최소화함을 증명.
-(c) $\mu_\infty$ (미니맥스)를 $O(n)$ 시간에 구하는 법.
+(c) 미니맥스 기준 $\max_i |x_i - \mu|$ 를 최소화하는 $\mu_\infty$ 를 $O(n)$ 시간에 구하는 법.
 
-[해설 및 증명]
-- (a) $\mu$를 좌측에서 우측으로 이동시킬 때, $\mu$보다 작은 원소 개수를 $L$, 큰 원소 개수를 $R$이라 하면 미분/기울기는 $L - R$ 입니다. $L = R$ 이 되는 지점이 바로 중앙값(Median)이며 이때 함수가 최솟값을 가집니다.
-- (b) $f(\mu) = \sum (x_i - \mu)^2$ 미분: $f'(\mu) = -2 \sum (x_i - \mu) = 0 \implies n \mu = \sum x_i \implies \mathbf{\mu = \frac{1}{n} \sum x_i = \mu_2}$ (평균).
-- (c) $f(\mu) = \max_i |x_i - \mu|$ 를 최소화하는 값은 최솟값과 최댓값의 정확한 중간점입니다:
-  $$\mu_\infty = \frac{\min_i x_i + \max_i x_i}{2}$$
-  - 배열의 $\min$과 $\max$는 단 1회 순회로 $O(n)$ 시간에 구할 수 있으므로 $\mu_\infty$ 도 $O(n)$ 시간에 계산됩니다.
+[30초 직관]
+- 거리의 합: 기준점을 움직일 때 좌측 점 개수 $L$과 우측 점 개수 $R$의 균형점 $L=R$ ➔ 중앙값.
+- 오차 제곱 합: 미분하여 기울기가 0이 되는 지점 ➔ 산술 평균.
+- 최대 오차 최소화: 최솟값과 최댓값의 정확한 정중앙점 ➔ $(\min + \max) / 2$.
+
+[단계별 정밀 풀이]
+1. (a) $\mu$ 이동 시 변화율 $L - R = 0 \implies L = R \implies \mu = \mu_1$ (중앙값).
+2. (b) $f'(\mu) = -2 \sum (x_i - \mu) = 0 \implies n\mu = \sum x_i \implies \mathbf{\mu = \frac{1}{n}\sum x_i = \mu_2}$ (평균).
+3. (c) $\mu_\infty = \frac{\min_i x_i + \max_i x_i}{2}$. 배열을 1회 순회($O(n)$)하여 $\min, \max$를 찾으므로 총 $O(n)$ 시간에 계산 가능.
 
 ---
 
 ### 📌 Exercise 2.22 (두 정렬 배열의 $k$번째 작은 원소)
-[원문]
-Find $k$th smallest element in union of two sorted lists of size $m$ and $n$ in $O(\log m + \log n)$ time.
+[원문 핵심]
+크기 $m, n$인 두 정렬 리스트의 합집합에서 $k$번째 작은 원소를 $O(\log m + \log n)$ 시간에 찾는 알고리즘을 제시하시오.
 
-[해설 및 증명]
-- 이진 탐색 기법: 각 배열에서 약 $k/2$번째 원소 $A[k/2]$ 와 $B[k/2]$ 를 비교합니다.
-- 만약 $A[k/2] < B[k/2]$ 이면, $A$의 앞쪽 $k/2$개 원소는 절대로 전체 $k$번째 작은 원소가 될 수 없으므로 제거하고 $k = k - k/2$ 로 갱신합니다.
-- 매 단계마다 $k$가 절반으로 줄어들므로 총 시간 복잡도는 $\mathbf{O(\log m + \log n)}$ 입니다.
+[30초 직관]
+절반씩 버리기: 두 배열에서 각각 $k/2$번째 원소를 비교하여, 더 작은 쪽의 앞부분 $k/2$개는 절대로 전체 $k$번째 원소가 될 수 없으므로 통째로 잘라냅니다.
+
+[단계별 정밀 풀이]
+1. 각 배열의 $k/2$번째 원소 $A[k/2]$ 와 $B[k/2]$ 비교.
+2. $A[k/2] < B[k/2]$ 이면 $A$의 앞쪽 $k/2$개 원소를 후보에서 제거하고 $k \leftarrow k - k/2$ 로 갱신.
+3. 매 재귀마다 $k$가 절반씩 줄어들므로 시간 복잡도는 $\mathbf{O(\log m + \log n)}$ 입니다.
 
 ---
 
 ### 📌 Exercise 2.23 (다수 원소 Majority Element 찾기)
-[원문]
-(a) $O(n \log n)$ 분할 정복 알고리즘.
-(b) $O(n)$ 선형 시간 알고리즘 (Boyer-Moore Majority Vote).
+[원문 핵심]
+과반수($> n/2$) 등장하는 원소를 (a) $O(n \log n)$ 분할 정복과 (b) $O(n)$ 선형 시간(Boyer-Moore)으로 각각 구하시오.
 
-[해설 및 증명]
-- (a) $O(n \log n)$ 알고리즘:
-  - 배열을 반으로 나누어 좌측 다수 원소 $m_1$과 우측 다수 원소 $m_2$를 재귀적으로 찾습니다.
-  - 전체 배열에서 $m_1$과 $m_2$의 개수를 직접 카운트($O(n)$)하여 과반수( $> n/2$ )를 넘는 원소를 반환합니다.
-  - 재귀식 $T(n) = 2T(n/2) + O(n) \implies \mathbf{O(n \log n)}$.
-- (b) $O(n)$ 알고리즘 (Boyer-Moore):
-  - 원소들을 2개씩 짝짓습니다. 두 원소가 다르면 둘 다 버리고, 같으면 하나만 남깁니다.
-  - 과반수 원소가 존재한다면 이 제거 과정을 거쳐도 끝까지 살아남게 됩니다.
-  - 1회 순회로 후보를 선정 후, 2번째 순회로 검증하여 $O(n)$ 에 해결합니다.
+[30초 직관]
+- (a) 반반 나눠서 각 구역의 다수 후보 2개를 추린 뒤 전체 검증 ➔ $O(n \log n)$.
+- (b) 서로 다른 두 원소를 짝지어 동반 탈락시키면 과반수 원소만 최후에 생존 ➔ $O(n)$.
+
+[단계별 정밀 풀이]
+1. (a) $O(n \log n)$ 분할 정복:
+   - 좌/우 절반에서 다수 원소 $m_1, m_2$를 재귀 탐색 후, 전체 배열에서 개수를 세어($O(n)$) 검증.
+   - $T(n) = 2T(n/2) + O(n) \implies \mathbf{O(n \log n)}$.
+2. (b) $O(n)$ Boyer-Moore 투표:
+   - 원소를 2개씩 짝지어 다르면 버리고 같으면 1개 보존.
+   - 남은 후보를 1회 순회로 카운트하여 과반수 여부 최종 판별 ➔ $\mathbf{O(n)}$.
 
 ---
 
 ### 📌 Exercise 2.24 (QuickSort 분석)
-[원문]
-(a) Pseudocode (b) 최악 시간복잡도 $\Theta(n^2)$ (c) 평균 시간복잡도 $O(n \log n)$ 유도.
+[원문 핵심]
+QuickSort의 (a) 의사코드 작성, (b) 최악 시간 복잡도 $\Theta(n^2)$ 분석, (c) 평균 시간 복잡도 $O(n \log n)$ 점화식 유도.
 
-[해설 및 증명]
-- (b) 최악의 경우: 피벗이 항상 최솟값 또는 최댓값으로 선택되면 재귀식이 $T(n) = T(n-1) + O(n)$ 이 되어 $\sum_{i=1}^n i = \mathbf{\Theta(n^2)}$.
-- (c) 평균의 경우: 모든 피벗 위치가 균등 확률 $1/n$ 을 가짐:
-  $$T(n) = O(n) + \frac{2}{n} \sum_{i=1}^{n-1} T(i)$$
-  이 재귀식을 풀면 $T(n) \le c n \ln n \implies \mathbf{O(n \log n)}$.
+[30초 직관]
+- 최악: 피벗이 항상 극단값(최소/최대)으로 뽑혀 $n, n-1, n-2 \dots$ 로 1개씩 줄어듦 ➔ $O(n^2)$.
+- 평균: 피벗이 무작위로 골고루 나뉘어 평균 트리 깊이 $\log n$ 유지 ➔ $O(n \log n)$.
+
+[단계별 정밀 풀이]
+1. (b) 최악: $T(n) = T(n-1) + O(n) \implies \sum_{i=1}^n i = \mathbf{\Theta(n^2)}$.
+2. (c) 평균: $T(n) \le O(n) + \frac{2}{n}\sum_{i=1}^{n-1} T(i)$.
+   - 양변에 $n$을 곱하고 $(n-1)$ 항을 빼서 전개하면 $T(n) \le c n \ln n \implies \mathbf{O(n \log n)}$.
 
 ---
 
 ### 📌 Exercise 2.25 (10진수 ➔ 2진수 변환 분할 정복)
-[원문]
-(a) $10^n$ 의 이진수 변환 `pwr2bin(n)`.
-(b) $n$자리 10진수 $x$의 이진수 변환 `dec2bin(x)`.
+[원문 핵심]
+빠른 정수 곱셈 알고리즘($O(n^{\log_2 3})$)을 활용하여 (a) $10^n$ 변환과 (b) $n$자리 10진수의 2진수 변환을 $O(n^{1.585})$ 에 해결하시오.
 
-[해설 및 증명]
-- (a) `z = pwr2bin(n/2)` 로 구한 뒤 `return fastmultiply(z, z)`.
-  - 재귀식: $T(n) = T(n/2) + O(n^{\log_2 3}) \implies \mathbf{O(n^{1.585})}$.
-- (b) $x = x_L \cdot 10^{n/2} + x_R$ 로 분할.
-  - `return add(fastmultiply(dec2bin(xL), pwr2bin(n/2)), dec2bin(xR))`
-  - 재귀식: $T(n) = 2T(n/2) + O(n^{1.585}) \implies \mathbf{O(n^{1.585})}$.
+[30초 직관]
+자릿수를 절반으로 쪼개어 $x = x_L \cdot 10^{n/2} + x_R$ 로 분할 정복 빠른 곱셈 적용.
+
+[단계별 정밀 풀이]
+1. (a) `pwr2bin(n)`: $z = \text{pwr2bin}(n/2)$ 구한 뒤 `fastmultiply(z, z)` 반환 ➔ $T(n) = T(n/2) + O(n^{1.585}) \implies \mathbf{O(n^{1.585})}$.
+2. (b) `dec2bin(x)`: $x_L \cdot 10^{n/2} + x_R$ 분할 ➔ $T(n) = 2T(n/2) + O(n^{1.585}) \implies \mathbf{O(n^{1.585})}$.
 
 ---
 
-### 📌 Exercise 2.26 (제곱 연산과 곱셈 연산의 점근적 속도)
-[원문]
-Is squaring an $n$-bit integer asymptotically faster than multiplying two $n$-bit integers?
+### 📌 Exercise 2.26 (제곱 연산과 곱셈 연산의 점근적 동치성)
+[원문 핵심]
+정수 제곱 연산이 두 정수의 곱셈보다 점근적으로 더 빠를 수 있는지 여부를 판정하시오.
 
-[해설 및 증명]
-- 아닙니다 (거짓).
-- 곱셈을 통해 제곱을 할 수 있음은 자명하며($x^2 = x \times x$), 반대로 항등식 $xy = \frac{(x+y)^2 - x^2 - y^2}{2}$ 를 이용하면 제곱 알고리즘 3번으로 두 수의 곱셈을 구현할 수 있습니다.
-- 따라서 정수 제곱과 두 정수의 곱셈은 상수 배 차이만 날 뿐 동일한 점근적 시간 복잡도 $\Theta(M(n))$ 를 가집니다.
+[30초 직관]
+항등식 $xy = \frac{(x+y)^2 - x^2 - y^2}{2}$ 를 이용하면 제곱 3번으로 곱셈을 완전히 대체할 수 있으므로 두 연산의 복잡도는 동치입니다.
+
+[단계별 정밀 풀이]
+1. 곱셈으로 제곱 구현: $x^2 = x \times x$ (자명).
+2. 제곱으로 곱셈 구현: $xy = \frac{(x+y)^2 - x^2 - y^2}{2}$.
+3. 덧셈/뺄셈 $O(n)$ 및 2로 나누기(비트 시프트 $O(n)$)를 제외하면 제곱 3번으로 곱셈 가능하므로 두 연산의 점근 복잡도는 $\Theta(M(n))$ 로 동일합니다.
 
 ---
 
 ### 📌 Exercise 2.27 (행렬 제곱과 행렬 곱셈의 동치성)
-[원문]
-(a) $2 \times 2$ 행렬 제곱에 5번 곱셈 충분 증명. (b) Strassen 적용 오류 지적. (c) $S(n) = O(n^c) \iff M(n) = O(n^c)$ 증명.
+[원문 핵심]
+$n \times n$ 행렬 제곱이 $S(n) = O(n^c)$ 이면 일반 행렬 곱셈도 $O(n^c)$ 시간에 가능함을 증명하시오.
 
-[해설 및 증명]
-- (b) 오류 원인: 슈트라센 알고리즘은 하위 블록의 곱셈에서 서로 다른 서브 행렬 간의 곱(예: $A \cdot E$)을 수행해야 하므로 단순 제곱 알고리즘을 하위 문제에 재귀 적용할 수 없습니다.
-- (c) 증명:
-  - $A = \begin{bmatrix} X & 0 \\ 0 & 0 \end{bmatrix}, B = \begin{bmatrix} 0 & Y \\ 0 & 0 \end{bmatrix}$ 이라 두면, $AB + BA = \begin{bmatrix} 0 & XY \\ 0 & 0 \end{bmatrix}$ 입니다.
-  - 항등식 $AB + BA = (A+B)^2 - A^2 - B^2$ 에 의해, $2n \times 2n$ 행렬의 제곱 3번으로 $XY$를 구할 수 있습니다.
-  - 따라서 행렬 제곱이 $O(n^c)$ 이면 일반 행렬 곱셈도 $O(n^c)$ 입니다. $\blacksquare$
+[30초 직관]
+블록 행렬 배치 트릭: $A = \begin{bmatrix} X & 0 \\ 0 & 0 \end{bmatrix}, B = \begin{bmatrix} 0 & Y \\ 0 & 0 \end{bmatrix}$ 로 두면 $AB + BA = \begin{bmatrix} 0 & XY \\ 0 & 0 \end{bmatrix}$ 이 되어 행렬 곱 $XY$가 고스란히 튀어나옵니다.
+
+[단계별 정밀 풀이]
+1. $AB + BA = (A+B)^2 - A^2 - B^2$ 항등식 성립.
+2. $2n \times 2n$ 크기의 행렬 제곱 3번으로 $XY$ 계산 가능 ($3S(2n) + O(n^2)$).
+3. 따라서 행렬 제곱이 $O(n^c)$ 이면 행렬 곱셈도 $\mathbf{O(n^c)}$ 입니다. $\blacksquare$
 
 ---
 
 ### 📌 Exercise 2.28 (Hadamard 행렬-벡터 곱셈)
-[원문]
-Show that $H_k v$ can be calculated using $O(n \log n)$ operations for $n = 2^k$.
+[원문 핵심]
+$n = 2^k$ 일 때 아다마르 행렬-벡터 곱 $H_k v$ 를 $O(n \log n)$ 시간에 계산함을 보이시오.
 
-[해설 및 증명]
-- $v = \begin{bmatrix} v_1 \\ v_2 \end{bmatrix}$ 로 반씩 나누면:
-  $$H_k v = \begin{bmatrix} H_{k-1} & H_{k-1} \\ H_{k-1} & -H_{k-1} \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} H_{k-1}v_1 + H_{k-1}v_2 \\ H_{k-1}v_1 - H_{k-1}v_2 \end{bmatrix}$$
-- $H_{k-1}v_1$ 과 $H_{k-1}v_2$ 를 재귀적으로 계산한 후 덧셈/뺄셈 $O(n)$ 수행.
-- 재귀식: $T(n) = 2 T(n/2) + O(n) \implies \mathbf{O(n \log n)}$.
+[30초 직관]
+벡터를 반으로 쪼개어 $H_{k-1}v_1$ 과 $H_{k-1}v_2$ 를 재귀 계산 후 덧셈/뺄셈으로 조합 ➔ FFT 나비 연산 구조와 동일!
+
+[단계별 정밀 풀이]
+1. $H_k v = \begin{bmatrix} H_{k-1}v_1 + H_{k-1}v_2 \\ H_{k-1}v_1 - H_{k-1}v_2 \end{bmatrix}$.
+2. 재귀식: $T(n) = 2T(n/2) + O(n)$.
+3. 마스터 정리에 의해 $\mathbf{O(n \log n)}$ 성립. $\blacksquare$
 
 ---
 
 ### 📌 Exercise 2.29 (Horner의 법칙 다항식 평가)
-[원문]
-(a) Horner's rule 구현. (b) 덧셈/곱셈 횟수 분석.
+[원문 핵심]
+다항식 $p(x) = a_0 + a_1 x + \dots + a_n x^n$ 을 덧셈 $n$번, 곱셈 $n$번만으로 계산하는 호너의 법칙을 제시하시오.
 
-[해설 및 증명]
-- (a) 알고리즘: $p(x) = (\dots((a_n x + a_{n-1})x + a_{n-2})\dots)x + a_0$
-- (b) 연산 횟수: 정확히 곱셈 $n$ 번, 덧셈 $n$ 번 소요 ➔ $O(n)$.
-  - 일반적인 전개 방식($O(n^2)$) 대비 최적의 연산 횟수입니다.
+[30초 직관]
+괄호로 묶기: $p(x) = (\dots((a_n x + a_{n-1})x + a_{n-2})\dots)x + a_0$.
 
----
-
-### 📌 Exercise 2.30 (모듈로 아리스메틱 Fourier Transform - Modular FFT)
-[원문]
-Modulo 7 에서의 푸리에 변환 및 다항식 곱셈.
-
-[해설 및 증명]
-- (a) $\omega = 3$ 선택: $3^1=3, 3^2=2, 3^3=6, 3^4=4, 3^5=5, 3^6=1 \pmod 7$.
-  - 합: $\sum_{i=1}^6 3^i = 3 + 2 + 6 + 4 + 5 + 1 = 21 \equiv \mathbf{0 \pmod 7}$.
-- (b) ~ (d): 복소수 영역의 $e^{-i 2\pi/n}$ 대신 모듈로 원시근 $\omega = 3$ 을 사용하여 동일하게 FFT 곱셈 수행.
+[단계별 정밀 풀이]
+1. 알고리즘: $z = a_n$ 에서 시작하여 $i = n-1$ 부터 0까지 $z \leftarrow z \cdot x + a_i$ 반복.
+2. 총 곱셈 $n$회, 덧셈 $n$회로 $O(n)$ 시간에 계산 완료.
 
 ---
 
-### 📌 Exercise 2.31 (이진 최대공약수 알고리즘 - Binary GCD)
-[원문]
-(a) Binary GCD 규칙 증명. (b) 분할 정복 알고리즘 및 유클리드 대비 효율성.
+### 📌 Exercise 2.30 (모듈로 7 푸리에 변환 - Modular FFT)
+[원문 핵심]
+모듈로 7 환경에서 원시근 $\omega = 3$ 을 이용하여 푸리에 변환 및 다항식 곱셈을 수행하시오.
 
-[해설 및 증명]
-- (a) 규칙:
-  - $a, b$ 모두 짝수: $\gcd(a, b) = 2 \gcd(a/2, b/2)$
-  - $a$ 홀수, $b$ 짝수: $\gcd(a, b) = \gcd(a, b/2)$
-  - $a, b$ 모두 홀수: $\gcd(a, b) = \gcd((a-b)/2, b)$
-- (c) 효율성: $n$비트 정수 연산 시, 나눗셈(유클리드) 대신 비트 시프트(Shift)와 뺄셈만 사용하므로 비트 연산 단위에서 훨씬 빠르고 단순하게 동작합니다.
+[30초 직관]
+복소수 $e^{-i 2\pi/n}$ 대신 모듈로 7의 원시근 $\omega = 3$ 을 기저 축으로 사용 ($3^6 \equiv 1 \pmod 7$).
+
+[단계별 정밀 풀이]
+1. $\omega=3$ 의 거듭제곱: $3, 2, 6, 4, 5, 1 \pmod 7$ (모두 서로 다름).
+2. 합: $\sum_{i=1}^6 3^i = 21 \equiv \mathbf{0 \pmod 7}$.
+3. 모듈로 변환 행렬 $M_6(\omega)$ 를 곱해 이산 FFT와 동일한 방식으로 합성곱 계산.
 
 ---
 
-### 📌 Exercise 2.32 (가장 가까운 두 점 찾기 - Closest Pair of Points)
-[원문]
-(a) $d \times d$ 영역 내 최대 4개 점 증명. (b) 알고리즘 정당성. (c) $T(n) = 2T(n/2) + O(n \log n) \implies O(n \log^2 n)$. (d) $O(n \log n)$ 으로 개선.
+### 📌 Exercise 2.31 (이진 최대공약수 Binary GCD)
+[원문 핵심]
+나눗셈 없이 비트 시프트와 뺄셈만으로 GCD를 계산하는 규칙을 증명하고 효율성을 논하시오.
 
-[해설 및 증명]
-- (a) 좌측/우측 각 영역 내 점들 간 거리는 최소 $d$ 이상입니다. 크기 $d/2 \times d/2$ 인 4개 소영역에는 각각 최대 1개의 점만 존재 가능하므로 $d \times d$ 영역 내에는 최대 4개의 점만 존재할 수 있습니다.
-- (c) 시간복잡도: $T(n) = 2T(n/2) + O(n \log n) \implies \mathbf{O(n \log^2 n)}$.
-- (d) $O(n \log n)$ 개선법: 최초에 $y$좌표로 정렬된 배열을 미리 만들어 두고 재귀 호출 시 병합 정렬(MergeSort) 방식으로 $y$좌표 정렬 상태를 유지하면, 경계 영역 점 정렬을 $O(n)$ 시간에 마쳐 $T(n) = 2T(n/2) + O(n) \implies \mathbf{O(n \log n)}$ 으로 줄일 수 있습니다. $\blacksquare$
+[30초 직관]
+짝수면 2로 나누고(시프트 1회), 둘 다 홀수면 빼서 짝수로 만들어 다시 시프트!
+
+[단계별 정밀 풀이]
+1. 규칙:
+   - 둘 다 짝수: $\gcd(a, b) = 2 \gcd(a/2, b/2)$
+   - 하나만 짝수: $\gcd(a, b) = \gcd(a/2, b)$
+   - 둘 다 홀수: $\gcd(a, b) = \gcd((a-b)/2, b)$
+2. $n$비트 정수 연산 시 고비용의 나눗셈 대신 $O(n)$ 비트 시프트와 뺄셈만 사용하므로 하드웨어 및 대형 정수에서 매우 효율적입니다.
+
+---
+
+### 📌 Exercise 2.32 (가장 가까운 두 점 찾기 Closest Pair)
+[원문 핵심]
+평면 위 $n$개 점 중 최단 거리 쌍을 (a) $d \times d$ 영역 내 최대 4개 점 증명, (b) $O(n \log^2 n)$ 분할 정복, (c) $O(n \log n)$ 개선법으로 구하시오.
+
+[30초 직관]
+좌/우 영역의 최단 거리 $d = \min(d_L, d_R)$ 을 구한 뒤, 경계선 주변 $2d$ 띠 안의 점들만 $y$좌표 순으로 최대 7개 이웃만 비교!
+
+[단계별 정밀 풀이]
+1. (a) $d/2 \times d/2$ 4개 박스에 각 1개 이하 점만 존재 가능하므로 $d \times d$ 내 최대 4점.
+2. (b) 경계선 주변 점을 $y$ 정렬($O(n \log n)$) 후 인접 7개 점 비교: $T(n) = 2T(n/2) + O(n \log n) \implies \mathbf{O(n \log^2 n)}$.
+3. (c) $O(n \log n)$ 개선: $y$좌표 정렬을 재귀 병합 정렬 과정에서 병렬로 유지하면 분할 단계가 $O(n)$ 이 되어 $T(n) = 2T(n/2) + O(n) \implies \mathbf{O(n \log n)}$. $\blacksquare$
 
 ---
 
