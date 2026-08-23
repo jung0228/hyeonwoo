@@ -721,11 +721,11 @@ function initGraph() {
 }
 
 /* ---- Custom Cluster Force ---- */
-function clusterForce(nodes, W, H) {
+function clusterForce(nodes, W, H, clusterConfigMap = CLUSTER_CONFIG, clusterProp = 'cluster') {
   const strength = 0.12;
   return function(alpha) {
     nodes.forEach(d => {
-      const cfg = CLUSTER_CONFIG[d.cluster];
+      const cfg = clusterConfigMap[d[clusterProp]];
       if (!cfg) return;
       const tx = W * cfg.cx;
       const ty = H * cfg.cy;
@@ -2112,25 +2112,27 @@ async function initResearchGraph() {
   researchSvg = d3.select(svgEl).attr('viewBox', `0 0 ${W} ${H}`);
 
   researchZoom = d3.zoom()
-    .scaleExtent([0.2, 3])
+    .scaleExtent([0.15, 3])
     .on('zoom', e => { if (researchG) researchG.attr('transform', e.transform); });
   researchSvg.call(researchZoom);
 
   researchG = researchSvg.append('g');
 
-  // Defs
+  // Defs (100% Identical Arrow Marker)
   const defs = researchSvg.append('defs');
   defs.append('marker')
     .attr('id', 'research-arrow')
     .attr('viewBox', '0 -5 10 10').attr('refX', 22).attr('refY', 0)
     .attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
     .append('path').attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', 'rgba(244,63,94,0.3)');
+    .attr('fill', 'rgba(255,255,255,0.15)');
 
-  // Load research nodes from window.researchKnowledgeData or fallback
+  // Load research nodes & map
   const researchDataSrc = window.researchKnowledgeData || knowledgeData;
   const researchNodes = researchDataSrc.nodes || [];
   const researchNodeIds = new Set(researchNodes.map(n => n.id));
+  const researchNodeMap = {};
+  researchNodes.forEach(n => { researchNodeMap[n.id] = n; });
 
   // Define 5 Research Sub-cluster Centers
   const RESEARCH_SUB_CLUSTERS = {
@@ -2148,7 +2150,7 @@ async function initResearchGraph() {
     return 'rq';
   };
 
-  const jitter = () => (Math.random() - 0.5) * 120;
+  const jitter = () => (Math.random() - 0.5) * 130;
   const nodes = researchNodes.map(n => {
     const sub = getSubCluster(n.id);
     const cfg = RESEARCH_SUB_CLUSTERS[sub];
@@ -2168,7 +2170,7 @@ async function initResearchGraph() {
       relation: e.relation, weight: e.weight || 1, insight: e.insight || null
     }));
 
-  // Hulls & Labels
+  // Hulls & Labels (100% Identical Style to initGraph)
   const hullGroup = researchG.append('g').attr('class', 'research-hulls');
   const labelGroup = researchG.append('g').attr('class', 'research-labels');
   const hullPaths = {};
@@ -2176,44 +2178,56 @@ async function initResearchGraph() {
 
   Object.entries(RESEARCH_SUB_CLUSTERS).forEach(([key, cfg]) => {
     hullPaths[key] = hullGroup.append('path')
+      .attr('class', 'cluster-hull')
       .attr('fill', cfg.color)
-      .attr('fill-opacity', 0.07)
+      .attr('fill-opacity', 0.05)
       .attr('stroke', cfg.color)
-      .attr('stroke-opacity', 0.35)
+      .attr('stroke-opacity', 0.25)
       .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '5,4');
+      .attr('stroke-dasharray', '6,4');
 
     hullLabels[key] = labelGroup.append('text')
+      .attr('class', 'cluster-label')
       .attr('text-anchor', 'middle')
-      .attr('font-size', '14')
+      .attr('font-size', '15')
       .attr('font-weight', '700')
+      .attr('font-family', 'Pretendard, sans-serif')
       .attr('fill', cfg.color)
+      .attr('fill-opacity', 0.7)
       .attr('pointer-events', 'none')
+      .attr('user-select', 'none')
       .text(cfg.label);
   });
 
-  // Force Simulation
+  // Force Simulation (100% Identical Physics Settings)
   researchSimulation = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.id).distance(110))
-    .force('charge', d3.forceManyBody().strength(-240))
-    .force('collide', d3.forceCollide(45))
-    .force('x', d3.forceX(d => W * RESEARCH_SUB_CLUSTERS[d.subCluster].cx).strength(0.35))
-    .force('y', d3.forceY(d => H * RESEARCH_SUB_CLUSTERS[d.subCluster].cy).strength(0.35));
+    .force('link', d3.forceLink(links)
+      .id(d => d.id)
+      .distance(d => 100 - (d.weight || 1) * 10)
+      .strength(d => 0.28 + (d.weight || 1) * 0.04))
+    .force('charge', d3.forceManyBody().strength(-220))
+    .force('collide', d3.forceCollide().radius(d => getNodeRadius(d) + 14))
+    .force('cluster', clusterForce(nodes, W, H, RESEARCH_SUB_CLUSTERS, 'subCluster'))
+    .alphaDecay(0.025);
 
-  // Render Links
-  const linkGroup = researchG.append('g').attr('class', 'research-links');
+  // Render Links (100% Identical Styling to initGraph)
+  const linkGroup = researchG.append('g').attr('class', 'links');
   const linkElements = linkGroup.selectAll('line')
     .data(links).enter().append('line')
-    .attr('stroke', '#f43f5e')
-    .attr('stroke-opacity', 0.3)
-    .attr('stroke-width', d => Math.max(1.5, d.weight))
+    .attr('class', 'link-line link-inner')
+    .attr('stroke', d => {
+      const src = researchNodeMap[typeof d.source === 'object' ? d.source.id : d.source];
+      return src?.nodeType === 'research' ? '#ec4899' : '#f43f5e';
+    })
+    .attr('stroke-width', d => 0.5 + (d.weight || 1) * 0.4)
     .attr('marker-end', 'url(#research-arrow)');
 
   // Render Nodes
-  const nodeGroup = researchG.append('g').attr('class', 'research-nodes');
-  const nodeElements = nodeGroup.selectAll('.r-node')
+  const nodeGroup = researchG.append('g').attr('class', 'nodes');
+  const nodeElements = nodeGroup.selectAll('.node-g')
     .data(nodes).enter().append('g')
-    .attr('class', 'r-node')
+    .attr('class', 'node-g')
+    .attr('id', d => `rnode-${d.id}`)
     .style('cursor', 'pointer')
     .call(d3.drag()
       .on('start', (e, d) => {
@@ -2226,12 +2240,35 @@ async function initResearchGraph() {
         d.fx = null; d.fy = null;
       }))
     .on('click', (e, d) => {
+      e.stopPropagation();
       openNotePanel(d);
     });
 
   renderGraphNodeComponent(nodeElements, d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e');
 
-  // Tick simulation
+  // Tooltip setup
+  const tooltip = document.getElementById('research-node-tooltip') || document.getElementById('node-tooltip');
+  if (tooltip) {
+    nodeElements.on('mouseover', (event, d) => {
+      const color = d.nodeType === 'research' ? '#ec4899' : '#f43f5e';
+      tooltip.innerHTML = `
+        <div class="tt-label" style="color:${color}">${d.label}</div>
+        <div class="tt-category">${d.category || (d.nodeType === 'research' ? 'Research Agenda' : 'Paper')}</div>
+        <div class="tt-confidence">자신감: ${CONFIDENCE_STARS[d.confidence] || '?'} ${CONFIDENCE_LABELS[d.confidence] || ''}</div>
+        <div class="tt-tags">${(d.tags || []).map(t => `<span class="tt-tag">${t}</span>`).join('')}</div>
+      `;
+      tooltip.classList.add('visible');
+    })
+    .on('mousemove', event => {
+      tooltip.style.left = (event.offsetX + 14) + 'px';
+      tooltip.style.top  = (event.offsetY - 10) + 'px';
+    })
+    .on('mouseout', () => {
+      tooltip.classList.remove('visible');
+    });
+  }
+
+  // Tick simulation (100% Identical Update Logic)
   researchSimulation.on('tick', () => {
     linkElements
       .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
@@ -2249,7 +2286,7 @@ async function initResearchGraph() {
       const polygon = d3.polygonHull(pts);
       if (!polygon) return;
 
-      // Expand hull outward from centroid
+      // Expand hull outward from centroid (pad = 52)
       const cx = d3.mean(polygon, p => p[0]);
       const cy = d3.mean(polygon, p => p[1]);
       const pad = 52;
@@ -2276,7 +2313,7 @@ async function initResearchGraph() {
   };
   const btnOut = document.getElementById('btn-research-zoom-out');
   if (btnOut) btnOut.onclick = () => {
-    researchSvg.transition().duration(300).call(researchZoom.scaleBy, 0.7);
+    researchSvg.transition().duration(300).call(researchZoom.scaleBy, 0.77);
   };
   const btnReset = document.getElementById('btn-research-zoom-reset');
   if (btnReset) btnReset.onclick = () => {
