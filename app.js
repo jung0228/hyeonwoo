@@ -1320,7 +1320,7 @@ function buildClusterGroups() {
     grouped[cluster].push(n);
   });
 
-  container.innerHTML = Object.entries(CLUSTER_CONFIG).map(([key, cfg]) => {
+  container.innerHTML = Object.entries(CLUSTER_CONFIG).filter(([key]) => key !== '연구').map(([key, cfg]) => {
     const nodes = grouped[key] || [];
     const avgConf = nodes.length > 0 ? (nodes.reduce((s, n) => s + n.confidence, 0) / nodes.length) : 0;
     const progressPct = Math.round((avgConf / 4) * 100);
@@ -2089,6 +2089,92 @@ function renderResearch() {
 
   // Keywords
   renderKeywords();
+
+  // Dedicated Research Cluster Hub
+  renderResearchClusterHub();
+}
+
+function renderResearchClusterHub() {
+  const container = document.getElementById('research-cluster-hub-container');
+  if (!container) return;
+
+  const researchNodes = knowledgeData.nodes.filter(n =>
+    n.nodeType === 'paper' || n.nodeType === 'research' || getNodeCluster(n) === '연구'
+  );
+
+  const subThemes = [
+    {
+      title: '✨ Omni-modal & Unified Generation (이해·생성 단일화)',
+      color: '#f43f5e',
+      nodeIds: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni']
+    },
+    {
+      title: '🎭 Spatiotemporal Reasoning & RVOS (시공간 픽셀 세그멘테이션)',
+      color: '#ec4899',
+      nodeIds: ['paper_virst', 'paper_lisa', 'paper_mevis', 'paper_momentseeker']
+    },
+    {
+      title: '📹 Long Video & Streaming Memory (장기 비디오 & 스트리밍 KV)',
+      color: '#fb923c',
+      nodeIds: ['paper_qwen2_vl', 'streamkv', 'clip', 'paper_llava']
+    },
+    {
+      title: '🤖 Physical AI & World Models (피지컬 AI & 월드 모델)',
+      color: '#38bdf8',
+      nodeIds: ['paper_cosmos', 'paper_flow_matching']
+    },
+    {
+      title: '🔭 현우의 핵심 연구 과제 (Open Research Questions)',
+      color: '#a78bfa',
+      nodeIds: [
+        'rq_physical_world_model',
+        'rq_counterfactual_video_causality',
+        'rq_modality_decoupled_moe',
+        'rq_cross_modal_alignment',
+        'rq_video_temporal_grounding',
+        'rq_data_recipe_optimization'
+      ]
+    }
+  ];
+
+  container.innerHTML = subThemes.map(theme => {
+    const themeNodes = researchNodes.filter(n => theme.nodeIds.includes(n.id));
+    if (!themeNodes.length) return '';
+
+    const chips = themeNodes.map(n => {
+      const isPaper = n.nodeType === 'paper';
+      const badgeIcon = isPaper ? '📄' : '🔭';
+      const badgeBg = isPaper ? 'rgba(244, 63, 94, 0.12)' : 'rgba(236, 72, 153, 0.12)';
+      const badgeBorder = isPaper ? 'rgba(244, 63, 94, 0.35)' : 'rgba(236, 72, 153, 0.35)';
+      const stars = '★'.repeat(n.confidence) + '☆'.repeat(4 - n.confidence);
+
+      return `<div class="research-hub-chip animate-in"
+        style="border: 1px solid ${badgeBorder}; background: ${badgeBg}; padding: 10px 14px; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: transform 0.2s;"
+        onmouseenter="this.style.transform='translateY(-2px)'"
+        onmouseleave="this.style.transform='translateY(0)'"
+        onclick="focusNode('${n.id}');openNotePanel(knowledgeData.nodes.find(n=>n.id==='${n.id}'))">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700; font-size: 14px; color: #f8fafc;">${badgeIcon} ${n.label}</span>
+          <span style="font-size: 11px; color: var(--accent-yellow);">${stars}</span>
+        </div>
+        ${n.tags ? `<div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
+          ${n.tags.slice(0, 3).map(t => `<span style="font-size: 10px; color: var(--text-muted); background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">#${t}</span>`).join('')}
+        </div>` : ''}
+      </div>`;
+    }).join('');
+
+    return `
+      <div class="research-theme-card" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; margin-bottom: 20px;">
+        <div style="font-size: 1.05rem; font-weight: 700; color: ${theme.color}; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+          <span>${theme.title}</span>
+          <span style="font-size: 12px; font-weight: 400; color: var(--text-muted);">${themeNodes.length}개 노드</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;">
+          ${chips}
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 function bindResearchEditors() {
