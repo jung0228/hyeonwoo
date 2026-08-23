@@ -11,7 +11,8 @@
         "Latent Space",
         "Encoder-Decoder"
       ],
-      "note": "data/notes/vae.md"
+      "note": "data/notes/vae.md",
+      "nodeType": "concept"
     },
     {
       "id": "diffusion",
@@ -24,7 +25,8 @@
         "Score Matching",
         "Denoising"
       ],
-      "note": "data/notes/diffusion.md"
+      "note": "data/notes/diffusion.md",
+      "nodeType": "concept"
     },
     {
       "id": "gan",
@@ -36,7 +38,8 @@
         "Adversarial",
         "Generator",
         "Discriminator"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "flow",
@@ -47,7 +50,8 @@
       "tags": [
         "Bijective",
         "Change of Variables"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "transformer",
@@ -60,7 +64,8 @@
         "Multi-Head",
         "Positional Encoding"
       ],
-      "note": "data/notes/transformer.md"
+      "note": "data/notes/transformer.md",
+      "nodeType": "concept"
     },
     {
       "id": "attention",
@@ -72,7 +77,8 @@
         "QKV",
         "Softmax",
         "Self-Attention"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "bert",
@@ -84,7 +90,8 @@
         "Bidirectional",
         "MLM",
         "NSP"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "gpt",
@@ -95,7 +102,8 @@
       "tags": [
         "Causal LM",
         "Next Token Prediction"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "llm",
@@ -107,7 +115,8 @@
         "Scaling Law",
         "Emergent Ability",
         "RLHF"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "rlhf",
@@ -119,7 +128,8 @@
         "Reward Model",
         "PPO",
         "Alignment"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "rl_basic",
@@ -131,7 +141,8 @@
         "MDP",
         "Value Function",
         "Policy Gradient"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "multimodal",
@@ -143,7 +154,8 @@
         "Vision-Language",
         "Cross-Attention",
         "CLIP"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "vision_encoder",
@@ -155,7 +167,8 @@
         "ViT",
         "CNN",
         "Patch Embedding"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "discrete_token",
@@ -167,7 +180,8 @@
         "Codebook",
         "VQ",
         "Quantization"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "audio_model",
@@ -179,12 +193,13 @@
         "Whisper",
         "Codec",
         "ASR"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "hcx_omni",
       "label": "HCX SEED Omni",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 4,
       "studyCount": 6,
       "tags": [
@@ -194,7 +209,8 @@
         "Data Recipe",
         "SFT Stages"
       ],
-      "note": "data/notes/hcx_omni.md"
+      "note": "data/notes/hcx_omni.md",
+      "nodeType": "paper"
     },
     {
       "id": "vit",
@@ -206,7 +222,8 @@
         "Patch",
         "CLS Token",
         "Image Classification"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "resnet",
@@ -218,7 +235,8 @@
         "Residual",
         "Skip Connection",
         "Conv"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "sft",
@@ -230,7 +248,8 @@
         "Fine-tuning",
         "Instruction Following",
         "CoT"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "data_recipe",
@@ -242,7 +261,8 @@
         "Token Ratio",
         "Curriculum",
         "Data Curation"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "lora",
@@ -254,7 +274,8 @@
         "Low-Rank",
         "Adapter",
         "Parameter Efficient"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "kv_cache",
@@ -267,12 +288,13 @@
         "Memory",
         "Quantization"
       ],
-      "note": "data/notes/kv_cache.md"
+      "note": "data/notes/kv_cache.md",
+      "nodeType": "concept"
     },
     {
       "id": "clip",
       "label": "CLIP",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -282,7 +304,8 @@
         "Zero-shot",
         "Vision-Language"
       ],
-      "note": "data/notes/paper_clip.md"
+      "note": "data/notes/paper_clip.md",
+      "nodeType": "paper"
     },
     {
       "id": "linear_algebra_problems",
@@ -299,7 +322,8 @@
       "definition": "1단계 문제 모음: MML (Mathematics for Machine Learning) Ch 2~4 10대 핵심 문제 전수 풀이집.",
       "purpose": "2단계 존재 이유: 수식 증명 및 알고리즘 구현/수치적 맹점 파악을 위한 실전 문제 모음.",
       "tradeoff_insight": "3단계 비판적 맹점: 단순 수식 증명을 넘어 부동소수점 오차, Ill-conditioned, Rank-Nullity의 한계를 파악.",
-      "ai_connection": "4단계 AI 연결: 최소제곱법, SVD, LoRA, ResNet, Normalizing Flow 등 실전 AI 모델 수식 완벽 매핑."
+      "ai_connection": "4단계 AI 연결: 최소제곱법, SVD, LoRA, ResNet, Normalizing Flow 등 실전 AI 모델 수식 완벽 매핑.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_1_systems",
@@ -316,7 +340,8 @@
       "definition": "1단계 개념: $Ax=b$를 초평면 교점(Row) 및 열벡터 선형결합(Column)으로 바라보는 2가지 시각.",
       "purpose": "2단계 존재 이유: $b \\in \\text{Col}(A)$ 일 때만 해가 존재한다는 선형결합 본질 파악.",
       "tradeoff_insight": "3단계 비판적 맹점: 센서 노이즈로 $b \\notin \\text{Col}(A)$ 이면 완벽해 불가능.",
-      "ai_connection": "4단계 AI 연결: 선형회귀 및 정사영 최적 웨이트 $w = (X^T X)^{-1} X^T y$ 추정."
+      "ai_connection": "4단계 AI 연결: 선형회귀 및 정사영 최적 웨이트 $w = (X^T X)^{-1} X^T y$ 추정.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_2_matrices",
@@ -333,7 +358,8 @@
       "definition": "1단계 개념: 행렬 곱셈 $AB$를 선형 변환의 연속적 연쇄 합성(Composition)으로 해석.",
       "purpose": "2단계 존재 이유: 연속 공간 변환을 컴퓨터 행렬 곱셈으로 연산 실현.",
       "tradeoff_insight": "3단계 비판적 맹점: 교환법칙 불성립($AB \\neq BA$). 변환 순서가 바뀌면 결과 폭망.",
-      "ai_connection": "4단계 AI 연결: Deep Neural Network 레이어 연쇄 행렬 곱셈 $W_3 \\sigma(W_2 \\sigma(W_1 x))$."
+      "ai_connection": "4단계 AI 연결: Deep Neural Network 레이어 연쇄 행렬 곱셈 $W_3 \\sigma(W_2 \\sigma(W_1 x))$.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_3_solving_systems",
@@ -351,7 +377,8 @@
       "definition": "1단계 개념: ERO를 통한 REF/RREF 변환 및 특수해+동차해 $x = x_p + x_h$ 아핀 구조.",
       "purpose": "2단계 존재 이유: 가우스 소거법으로 해의 공간 구조와 Nullspace를 정밀 추출.",
       "tradeoff_insight": "3단계 비판적 맹점: 피벗이 0 근처일 때 부동소수점 오차가 폭발하므로 Partial Pivoting 필수.",
-      "ai_connection": "4단계 AI 연결: MML 특수 기법 Minus-1 Trick으로 Nullspace 암산 추출."
+      "ai_connection": "4단계 AI 연결: MML 특수 기법 Minus-1 Trick으로 Nullspace 암산 추출.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_4_vector_spaces",
@@ -368,7 +395,8 @@
       "definition": "1단계 개념: 원점 포함 및 덧셈/스칼라배 닫힘을 만족하는 벡터 부분공간 (Ex 2.12 A,B,C,D 해부).",
       "purpose": "2단계 존재 이유: 변환 시 어떤 차원 공간이 보존되고 소실되는지 3대 공리로 증명.",
       "tradeoff_insight": "3단계 비판적 맹점: 원점을 지나지 않는 직선(Case A)이나 1사분면(Case B)은 부분공간 파탄.",
-      "ai_connection": "4단계 AI 연결: ResNet 잔차 연결(y=F(x)+x)로 0 벡터 소실을 강제 방지."
+      "ai_connection": "4단계 AI 연결: ResNet 잔차 연결(y=F(x)+x)로 0 벡터 소실을 강제 방지.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_5_independence",
@@ -386,7 +414,8 @@
       "definition": "1단계 개념: 어떤 벡터도 다른 벡터의 선형 결합으로 표현 불가능한 선형독립 및 스팬.",
       "purpose": "2단계 존재 이유: 특징(Feature) 간 정보 중복을 막아 최소 생성집합(기저)을 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 선형 종속 시 Rank가 떨어져 무수히 많은 해 및 정보 손실 발생.",
-      "ai_connection": "4단계 AI 연결: PCA 및 Autoencoder로 선형독립인 주성분 기저축만 남기는 차원 축소."
+      "ai_connection": "4단계 AI 연결: PCA 및 Autoencoder로 선형독립인 주성분 기저축만 남기는 차원 축소.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_6_basis_rank",
@@ -403,7 +432,8 @@
       "definition": "1단계 개념: 공간을 생성하는 최소 독립 기저(Basis)와 유효 정보 차원 계수(Rank).",
       "purpose": "2단계 존재 이유: 데이터 공간 내의 유일한 좌표 표현 및 차원 측정.",
       "tradeoff_insight": "3단계 비판적 맹점: Row Rank = Column Rank 법칙 성립.",
-      "ai_connection": "4단계 AI 연결: PCA/SVD 주성분 차원 축소의 이론적 기틀."
+      "ai_connection": "4단계 AI 연결: PCA/SVD 주성분 차원 축소의 이론적 기틀.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_7_linear_mappings",
@@ -420,7 +450,8 @@
       "definition": "1단계 개념: 가산성과 스칼라곱을 보존하는 변환 T(x)와 Rank-Nullity 차원 보존 정리.",
       "purpose": "2단계 존재 이유: 정보 소실 공간(Kernel)과 보존 공간(Image) 추적.",
       "tradeoff_insight": "3단계 비판적 맹점: Kernel로 들어간 정보는 영구 손실됨.",
-      "ai_connection": "4단계 AI 연결: Autoencoder 라텐트 공간 차원 소실 추적."
+      "ai_connection": "4단계 AI 연결: Autoencoder 라텐트 공간 차원 소실 추적.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch2_8_affine_spaces",
@@ -437,7 +468,8 @@
       "definition": "1단계 개념: 원점을 지나지 않고 xp 만큼 평행 이동된 부분공간 $L = x_0 + U$.",
       "purpose": "2단계 존재 이유: 비동차 데이터 표현 및 신경망 편향 연산.",
       "tradeoff_insight": "3단계 비판적 맹점: 원점을 지나지 않아 벡터공간 공리는 파탄 남.",
-      "ai_connection": "4단계 AI 연결: 신경망 레이어 $y = Wx + b$ 의 편향 $b$ 연산."
+      "ai_connection": "4단계 AI 연결: 신경망 레이어 $y = Wx + b$ 의 편향 $b$ 연산.",
+      "nodeType": "concept"
     },
     {
       "id": "pipeline",
@@ -451,7 +483,8 @@
         "Forwarding",
         "OoO"
       ],
-      "note": "data/notes/pipeline.md"
+      "note": "data/notes/pipeline.md",
+      "nodeType": "concept"
     },
     {
       "id": "cache",
@@ -464,7 +497,8 @@
         "Tag/Index/Offset",
         "False Sharing"
       ],
-      "note": "data/notes/cache.md"
+      "note": "data/notes/cache.md",
+      "nodeType": "concept"
     },
     {
       "id": "virtual_memory",
@@ -477,7 +511,8 @@
         "Page Fault",
         "Page Table"
       ],
-      "note": "data/notes/virtual_memory.md"
+      "note": "data/notes/virtual_memory.md",
+      "nodeType": "concept"
     },
     {
       "id": "os_io",
@@ -490,7 +525,8 @@
         "DMA",
         "IRQ Handler"
       ],
-      "note": "data/notes/os_io.md"
+      "note": "data/notes/os_io.md",
+      "nodeType": "concept"
     },
     {
       "id": "file_system",
@@ -503,7 +539,8 @@
         "Journaling",
         "CoW",
         "Crash Consistency"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "concurrency",
@@ -516,7 +553,8 @@
         "Deadlock",
         "Race Condition",
         "Lock-free"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "sliding_window",
@@ -529,7 +567,8 @@
         "연속 구간",
         "Hash Map"
       ],
-      "note": "data/notes/sliding_window.md"
+      "note": "data/notes/sliding_window.md",
+      "nodeType": "concept"
     },
     {
       "id": "prefix_sum",
@@ -541,7 +580,8 @@
         "누적합",
         "부분배열",
         "O(n)"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "heap_interval",
@@ -553,7 +593,8 @@
         "Min-Heap",
         "구간 스케줄링",
         "최소 자원"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "binary_search",
@@ -564,7 +605,8 @@
       "tags": [
         "정답 이분탐색",
         "Parametric Search"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "bfs_grid",
@@ -576,7 +618,8 @@
         "Grid 탐색",
         "최단경로",
         "deque"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "topo_sort",
@@ -588,7 +631,8 @@
         "indegree",
         "DAG",
         "Kahn's Algorithm"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "dp",
@@ -600,7 +644,8 @@
         "Memoization",
         "Bottom-up",
         "lru_cache"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "astar",
@@ -612,7 +657,8 @@
         "f(n)=g(n)+h(n)",
         "Admissible",
         "Consistent"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "graph_algo",
@@ -624,7 +670,8 @@
         "Dijkstra",
         "Union-Find",
         "MST"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "mle_map",
@@ -637,7 +684,8 @@
         "Prior/Posterior",
         "Consistency"
       ],
-      "note": "data/notes/mle_map.md"
+      "note": "data/notes/mle_map.md",
+      "nodeType": "concept"
     },
     {
       "id": "cross_entropy",
@@ -649,7 +697,8 @@
         "NLL",
         "KL Divergence",
         "Information Theory"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "pca",
@@ -661,7 +710,8 @@
         "Eigenvalue",
         "Covariance Matrix",
         "Dimensionality Reduction"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "bias_variance",
@@ -673,7 +723,8 @@
         "Overfitting",
         "Underfitting",
         "Regularization"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "ensemble",
@@ -685,7 +736,8 @@
         "Random Forest",
         "XGBoost",
         "Variance Reduction"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "cnn_math",
@@ -697,7 +749,8 @@
         "(N+2P-K)/S+1",
         "Equivariance",
         "Pooling"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "gnn",
@@ -709,7 +762,8 @@
         "Message Passing",
         "Aggregation",
         "Inductive"
-      ]
+      ],
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch3_1_norms",
@@ -727,7 +781,8 @@
       "definition": "1단계 개념: 벡터 공간 위 원소에 길이(Length)를 할당하는 함수 및 3대 공리.",
       "purpose": "2단계 존재 이유: 벡터 간 거리와 유사도를 정량적으로 측정하기 위함.",
       "tradeoff_insight": "3단계 비판적 맹점: L1 노름은 Sparsity(희소성)를 유도하고 L2 노름은 미분 가능한 매끈한 제약을 줌.",
-      "ai_connection": "4단계 AI 연결: SVM 마진 최적화 및 Lasso/Ridge 규제 페널티 항 활용."
+      "ai_connection": "4단계 AI 연결: SVM 마진 최적화 및 Lasso/Ridge 규제 페널티 항 활용.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch3_2_inner_products",
@@ -745,7 +800,8 @@
       "definition": "1단계 개념: 이선형, 대칭, 양의 정정 사상 및 x^T A y 표현의 대칭 양의 정정(SPD) 행렬.",
       "purpose": "2단계 존재 이유: 공간에 각도(Angle)와 직교성(Orthogonality)을 엄밀히 정의.",
       "tradeoff_insight": "3단계 비판적 맹점: A의 고유값이 모두 양수(lambda > 0)일 때만 양의 정정성 성립.",
-      "ai_connection": "4단계 AI 연결: SVM 커널 트릭(Kernel Trick) 및 샬레스키(Cholesky) 행렬 분해 기반."
+      "ai_connection": "4단계 AI 연결: SVM 커널 트릭(Kernel Trick) 및 샬레스키(Cholesky) 행렬 분해 기반.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch3_3_lengths_angles",
@@ -764,7 +820,8 @@
       "definition": "1단계 개념: 내적으로 유도되는 노름/거리/각도 및 직교행렬(A^T = A^-1)의 불변성.",
       "purpose": "2단계 존재 이유: 벡터 간 유사도 측정 및 길이/각도를 보존하는 회전 변환 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: 내적은 유사도가 클수록 높고 거리(Metric)는 낮음. 직교행렬 역행렬은 전치만으로 O(1) 연산.",
-      "ai_connection": "4단계 AI 연결: 코사인 유사도(Cosine Similarity) 및 SVD/PCA 직교 회전 변환."
+      "ai_connection": "4단계 AI 연결: 코사인 유사도(Cosine Similarity) 및 SVD/PCA 직교 회전 변환.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch3_5_orthonormal_basis",
@@ -782,7 +839,8 @@
       "definition": "1단계 개념: 상호 직교 단위기저(ONB) 및 부분공간과 수직인 직교 여공간(U^perp).",
       "purpose": "2단계 존재 이유: 좌표 계산의 극단적 단순화(내적 단일연산) 및 신호/잔차 공간의 수직 분해.",
       "tradeoff_insight": "3단계 비판적 맹점: 직교기저는 복잡한 역행렬 없이 전치만으로 좌표를 추출하며, U와 U^perp는 영벡터만 공유.",
-      "ai_connection": "4단계 AI 연결: PCA 주성분 ONB 축소, SVM 초평면 법선벡터, 최소제곱법 오차의 직교 여공간 배치."
+      "ai_connection": "4단계 AI 연결: PCA 주성분 ONB 축소, SVM 초평면 법선벡터, 최소제곱법 오차의 직교 여공간 배치.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch3_7_orthogonal_projections",
@@ -802,7 +860,8 @@
       "definition": "1단계 개념: 연속함수 적분내적 및 부분공간/어파인공간으로의 최단거리 수직 사영(P_pi^2 = P_pi).",
       "purpose": "2단계 존재 이유: 차원 축소 시 데이터 정보 손실(재구성 오차) 최소화 및 해가 없는 연립방정식의 최소제곱 근사해 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 일반기저는 B(B^T B)^-1 B^T 역행렬 연산 필요, 정규직교기저(ONB)는 B B^T 로 O(1) 초고속 사영.",
-      "ai_connection": "4단계 AI 연결: 선형회귀 정규방정식, PCA 주성분 정사영, 오토인코더 Latent Projection, SVM 분리초평면 마진."
+      "ai_connection": "4단계 AI 연결: 선형회귀 정규방정식, PCA 주성분 정사영, 오토인코더 Latent Projection, SVM 분리초평면 마진.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch3_9_rotations",
@@ -822,7 +881,8 @@
       "definition": "1단계 개념: 거리/각도를 보존하는 직교 자기동형사상(R^T R = I, det(R)=1) 및 기븐스 회전.",
       "purpose": "2단계 존재 이유: 공간의 형태 왜곡 없이 방향 전환(기저 변환) 및 수치 선형대수(QR분해) 소거 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: 2D 회전은 교환법칙 성립(가환군), 3D 이상 회전은 순서가 결과에 영향(비가환군).",
-      "ai_connection": "4단계 AI 연결: 3D 비전/NeRF 카메라 외부파라미터 R, 로보틱스 기구학, 커널 트릭, PCA 직교사영."
+      "ai_connection": "4단계 AI 연결: 3D 비전/NeRF 카메라 외부파라미터 R, 로보틱스 기구학, 커널 트릭, PCA 직교사영.",
+      "nodeType": "concept"
     },
     {
       "id": "linear_algebra_ch3_problems",
@@ -841,7 +901,8 @@
       "definition": "1단계 문제 풀이: MML Chapter 3 (Exercises 3.1 ~ 3.10) 전수 풀이 및 수식 증명.",
       "purpose": "2단계 존재 이유: 내적 공리, 정사영(Normal Equation), 그람-슈미트, 코시-슈바르츠 부등식 실전 증명 마스터.",
       "tradeoff_insight": "3단계 비판적 맹점: 비대칭 행렬의 내적 파탄, 비직교 내적에서의 정사영 왜곡, 여사영(id - pi)의 핵과 상 상호교환.",
-      "ai_connection": "4단계 AI 연결: 선형회귀 Pseudo-inverse 유도, 3D 비전 회전 변환, SVM 코시-슈바르츠 마진 최적화."
+      "ai_connection": "4단계 AI 연결: 선형회귀 Pseudo-inverse 유도, 3D 비전 회전 변환, SVM 코시-슈바르츠 마진 최적화.",
+      "nodeType": "concept"
     },
     {
       "id": "web_agent",
@@ -855,7 +916,8 @@
         "Browser-use",
         "DOM Action"
       ],
-      "note": "data/notes/web_agent.md"
+      "note": "data/notes/web_agent.md",
+      "nodeType": "concept"
     },
     {
       "id": "agent_memory",
@@ -869,7 +931,8 @@
         "ReasoningBank",
         "Experience Retrieval"
       ],
-      "note": "data/notes/agent_memory.md"
+      "note": "data/notes/agent_memory.md",
+      "nodeType": "concept"
     },
     {
       "id": "long_video_understanding",
@@ -884,12 +947,13 @@
         "Momentseeker",
         "LVMR"
       ],
-      "note": "data/notes/long_video_understanding.md"
+      "note": "data/notes/long_video_understanding.md",
+      "nodeType": "concept"
     },
     {
       "id": "streamkv",
       "label": "StreamKV",
-      "category": "Architecture",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -899,7 +963,8 @@
         "KV Eviction",
         "Attention Budget"
       ],
-      "note": "data/notes/streamkv.md"
+      "note": "data/notes/streamkv.md",
+      "nodeType": "paper"
     },
     {
       "id": "svd",
@@ -913,7 +978,8 @@
         "Spectral Theorem",
         "Low Rank"
       ],
-      "note": "data/notes/svd.md"
+      "note": "data/notes/svd.md",
+      "nodeType": "concept"
     },
     {
       "id": "information_theory",
@@ -927,7 +993,8 @@
         "Mutual Information",
         "Cross-Entropy"
       ],
-      "note": "data/notes/information_theory.md"
+      "note": "data/notes/information_theory.md",
+      "nodeType": "concept"
     },
     {
       "id": "matrix_decomp_ch4_1_determinant_trace",
@@ -947,7 +1014,8 @@
       "definition": "1단계 개념: 정방행렬의 부호있는 초부피 팽창률 det(A) 및 주대각선 합 tr(A), 특성 다항식 p_A(lambda).",
       "purpose": "2단계 존재 이유: 가역성(det != 0) 판별, 행렬의 기하학적 부피 스케일 요약 및 고유값 산출 기반 마련.",
       "tradeoff_insight": "3단계 비판적 맹점: 라플라스 전개 O(n!) 대신 가우스 소거 삼각화 O(n^3) 연산. 대각합은 순환불변 tr(ABC)=tr(BCA).",
-      "ai_connection": "4단계 AI 연결: Normalizing Flows 생성모델 야코비안 행렬식 |det(J)|, 다변량 가우시안 분모 det(Sigma), Trace Trick."
+      "ai_connection": "4단계 AI 연결: Normalizing Flows 생성모델 야코비안 행렬식 |det(J)|, 다변량 가우시안 분모 det(Sigma), Trace Trick.",
+      "nodeType": "concept"
     },
     {
       "id": "matrix_decomp_ch4_2_eigenvalues",
@@ -968,7 +1036,8 @@
       "definition": "1단계 개념: 방향 불변 주축(Ax = lambda x), 고유공간 ker(A - lambda I) 및 대칭행렬 직교분해 스펙트럴 정리.",
       "purpose": "2단계 존재 이유: 복잡한 다차원 변환을 독립된 1차원 스케일링으로 분해하고 데이터의 주성분 분산 축 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 비대칭 행렬은 결함행렬/복소근 위험, 대칭행렬은 100% 실수고유값 & 정규직교기저(ONB) 보장.",
-      "ai_connection": "4단계 AI 연결: 구글 PageRank 정상상태 고유벡터, PCA 주성분 분석, GNN 인접행렬 스펙트럼, Hessian 곡률 분석."
+      "ai_connection": "4단계 AI 연결: 구글 PageRank 정상상태 고유벡터, PCA 주성분 분석, GNN 인접행렬 스펙트럼, Hessian 곡률 분석.",
+      "nodeType": "concept"
     },
     {
       "id": "matrix_decomp_ch4_3_cholesky_diagonalization",
@@ -988,7 +1057,8 @@
       "definition": "1단계 개념: SPD 행렬의 제곱근 분해 A = L L^T 및 고유기저 변환 대각화 A = P D P^-1.",
       "purpose": "2단계 존재 이유: 다변수 간섭 제거(O(n) 대각 연산화), 다변량 가우시안 난수 생성 및 행렬 거듭제곱/역행렬 초고속 산출.",
       "tradeoff_insight": "3단계 비판적 맹점: 숄레스키는 SPD 전용 O(n^3/3) 초고속, 고유값 분해는 비결함 정방행렬 전용 O(n^3) 스펙트럼 분석.",
-      "ai_connection": "4단계 AI 연결: VAE Reparameterization Trick z = mu + L eps, 가우시안 프로세스 커널 역행렬, PageRank 장기 수렴 예측."
+      "ai_connection": "4단계 AI 연결: VAE Reparameterization Trick z = mu + L eps, 가우시안 프로세스 커널 역행렬, PageRank 장기 수렴 예측.",
+      "nodeType": "concept"
     },
     {
       "id": "matrix_decomp_ch4_5_svd",
@@ -1009,7 +1079,8 @@
       "definition": "1단계 개념: 모든 임의의 직사각형 행렬을 두 직교행렬 U, V와 특이값 대각행렬 Sigma로 분해(A = U Sigma V^T).",
       "purpose": "2단계 존재 이유: 정방행렬 한계를 넘어 임의의 m x n 데이터 행렬을 최적 직교 축으로 분해하고 최적 저계수(Low-Rank) 압축 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: Full SVD(100% 보존) vs Truncated SVD(상위 k개 특이값 유지로 O(k(m+n)) 초경량 압축 및 잠재의미 추출).",
-      "ai_connection": "4단계 AI 연결: 넷플릭스 Matrix Factorization 추천, Moore-Penrose 의사역행렬 A^+, NLP Latent Semantic Analysis(LSA), 이미지 잡음 제거."
+      "ai_connection": "4단계 AI 연결: 넷플릭스 Matrix Factorization 추천, Moore-Penrose 의사역행렬 A^+, NLP Latent Semantic Analysis(LSA), 이미지 잡음 제거.",
+      "nodeType": "concept"
     },
     {
       "id": "matrix_decomp_ch4_6_approx_phylogeny",
@@ -1031,7 +1102,8 @@
       "definition": "1단계 개념: SVD Rank-k 외적합 저계수 근사 및 최적오차 보장 에카르트-영 정리(||A - A_k||_2 = sigma_{k+1}), 선형대수 행렬 계통도.",
       "purpose": "2단계 존재 이유: 거대 데이터의 0.6% 초경량 압축, 노이즈 필터링, 잠재 특징 추출 및 행렬 분류 체계 총망라.",
       "tradeoff_insight": "3단계 비판적 맹점: 압축률 vs 복원오차 sigma_{k+1} Trade-off (누적 에너지 90~95% 기준). 가역성과 대각화 가능성의 독립성.",
-      "ai_connection": "4단계 AI 연결: LLM LoRA 가중치 압축, 넷플릭스 추천, Isomap/Laplacian Eigenmaps 매니폴드 학습, 고차원 텐서 Tucker/CP 분해."
+      "ai_connection": "4단계 AI 연결: LLM LoRA 가중치 압축, 넷플릭스 추천, Isomap/Laplacian Eigenmaps 매니폴드 학습, 고차원 텐서 Tucker/CP 분해.",
+      "nodeType": "concept"
     },
     {
       "id": "vector_calculus_ch5_1_univariate",
@@ -1052,7 +1124,8 @@
       "definition": "1단계 개념: 접선 순간변화율 도함수 df/dx, 국소 다항식 전개 테일러 급수 T_n(x) 및 합성함수 미분 연쇄법칙 (g o f)' = g' f'.",
       "purpose": "2단계 존재 이유: 비선형 딥러닝 손실함수의 국소 다항식 근사 및 다층 신경망(Deep Layer)의 역전파 그래디언트 전파.",
       "tradeoff_insight": "3단계 비판적 맹점: 1차 테일러 근사(경사하강법 O(D) 저비용) vs 2차 테일러 근사(뉴턴법 O(D^2~D^3) 곡률 고려 고비용).",
-      "ai_connection": "4단계 AI 연결: PyTorch/JAX 자동미분 역전파(Backprop), 경사하강법(Gradient Descent), L-BFGS, 활성화함수 도함수."
+      "ai_connection": "4단계 AI 연결: PyTorch/JAX 자동미분 역전파(Backprop), 경사하강법(Gradient Descent), L-BFGS, 활성화함수 도함수.",
+      "nodeType": "concept"
     },
     {
       "id": "contrastive_learning",
@@ -1066,12 +1139,13 @@
         "Loss",
         "Concept"
       ],
-      "note": "data/notes/contrastive_learning.md"
+      "note": "data/notes/contrastive_learning.md",
+      "nodeType": "concept"
     },
     {
       "id": "paper_llava",
       "label": "LLaVA",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1081,12 +1155,13 @@
         "Visual Instruction Tuning",
         "Projection"
       ],
-      "note": "data/notes/paper_llava.md"
+      "note": "data/notes/paper_llava.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_momentseeker",
       "label": "Momentseeker",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -1096,12 +1171,13 @@
         "Temporal Grounding",
         "Video Benchmark"
       ],
-      "note": "data/notes/paper_momentseeker.md"
+      "note": "data/notes/paper_momentseeker.md",
+      "nodeType": "paper"
     },
     {
       "id": "rq_cross_modal_alignment",
       "label": "RQ: Cross-Modal Alignment",
-      "category": "Multimodal",
+      "category": "Research Agenda",
       "confidence": 2,
       "studyCount": 5,
       "tags": [
@@ -1110,12 +1186,13 @@
         "OpenProblem",
         "FineGrained"
       ],
-      "note": "data/notes/rq_cross_modal_alignment.md"
+      "note": "data/notes/rq_cross_modal_alignment.md",
+      "nodeType": "research"
     },
     {
       "id": "rq_video_temporal_grounding",
       "label": "RQ: Video Temporal Grounding",
-      "category": "Multimodal",
+      "category": "Research Agenda",
       "confidence": 3,
       "studyCount": 5,
       "tags": [
@@ -1124,12 +1201,13 @@
         "KVCompression",
         "DAVIAN_KAIST"
       ],
-      "note": "data/notes/rq_video_temporal_grounding.md"
+      "note": "data/notes/rq_video_temporal_grounding.md",
+      "nodeType": "research"
     },
     {
       "id": "rq_data_recipe_optimization",
       "label": "RQ: Data Recipe Optimization",
-      "category": "Training",
+      "category": "Research Agenda",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -1138,12 +1216,13 @@
         "TokenMixture",
         "HCX_Omni"
       ],
-      "note": "data/notes/rq_data_recipe_optimization.md"
+      "note": "data/notes/rq_data_recipe_optimization.md",
+      "nodeType": "research"
     },
     {
       "id": "paper_moshi",
       "label": "Moshi",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1153,12 +1232,13 @@
         "RealTimeOmni",
         "SpokenDialogue"
       ],
-      "note": "data/notes/paper_moshi.md"
+      "note": "data/notes/paper_moshi.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_emu3",
       "label": "Emu3",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1168,12 +1248,13 @@
         "AnyToAny",
         "UnifiedMultimodal"
       ],
-      "note": "data/notes/paper_emu3.md"
+      "note": "data/notes/paper_emu3.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_qwen2_vl",
       "label": "Qwen2-VL",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -1183,12 +1264,13 @@
         "MRoPE",
         "VideoUnderstanding"
       ],
-      "note": "data/notes/paper_qwen2_vl.md"
+      "note": "data/notes/paper_qwen2_vl.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_mini_omni2",
       "label": "Mini-Omni 2",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1198,12 +1280,13 @@
         "OmniModal",
         "Interruption"
       ],
-      "note": "data/notes/paper_mini_omni2.md"
+      "note": "data/notes/paper_mini_omni2.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_dynin_omni",
       "label": "Dynin-Omni",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1213,12 +1296,13 @@
         "OmniModal",
         "UnifiedArchitecture"
       ],
-      "note": "data/notes/paper_dynin_omni.md"
+      "note": "data/notes/paper_dynin_omni.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_virst",
       "label": "VIRST",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1228,12 +1312,13 @@
         "RVOS",
         "SpatiotemporalSegmentation"
       ],
-      "note": "data/notes/paper_virst.md"
+      "note": "data/notes/paper_virst.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_show_o",
       "label": "Show-o",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1243,12 +1328,13 @@
         "UnifiedTransformer",
         "AnyToAny"
       ],
-      "note": "data/notes/paper_show_o.md"
+      "note": "data/notes/paper_show_o.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_lisa",
       "label": "LISA",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1258,12 +1344,13 @@
         "SEG_Token",
         "PixelGrounding"
       ],
-      "note": "data/notes/paper_lisa.md"
+      "note": "data/notes/paper_lisa.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_mevis",
       "label": "MeViS",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1273,12 +1360,13 @@
         "MotionSegmentation",
         "VideoBenchmark"
       ],
-      "note": "data/notes/paper_mevis.md"
+      "note": "data/notes/paper_mevis.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_cosmos",
       "label": "Cosmos",
-      "category": "Multimodal",
+      "category": "Paper",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1288,12 +1376,13 @@
         "PhysicalAI",
         "FlowMatching"
       ],
-      "note": "data/notes/paper_cosmos.md"
+      "note": "data/notes/paper_cosmos.md",
+      "nodeType": "paper"
     },
     {
       "id": "paper_flow_matching",
       "label": "Flow Matching",
-      "category": "Generative",
+      "category": "Paper",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1303,12 +1392,13 @@
         "FastSampling",
         "VectorField"
       ],
-      "note": "data/notes/paper_flow_matching.md"
+      "note": "data/notes/paper_flow_matching.md",
+      "nodeType": "paper"
     },
     {
       "id": "rq_physical_world_model",
       "label": "RQ: Physics 4D World Model",
-      "category": "Multimodal",
+      "category": "Research Agenda",
       "confidence": 3,
       "studyCount": 5,
       "tags": [
@@ -1317,12 +1407,13 @@
         "RoboticsWorldModel",
         "DyninRobotics"
       ],
-      "note": "data/notes/rq_physical_world_model.md"
+      "note": "data/notes/rq_physical_world_model.md",
+      "nodeType": "research"
     },
     {
       "id": "rq_counterfactual_video_causality",
       "label": "RQ: Counterfactual Video Causality",
-      "category": "Multimodal",
+      "category": "Research Agenda",
       "confidence": 3,
       "studyCount": 5,
       "tags": [
@@ -1331,7 +1422,8 @@
         "SpatiotemporalReasoning",
         "VIRST"
       ],
-      "note": "data/notes/rq_counterfactual_video_causality.md"
+      "note": "data/notes/rq_counterfactual_video_causality.md",
+      "nodeType": "research"
     },
     {
       "id": "hamiltonian_mechanics_physics",
@@ -1346,7 +1438,8 @@
         "EnergyConservation",
         "PhaseSpace"
       ],
-      "note": "data/notes/hamiltonian_mechanics_physics.md"
+      "note": "data/notes/hamiltonian_mechanics_physics.md",
+      "nodeType": "concept"
     },
     {
       "id": "causal_inference_scm",
@@ -1361,12 +1454,13 @@
         "Counterfactuals",
         "SCM"
       ],
-      "note": "data/notes/causal_inference_scm.md"
+      "note": "data/notes/causal_inference_scm.md",
+      "nodeType": "concept"
     },
     {
       "id": "rq_modality_decoupled_moe",
       "label": "RQ: Modality-Decoupled MoE",
-      "category": "Training",
+      "category": "Research Agenda",
       "confidence": 3,
       "studyCount": 5,
       "tags": [
@@ -1375,7 +1469,8 @@
         "ContinualLearning",
         "CatastrophicForgetting"
       ],
-      "note": "data/notes/rq_modality_decoupled_moe.md"
+      "note": "data/notes/rq_modality_decoupled_moe.md",
+      "nodeType": "research"
     },
     {
       "id": "vector_calculus_ch5_2_gradients",
@@ -1396,7 +1491,8 @@
       "definition": "1단계 개념: 변수 1개만 변화시키는 편미분 df/dx_i 및 편미분들을 모은 1xn 행벡터 그래디언트 nabla f (가장 가파른 상승 방향).",
       "purpose": "2단계 존재 이유: 고차원 손실 곡면에서 파라미터를 가장 빠르게 최적화하는 이동 나침반(-nabla L) 및 분할정복 미분.",
       "tradeoff_insight": "3단계 비판적 맹점: 그래디언트를 행벡터(1xn)로 정의함으로써 야코비안 일반화 및 다변수 연쇄법칙의 전치 없는 완벽한 행렬곱(1xn x nxk) 일치 달성.",
-      "ai_connection": "4단계 AI 연결: PyTorch loss.backward() 역전파 그래디언트 누적, SGD/Adam 가중치 갱신, 수치 유한차분 Gradient Checking."
+      "ai_connection": "4단계 AI 연결: PyTorch loss.backward() 역전파 그래디언트 누적, SGD/Adam 가중치 갱신, 수치 유한차분 Gradient Checking.",
+      "nodeType": "concept"
     },
     {
       "id": "vector_calculus_ch5_3_vector_valued",
@@ -1418,7 +1514,8 @@
       "definition": "1단계 개념: 다변수 벡터 사상 f: R^n -> R^m 의 mxn 편미분 종합행렬 야코비안 J 및 국소 부피 팽창 배율 야코비안 행렬식 |det(J)|.",
       "purpose": "2단계 존재 이유: 심층 신경망 레이어 간 선형 변화율 규명, 선형회귀 최소제곱 손실 그래디언트 도출 및 확률분포 변수변환.",
       "tradeoff_insight": "3단계 비판적 맹점: 분자 배치(Numerator Layout mxn) 채택을 통한 연쇄법칙 행렬곱 차원 일관성 유지.",
-      "ai_connection": "4단계 AI 연결: 선형회귀 정규방정식 theta* = (Phi^T Phi)^-1 Phi^T y 유도, Normalizing Flows 생성모델, VAE Reparameterization Trick."
+      "ai_connection": "4단계 AI 연결: 선형회귀 정규방정식 theta* = (Phi^T Phi)^-1 Phi^T y 유도, Normalizing Flows 생성모델, VAE Reparameterization Trick.",
+      "nodeType": "concept"
     },
     {
       "id": "vector_calculus_ch5_4_matrix_gradients",
@@ -1441,7 +1538,8 @@
       "definition": "1단계 개념: 행렬 대 행렬 미분의 4D 야코비안 텐서 J_ijkl, 평탄화(Flattening mn x pq) 및 행렬식/역행렬/이차형식 10대 미분 항등식.",
       "purpose": "2단계 존재 이유: 수십억 개 딥러닝 가중치 행렬 동시 미분, 다변량 가우시안 MLE 공분산 추정 및 칼만 필터 최적해 도출.",
       "tradeoff_insight": "3단계 비판적 맹점: 고차원 텐서 수축(Tensor Contraction)의 복잡성을 벡터 공간 동형사상(Flattening)으로 2D 행렬곱 변환.",
-      "ai_connection": "4단계 AI 연결: 다변량 가우시안 MLE Sigma* 유도, 트랜스포머 Attention 가중치 W_Q, W_K 역전파, 릿지 회귀 정규방정식."
+      "ai_connection": "4단계 AI 연결: 다변량 가우시안 MLE Sigma* 유도, 트랜스포머 Attention 가중치 W_Q, W_K 역전파, 릿지 회귀 정규방정식.",
+      "nodeType": "concept"
     },
     {
       "id": "vector_calculus_ch5_6_backprop_autodiff",
@@ -1463,7 +1561,8 @@
       "definition": "1단계 개념: 계산 그래프 기반 연쇄법칙 역방향 동적계획법 전파 역전파(Backpropagation) 및 역방향 모드 자동미분(Reverse-mode AD).",
       "purpose": "2단계 존재 이유: 수식 폭발(Symbolic)과 O(N) 비효율(Numerical) 없이 단 1회의 역방향 패스(O(1))로 수억 개 딥러닝 가중치 그래디언트 동시 추출.",
       "tradeoff_insight": "3단계 비판적 맹점: Forward-mode(N << M 입력 작을 때 유리) vs Reverse-mode(N >> M 딥러닝 N개 가중치 최적, 활성화 메모리 O(K) 소모).",
-      "ai_connection": "4단계 AI 연결: PyTorch loss.backward() C++ 엔진, LLM 메모리 절약 Gradient Checkpointing, JAX jax.grad / jax.vjp 벡터-야코비안 곱."
+      "ai_connection": "4단계 AI 연결: PyTorch loss.backward() C++ 엔진, LLM 메모리 절약 Gradient Checkpointing, JAX jax.grad / jax.vjp 벡터-야코비안 곱.",
+      "nodeType": "concept"
     },
     {
       "id": "vector_calculus_ch5_7_hessian_taylor",
@@ -1486,7 +1585,8 @@
       "definition": "1단계 개념: 2계 편도함수 대칭행렬 헤시안 H(곡률 측정기) 및 2차 다변수 테일러 전개 f(x) approx f(x0) + nabla f delta + 1/2 delta^T H delta.",
       "purpose": "2단계 존재 이유: 1차 기울기의 학습률 민감성 극복, 손실곡면 곡률을 고려해 최적점으로 단번에 점프하는 뉴턴법 2차 최적화.",
       "tradeoff_insight": "3단계 비판적 맹점: 1차 최적화(SGD O(D) 저비용/진동수렴) vs 2차 최적화(뉴턴법 O(D^3) 역행렬 고비용 -> L-BFGS 준뉴턴법으로 해결).",
-      "ai_connection": "4단계 AI 연결: 뉴턴-랩슨 최적화 x_{t+1} = x_t - H^-1 nabla f, AdaHessian, Flat Minima 일반화 능력 판정."
+      "ai_connection": "4단계 AI 연결: 뉴턴-랩슨 최적화 x_{t+1} = x_t - H^-1 nabla f, AdaHessian, Flat Minima 일반화 능력 판정.",
+      "nodeType": "concept"
     },
     {
       "id": "probability_ch6_1_space_rv",
@@ -1508,7 +1608,8 @@
       "definition": "1단계 개념: 콜모고로프 확률공간 3요소 (Omega, A, P), 표본공간 매핑함수 확률변수 X: Omega -> T 및 빈도주의/베이지안 관점 대조.",
       "purpose": "2단계 존재 이유: 데이터/모델/예측의 불확실성을 실수 범위([0, 1])의 확률적 체계로 정량화하여 자동화된 추론 수행.",
       "tradeoff_insight": "3단계 비판적 맹점: 빈도주의(고정 참값 모수, 대용량 데이터 MLE) vs 베이지안(모수도 확률변수, 사전분포 prior 결합 MAP).",
-      "ai_connection": "4단계 AI 연결: 최대우도추정(MLE), 최대 사후확률 추정(MAP), 신경망 Softmax 확률 출력, VAE/Flows 생성모델."
+      "ai_connection": "4단계 AI 연결: 최대우도추정(MLE), 최대 사후확률 추정(MAP), 신경망 Softmax 확률 출력, VAE/Flows 생성모델.",
+      "nodeType": "concept"
     },
     {
       "id": "probability_ch6_2_discrete_continuous",
@@ -1530,7 +1631,8 @@
       "definition": "1단계 개념: 타겟공간 T에 따른 이산확률질량함수(PMF) P(X=x) 및 연속확률밀도함수(PDF) f(x), 누적분포함수(CDF) F(x)와 주변화 연산.",
       "purpose": "2단계 존재 이유: 분류(Cross-Entropy)와 회귀/생성(NLL) 모델 손실함수 수학적 정립 및 잠재변수 소거 주변화(Marginalization).",
       "tradeoff_insight": "3단계 비판적 맹점: 이산 P(X=x) in [0, 1] vs 연속 P(X=x)=0 (측도 0) 및 PDF 밀도값 f(x) > 1 가능성.",
-      "ai_connection": "4단계 AI 연결: 딥러닝 분류 Cross-Entropy, VAE/Diffusion NLL 손실함수, 객체검출 Multi-task 학습."
+      "ai_connection": "4단계 AI 연결: 딥러닝 분류 Cross-Entropy, VAE/Diffusion NLL 손실함수, 객체검출 Multi-task 학습.",
+      "nodeType": "concept"
     },
     {
       "id": "probability_ch6_4_summary_stats",
@@ -1554,7 +1656,8 @@
       "definition": "1단계 개념: 기댓값, 평균, 공분산행렬 Sigma (대칭 PSD), 아핀변환 V[Ax+b]=A Sigma A^T 및 통계적/조건부 독립성 수식화.",
       "purpose": "2단계 존재 이유: 신경망 레이어 패스 후 데이터 퍼짐성 추적, 배치정규화(BN) 및 PCA 주성분분석 공분산 대각화.",
       "tradeoff_insight": "3단계 비판적 맹점: 무상관 Cov[x, y]=0 != 독립! (선형 관계만 측정 -> y=x^2 비선형 종속이어도 Cov=0 가능).",
-      "ai_connection": "4단계 AI 연결: 배치 정규화(Batch Norm), PCA 주성분 분석, 가우시안 프로세스(GP) 커널 공분산 행렬."
+      "ai_connection": "4단계 AI 연결: 배치 정규화(Batch Norm), PCA 주성분 분석, 가우시안 프로세스(GP) 커널 공분산 행렬.",
+      "nodeType": "concept"
     },
     {
       "id": "probability_ch6_3_bayes_theorem",
@@ -1578,7 +1681,8 @@
       "definition": "1단계 개념: 합의 법칙(Marginalization) p(x)=int p(x,y)dy, 곱의 법칙 p(x,y)=p(y|x)p(x) 및 사후분포 갱신 베이즈 정리 p(x|y)=p(y|x)p(x)/p(y).",
       "purpose": "2단계 존재 이유: 관측 데이터 y로부터 가려진 잠재 변수/파라미터 x의 사후 확률분포(Posterior)를 역방향으로 정밀 추정.",
       "tradeoff_insight": "3단계 비판적 맹점: 점추정(MAP/MLE 정보 손실) vs 전체 사후분포(Full Posterior - 적분 p(y) 난해하나 불확실성에 극도로 로버스트).",
-      "ai_connection": "4단계 AI 연결: 나이브 베이즈 분류기, VAE 변분 추론(ELBO), 베이지안 최적화, 베이지안 딥러닝 가중치 사후분포."
+      "ai_connection": "4단계 AI 연결: 나이브 베이즈 분류기, VAE 변분 추론(ELBO), 베이지안 최적화, 베이지안 딥러닝 가중치 사후분포.",
+      "nodeType": "concept"
     },
     {
       "id": "probability_ch6_5_gaussian",
@@ -1602,7 +1706,8 @@
       "definition": "1단계 개념: 다변량 가우시안 PDF N(mu, Sigma), 주변/조건부 분포 닫힘성 p(x|y)=N(mu_{x|y}, Sigma_{x|y}) 및 숄레스키 샘플링 y=Lx+mu.",
       "purpose": "2단계 존재 이유: 베이즈 정리 및 선형회귀 사후분포 해석적(Closed-form) 계산, 칼만 필터 및 VAE 샘플링 수식화.",
       "tradeoff_insight": "3단계 비판적 맹점: 단일 가우시안(단봉 Unimodal 한계) vs 가우시안 혼합 모델(GMM - 다봉 Multimodal 복잡 분포 표현).",
-      "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, GMM 밀도추정."
+      "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, GMM 밀도추정.",
+      "nodeType": "concept"
     },
     {
       "id": "probability_ch6_6_conjugacy_exponential",
@@ -1627,7 +1732,8 @@
       "definition": "1단계 개념: 공액사전분포(Conjugate Prior) p(theta|y) in Family F, 피셔-네이만 충분통계량 phi(x) 및 지수족 p(x|theta)=h(x)exp(theta^T phi(x) - A(theta))와 로지스틱 시그모이드 수식 유도.",
       "purpose": "2단계 존재 이유: 스트리밍 데이터 베이즈 파라미터 0초 덧셈 갱신, 유한차원 충분통계량 및 로그 우도 볼록성(Concavity)으로 전역 최적해 보장.",
       "tradeoff_insight": "3단계 비판적 맹점: 계산의 닫힘성(Closed-form) 대가로 복잡한 현실 다봉 분포 표현 제약 (비공액 MCMC/VI 필요).",
-      "ai_connection": "4단계 AI 연결: 로지스틱 회귀 시그모이드(Sigmoid), 다중 분류 소프트맥스(Softmax), 토픽 모델링(LDA Dirichlet)."
+      "ai_connection": "4단계 AI 연결: 로지스틱 회귀 시그모이드(Sigmoid), 다중 분류 소프트맥스(Softmax), 토픽 모델링(LDA Dirichlet).",
+      "nodeType": "concept"
     },
     {
       "id": "probability_ch6_7_change_of_variables",
@@ -1649,7 +1755,8 @@
       "definition": "1단계 개념: 분포함수법 F_Y(y)=F_X(U^-1(y)), 확률적분변환 Y=F_X(X)~U[0,1] 및 다변량 변수변환 f(y)=f_x(U^-1(y))|det(dU^-1/dy)| 야코비안 부피보정 공식.",
       "purpose": "2단계 존재 이유: 역변환 샘플링 난수 생성 및 딥러닝 가역 신경망(Invertible NN) 생성 모델의 정확한 밀도(Exact Likelihood) 추정.",
       "tradeoff_insight": "3단계 비판적 맹점: VAE/GAN(밀도 산출 불가, 차원변화 자유) vs 노말라이징 플로우(정확한 밀도 ln p(x) 산출 가능, 가역성 및 차원유지 제약).",
-      "ai_connection": "4단계 AI 연결: 노말라이징 플로우 (Normalizing Flows - RealNVP, Glow), 역변환 샘플링 (Inverse Transform Sampling), 정보기하학 (Information Geometry)."
+      "ai_connection": "4단계 AI 연결: 노말라이징 플로우 (Normalizing Flows - RealNVP, Glow), 역변환 샘플링 (Inverse Transform Sampling), 정보기하학 (Information Geometry).",
+      "nodeType": "concept"
     },
     {
       "id": "mml_ch6_exercises",
@@ -1672,7 +1779,8 @@
       "definition": "1단계 개념: MML Ch 6 연습문제 6.1~6.13 전수 풀이 (주변/조건부확률 수치계산, GMM모드, 칼만필터 수식유도, 분산공식 증명, 지수족 변환, 가우시안 곱 증명, 확률적분변환 증명).",
       "purpose": "2단계 존재 이유: 대학원 구술/필기 전공면접 백지 수식 유도 및 칼만필터, 베이지안 추론, 숄레스키 난수 생성을 수식으로 완벽히 정복.",
       "tradeoff_insight": "3단계 비판적 맹점: 단순 수식 암기 vs 원본 확률 공리(Kolmogorov/Bayes) 및 선형 아핀 변환(Covariance propagation) 인과관계 통찰.",
-      "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, 나이브 베이즈, 딥러닝 손실함수."
+      "ai_connection": "4단계 AI 연결: 칼만 필터(Kalman Filter), 가우시안 프로세스(GP), VAE Reparameterization Trick, 나이브 베이즈, 딥러닝 손실함수.",
+      "nodeType": "concept"
     },
     {
       "id": "dasgupta_ch2_exercises",
@@ -1693,7 +1801,8 @@
       "definition": "1단계 개념: Dasgupta Ch 2 분할 정복 연습문제 2.1~2.32 전수 풀이 (카라츠바 곱셈, 재귀식 전개법, 마스터 정리, FFT 다항식 곱셈, In-place Split, Closest Pair 등).",
       "purpose": "2단계 존재 이유: 대학원 알고리즘 지필/구술 시험 대비 및 분할 정복 시간복잡도(Recurrence Relation) 증명 체계 완성.",
       "tradeoff_insight": "3단계 비판적 맹점: 마스터 정리 적용 가능 여부(T(n)=T(n-1)+O(1) 등 마스터 정리 불가능 형태 분별).",
-      "ai_connection": "4단계 AI 연결: FFT(Fast Fourier Transform - 시계열/신호 처리 및 Transformer 컨볼루션 연산 속도 향상), QuickSelect(상위 k개 피처 추출)."
+      "ai_connection": "4단계 AI 연결: FFT(Fast Fourier Transform - 시계열/신호 처리 및 Transformer 컨볼루션 연산 속도 향상), QuickSelect(상위 k개 피처 추출).",
+      "nodeType": "concept"
     }
   ],
   "edges": [
@@ -2641,6 +2750,14 @@
     "Math Problems": {
       "color": "#facc15",
       "icon": "📝"
+    },
+    "Paper": {
+      "color": "#f43f5e",
+      "icon": "📄"
+    },
+    "Research Agenda": {
+      "color": "#ec4899",
+      "icon": "🔭"
     }
   },
   "sessions": [

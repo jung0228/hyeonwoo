@@ -55,6 +55,8 @@ const NODE_CLUSTER_OVERRIDE = {
 // 헬퍼: 노드의 최종 클러스터 반환
 function getNodeCluster(node) {
   if (!node) return 'AI';
+  if (node.nodeType === 'paper' || node.nodeType === 'research') return '연구';
+  if (node.category === 'Paper' || node.category === 'Research Agenda') return '연구';
   if (node.id && (node.id.startsWith('linear_algebra') || node.id.startsWith('probability_') || node.id.startsWith('mml_') || node.id.startsWith('math_'))) return '선형대수';
   if (node.id && (node.id.startsWith('rq_') || node.id.startsWith('paper_'))) return '연구';
   if (node.tags && (node.tags.includes('Paper') || node.tags.includes('ResearchAgenda') || node.tags.includes('Agenda'))) return '연구';
