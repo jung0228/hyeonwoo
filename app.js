@@ -37,6 +37,7 @@ const CLUSTER_MAP = {
   'Multimodal':     'AI',       // 딥러닝
   'Training':       'AI',       // 딥러닝
   'RL':             'ML',       // 머신러닝
+  'ML':             'ML',       // 머신러닝 (비-챕터 수학/ML 개념)
   'MML: Linear Algebra':     '선형대수',
   'MML: Analytic Geometry':  '선형대수',
   'MML: Vector Calculus':     '선형대수',
@@ -49,6 +50,12 @@ const CLUSTER_MAP = {
 
 // 노드별 개별 오버라이드 (카테고리 매핑보다 우선)
 const NODE_CLUSTER_OVERRIDE = {
+  'linear_algebra_problems': 'ML',
+  'mle_map': 'ML',
+  'cross_entropy': 'ML',
+  'pca': 'ML',
+  'svd': 'ML',
+  'information_theory': 'ML',
   'rl_basic': 'ML',
   'rlhf': 'ML',
   'bias_variance': 'ML',
@@ -59,12 +66,13 @@ const NODE_CLUSTER_OVERRIDE = {
 // 헬퍼: 노드의 최종 클러스터 반환
 function getNodeCluster(node) {
   if (!node) return 'AI';
+  if (NODE_CLUSTER_OVERRIDE[node.id]) return NODE_CLUSTER_OVERRIDE[node.id];
   if (node.category && node.category.startsWith('MML')) return '선형대수';
-  if (node.id && (node.id.startsWith('linear_algebra') || node.id.startsWith('probability_') || node.id.startsWith('matrix_decomp') || node.id.startsWith('vector_calculus') || node.id.startsWith('mml_'))) return '선형대수';
+  if (node.id && (node.id.startsWith('linear_algebra_ch') || node.id.startsWith('probability_ch') || node.id.startsWith('matrix_decomp_ch') || node.id.startsWith('vector_calculus_ch') || node.id.startsWith('mml_ch'))) return '선형대수';
   if (node.id && (node.id.startsWith('rq_') || node.id.startsWith('paper_'))) return '연구';
   if (node.tags && (node.tags.includes('Paper') || node.tags.includes('ResearchAgenda') || node.tags.includes('Agenda'))) return '연구';
   if (['streamkv', 'hcx_omni', 'clip'].includes(node.id)) return '연구';
-  return NODE_CLUSTER_OVERRIDE[node.id] || CLUSTER_MAP[node.category] || 'AI';
+  return CLUSTER_MAP[node.category] || 'AI';
 }
 
 // 6개 주요 클러스터 좌표 설정 (수평 배치: 시스템 ➔ 알고리즘 ➔ 선형대수 ➔ 머신러닝 ➔ 딥러닝 ➔ 연구)

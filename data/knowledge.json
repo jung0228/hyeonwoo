@@ -63,6 +63,10 @@
     "MML: Probability & Stats": {
       "color": "#f97316",
       "icon": "📊"
+    },
+    "ML": {
+      "color": "#34d399",
+      "icon": "📊"
     }
   },
   "nodes": [
@@ -187,7 +191,7 @@
     {
       "id": "rlhf",
       "label": "RLHF / PPO",
-      "category": "RL",
+      "category": "ML",
       "confidence": 2,
       "studyCount": 3,
       "tags": [
@@ -200,7 +204,7 @@
     {
       "id": "rl_basic",
       "label": "RL 기초",
-      "category": "RL",
+      "category": "ML",
       "confidence": 2,
       "studyCount": 2,
       "tags": [
@@ -344,7 +348,7 @@
     {
       "id": "linear_algebra_problems",
       "label": "📝 선형대수 MML 문제 모음",
-      "category": "MML: Linear Algebra",
+      "category": "ML",
       "confidence": 4,
       "studyCount": 5,
       "note": "data/notes/linear_algebra_problems.md",
@@ -710,7 +714,7 @@
     {
       "id": "mle_map",
       "label": "MLE / MAP / Bayesian",
-      "category": "MML: Probability & Stats",
+      "category": "ML",
       "confidence": 3,
       "studyCount": 5,
       "tags": [
@@ -724,7 +728,7 @@
     {
       "id": "cross_entropy",
       "label": "Cross-Entropy & KL Div.",
-      "category": "MML: Probability & Stats",
+      "category": "ML",
       "confidence": 4,
       "studyCount": 5,
       "tags": [
@@ -737,7 +741,7 @@
     {
       "id": "pca",
       "label": "PCA / 선형대수",
-      "category": "MML: Linear Algebra",
+      "category": "ML",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -750,7 +754,7 @@
     {
       "id": "bias_variance",
       "label": "Bias-Variance Tradeoff",
-      "category": "RL",
+      "category": "ML",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -763,7 +767,7 @@
     {
       "id": "ensemble",
       "label": "Ensemble (Bagging/Boosting)",
-      "category": "RL",
+      "category": "ML",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -987,7 +991,7 @@
     {
       "id": "svd",
       "label": "SVD & Eigendecomposition",
-      "category": "MML: Linear Algebra",
+      "category": "ML",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -1002,7 +1006,7 @@
     {
       "id": "information_theory",
       "label": "Information Theory & Entropy",
-      "category": "MML: Probability & Stats",
+      "category": "ML",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1179,7 +1183,7 @@
     {
       "id": "causal_inference_scm",
       "label": "구조적 인과 모델 (SCM & do-Calculus)",
-      "category": "RL",
+      "category": "ML",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
