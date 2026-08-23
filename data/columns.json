@@ -8,7 +8,8 @@
       "summary": "정현우 연구자의 TCVP 논문(유튜브 타임스탬프 댓글 기반 VMR 파이프라인)을 2026 ICML/CVPR SOTA 수식(DiReCT 어텐션 투영, CSR 인과 롤백, O-Voxel 3D 쿼리)으로 전면 개조하는 완벽 구조(와꾸) 및 100% 구현 타당성 검증 칼럼.",
       "file": "data/columns/tcvp_2_0_upgrade_blueprint.md",
       "category": "Paper Upgrade & Feasibility",
-      "readTime": "12 min read"
+      "readTime": "12 min read",
+      "tab": "column"
     },
     {
       "id": "autonomous_research_loop_guide_2026",
@@ -18,7 +19,8 @@
       "summary": "연구자 본인이 노가다 코딩과 실험에서 해방되어 연구 총괄 감독관이 되는 5단계 자율 연구 파이프라인(가설 탐색, 오토 코딩, GPU 자율 실행, 자가 디버깅, LaTeX 집필) 작동 원리와 오케스트레이션 시스템 가이드.",
       "file": "data/columns/autonomous_research_loop_guide_2026.md",
       "category": "Autonomous Research Engine",
-      "readTime": "12 min read"
+      "readTime": "12 min read",
+      "tab": "column"
     },
     {
       "id": "paper_direct_backtrack_spotlight",
@@ -28,7 +30,8 @@
       "summary": "자율 AI 연구 파이프라인으로 생성된 ICML/NeurIPS 제출용 톱티어 논문 드래프트. 사전학습 0원으로 방향성 어텐션 구속(DiReCT)과 인과 상태 롤백(CSR)을 결합하여 장기 수행 에이전트 성능을 +44.2% 향상시킨 SOTA 연구.",
       "file": "data/columns/paper_direct_backtrack_spotlight.md",
       "category": "Top-Tier Paper Draft",
-      "readTime": "10 min read"
+      "readTime": "10 min read",
+      "tab": "column"
     },
     {
       "id": "laptop_world_class_research_methodology",
@@ -38,7 +41,8 @@
       "summary": "2026년 8월 기준 최근 6개월 이내(2026.02~2026.08) 발표된 ICML 2026(DiReCT, JustGRPO, Neuro-Symbolic) 및 CVPR 2026 Best Paper(D4RT, O-Voxel) 최신 SOTA 방법론만을 엄선 결합하여 개인 노트북 한 대만으로 월클급 연구를 완결 짓는 단 하나의 시스템 가이드 v3.0.",
       "file": "data/columns/laptop_world_class_research_methodology.md",
       "category": "Master Research Methodology",
-      "readTime": "16 min read"
+      "readTime": "16 min read",
+      "tab": "column"
     },
     {
       "id": "university_in_a_box_ai_learning",
@@ -48,7 +52,8 @@
       "summary": "하버드·MIT 무료 강의 완주율이 12%에 불과한 이유와 벤저민 블룸의 2-시그마 문제. AI를 학업 조언자(Advisor), 사서(Librarian), 1:1 튜터(Tutor), 에디터(Editor), 룸메이트(Roommate)로 활용하는 5대 독학 프레임워크(ALTER) 실전 가이드.",
       "file": "data/columns/university_in_a_box_ai_learning.md",
       "category": "AI & Education",
-      "readTime": "8 min read"
+      "readTime": "8 min read",
+      "tab": "column"
     },
     {
       "id": "ai_for_science_and_research",
@@ -58,7 +63,8 @@
       "summary": "FunSearch, The AI Scientist, GNoME 등 실제 AI 연구 성공 사례부터 5단계 연구 자동화 파이프라인, 논문 수집·구조화 스키마, 그리고 4대 독창적 아이디어 발굴 벡터까지 집대성한 연구자용 실전 가이드.",
       "file": "data/columns/ai_for_science_and_research.md",
       "category": "AI & Philosophy",
-      "readTime": "10 min read"
+      "readTime": "10 min read",
+      "tab": "column"
     },
     {
       "id": "ai_data_center_necessity",
@@ -68,7 +74,41 @@
       "summary": "단순한 저장소를 넘어 거대한 연산 파이프라인으로 진화하는 현대 데이터 센터. 초거대 인공지능 모델과 가속 연산이 불러온 물리적 인프라의 패러다임 변화를 짚어봅니다.",
       "file": "data/columns/ai_data_center_necessity.md",
       "category": "Infrastructure",
-      "readTime": "5 min read"
+      "readTime": "5 min read",
+      "tab": "column"
+    },
+    {
+      "id": "auto_research_agent_orchestration_2026",
+      "title": "1인 연구자를 위한 24시간 자율 AI 에이전트 오케스트레이션 설계",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "가설 수립, 논문 스크랩, PyTorch 코드 구현, GPU 자율 실행, 에러 디버깅, LaTeX 집필을 24시간 백그라운드로 순환시키는 서브에이전트 협업 오케스트레이션 아키텍처 가이드.",
+      "file": "data/columns/auto_research_agent_orchestration_2026.md",
+      "category": "Autonomous Agent System",
+      "readTime": "11 min read",
+      "tab": "auto-research"
+    },
+    {
+      "id": "zero_gpu_paper_generation_methodology",
+      "title": "GPU 연산 리소스 없이 SOTA 논문을 파싱하고 실험을 자동화하는 방법",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "빅테크의 GPU 클러스터 싸움을 피하고 개인 노트북 환경에서 사전학습 비용 0원(Zero-Shot)으로 톱티어 논문 실험을 자동화하는 표현 공학 및 DiReCT 어텐션 투영 수식 가이드.",
+      "file": "data/columns/zero_gpu_paper_generation_methodology.md",
+      "category": "Zero-GPU Research Automation",
+      "readTime": "10 min read",
+      "tab": "auto-research"
+    },
+    {
+      "id": "self_debugging_code_loop_architecture",
+      "title": "PyTorch 모델 생성부터 Traceback 자가 디버깅까지: 실패율 0% 루프 설계",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "CUDA OOM, Dimension Mismatch, NaN Loss 발생 시 Traceback을 실시간 파싱하여 스스로 파이썬 코드를 리팩토링하고 5회 자가 시도로 실패율 0%를 유지하는 디버깅 엔진 구조.",
+      "file": "data/columns/self_debugging_code_loop_architecture.md",
+      "category": "Self-Debugging Engine",
+      "readTime": "12 min read",
+      "tab": "auto-research"
     }
   ]
 }

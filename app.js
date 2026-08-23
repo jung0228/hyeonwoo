@@ -2937,10 +2937,12 @@ function renderAutoResearchRack() {
   const grid = document.getElementById('auto-research-grid');
   if (!grid) return;
 
-  const researchCategories = ['Autonomous Research Engine', 'Research Methodology', 'Paper Upgrade & Strategy', 'Paper Spotlight', 'Research Vision', 'Paper Upgrade & Feasibility'];
-  let autoCols = columnsData.filter(c => researchCategories.includes(c.category) || c.id.includes('laptop') || c.id.includes('auto') || c.id.includes('tcvp') || c.id.includes('paper') || c.id.includes('vision'));
+  const autoCols = columnsData.filter(c => c.tab === 'auto-research');
 
-  if (autoCols.length === 0) autoCols = columnsData;
+  if (autoCols.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center">아직 발행된 자율 연구 글이 없습니다.</p>';
+    return;
+  }
 
   grid.innerHTML = autoCols.map(col => {
     return `
