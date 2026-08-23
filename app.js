@@ -2685,20 +2685,25 @@ function saveKnowledgeData() {
 }
 
 /* ============================================================
-   COLUMN VIEW (신문 아카이브 및 가판대 기능)
+   COLUMN & AUTONOMOUS RESEARCH VIEW (신문 아카이브 및 가판대 기능)
    ============================================================ */
 let columnsData = [];
 
-async function initColumn() {
-  // Load columns metadata
+async function getColumnsData() {
+  if (columnsData && columnsData.length > 0) return columnsData;
   try {
-    const res = await fetch('data/columns.json');
+    const res = await fetch('data/columns.json?t=' + Date.now());
     const data = await res.json();
     columnsData = data.columns || [];
   } catch (e) {
     console.error('Failed to load columns.json:', e);
     columnsData = [];
   }
+  return columnsData;
+}
+
+async function initColumn() {
+  await getColumnsData();
 
   // Set today's date in newspaper brand style
   const dateEl = document.getElementById('newspaper-date');
@@ -2708,22 +2713,23 @@ async function initColumn() {
     dateEl.textContent = d.toLocaleDateString('ko-KR', options).toUpperCase();
   }
 
-  // Render both column and auto-research newspaper shelf cards
   renderColumnRack();
   renderAutoResearchRack();
 
   // Close button overlay bind
   const closeBtn = document.getElementById('reader-close-btn');
-  if (closeBtn) {
+  if (closeBtn && !closeBtn.dataset.bound) {
     closeBtn.addEventListener('click', closeColumnReader);
+    closeBtn.dataset.bound = 'true';
   }
   
   // Close reader on background click
   const overlay = document.getElementById('column-reader-overlay');
-  if (overlay) {
+  if (overlay && !overlay.dataset.bound) {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) closeColumnReader();
     });
+    overlay.dataset.bound = 'true';
   }
 }
 
@@ -2731,31 +2737,71 @@ function renderColumnRack() {
   const grid = document.getElementById('newspaper-grid');
   if (!grid) return;
   
-  const colItems = columnsData.filter(c => c.tab === 'column' || !c.tab);
+  // Filter for data/columns/ folder or tab === 'column'
+  const colItems = columnsData.filter(c => (c.file && c.file.includes('data/columns/')) || c.tab === 'column');
 
   if (colItems.length === 0) {
     grid.innerHTML = '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center">아직 발행된 칼럼이 없습니다.</p>';
     return;
   }
 
-  grid.innerHTML = colItems.map(col => {
-    return `
-      <div class="newspaper-card" onclick="openColumnReader('${col.id}')">
-        <span class="npc-category">${col.category}</span>
-        <h2 class="npc-title">${col.title}</h2>
-        <p class="npc-summary">${col.summary}</p>
-        <div class="npc-meta">
-          <span>✍️ ${col.author}</span>
-          <span>📅 ${col.date} • ${col.readTime}</span>
-        </div>
+  grid.innerHTML = colItems.map(col => `
+    <div class="newspaper-card" onclick="openColumnReader('${col.id}')">
+      <span class="npc-category">${col.category || 'Column'}</span>
+      <h2 class="npc-title">${col.title}</h2>
+      <p class="npc-summary">${col.summary}</p>
+      <div class="npc-meta">
+        <span>✍️ ${col.author}</span>
+        <span>📅 ${col.date} • ${col.readTime}</span>
       </div>
-    `;
-  }).join('');
+    </div>
+  `).join('');
+}
+
+async function initAutoResearch() {
+  await getColumnsData();
+
+  // Set today's date in auto-research brand style
+  const dateEl = document.getElementById('auto-research-date');
+  if (dateEl) {
+    dateEl.textContent = '24/7 AUTONOMOUS LOOP ACTIVE';
+  }
+
+  renderAutoResearchRack();
+}
+
+function renderAutoResearchRack() {
+  const grid = document.getElementById('auto-research-grid');
+  if (!grid) return;
+
+  // Filter for data/auto_research/ folder or tab === 'auto-research'
+  const autoCols = columnsData.filter(c => (c.file && c.file.includes('data/auto_research/')) || c.tab === 'auto-research');
+
+  if (autoCols.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center">아직 발행된 자율 연구 글이 없습니다.</p>';
+    return;
+  }
+
+  grid.innerHTML = autoCols.map(col => `
+    <div class="newspaper-card" onclick="openColumnReader('${col.id}')">
+      <span class="npc-category">${col.category || 'Autonomous Research'}</span>
+      <h2 class="npc-title">${col.title}</h2>
+      <p class="npc-summary">${col.summary}</p>
+      <div class="npc-meta">
+        <span>✍️ ${col.author}</span>
+        <span>📅 ${col.date} • ${col.readTime}</span>
+      </div>
+    </div>
+  `).join('');
 }
 
 async function openColumnReader(columnId) {
+  await getColumnsData();
   const col = columnsData.find(c => c.id === columnId);
-  if (!col) return;
+  if (!col) {
+    console.error('Column not found for ID:', columnId);
+    return;
+  }
 
   const overlay = document.getElementById('column-reader-overlay');
   const titleEl = document.getElementById('reader-title');
@@ -2765,43 +2811,46 @@ async function openColumnReader(columnId) {
 
   titleEl.textContent = col.title;
   authorEl.textContent = `BY ${col.author}`;
-  metaEl.textContent = `PUBLISHED ON ${col.date.replace(/-/g, '. ')} • ${col.category.toUpperCase()}`;
-  
-  bodyEl.innerHTML = `<p style="text-align:center;color:var(--text-muted)">신문을 인쇄 중입니다...</p>`;
-  overlay.classList.add('open');
+  metaEl.textContent = `PUBLISHED ON ${col.date} • ${col.category.toUpperCase()} • ${col.readTime.toUpperCase()}`;
+
+  bodyEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">신문을 펼치는 중...</div>';
+  overlay.classList.add('show');
 
   try {
-    const res = await fetch(col.file);
-    if (!res.ok) throw new Error('File not found');
-    const md = await res.text();
-    window.currentColumnRawMd = md;
-    
-    // Parse markdown (exclude the main title since it is already rendered in header)
-    const cleanMd = md.replace(/^#\s+.+$/m, '');
-    bodyEl.innerHTML = marked.parse(cleanMd);
+    const res = await fetch(col.file + '?t=' + Date.now());
+    let md = await res.text();
 
-    // Apply KaTeX math rendering if equations exist
+    window.currentColumnRawMd = md;
+
+    // Remove first H1 from markdown content since header already shows title
+    md = md.replace(/^#\s+[^
+]+
+/, '');
+
+    // Parse LaTeX with KaTeX if present
     if (window.renderMathInElement) {
+      bodyEl.innerHTML = marked.parse(md);
       renderMathInElement(bodyEl, {
-        output: 'html',
         delimiters: [
           { left: '$$', right: '$$', display: true },
-          { left: '$',  right: '$',  display: false }
-        ]
+          { left: '$', right: '$', display: false }
+        ],
+        throwOnError: false
       });
+    } else {
+      bodyEl.innerHTML = marked.parse(md);
     }
-  } catch (e) {
-    bodyEl.innerHTML = `<p style="text-align:center;color:#ef4444">칼럼을 불러오지 못했습니다. 파일 경로를 확인해 주세요. (${col.file})</p>`;
+  } catch (err) {
+    bodyEl.innerHTML = `<div style="grid-column:1/-1;color:#ef4444;text-align:center;padding:40px">칼럼을 불러오는 중 오류가 발생했습니다.<br><small>${err.message}</small></div>`;
   }
 }
 
 function closeColumnReader() {
   const overlay = document.getElementById('column-reader-overlay');
-  if (overlay) overlay.classList.remove('open');
+  if (overlay) {
+    overlay.classList.remove('show');
+  }
 }
-
-
-
 
 /* ── 📚 Dedicated SOTA Paper Archive Functions ── */
 let currentPaperFilter = 'all';
@@ -2813,27 +2862,31 @@ function switchResearchMode(mode) {
   const archiveContainer = document.getElementById('research-paper-archive-container');
 
   if (mode === 'papers') {
-    btnGraph.classList.remove('active');
-    btnGraph.style.background = 'transparent';
-    btnGraph.style.color = '#94a3b8';
-
-    btnPapers.classList.add('active');
-    btnPapers.style.background = '#38bdf8';
-    btnPapers.style.color = '#0f172a';
-
+    if (btnGraph) {
+      btnGraph.classList.remove('active');
+      btnGraph.style.background = 'transparent';
+      btnGraph.style.color = '#94a3b8';
+    }
+    if (btnPapers) {
+      btnPapers.classList.add('active');
+      btnPapers.style.background = '#38bdf8';
+      btnPapers.style.color = '#0f172a';
+    }
     if (graphContainer) graphContainer.style.display = 'none';
     if (archiveContainer) archiveContainer.style.display = 'block';
 
     renderResearchPaperArchive();
   } else {
-    btnPapers.classList.remove('active');
-    btnPapers.style.background = 'transparent';
-    btnPapers.style.color = '#94a3b8';
-
-    btnGraph.classList.add('active');
-    btnGraph.style.background = '#38bdf8';
-    btnGraph.style.color = '#0f172a';
-
+    if (btnPapers) {
+      btnPapers.classList.remove('active');
+      btnPapers.style.background = 'transparent';
+      btnPapers.style.color = '#94a3b8';
+    }
+    if (btnGraph) {
+      btnGraph.classList.add('active');
+      btnGraph.style.background = '#38bdf8';
+      btnGraph.style.color = '#0f172a';
+    }
     if (archiveContainer) archiveContainer.style.display = 'none';
     if (graphContainer) graphContainer.style.display = 'block';
   }
@@ -2864,14 +2917,14 @@ function renderResearchPaperArchive() {
   const nodes = dataSrc.nodes || [];
   
   // Filter nodes that are papers or research notes
-  let paperNodes = nodes.filter(n => n.nodeType === 'paper' || n.category === 'Paper' || n.id.startsWith('paper_') || n.id.startsWith('note_') || n.id.startsWith('integrated_'));
+  let paperNodes = nodes.filter(n => n.nodeType === 'paper' || n.category === 'Paper' || (n.id && (n.id.startsWith('paper_') || n.id.startsWith('note_') || n.id.startsWith('integrated_'))));
 
   if (currentPaperFilter === 'award') {
     paperNodes = paperNodes.filter(n => n.tags && (n.tags.includes('Best Paper') || n.tags.includes('Best Student Paper') || n.tags.includes('Outstanding Paper')));
   } else if (currentPaperFilter === 'sota') {
     paperNodes = paperNodes.filter(n => n.tags && (n.tags.includes('Top-Tier') || n.tags.includes('ICML2027') || n.id.includes('direct_backtrack')));
   } else if (currentPaperFilter === 'note') {
-    paperNodes = paperNodes.filter(n => n.id.startsWith('note_') || n.id.startsWith('integrated_') || (n.tags && n.tags.includes('ResearchNote')));
+    paperNodes = paperNodes.filter(n => n.id && (n.id.startsWith('note_') || n.id.startsWith('integrated_') || (n.tags && n.tags.includes('ResearchNote'))));
   }
 
   if (paperNodes.length === 0) {
@@ -2881,23 +2934,23 @@ function renderResearchPaperArchive() {
 
   grid.innerHTML = paperNodes.map(n => {
     const isAward = n.tags && (n.tags.includes('Best Paper') || n.tags.includes('Best Student Paper') || n.tags.includes('Outstanding Paper'));
-    const isSotaDraft = n.id.includes('direct_backtrack') || (n.tags && n.tags.includes('Top-Tier'));
+    const isSotaDraft = n.id && (n.id.includes('direct_backtrack') || (n.tags && n.tags.includes('Top-Tier')));
     
     let badgeHtml = '<span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">📄 Paper</span>';
     if (isAward) {
       badgeHtml = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">🏆 Award Winner</span>';
     } else if (isSotaDraft) {
       badgeHtml = '<span style="background:rgba(244,63,94,0.2); color:#f43f5e; border:1px solid rgba(244,63,94,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">🎓 SOTA Draft</span>';
-    } else if (n.id.startsWith('note_') || n.id.startsWith('integrated_')) {
+    } else if (n.id && (n.id.startsWith('note_') || n.id.startsWith('integrated_'))) {
       badgeHtml = '<span style="background:rgba(167,139,250,0.2); color:#a78bfa; border:1px solid rgba(167,139,250,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">📝 Master Note</span>';
     }
 
     const tagsHtml = (n.tags || []).slice(0, 3).map(t => `<span style="background:rgba(255,255,255,0.06); color:#cbd5e1; padding:2px 6px; border-radius:4px; font-size:10px;">#${t}</span>`).join(' ');
 
     return `
-      <div style="background:rgba(30,41,59,0.7); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify:space-between; transition:all 0.2s; position:relative;" onmouseenter="this.style.borderColor='#38bdf8';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='none'">
+      <div style="background:rgba(30,41,59,0.7); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.2s; position:relative;" onmouseenter="this.style.borderColor='#38bdf8';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='none'">
         <div>
-          <div style="display:flex; justify-space-between; align-items:center; margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             ${badgeHtml}
             <span style="font-size:11px; color:#64748b;">Conf: ${'★'.repeat(n.confidence || 3)}</span>
           </div>
@@ -2911,47 +2964,6 @@ function renderResearchPaperArchive() {
           <button onclick="openNotePanel('${n.id}')" style="padding:6px 12px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); border-radius:8px; color:#38bdf8; font-weight:600; font-size:12px; cursor:pointer;" onmouseenter="this.style.background='#38bdf8';this.style.color='#0f172a'" onmouseleave="this.style.background='rgba(56,189,248,0.15)';this.style.color='#38bdf8'">
             📖 상세 노트 읽기
           </button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-
-/* ── 🤖 Autonomous Research Rack Renderer (100% Identical to Column Rack) ── */
-async function initAutoResearch() {
-  if (!columnsData || columnsData.length === 0) {
-    try {
-      const res = await fetch('data/columns.json');
-      const data = await res.json();
-      columnsData = data.columns || [];
-    } catch (e) {
-      console.error('Failed to load columns.json for auto-research:', e);
-    }
-  }
-  renderAutoResearchRack();
-}
-
-function renderAutoResearchRack() {
-  const grid = document.getElementById('auto-research-grid');
-  if (!grid) return;
-
-  const autoCols = columnsData.filter(c => c.tab === 'auto-research');
-
-  if (autoCols.length === 0) {
-    grid.innerHTML = '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center">아직 발행된 자율 연구 글이 없습니다.</p>';
-    return;
-  }
-
-  grid.innerHTML = autoCols.map(col => {
-    return `
-      <div class="newspaper-card" onclick="openColumnReader('${col.id}')">
-        <span class="npc-category">${col.category}</span>
-        <h2 class="npc-title">${col.title}</h2>
-        <p class="npc-summary">${col.summary}</p>
-        <div class="npc-meta">
-          <span>✍️ ${col.author}</span>
-          <span>📅 ${col.date} • ${col.readTime}</span>
         </div>
       </div>
     `;
