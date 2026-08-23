@@ -55,8 +55,6 @@ const NODE_CLUSTER_OVERRIDE = {
 // 헬퍼: 노드의 최종 클러스터 반환
 function getNodeCluster(node) {
   if (!node) return 'AI';
-  if (node.nodeType === 'paper' || node.nodeType === 'research') return '연구';
-  if (node.category === 'Paper' || node.category === 'Research Agenda') return '연구';
   if (node.id && (node.id.startsWith('linear_algebra') || node.id.startsWith('probability_') || node.id.startsWith('mml_') || node.id.startsWith('math_'))) return '선형대수';
   if (node.id && (node.id.startsWith('rq_') || node.id.startsWith('paper_'))) return '연구';
   if (node.tags && (node.tags.includes('Paper') || node.tags.includes('ResearchAgenda') || node.tags.includes('Agenda'))) return '연구';
@@ -68,7 +66,7 @@ function getNodeCluster(node) {
 const CLUSTER_CONFIG = {
   '시스템':   { color: '#ef4444', label: '💻  시스템',        cx: 0.08, cy: 0.48 },
   '알고리즘': { color: '#06b6d4', label: '🔢  알고리즘',      cx: 0.24, cy: 0.48 },
-  '선형대수': { color: '#f59e0b', label: '📐  Mathematics for Machine Learning (MML)', cx: 0.40, cy: 0.48 },
+  '선형대수': { color: '#f59e0b', label: '📐  선형대수학',    cx: 0.40, cy: 0.48 },
   'ML':       { color: '#34d399', label: '📊  머신러닝',      cx: 0.56, cy: 0.48 },
   'AI':       { color: '#a78bfa', label: '🤖  딥러닝',        cx: 0.74, cy: 0.48 },
   '연구':     { color: '#f43f5e', label: '🔭  연구 & 논문',   cx: 0.92, cy: 0.48 }
@@ -1320,7 +1318,7 @@ function buildClusterGroups() {
     grouped[cluster].push(n);
   });
 
-  container.innerHTML = Object.entries(CLUSTER_CONFIG).filter(([key]) => key !== '연구').map(([key, cfg]) => {
+  container.innerHTML = Object.entries(CLUSTER_CONFIG).map(([key, cfg]) => {
     const nodes = grouped[key] || [];
     const avgConf = nodes.length > 0 ? (nodes.reduce((s, n) => s + n.confidence, 0) / nodes.length) : 0;
     const progressPct = Math.round((avgConf / 4) * 100);
@@ -2073,325 +2071,22 @@ async function initResearch() {
 }
 
 function renderResearch() {
-  // Initialize Research Mode (Default to D3 Graph)
-  switchResearchMode('graph');
-}
+  // Tagline
+  const tl = document.getElementById('research-tagline');
+  if (tl) tl.textContent = researchData.tagline || '';
 
-let researchSvg, researchG, researchSimulation, researchZoom;
-
-function switchResearchMode(mode) {
-  const graphView = document.getElementById('research-graph-view');
-  const cardsView = document.getElementById('research-cards-view');
-  const btnGraph = document.getElementById('btn-research-graph');
-  const btnCards = document.getElementById('btn-research-cards');
-
-  if (!graphView || !cardsView) return;
-
-  if (mode === 'graph') {
-    graphView.style.display = 'block';
-    cardsView.style.display = 'none';
-    if (btnGraph) {
-      btnGraph.classList.add('active');
-      btnGraph.style.background = '#f43f5e';
-      btnGraph.style.color = '#fff';
-    }
-    if (btnCards) {
-      btnCards.classList.remove('active');
-      btnCards.style.background = 'transparent';
-      btnCards.style.color = 'var(--text-muted)';
-    }
-    setTimeout(initResearchGraph, 100);
-  } else {
-    graphView.style.display = 'none';
-    cardsView.style.display = 'block';
-    if (btnCards) {
-      btnCards.classList.add('active');
-      btnCards.style.background = '#f43f5e';
-      btnCards.style.color = '#fff';
-    }
-    if (btnGraph) {
-      btnGraph.classList.remove('active');
-      btnGraph.style.background = 'transparent';
-      btnGraph.style.color = 'var(--text-muted)';
-    }
-    renderResearchClusterHub();
-  }
-}
-
-function initResearchGraph() {
-  const container = document.getElementById('research-graph-container');
-  const svgEl = document.getElementById('research-graph-svg');
-  if (!container || !svgEl) return;
-
-  const W = container.clientWidth || 1000;
-  const H = container.clientHeight || 700;
-
-  d3.select(svgEl).selectAll('*').remove();
-
-  researchSvg = d3.select(svgEl).attr('viewBox', `0 0 ${W} ${H}`);
-
-  researchZoom = d3.zoom()
-    .scaleExtent([0.2, 3])
-    .on('zoom', e => { if (researchG) researchG.attr('transform', e.transform); });
-  researchSvg.call(researchZoom);
-
-  researchG = researchSvg.append('g');
-
-  // Defs
-  const defs = researchSvg.append('defs');
-  defs.append('marker')
-    .attr('id', 'research-arrow')
-    .attr('viewBox', '0 -5 10 10').attr('refX', 22).attr('refY', 0)
-    .attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
-    .append('path').attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', 'rgba(244,63,94,0.3)');
-
-  // Filter research & paper nodes
-  const researchNodes = knowledgeData.nodes.filter(n =>
-    n.nodeType === 'paper' || n.nodeType === 'research' || getNodeCluster(n) === '연구'
-  );
-  const researchNodeIds = new Set(researchNodes.map(n => n.id));
-
-  // Define 5 Research Sub-cluster Centers
-  const RESEARCH_SUB_CLUSTERS = {
-    'omni': { label: '✨ Omni-modal & Unified', color: '#f43f5e', cx: 0.22, cy: 0.35, ids: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni'] },
-    'spatial': { label: '🎭 Spatiotemporal & RVOS', color: '#ec4899', cx: 0.50, cy: 0.28, ids: ['paper_virst', 'paper_lisa', 'paper_mevis', 'paper_momentseeker'] },
-    'video': { label: '📹 Long Video & Memory', color: '#fb923c', cx: 0.78, cy: 0.35, ids: ['paper_qwen2_vl', 'streamkv', 'clip', 'paper_llava'] },
-    'physical': { label: '🤖 Physical AI & World Model', color: '#38bdf8', cx: 0.32, cy: 0.72, ids: ['paper_cosmos', 'paper_flow_matching'] },
-    'rq': { label: '🔭 현우의 핵심 연구 과제 (RQ)', color: '#a78bfa', cx: 0.68, cy: 0.72, ids: ['rq_physical_world_model', 'rq_counterfactual_video_causality', 'rq_modality_decoupled_moe', 'rq_cross_modal_alignment', 'rq_video_temporal_grounding', 'rq_data_recipe_optimization'] }
-  };
-
-  const getSubCluster = (nid) => {
-    for (const [key, cfg] of Object.entries(RESEARCH_SUB_CLUSTERS)) {
-      if (cfg.ids.includes(nid)) return key;
-    }
-    return 'rq';
-  };
-
-  const jitter = () => (Math.random() - 0.5) * 120;
-  const nodes = researchNodes.map(n => {
-    const sub = getSubCluster(n.id);
-    const cfg = RESEARCH_SUB_CLUSTERS[sub];
-    return {
-      ...n,
-      subCluster: sub,
-      x: W * cfg.cx + jitter(),
-      y: H * cfg.cy + jitter()
-    };
+  // Flow card sections
+  const keys = ['worldview', 'need', 'value', 'research'];
+  keys.forEach(key => {
+    const el = document.getElementById(`section-${key}`);
+    if (el) el.textContent = researchData.sections?.[key] || '';
   });
 
-  const links = knowledgeData.edges
-    .filter(e => researchNodeIds.has(e.source) && researchNodeIds.has(e.target))
-    .map(e => ({
-      source: e.source, target: e.target,
-      relation: e.relation, weight: e.weight || 1, insight: e.insight || null
-    }));
+  // Agenda
+  renderAgendaList();
 
-  // Hulls & Labels
-  const hullGroup = researchG.append('g').attr('class', 'research-hulls');
-  const labelGroup = researchG.append('g').attr('class', 'research-labels');
-  const hullPaths = {};
-  const hullLabels = {};
-
-  Object.entries(RESEARCH_SUB_CLUSTERS).forEach(([key, cfg]) => {
-    hullPaths[key] = hullGroup.append('path')
-      .attr('fill', cfg.color)
-      .attr('fill-opacity', 0.07)
-      .attr('stroke', cfg.color)
-      .attr('stroke-opacity', 0.35)
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '5,4');
-
-    hullLabels[key] = labelGroup.append('text')
-      .attr('text-anchor', 'middle')
-      .attr('font-size', '14')
-      .attr('font-weight', '700')
-      .attr('fill', cfg.color)
-      .attr('pointer-events', 'none')
-      .text(cfg.label);
-  });
-
-  // Force Simulation
-  researchSimulation = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.id).distance(110))
-    .force('charge', d3.forceManyBody().strength(-240))
-    .force('collide', d3.forceCollide(45))
-    .force('x', d3.forceX(d => W * RESEARCH_SUB_CLUSTERS[d.subCluster].cx).strength(0.35))
-    .force('y', d3.forceY(d => H * RESEARCH_SUB_CLUSTERS[d.subCluster].cy).strength(0.35));
-
-  // Render Links
-  const linkGroup = researchG.append('g').attr('class', 'research-links');
-  const linkElements = linkGroup.selectAll('line')
-    .data(links).enter().append('line')
-    .attr('stroke', '#f43f5e')
-    .attr('stroke-opacity', 0.3)
-    .attr('stroke-width', d => Math.max(1.5, d.weight))
-    .attr('marker-end', 'url(#research-arrow)');
-
-  // Render Nodes
-  const nodeGroup = researchG.append('g').attr('class', 'research-nodes');
-  const nodeElements = nodeGroup.selectAll('.r-node')
-    .data(nodes).enter().append('g')
-    .attr('class', 'r-node')
-    .style('cursor', 'pointer')
-    .call(d3.drag()
-      .on('start', (e, d) => {
-        if (!e.active) researchSimulation.alphaTarget(0.3).restart();
-        d.fx = d.x; d.fy = d.y;
-      })
-      .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
-      .on('end', (e, d) => {
-        if (!e.active) researchSimulation.alphaTarget(0);
-        d.fx = null; d.fy = null;
-      }))
-    .on('click', (e, d) => {
-      openNotePanel(d);
-    });
-
-  // Circle inside Node
-  nodeElements.append('circle')
-    .attr('r', d => d.nodeType === 'research' ? 22 : 18)
-    .attr('fill', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
-    .attr('fill-opacity', 0.85)
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 2);
-
-  // Icon in Node
-  nodeElements.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('dy', '0.35em')
-    .attr('font-size', '12px')
-    .text(d => d.nodeType === 'research' ? '🔭' : '📄');
-
-  // Label under Node
-  nodeElements.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('y', 32)
-    .attr('font-size', '12px')
-    .attr('font-weight', '600')
-    .attr('fill', '#f8fafc')
-    .text(d => d.label);
-
-  // Tick simulation
-  researchSimulation.on('tick', () => {
-    linkElements
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-
-    nodeElements.attr('transform', d => `translate(${d.x},${d.y})`);
-
-    // Update Hulls
-    Object.entries(RESEARCH_SUB_CLUSTERS).forEach(([key, cfg]) => {
-      const subNodes = nodes.filter(n => n.subCluster === key);
-      if (subNodes.length >= 2) {
-        const pts = subNodes.map(n => [n.x, n.y]);
-        const polygon = d3.polygonHull(pts);
-        if (polygon) {
-          hullPaths[key].attr('d', `M${polygon.join('L')}Z`);
-          const cx = d3.mean(polygon, p => p[0]);
-          const cy = d3.min(polygon, p => p[1]) - 20;
-          hullLabels[key].attr('x', cx).attr('y', cy);
-        }
-      }
-    });
-  });
-
-  // Bind Zoom controls
-  const btnIn = document.getElementById('btn-research-zoom-in');
-  if (btnIn) btnIn.onclick = () => {
-    researchSvg.transition().duration(300).call(researchZoom.scaleBy, 1.3);
-  };
-  const btnOut = document.getElementById('btn-research-zoom-out');
-  if (btnOut) btnOut.onclick = () => {
-    researchSvg.transition().duration(300).call(researchZoom.scaleBy, 0.7);
-  };
-  const btnReset = document.getElementById('btn-research-zoom-reset');
-  if (btnReset) btnReset.onclick = () => {
-    researchSvg.transition().duration(400).call(researchZoom.transform, d3.zoomIdentity);
-  };
-}
-
-function renderResearchClusterHub() {
-  const container = document.getElementById('research-cluster-hub-container');
-  if (!container) return;
-
-  const researchNodes = knowledgeData.nodes.filter(n =>
-    n.nodeType === 'paper' || n.nodeType === 'research' || getNodeCluster(n) === '연구'
-  );
-
-  const subThemes = [
-    {
-      title: '✨ Omni-modal & Unified Generation (이해·생성 단일화)',
-      color: '#f43f5e',
-      nodeIds: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni']
-    },
-    {
-      title: '🎭 Spatiotemporal Reasoning & RVOS (시공간 픽셀 세그멘테이션)',
-      color: '#ec4899',
-      nodeIds: ['paper_virst', 'paper_lisa', 'paper_mevis', 'paper_momentseeker']
-    },
-    {
-      title: '📹 Long Video & Streaming Memory (장기 비디오 & 스트리밍 KV)',
-      color: '#fb923c',
-      nodeIds: ['paper_qwen2_vl', 'streamkv', 'clip', 'paper_llava']
-    },
-    {
-      title: '🤖 Physical AI & World Models (피지컬 AI & 월드 모델)',
-      color: '#38bdf8',
-      nodeIds: ['paper_cosmos', 'paper_flow_matching']
-    },
-    {
-      title: '🔭 현우의 핵심 연구 과제 (Open Research Questions)',
-      color: '#a78bfa',
-      nodeIds: [
-        'rq_physical_world_model',
-        'rq_counterfactual_video_causality',
-        'rq_modality_decoupled_moe',
-        'rq_cross_modal_alignment',
-        'rq_video_temporal_grounding',
-        'rq_data_recipe_optimization'
-      ]
-    }
-  ];
-
-  container.innerHTML = subThemes.map(theme => {
-    const themeNodes = researchNodes.filter(n => theme.nodeIds.includes(n.id));
-    if (!themeNodes.length) return '';
-
-    const chips = themeNodes.map(n => {
-      const isPaper = n.nodeType === 'paper';
-      const badgeIcon = isPaper ? '📄' : '🔭';
-      const badgeBg = isPaper ? 'rgba(244, 63, 94, 0.12)' : 'rgba(236, 72, 153, 0.12)';
-      const badgeBorder = isPaper ? 'rgba(244, 63, 94, 0.35)' : 'rgba(236, 72, 153, 0.35)';
-      const stars = '★'.repeat(n.confidence) + '☆'.repeat(4 - n.confidence);
-
-      return `<div class="research-hub-chip animate-in"
-        style="border: 1px solid ${badgeBorder}; background: ${badgeBg}; padding: 10px 14px; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: transform 0.2s;"
-        onmouseenter="this.style.transform='translateY(-2px)'"
-        onmouseleave="this.style.transform='translateY(0)'"
-        onclick="focusNode('${n.id}');openNotePanel(knowledgeData.nodes.find(n=>n.id==='${n.id}'))">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: 700; font-size: 14px; color: #f8fafc;">${badgeIcon} ${n.label}</span>
-          <span style="font-size: 11px; color: var(--accent-yellow);">${stars}</span>
-        </div>
-        ${n.tags ? `<div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
-          ${n.tags.slice(0, 3).map(t => `<span style="font-size: 10px; color: var(--text-muted); background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">#${t}</span>`).join('')}
-        </div>` : ''}
-      </div>`;
-    }).join('');
-
-    return `
-      <div class="research-theme-card" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; margin-bottom: 20px;">
-        <div style="font-size: 1.05rem; font-weight: 700; color: ${theme.color}; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
-          <span>${theme.title}</span>
-          <span style="font-size: 12px; font-weight: 400; color: var(--text-muted);">${themeNodes.length}개 노드</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;">
-          ${chips}
-        </div>
-      </div>
-    `;
-  }).join('');
+  // Keywords
+  renderKeywords();
 }
 
 function bindResearchEditors() {
