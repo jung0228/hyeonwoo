@@ -2864,7 +2864,7 @@ function renderResearchPaperArchive() {
   const nodes = dataSrc.nodes || [];
   
   // Filter nodes that are papers or research notes
-  let paperNodes = nodes.filter(n => n.nodeType === 'paper' || n.category === 'Paper' || n.id.startswith('paper_') || n.id.startswith('note_') || n.id.startswith('integrated_'));
+  let paperNodes = nodes.filter(n => n.nodeType === 'paper' || n.category === 'Paper' || n.id.startsWith('paper_') || n.id.startsWith('note_') || n.id.startsWith('integrated_'));
 
   if (currentPaperFilter === 'award') {
     paperNodes = paperNodes.filter(n => n.tags && (n.tags.includes('Best Paper') || n.tags.includes('Best Student Paper') || n.tags.includes('Outstanding Paper')));
