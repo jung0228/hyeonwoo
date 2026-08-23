@@ -11,6 +11,16 @@
       "readTime": "12 min read"
     },
     {
+      "id": "autonomous_research_loop_guide_2026",
+      "title": "24시간 자율 연구 루프 엔진: 5단계 오케스트레이션 실전 가이드",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "연구자 본인이 노가다 코딩과 실험에서 해방되어 연구 총괄 감독관이 되는 5단계 자율 연구 파이프라인(가설 탐색, 오토 코딩, GPU 자율 실행, 자가 디버깅, LaTeX 집필) 작동 원리와 오케스트레이션 시스템 가이드.",
+      "file": "data/columns/autonomous_research_loop_guide_2026.md",
+      "category": "Autonomous Research Engine",
+      "readTime": "12 min read"
+    },
+    {
       "id": "paper_direct_backtrack_spotlight",
       "title": "[SOTA 논문집필 완료] DiReCT-Backtrack: 에이전트 오차 0% 롤백",
       "date": "2026-08-23",
