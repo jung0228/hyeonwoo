@@ -371,24 +371,21 @@ function initNav() {
   });
 }
 
-function switchView(view) {
+// ✅ VIEW LIFECYCLE REGISTRY (Modular View Handling)
+const VIEW_LIFECYCLE = {
+  graph:    { onShow: () => { if (typeof simulation !== 'undefined' && simulation) simulation.alpha(0.1).restart(); } },
+  research: { onShow: () => { setTimeout(initResearchGraph, 50); } },
+  quiz:     { onShow: () => { if (typeof initQuiz === 'function') initQuiz(); } },
+  column:   { onShow: () => { if (typeof initColumn === 'function') initColumn(); } },
+  analytics:{ onShow: () => { if (typeof initAnalytics === 'function') initAnalytics(); } }
+};
+
+function switchView(viewName) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(`view-${view}`).classList.add('active');
-  if (view === 'graph' && simulation) {
-    setTimeout(() => { simulation.alpha(0.1).restart(); }, 100);
-  }
-  if (view === 'progress') {
-    initProgress(); // Re-render lists with the latest localStorage/json data
-  }
-  if (view === 'research') {
-    setTimeout(initResearchGraph, 50);
-  }
-  if (view === 'quiz') {
-    initQuiz();
-  }
-  if (view === 'column') {
-    initColumn();
-  }
+  const targetView = document.getElementById(`view-${viewName}`);
+  if (targetView) targetView.classList.add('active');
+  
+  VIEW_LIFECYCLE[viewName]?.onShow?.();
 }
 
 /* ============================================================
@@ -440,6 +437,38 @@ function initSearch() {
 
 function updateStatsBadge() {
   document.getElementById('total-nodes').textContent = knowledgeData.nodes.length;
+}
+
+/* ============================================================
+   SINGLE NODE COMPONENT MODULE (DRY Pattern)
+   ============================================================ */
+function renderGraphNodeComponent(selection, getColorFn) {
+  // 1. Outer confidence glow ring
+  selection.append('circle')
+    .attr('class', 'node-circle')
+    .attr('r', d => getNodeRadius(d))
+    .attr('fill', d => getColorFn(d))
+    .attr('fill-opacity', d => 0.15 + ((d.confidence || 0) / 4) * 0.6)
+    .attr('stroke', d => getColorFn(d))
+    .attr('stroke-width', 1.5)
+    .attr('stroke-opacity', 0.65);
+
+  // 2. Inner center dot
+  selection.append('circle')
+    .attr('r', 3)
+    .attr('fill', d => getColorFn(d))
+    .attr('fill-opacity', 0.9);
+
+  // 3. Label text under node
+  selection.append('text')
+    .attr('class', 'node-label')
+    .attr('text-anchor', 'middle')
+    .attr('dy', d => getNodeRadius(d) + 12)
+    .attr('font-size', '11')
+    .attr('font-family', 'Pretendard, sans-serif')
+    .attr('font-weight', '500')
+    .attr('fill', 'rgba(232,234,240,0.85)')
+    .text(d => d.label);
 }
 
 /* ============================================================
@@ -592,29 +621,7 @@ function initGraph() {
       .on('drag',  dragged)
       .on('end',   dragEnd));
 
-  node.append('circle')
-    .attr('class', 'node-circle')
-    .attr('r', d => getNodeRadius(d))
-    .attr('fill', d => knowledgeData.categories[d.category]?.color || '#888')
-    .attr('fill-opacity', d => 0.15 + (d.confidence / 4) * 0.6)
-    .attr('stroke', d => knowledgeData.categories[d.category]?.color || '#888')
-    .attr('stroke-width', 1.5)
-    .attr('stroke-opacity', 0.65);
-
-  node.append('circle')
-    .attr('r', 3)
-    .attr('fill', d => knowledgeData.categories[d.category]?.color || '#888')
-    .attr('fill-opacity', 0.9);
-
-  node.append('text')
-    .attr('class', 'node-label')
-    .attr('text-anchor', 'middle')
-    .attr('dy', d => getNodeRadius(d) + 12)
-    .attr('font-size', '11')
-    .attr('font-family', 'Pretendard, sans-serif')
-    .attr('font-weight', '500')
-    .attr('fill', 'rgba(232,234,240,0.85)')
-    .text(d => d.label);
+  renderGraphNodeComponent(node, d => knowledgeData.categories[d.category]?.color || '#888');
 
   /* ---- Tooltip ---- */
   const tooltip = document.getElementById('node-tooltip');
@@ -2222,32 +2229,7 @@ async function initResearchGraph() {
       openNotePanel(d);
     });
 
-  // Circle inside Node (100% Identical to Main Knowledge Graph)
-  nodeElements.append('circle')
-    .attr('class', 'node-circle')
-    .attr('r', d => getNodeRadius(d))
-    .attr('fill', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
-    .attr('fill-opacity', d => 0.15 + (d.confidence / 4) * 0.6)
-    .attr('stroke', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
-    .attr('stroke-width', 1.5)
-    .attr('stroke-opacity', 0.65);
-
-  // Inner center dot
-  nodeElements.append('circle')
-    .attr('r', 3)
-    .attr('fill', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
-    .attr('fill-opacity', 0.9);
-
-  // Label under Node
-  nodeElements.append('text')
-    .attr('class', 'node-label')
-    .attr('text-anchor', 'middle')
-    .attr('dy', d => getNodeRadius(d) + 12)
-    .attr('font-size', '11')
-    .attr('font-family', 'Pretendard, sans-serif')
-    .attr('font-weight', '500')
-    .attr('fill', 'rgba(232,234,240,0.85)')
-    .text(d => d.label);
+  renderGraphNodeComponent(nodeElements, d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e');
 
   // Tick simulation
   researchSimulation.on('tick', () => {
