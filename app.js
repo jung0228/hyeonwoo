@@ -2814,7 +2814,9 @@ async function openColumnReader(columnId) {
   metaEl.textContent = `PUBLISHED ON ${col.date} • ${col.category.toUpperCase()} • ${col.readTime.toUpperCase()}`;
 
   bodyEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">신문을 펼치는 중...</div>';
+  overlay.classList.add('open');
   overlay.classList.add('show');
+  overlay.style.display = 'block';
 
   try {
     const res = await fetch(col.file + '?t=' + Date.now());
@@ -2846,7 +2848,9 @@ async function openColumnReader(columnId) {
 function closeColumnReader() {
   const overlay = document.getElementById('column-reader-overlay');
   if (overlay) {
+    overlay.classList.remove('open');
     overlay.classList.remove('show');
+    overlay.style.display = 'none';
   }
 }
 

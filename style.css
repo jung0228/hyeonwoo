@@ -1735,8 +1735,10 @@ body {
   padding: 40px 16px;
   animation: fadeIn 0.3s ease;
 }
-.column-reader-overlay.open {
-  display: block;
+.column-reader-overlay.open,
+.column-reader-overlay.show,
+.column-reader-overlay.active {
+  display: block !important;
 }
 
 .column-reader-paper {
