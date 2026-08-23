@@ -2297,13 +2297,16 @@ function initResearchGraph() {
   });
 
   // Bind Zoom controls
-  document.getElementById('btn-research-zoom-in')?.onclick = () => {
+  const btnIn = document.getElementById('btn-research-zoom-in');
+  if (btnIn) btnIn.onclick = () => {
     researchSvg.transition().duration(300).call(researchZoom.scaleBy, 1.3);
   };
-  document.getElementById('btn-research-zoom-out')?.onclick = () => {
+  const btnOut = document.getElementById('btn-research-zoom-out');
+  if (btnOut) btnOut.onclick = () => {
     researchSvg.transition().duration(300).call(researchZoom.scaleBy, 0.7);
   };
-  document.getElementById('btn-research-zoom-reset')?.onclick = () => {
+  const btnReset = document.getElementById('btn-research-zoom-reset');
+  if (btnReset) btnReset.onclick = () => {
     researchSvg.transition().duration(400).call(researchZoom.transform, d3.zoomIdentity);
   };
 }
