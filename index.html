@@ -206,33 +206,52 @@
       </div>
     </div>
 
-    <!-- ===== VIEW: RESEARCH (DEDICATED RESEARCH CLUSTERS HUB) ===== -->
-    <div class="view" id="view-research" style="padding: 24px; overflow-y: auto; height: calc(100vh - 70px);">
-      <div class="research-page-clean">
-        <!-- Research Header Banner -->
-        <div class="page-header" style="margin-bottom: 28px; background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.25); border-radius: 16px; padding: 22px 26px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <!-- ===== VIEW: RESEARCH (INTERACTIVE D3 RESEARCH GRAPH & MATRIX) ===== -->
+    <div class="view" id="view-research" style="position: relative; height: calc(100vh - 65px); overflow: hidden; padding: 0;">
+      <div class="research-page-container" style="display: flex; flex-direction: column; width: 100%; height: 100%;">
+        
+        <!-- Header Bar with View Switcher -->
+        <div class="research-header-bar" style="padding: 12px 20px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 1.3rem;">🔭</span>
             <div>
-              <h1 class="page-title" style="color: #f43f5e; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                <span>🔭</span> Research Clusters & Paper Matrix
-              </h1>
-              <p class="page-subtitle" style="color: #cbd5e1; font-size: 0.95rem;">
-                정현우의 멀티모달 & 피지컬 AI 핵심 연구 계보 및 개방형 연구 과제 지형도
-              </p>
+              <div style="font-weight: 700; font-size: 1.05rem; color: #f43f5e;">Research Knowledge Graph</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">SOTA 논문 16편 & 현우의 미해결 연구 과제(RQ) 인터랙티브 2D 지형도</div>
             </div>
-            <div style="display: flex; gap: 10px;">
-              <span style="background: rgba(244, 63, 94, 0.2); border: 1px solid rgba(244, 63, 94, 0.4); color: #f43f5e; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
-                📄 SOTA 논문 16편
-              </span>
-              <span style="background: rgba(236, 72, 153, 0.2); border: 1px solid rgba(236, 72, 153, 0.4); color: #ec4899; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
-                🔭 미해결 RQ 6개
-              </span>
-            </div>
+          </div>
+
+          <!-- View Mode Toggle -->
+          <div style="display: flex; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 3px;">
+            <button class="research-mode-btn active" id="btn-research-graph" onclick="switchResearchMode('graph')" style="padding: 6px 14px; border: none; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: #fff; background: #f43f5e;">
+              🌐 2D 연구 그래프
+            </button>
+            <button class="research-mode-btn" id="btn-research-cards" onclick="switchResearchMode('cards')" style="padding: 6px 14px; border: none; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--text-muted); background: transparent;">
+              📦 클러스터 카드 뷰
+            </button>
           </div>
         </div>
 
-        <!-- Dedicated Research Cluster Container -->
-        <div class="research-cluster-hub-container" id="research-cluster-hub-container"></div>
+        <!-- Mode 1: Research D3 Graph Canvas -->
+        <div id="research-graph-view" class="research-view-mode" style="flex: 1; position: relative; width: 100%; height: 100%;">
+          <div class="graph-container" id="research-graph-container" style="width: 100%; height: 100%; position: absolute; inset: 0;">
+            <!-- Graph Controls -->
+            <div class="graph-controls">
+              <button class="ctrl-btn" id="btn-research-zoom-in" title="확대">+</button>
+              <button class="ctrl-btn" id="btn-research-zoom-out" title="축소">−</button>
+              <button class="ctrl-btn" id="btn-research-zoom-reset" title="초기화">⊙</button>
+            </div>
+            <!-- D3 SVG -->
+            <svg id="research-graph-svg" style="width: 100%; height: 100%; display: block;"></svg>
+            <!-- Tooltip -->
+            <div class="node-tooltip" id="research-node-tooltip"></div>
+          </div>
+        </div>
+
+        <!-- Mode 2: Research Cards Matrix View -->
+        <div id="research-cards-view" class="research-view-mode" style="display: none; flex: 1; padding: 24px; overflow-y: auto;">
+          <div class="research-cluster-hub-container" id="research-cluster-hub-container"></div>
+        </div>
+
       </div>
     </div>
 

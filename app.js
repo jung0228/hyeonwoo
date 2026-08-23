@@ -2073,8 +2073,239 @@ async function initResearch() {
 }
 
 function renderResearch() {
-  // Dedicated Research Cluster Hub Page
-  renderResearchClusterHub();
+  // Initialize Research Mode (Default to D3 Graph)
+  switchResearchMode('graph');
+}
+
+let researchSvg, researchG, researchSimulation, researchZoom;
+
+function switchResearchMode(mode) {
+  const graphView = document.getElementById('research-graph-view');
+  const cardsView = document.getElementById('research-cards-view');
+  const btnGraph = document.getElementById('btn-research-graph');
+  const btnCards = document.getElementById('btn-research-cards');
+
+  if (!graphView || !cardsView) return;
+
+  if (mode === 'graph') {
+    graphView.style.display = 'block';
+    cardsView.style.display = 'none';
+    if (btnGraph) {
+      btnGraph.classList.add('active');
+      btnGraph.style.background = '#f43f5e';
+      btnGraph.style.color = '#fff';
+    }
+    if (btnCards) {
+      btnCards.classList.remove('active');
+      btnCards.style.background = 'transparent';
+      btnCards.style.color = 'var(--text-muted)';
+    }
+    setTimeout(initResearchGraph, 100);
+  } else {
+    graphView.style.display = 'none';
+    cardsView.style.display = 'block';
+    if (btnCards) {
+      btnCards.classList.add('active');
+      btnCards.style.background = '#f43f5e';
+      btnCards.style.color = '#fff';
+    }
+    if (btnGraph) {
+      btnGraph.classList.remove('active');
+      btnGraph.style.background = 'transparent';
+      btnGraph.style.color = 'var(--text-muted)';
+    }
+    renderResearchClusterHub();
+  }
+}
+
+function initResearchGraph() {
+  const container = document.getElementById('research-graph-container');
+  const svgEl = document.getElementById('research-graph-svg');
+  if (!container || !svgEl) return;
+
+  const W = container.clientWidth || 1000;
+  const H = container.clientHeight || 700;
+
+  d3.select(svgEl).selectAll('*').remove();
+
+  researchSvg = d3.select(svgEl).attr('viewBox', `0 0 ${W} ${H}`);
+
+  researchZoom = d3.zoom()
+    .scaleExtent([0.2, 3])
+    .on('zoom', e => { if (researchG) researchG.attr('transform', e.transform); });
+  researchSvg.call(researchZoom);
+
+  researchG = researchSvg.append('g');
+
+  // Defs
+  const defs = researchSvg.append('defs');
+  defs.append('marker')
+    .attr('id', 'research-arrow')
+    .attr('viewBox', '0 -5 10 10').attr('refX', 22).attr('refY', 0)
+    .attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
+    .append('path').attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', 'rgba(244,63,94,0.3)');
+
+  // Filter research & paper nodes
+  const researchNodes = knowledgeData.nodes.filter(n =>
+    n.nodeType === 'paper' || n.nodeType === 'research' || getNodeCluster(n) === '연구'
+  );
+  const researchNodeIds = new Set(researchNodes.map(n => n.id));
+
+  // Define 5 Research Sub-cluster Centers
+  const RESEARCH_SUB_CLUSTERS = {
+    'omni': { label: '✨ Omni-modal & Unified', color: '#f43f5e', cx: 0.22, cy: 0.35, ids: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni'] },
+    'spatial': { label: '🎭 Spatiotemporal & RVOS', color: '#ec4899', cx: 0.50, cy: 0.28, ids: ['paper_virst', 'paper_lisa', 'paper_mevis', 'paper_momentseeker'] },
+    'video': { label: '📹 Long Video & Memory', color: '#fb923c', cx: 0.78, cy: 0.35, ids: ['paper_qwen2_vl', 'streamkv', 'clip', 'paper_llava'] },
+    'physical': { label: '🤖 Physical AI & World Model', color: '#38bdf8', cx: 0.32, cy: 0.72, ids: ['paper_cosmos', 'paper_flow_matching'] },
+    'rq': { label: '🔭 현우의 핵심 연구 과제 (RQ)', color: '#a78bfa', cx: 0.68, cy: 0.72, ids: ['rq_physical_world_model', 'rq_counterfactual_video_causality', 'rq_modality_decoupled_moe', 'rq_cross_modal_alignment', 'rq_video_temporal_grounding', 'rq_data_recipe_optimization'] }
+  };
+
+  const getSubCluster = (nid) => {
+    for (const [key, cfg] of Object.entries(RESEARCH_SUB_CLUSTERS)) {
+      if (cfg.ids.includes(nid)) return key;
+    }
+    return 'rq';
+  };
+
+  const jitter = () => (Math.random() - 0.5) * 120;
+  const nodes = researchNodes.map(n => {
+    const sub = getSubCluster(n.id);
+    const cfg = RESEARCH_SUB_CLUSTERS[sub];
+    return {
+      ...n,
+      subCluster: sub,
+      x: W * cfg.cx + jitter(),
+      y: H * cfg.cy + jitter()
+    };
+  });
+
+  const links = knowledgeData.edges
+    .filter(e => researchNodeIds.has(e.source) && researchNodeIds.has(e.target))
+    .map(e => ({
+      source: e.source, target: e.target,
+      relation: e.relation, weight: e.weight || 1, insight: e.insight || null
+    }));
+
+  // Hulls & Labels
+  const hullGroup = researchG.append('g').attr('class', 'research-hulls');
+  const labelGroup = researchG.append('g').attr('class', 'research-labels');
+  const hullPaths = {};
+  const hullLabels = {};
+
+  Object.entries(RESEARCH_SUB_CLUSTERS).forEach(([key, cfg]) => {
+    hullPaths[key] = hullGroup.append('path')
+      .attr('fill', cfg.color)
+      .attr('fill-opacity', 0.07)
+      .attr('stroke', cfg.color)
+      .attr('stroke-opacity', 0.35)
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '5,4');
+
+    hullLabels[key] = labelGroup.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '14')
+      .attr('font-weight', '700')
+      .attr('fill', cfg.color)
+      .attr('pointer-events', 'none')
+      .text(cfg.label);
+  });
+
+  // Force Simulation
+  researchSimulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(110))
+    .force('charge', d3.forceManyBody().strength(-240))
+    .force('collide', d3.forceCollide(45))
+    .force('x', d3.forceX(d => W * RESEARCH_SUB_CLUSTERS[d.subCluster].cx).strength(0.35))
+    .force('y', d3.forceY(d => H * RESEARCH_SUB_CLUSTERS[d.subCluster].cy).strength(0.35));
+
+  // Render Links
+  const linkGroup = researchG.append('g').attr('class', 'research-links');
+  const linkElements = linkGroup.selectAll('line')
+    .data(links).enter().append('line')
+    .attr('stroke', '#f43f5e')
+    .attr('stroke-opacity', 0.3)
+    .attr('stroke-width', d => Math.max(1.5, d.weight))
+    .attr('marker-end', 'url(#research-arrow)');
+
+  // Render Nodes
+  const nodeGroup = researchG.append('g').attr('class', 'research-nodes');
+  const nodeElements = nodeGroup.selectAll('.r-node')
+    .data(nodes).enter().append('g')
+    .attr('class', 'r-node')
+    .style('cursor', 'pointer')
+    .call(d3.drag()
+      .on('start', (e, d) => {
+        if (!e.active) researchSimulation.alphaTarget(0.3).restart();
+        d.fx = d.x; d.fy = d.y;
+      })
+      .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+      .on('end', (e, d) => {
+        if (!e.active) researchSimulation.alphaTarget(0);
+        d.fx = null; d.fy = null;
+      }))
+    .on('click', (e, d) => {
+      openNotePanel(d);
+    });
+
+  // Circle inside Node
+  nodeElements.append('circle')
+    .attr('r', d => d.nodeType === 'research' ? 22 : 18)
+    .attr('fill', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
+    .attr('fill-opacity', 0.85)
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 2);
+
+  // Icon in Node
+  nodeElements.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '0.35em')
+    .attr('font-size', '12px')
+    .text(d => d.nodeType === 'research' ? '🔭' : '📄');
+
+  // Label under Node
+  nodeElements.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('y', 32)
+    .attr('font-size', '12px')
+    .attr('font-weight', '600')
+    .attr('fill', '#f8fafc')
+    .text(d => d.label);
+
+  // Tick simulation
+  researchSimulation.on('tick', () => {
+    linkElements
+      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+
+    nodeElements.attr('transform', d => `translate(${d.x},${d.y})`);
+
+    // Update Hulls
+    Object.entries(RESEARCH_SUB_CLUSTERS).forEach(([key, cfg]) => {
+      const subNodes = nodes.filter(n => n.subCluster === key);
+      if (subNodes.length >= 2) {
+        const pts = subNodes.map(n => [n.x, n.y]);
+        const polygon = d3.polygonHull(pts);
+        if (polygon) {
+          hullPaths[key].attr('d', `M${polygon.join('L')}Z`);
+          const cx = d3.mean(polygon, p => p[0]);
+          const cy = d3.min(polygon, p => p[1]) - 20;
+          hullLabels[key].attr('x', cx).attr('y', cy);
+        }
+      }
+    });
+  });
+
+  // Bind Zoom controls
+  document.getElementById('btn-research-zoom-in')?.onclick = () => {
+    researchSvg.transition().duration(300).call(researchZoom.scaleBy, 1.3);
+  };
+  document.getElementById('btn-research-zoom-out')?.onclick = () => {
+    researchSvg.transition().duration(300).call(researchZoom.scaleBy, 0.7);
+  };
+  document.getElementById('btn-research-zoom-reset')?.onclick = () => {
+    researchSvg.transition().duration(400).call(researchZoom.transform, d3.zoomIdentity);
+  };
 }
 
 function renderResearchClusterHub() {
