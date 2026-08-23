@@ -479,154 +479,99 @@
       </div>
     </div>
 
-    <!-- ===== VIEW: AUTONOMOUS RESEARCH ===== -->
-    <div class="view" id="view-auto-research" style="padding:24px; width:100%; height:100%; overflow-y:auto; background:var(--bg);">
-      <div style="max-width:1200px; margin:0 auto;">
-        
-        <!-- Header & Live Metrics -->
-        <div style="background:linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.8)); border:1px solid rgba(56,189,248,0.3); border-radius:20px; padding:28px; margin-bottom:28px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-            <div>
-              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                <span style="font-size:2rem;">🤖</span>
-                <h1 style="font-size:1.8rem; font-weight:800; color:#f8fafc;">Autonomous Research Engine & Lab</h1>
-                <span style="background:rgba(16,185,129,0.2); color:#10b981; border:1px solid rgba(16,185,129,0.4); padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;">● 24/7 RUNNING</span>
-              </div>
-              <p style="font-size:0.95rem; color:#94a3b8;">연구자 정현우의 1인 연구 자동화 파이프라인, 마스터 연구 방법론 v3.0 및 진행 중인 SOTA 연구 집대성 센터</p>
-            </div>
-            <div style="display:flex; gap:14px;">
-              <div style="background:rgba(255,255,255,0.05); padding:12px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); text-align:center;">
-                <div style="font-size:1.2rem; font-weight:800; color:#38bdf8;">$0</div>
-                <div style="font-size:11px; color:#94a3b8;">학습 연산 비용</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.05); padding:12px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); text-align:center;">
-                <div style="font-size:1.2rem; font-weight:800; color:#f59e0b;">v3.0</div>
-                <div style="font-size:11px; color:#94a3b8;">노트북 방법론</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.05); padding:12px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); text-align:center;">
-                <div style="font-size:1.2rem; font-weight:800; color:#a78bfa;">4대</div>
-                <div style="font-size:11px; color:#94a3b8;">블루오션 연구</div>
-              </div>
-            </div>
+    <!-- ===== VIEW: AUTONOMOUS RESEARCH (NEWSPAPER / JOURNAL RACK UI) ===== -->
+    <div class="view" id="view-auto-research">
+      <div class="column-page">
+        <div class="column-page-header">
+          <div class="newspaper-brand">AUTONOMOUS AI<br>RESEARCH LAB</div>
+          <div class="newspaper-meta-row">
+            <span>VOL. III NO. 1</span>
+            <span>SEOUL, KOREA</span>
+            <span>24/7 AUTONOMOUS LOOP ACTIVE</span>
           </div>
         </div>
 
-        <!-- Section 1: Master Methodology v3.0 Card -->
-        <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:24px; margin-bottom:28px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <h2 style="font-size:1.3rem; font-weight:700; color:#f8fafc;">🏛️ 마스터 연구 방법론 (v3.0 H2 Edition)</h2>
-            <button onclick="openColumnReader('laptop_world_class_research_methodology')" style="padding:8px 16px; background:#38bdf8; border:none; border-radius:10px; color:#0f172a; font-weight:700; font-size:13px; cursor:pointer;">📖 마스터 방법론 전문 읽기</button>
-          </div>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
-            <div style="background:rgba(15,23,42,0.6); padding:14px; border-radius:12px; border-left:3px solid #f59e0b;">
-              <div style="font-size:11px; color:#f59e0b; font-weight:700; margin-bottom:4px;">Pillar 1</div>
-              <div style="font-size:13px; font-weight:700; color:#f8fafc;">DiReCT & RepE (ICML26)</div>
-              <div style="font-size:12px; color:#94a3b8; margin-top:4px;">사전 학습 0원, 어텐션 방향 제어로 환각 85% 제거</div>
-            </div>
-            <div style="background:rgba(15,23,42,0.6); padding:14px; border-radius:12px; border-left:3px solid #10b981;">
-              <div style="font-size:11px; color:#10b981; font-weight:700; margin-bottom:4px;">Pillar 2</div>
-              <div style="font-size:13px; font-weight:700; color:#f8fafc;">Causal Backtracking Protocol</div>
-              <div style="font-size:12px; color:#94a3b8; margin-top:4px;">에이전트 역방향 롤백 벤치마크 학계 최초 정의</div>
-            </div>
-            <div style="background:rgba(15,23,42,0.6); padding:14px; border-radius:12px; border-left:3px solid #38bdf8;">
-              <div style="font-size:11px; color:#38bdf8; font-weight:700; margin-bottom:4px;">Pillar 3</div>
-              <div style="font-size:13px; font-weight:700; color:#f8fafc;">D4RT & O-Voxel (CVPR26)</div>
-              <div style="font-size:12px; color:#94a3b8; margin-top:4px;">단 한 번의 순전파로 4D 시공간 & PBR 3D 복원</div>
-            </div>
-            <div style="background:rgba(15,23,42,0.6); padding:14px; border-radius:12px; border-left:3px solid #a78bfa;">
-              <div style="font-size:11px; color:#a78bfa; font-weight:700; margin-bottom:4px;">Pillar 4</div>
-              <div style="font-size:13px; font-weight:700; color:#f8fafc;">The AI Scientist v2</div>
-              <div style="font-size:12px; color:#94a3b8; margin-top:4px;">논문 1편당 $15 미만 24시간 자율 집필 파이프라인</div>
-            </div>
-            <div style="background:rgba(15,23,42,0.6); padding:14px; border-radius:12px; border-left:3px solid #f43f5e;">
-              <div style="font-size:11px; color:#f43f5e; font-weight:700; margin-bottom:4px;">Pillar 5</div>
-              <div style="font-size:13px; font-weight:700; color:#f8fafc;">rStar-Math & JustGRPO</div>
-              <div style="font-size:12px; color:#94a3b8; margin-top:4px;">7B 소형 모델 MCTS 탐색 제어로 OpenAI o1 추론 달성</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 2: 5-Stage Autonomous Pipeline Flowchart -->
-        <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:24px; margin-bottom:28px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <h2 style="font-size:1.3rem; font-weight:700; color:#f8fafc;">⚙️ 5단계 24시간 자율 연구 루프 (Autonomous Loop)</h2>
-            <button onclick="openColumnReader('autonomous_research_loop_guide_2026')" style="padding:8px 16px; background:#10b981; border:none; border-radius:10px; color:#0f172a; font-weight:700; font-size:13px; cursor:pointer;">📖 자율 루프 가이드 전문 읽기</button>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; position:relative;">
-            <div style="flex:1; min-width:180px; background:rgba(15,23,42,0.8); border:1px solid rgba(56,189,248,0.3); border-radius:14px; padding:16px; text-align:center;">
-              <div style="font-size:1.4rem; margin-bottom:6px;">🔎</div>
-              <div style="font-size:12px; font-weight:700; color:#38bdf8;">1단계: 가설 탐색</div>
-              <div style="font-size:11px; color:#94a3b8; margin-top:4px;">arXiv 파싱 & 수식 가설 도출</div>
-            </div>
-            <div style="font-size:1.2rem; color:#64748b;">➔</div>
-            <div style="flex:1; min-width:180px; background:rgba(15,23,42,0.8); border:1px solid rgba(16,185,129,0.3); border-radius:14px; padding:16px; text-align:center;">
-              <div style="font-size:1.4rem; margin-bottom:6px;">💻</div>
-              <div style="font-size:12px; font-weight:700; color:#10b981;">2단계: 오토 코딩</div>
-              <div style="font-size:11px; color:#94a3b8; margin-top:4px;">PyTorch 모델 & Loss 구현</div>
-            </div>
-            <div style="font-size:1.2rem; color:#64748b;">➔</div>
-            <div style="flex:1; min-width:180px; background:rgba(15,23,42,0.8); border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:16px; text-align:center;">
-              <div style="font-size:1.4rem; margin-bottom:6px;">⚡</div>
-              <div style="font-size:12px; font-weight:700; color:#f59e0b;">3단계: GPU 자율 실행</div>
-              <div style="font-size:11px; color:#94a3b8; margin-top:4px;">텐서보드 로그 분석 & 검증</div>
-            </div>
-            <div style="font-size:1.2rem; color:#64748b;">➔</div>
-            <div style="flex:1; min-width:180px; background:rgba(15,23,42,0.8); border:1px solid rgba(167,139,250,0.3); border-radius:14px; padding:16px; text-align:center;">
-              <div style="font-size:1.4rem; margin-bottom:6px;">🛠️</div>
-              <div style="font-size:12px; font-weight:700; color:#a78bfa;">4단계: 자가 디버깅</div>
-              <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Traceback 파싱 & 에러 수정</div>
-            </div>
-            <div style="font-size:1.2rem; color:#64748b;">➔</div>
-            <div style="flex:1; min-width:180px; background:rgba(15,23,42,0.8); border:1px solid rgba(244,63,94,0.3); border-radius:14px; padding:16px; text-align:center;">
-              <div style="font-size:1.4rem; margin-bottom:6px;">🎓</div>
-              <div style="font-size:12px; font-weight:700; color:#f43f5e;">5단계: 논문 집필</div>
-              <div style="font-size:11px; color:#94a3b8; margin-top:4px;">LaTeX 규격 집필 (<$15)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 3: Ongoing Research & Paper Drafts -->
-        <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:24px;">
-          <h2 style="font-size:1.3rem; font-weight:700; color:#f8fafc; margin-bottom:16px;">🚀 진행 중인 SOTA 연구 논문 & 연구 노트</h2>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:18px;">
+        <!-- Newspaper Rack 가판대 구역 (자동화 연구 전용) -->
+        <div class="newspaper-rack-section">
+          <div class="rack-shelf-label">🤖 자율 연구 & 마스터 방법론 가판대 (Autonomous Research Rack)</div>
+          <div class="newspaper-grid" id="auto-research-grid">
             
-            <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(244,63,94,0.4); border-radius:14px; padding:18px;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <span style="background:rgba(244,63,94,0.2); color:#f43f5e; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">🎓 SOTA Paper Draft</span>
-                <span style="font-size:11px; color:#10b981;">COMPLETED</span>
+            <!-- Card 1: Master Methodology v3.0 -->
+            <div class="newspaper-card" onclick="openColumnReader('laptop_world_class_research_methodology')">
+              <div class="newspaper-card-meta">
+                <span class="newspaper-card-tag">🏛️ MASTER METHODOLOGY</span>
+                <span class="newspaper-card-date">2026. 08. 23</span>
               </div>
-              <h3 style="font-size:1.05rem; font-weight:700; color:#f8fafc; margin-bottom:8px;">DiReCT-Backtrack (에이전트 오차 롤백)</h3>
-              <p style="font-size:0.82rem; color:#94a3b8; margin-bottom:14px;">방향성 어텐션 구속과 인과 상태 롤백(CSR)을 통한 Zero-Shot 에이전트 오차 44.2% 감축 논문</p>
-              <button onclick="openNotePanel('paper_direct_backtrack_2026')" style="width:100%; padding:8px; background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.3); border-radius:8px; color:#f43f5e; font-weight:600; font-size:12px; cursor:pointer;">📖 논문 전문 읽기</button>
+              <h3 class="newspaper-card-title">집에서 노트북 1대로 월클급 AI 연구를 수행하는 완벽 방법론 (v3.0)</h3>
+              <p class="newspaper-card-summary">빅테크의 GPU 연산량 싸움을 피하고 개인 노트북 한 대만으로 최신 톱티어 학회(ICML 2026, CVPR 2026)를 뚫는 5대 마스터 방법론(DiReCT, Neuro-Symbolic, D4RT, AI Scientist, rStar MCTS) 가이드.</p>
+              <div class="newspaper-card-footer">
+                <span class="newspaper-card-author">BY 정현우</span>
+                <span class="newspaper-card-readtime">16 min read</span>
+              </div>
             </div>
 
-            <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(167,139,250,0.4); border-radius:14px; padding:18px;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <span style="background:rgba(167,139,250,0.2); color:#a78bfa; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">📝 Master Research Note</span>
-                <span style="font-size:11px; color:#38bdf8;">INTEGRATED</span>
+            <!-- Card 2: 5-Stage Loop Guide -->
+            <div class="newspaper-card" onclick="openColumnReader('autonomous_research_loop_guide_2026')">
+              <div class="newspaper-card-meta">
+                <span class="newspaper-card-tag" style="background:rgba(16,185,129,0.2); color:#10b981;">⚙️ 24/7 AUTO LOOP</span>
+                <span class="newspaper-card-date">2026. 08. 23</span>
               </div>
-              <h3 style="font-size:1.05rem; font-weight:700; color:#f8fafc; margin-bottom:8px;">Modality Gating vs Cross-Attention</h3>
-              <p style="font-size:0.82rem; color:#94a3b8; margin-bottom:14px;">어텐션의 Text Dominance Bias 한계를 수식적으로 규명하고 Gating 필요성을 실증한 연구 노트</p>
-              <button onclick="openNotePanel('integrated_direct_backtrack_modality_gating')" style="width:100%; padding:8px; background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.3); border-radius:8px; color:#a78bfa; font-weight:600; font-size:12px; cursor:pointer;">📖 연구 노트 읽기</button>
+              <h3 class="newspaper-card-title">24시간 자율 연구 루프 엔진: 5단계 오케스트레이션 실전 가이드</h3>
+              <p class="newspaper-card-summary">연구자 본인이 노가다 코딩과 실험에서 해방되어 연구 총괄 감독관이 되는 5단계 자율 연구 파이프라인(가설 탐색, 오토 코딩, GPU 자율 실행, 자가 디버깅, LaTeX 집필) 작동 원리와 오케스트레이션 시스템 가이드.</p>
+              <div class="newspaper-card-footer">
+                <span class="newspaper-card-author">BY 정현우</span>
+                <span class="newspaper-card-readtime">12 min read</span>
+              </div>
             </div>
 
-            <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(56,189,248,0.4); border-radius:14px; padding:18px;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">🔥 Paper Upgrade</span>
-                <span style="font-size:11px; color:#f59e0b;">IN PROGRESS</span>
+            <!-- Card 3: DiReCT-Backtrack Paper -->
+            <div class="newspaper-card" onclick="openColumnReader('paper_direct_backtrack_spotlight')">
+              <div class="newspaper-card-meta">
+                <span class="newspaper-card-tag" style="background:rgba(244,63,94,0.2); color:#f43f5e;">🎓 SOTA PAPER DRAFT</span>
+                <span class="newspaper-card-date">2026. 08. 23</span>
               </div>
-              <h3 style="font-size:1.05rem; font-weight:700; color:#f8fafc; margin-bottom:8px;">TCVP 2.0 논문 개조 청사진</h3>
-              <p style="font-size:0.82rem; color:#94a3b8; margin-bottom:14px;">유튜브 타임스탬프 댓글 VMR 파이프라인에 2026 SOTA 수식을 이식하여 톱티어 학회 제출 준비</p>
-              <button onclick="openColumnReader('tcvp_2_0_upgrade_blueprint')" style="width:100%; padding:8px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); border-radius:8px; color:#38bdf8; font-weight:600; font-size:12px; cursor:pointer;">📖 개조 청사진 읽기</button>
+              <h3 class="newspaper-card-title">[SOTA 논문집필 완료] DiReCT-Backtrack: 에이전트 오차 0% 롤백</h3>
+              <p class="newspaper-card-summary">자율 AI 연구 파이프라인으로 생성된 ICML/NeurIPS 제출용 톱티어 논문 드래프트. 사전학습 0원으로 방향성 어텐션 구속(DiReCT)과 인과 상태 롤백(CSR)을 결합하여 장기 수행 에이전트 성능을 +44.2% 향상시킨 SOTA 연구.</p>
+              <div class="newspaper-card-footer">
+                <span class="newspaper-card-author">BY 정현우</span>
+                <span class="newspaper-card-readtime">10 min read</span>
+              </div>
+            </div>
+
+            <!-- Card 4: TCVP 2.0 Blueprint -->
+            <div class="newspaper-card" onclick="openColumnReader('tcvp_2_0_upgrade_blueprint')">
+              <div class="newspaper-card-meta">
+                <span class="newspaper-card-tag" style="background:rgba(56,189,248,0.2); color:#38bdf8;">🔥 PAPER UPGRADE</span>
+                <span class="newspaper-card-date">2026. 08. 23</span>
+              </div>
+              <h3 class="newspaper-card-title">TCVP 2.0 논문 개조 청사진: 2026 SOTA 수식을 붙여 톱티어 뚫기</h3>
+              <p class="newspaper-card-summary">정현우 연구자의 TCVP 논문(유튜브 타임스탬프 댓글 기반 VMR 파이프라인)을 2026 ICML/CVPR SOTA 수식(DiReCT 어텐션 투영, CSR 인과 롤백, O-Voxel 3D 쿼리)으로 전면 개조하는 완벽 구조(와꾸) 및 100% 구현 타당성 검증 칼럼.</p>
+              <div class="newspaper-card-footer">
+                <span class="newspaper-card-author">BY 정현우</span>
+                <span class="newspaper-card-readtime">12 min read</span>
+              </div>
+            </div>
+
+            <!-- Card 5: Grand Research Vision -->
+            <div class="newspaper-card" onclick="openColumnReader('ai_grand_research_vision_2026')">
+              <div class="newspaper-card-meta">
+                <span class="newspaper-card-tag" style="background:rgba(167,139,250,0.2); color:#a78bfa;">🚀 RESEARCH VISION</span>
+                <span class="newspaper-card-date">2026. 08. 23</span>
+              </div>
+              <h3 class="newspaper-card-title">거대한 세상의 흐름과 AI 연구의 블루오션</h3>
+              <p class="newspaper-card-summary">왜 인공지능 연구가 텍스트를 넘어 4D 물리 세계와 인과 추론으로 가야 하는가? 현재의 핵심 기술적 병목과 대학원 및 연구 인생에서 대박(High-ROI)을 낼 수 있는 4대 블루오션 연구 주제 심층 가이드.</p>
+              <div class="newspaper-card-footer">
+                <span class="newspaper-card-author">BY 정현우</span>
+                <span class="newspaper-card-readtime">14 min read</span>
+              </div>
             </div>
 
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ===== VIEW: COLUMN ===== -->
+    <!-- ===== VIEW: COLUMN ===== 
     <div class="view" id="view-column">
       <div class="column-page">
         <div class="column-page-header">
