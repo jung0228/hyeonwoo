@@ -217,12 +217,17 @@ body {
   inset: 0;
   opacity: 0;
   pointer-events: none;
+  display: none !important;
   transition: opacity var(--transition-slow);
-  overflow: hidden;  /* graph/heatmap/progress는 자체 스크롤 */
+  overflow: hidden;
 }
 .view.active {
   opacity: 1;
   pointer-events: all;
+  display: block !important;
+}
+#view-graph.view.active, #view-research.view.active {
+  display: flex !important;
 }
 /* Research, Column, Progress(복습 대시보드), Quiz 뷰는 세로 스크롤 허용 */
 #view-research, #view-column, #view-auto-research, #view-progress, #view-quiz {
