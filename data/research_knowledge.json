@@ -456,6 +456,23 @@
       ],
       "note": "data/notes/research_modality_gating_vs_cross_attention_2026.md",
       "nodeType": "research"
+    },
+    {
+      "id": "integrated_direct_backtrack_modality_gating",
+      "label": "DiReCT-Backtrack & Modality Gating (Master)",
+      "category": "Research",
+      "confidence": 5,
+      "studyCount": 12,
+      "tags": [
+        "MasterNote",
+        "IntegratedSOTA",
+        "DiReCT",
+        "ModalityGating",
+        "CausalRollback",
+        "ICML2027"
+      ],
+      "note": "data/notes/integrated_direct_backtrack_modality_gating_2026.md",
+      "nodeType": "research"
     }
   ],
   "edges": [
@@ -804,6 +821,20 @@
       "relation": "enables",
       "weight": 5,
       "insight": "Cross-Attention의 Text Bias 한계를 극복하는 Modality Gating 핵심 이론"
+    },
+    {
+      "source": "integrated_direct_backtrack_modality_gating",
+      "target": "paper_direct_backtrack_2026",
+      "relation": "basis_of",
+      "weight": 5,
+      "insight": "DiReCT-Backtrack SOTA 논문의 핵심 수식 통합 기반"
+    },
+    {
+      "source": "integrated_direct_backtrack_modality_gating",
+      "target": "note_modality_gating_vs_cross_attention",
+      "relation": "uses",
+      "weight": 5,
+      "insight": "Cross-Attention의 Text Bias 한계를 극복하는 Modality Gating 결합"
     }
   ]
 }
