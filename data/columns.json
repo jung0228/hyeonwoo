@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "paper_direct_backtrack_spotlight",
+      "title": "[SOTA 논문집필 완료] DiReCT-Backtrack: 에이전트 오차 0% 롤백",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "자율 AI 연구 파이프라인으로 생성된 ICML/NeurIPS 제출용 톱티어 논문 드래프트. 사전학습 0원으로 방향성 어텐션 구속(DiReCT)과 인과 상태 롤백(CSR)을 결합하여 장기 수행 에이전트 성능을 +44.2% 향상시킨 SOTA 연구.",
+      "file": "data/columns/paper_direct_backtrack_spotlight.md",
+      "category": "Top-Tier Paper Draft",
+      "readTime": "10 min read"
+    },
+    {
       "id": "laptop_world_class_research_methodology",
       "title": "집에서 노트북 1대로 월클급 AI 연구를 수행하는 완벽 방법론",
       "date": "2026-08-23",

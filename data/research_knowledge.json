@@ -423,6 +423,23 @@
       ],
       "note": "data/notes/paper_dllm.md",
       "nodeType": "paper"
+    },
+    {
+      "id": "paper_direct_backtrack_2026",
+      "label": "DiReCT-Backtrack (SOTA Top-Tier Paper)",
+      "category": "Paper",
+      "confidence": 5,
+      "studyCount": 10,
+      "tags": [
+        "Paper",
+        "Top-Tier",
+        "ICML2027",
+        "Embodied AI",
+        "Activation Steering",
+        "Causal Backtracking"
+      ],
+      "note": "data/notes/paper_autonomous_top_tier_2026.md",
+      "nodeType": "paper"
     }
   ],
   "edges": [
@@ -750,6 +767,20 @@
       "relation": "uses",
       "weight": 5,
       "insight": "dLLM의 Flexibility Trap을 오토레그레시브 JustGRPO RL 스캐폴딩으로 극복"
+    },
+    {
+      "source": "paper_direct_backtrack_2026",
+      "target": "rq_physical_world_model",
+      "relation": "enables",
+      "weight": 5,
+      "insight": "DiReCT-Backtrack의 방향성 어텐션 구속 수식으로 물리 세계 에이전트 오차 0% 달성"
+    },
+    {
+      "source": "paper_direct_backtrack_2026",
+      "target": "rq_counterfactual_video_causality",
+      "relation": "uses",
+      "weight": 5,
+      "insight": "Causal State Rollback (CSR) 수식을 반사실적 비디오 인과 롤백에 직접 적용"
     }
   ]
 }
