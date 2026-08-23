@@ -1757,11 +1757,14 @@ body {
   top: 20px; right: 20px;
   background: #e6dcbe;
   border: 1px solid #c8bc9e;
-  padding: 6px 14px;
+  padding: 8px 16px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
   color: #4a4235;
   cursor: pointer;
+  z-index: 100;
+  pointer-events: auto;
   transition: all 0.2s;
 }
 .reader-close-btn:hover {

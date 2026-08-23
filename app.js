@@ -2850,9 +2850,18 @@ function closeColumnReader() {
   if (overlay) {
     overlay.classList.remove('open');
     overlay.classList.remove('show');
+    overlay.classList.remove('active');
     overlay.style.display = 'none';
   }
 }
+window.closeColumnReader = closeColumnReader;
+
+// Escape key closes column reader
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeColumnReader();
+  }
+});
 
 /* ── 📚 Dedicated SOTA Paper Archive Functions ── */
 let currentPaperFilter = 'all';
