@@ -47,6 +47,22 @@
     "Research Agenda": {
       "color": "#ec4899",
       "icon": "🔭"
+    },
+    "MML: Linear Algebra": {
+      "color": "#f59e0b",
+      "icon": "📐"
+    },
+    "MML: Analytic Geometry": {
+      "color": "#eab308",
+      "icon": "📏"
+    },
+    "MML: Vector Calculus": {
+      "color": "#fb923c",
+      "icon": "📈"
+    },
+    "MML: Probability & Stats": {
+      "color": "#f97316",
+      "icon": "📊"
     }
   },
   "nodes": [
@@ -328,7 +344,7 @@
     {
       "id": "linear_algebra_problems",
       "label": "📝 선형대수 MML 문제 모음",
-      "category": "Math Problems",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 5,
       "note": "data/notes/linear_algebra_problems.md",
@@ -346,7 +362,7 @@
     {
       "id": "linear_algebra_ch2_1_systems",
       "label": "2.1 선형방정식계",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 4,
       "note": "data/notes/linear_algebra_ch2_1_systems.md",
@@ -364,7 +380,7 @@
     {
       "id": "linear_algebra_ch2_2_matrices",
       "label": "2.2 행렬 대수",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 3,
       "note": "data/notes/linear_algebra_ch2_2_matrices.md",
@@ -382,7 +398,7 @@
     {
       "id": "linear_algebra_ch2_3_solving_systems",
       "label": "2.3 선형계 풀이",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 5,
       "note": "data/notes/linear_algebra_ch2_3_solving_systems.md",
@@ -401,7 +417,7 @@
     {
       "id": "linear_algebra_ch2_4_vector_spaces",
       "label": "2.4 벡터공간과 부분공간",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 5,
       "note": "data/notes/linear_algebra_ch2_4_vector_spaces.md",
@@ -419,7 +435,7 @@
     {
       "id": "linear_algebra_ch2_5_independence",
       "label": "2.5 선형독립과 생성",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 5,
       "note": "data/notes/linear_algebra_ch2_5_linear_independence.md",
@@ -438,7 +454,7 @@
     {
       "id": "linear_algebra_ch2_6_basis_rank",
       "label": "2.6 기저와 계수",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 4,
       "note": "data/notes/linear_algebra_ch2_6_basis_rank.md",
@@ -456,7 +472,7 @@
     {
       "id": "linear_algebra_ch2_7_linear_mappings",
       "label": "2.7 선형 사상",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 4,
       "note": "data/notes/linear_algebra_ch2_7_linear_mappings.md",
@@ -474,7 +490,7 @@
     {
       "id": "linear_algebra_ch2_8_affine_spaces",
       "label": "2.8 어파인 공간",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 4,
       "note": "data/notes/linear_algebra_ch2_8_affine_spaces.md",
@@ -694,7 +710,7 @@
     {
       "id": "mle_map",
       "label": "MLE / MAP / Bayesian",
-      "category": "Math & Stats",
+      "category": "MML: Probability & Stats",
       "confidence": 3,
       "studyCount": 5,
       "tags": [
@@ -708,7 +724,7 @@
     {
       "id": "cross_entropy",
       "label": "Cross-Entropy & KL Div.",
-      "category": "Math & Stats",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 5,
       "tags": [
@@ -721,7 +737,7 @@
     {
       "id": "pca",
       "label": "PCA / 선형대수",
-      "category": "Math & Stats",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -734,7 +750,7 @@
     {
       "id": "bias_variance",
       "label": "Bias-Variance Tradeoff",
-      "category": "Math & Stats",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -747,7 +763,7 @@
     {
       "id": "ensemble",
       "label": "Ensemble (Bagging/Boosting)",
-      "category": "Math & Stats",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -760,7 +776,7 @@
     {
       "id": "cnn_math",
       "label": "CNN 수식 & 출력 크기",
-      "category": "Math & Stats",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -786,7 +802,7 @@
     {
       "id": "linear_algebra_ch3_1_norms",
       "label": "3.1 노름과 길이기하학",
-      "category": "Math",
+      "category": "MML: Analytic Geometry",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/linear_algebra_ch3_1_norms.md",
@@ -805,7 +821,7 @@
     {
       "id": "linear_algebra_ch3_2_inner_products",
       "label": "3.2 내적과 대칭 양의 정정 행렬",
-      "category": "Math",
+      "category": "MML: Analytic Geometry",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/linear_algebra_ch3_2_inner_products.md",
@@ -824,7 +840,7 @@
     {
       "id": "linear_algebra_ch3_3_lengths_angles",
       "label": "3.3 & 3.4 거리, 각도, 직교성 및 직교행렬",
-      "category": "Math",
+      "category": "MML: Analytic Geometry",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/linear_algebra_ch3_3_lengths_angles.md",
@@ -844,7 +860,7 @@
     {
       "id": "linear_algebra_ch3_5_orthonormal_basis",
       "label": "3.5 & 3.6 정규직교기저와 직교 여공간",
-      "category": "Math",
+      "category": "MML: Analytic Geometry",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/linear_algebra_ch3_5_orthonormal_basis.md",
@@ -863,7 +879,7 @@
     {
       "id": "linear_algebra_ch3_7_orthogonal_projections",
       "label": "3.7 & 3.8 함수 내적과 직교 정사영",
-      "category": "Math",
+      "category": "MML: Analytic Geometry",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/linear_algebra_ch3_7_orthogonal_projections.md",
@@ -884,7 +900,7 @@
     {
       "id": "linear_algebra_ch3_9_rotations",
       "label": "3.9 & 3.10 회전 변환과 해석기하학 총결산",
-      "category": "Math",
+      "category": "MML: Analytic Geometry",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/linear_algebra_ch3_9_rotations.md",
@@ -905,7 +921,7 @@
     {
       "id": "linear_algebra_ch3_problems",
       "label": "📝 3장 해석기하학 연습문제 (3.1~3.10)",
-      "category": "Math Problems",
+      "category": "MML: Analytic Geometry",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/linear_algebra_ch3_problems.md",
@@ -971,7 +987,7 @@
     {
       "id": "svd",
       "label": "SVD & Eigendecomposition",
-      "category": "Math & Stats",
+      "category": "MML: Linear Algebra",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -986,7 +1002,7 @@
     {
       "id": "information_theory",
       "label": "Information Theory & Entropy",
-      "category": "Math & Stats",
+      "category": "MML: Probability & Stats",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1001,7 +1017,7 @@
     {
       "id": "matrix_decomp_ch4_1_determinant_trace",
       "label": "4.1 행렬식과 대각합 (Determinant & Trace)",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/matrix_decomp_ch4_1_determinant_trace.md",
@@ -1022,7 +1038,7 @@
     {
       "id": "matrix_decomp_ch4_2_eigenvalues",
       "label": "4.2 고유값, 고유벡터 및 스펙트럴 정리",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/matrix_decomp_ch4_2_eigenvalues.md",
@@ -1044,7 +1060,7 @@
     {
       "id": "matrix_decomp_ch4_3_cholesky_diagonalization",
       "label": "4.3 & 4.4 숄레스키 분해와 고유값 대각화",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/matrix_decomp_ch4_3_cholesky_diagonalization.md",
@@ -1065,7 +1081,7 @@
     {
       "id": "matrix_decomp_ch4_5_svd",
       "label": "4.5 특이값 분해 (Singular Value Decomposition, SVD)",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/matrix_decomp_ch4_5_svd.md",
@@ -1087,7 +1103,7 @@
     {
       "id": "matrix_decomp_ch4_6_approx_phylogeny",
       "label": "4.6~4.8 저계수 근사, 에카르트-영 정리 및 행렬 계통도",
-      "category": "Math",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/matrix_decomp_ch4_6_approx_phylogeny.md",
@@ -1110,7 +1126,7 @@
     {
       "id": "vector_calculus_ch5_1_univariate",
       "label": "5.1 일변수 미분, 테일러 급수와 연쇄 법칙",
-      "category": "Math",
+      "category": "MML: Vector Calculus",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/vector_calculus_ch5_1_univariate.md",
@@ -1147,7 +1163,7 @@
     {
       "id": "hamiltonian_mechanics_physics",
       "label": "해밀토니안 물리 역학 (HNN)",
-      "category": "Math & Stats",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1163,7 +1179,7 @@
     {
       "id": "causal_inference_scm",
       "label": "구조적 인과 모델 (SCM & do-Calculus)",
-      "category": "Math & Stats",
+      "category": "MML: Linear Algebra",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1179,7 +1195,7 @@
     {
       "id": "vector_calculus_ch5_2_gradients",
       "label": "5.2 편미분, 그래디언트와 다변수 연쇄법칙",
-      "category": "Math",
+      "category": "MML: Vector Calculus",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/vector_calculus_ch5_2_gradients.md",
@@ -1201,7 +1217,7 @@
     {
       "id": "vector_calculus_ch5_3_vector_valued",
       "label": "5.3 벡터값 함수의 그래디언트와 야코비안 행렬",
-      "category": "Math",
+      "category": "MML: Vector Calculus",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/vector_calculus_ch5_3_vector_valued.md",
@@ -1224,7 +1240,7 @@
     {
       "id": "vector_calculus_ch5_4_matrix_gradients",
       "label": "5.4~5.5 행렬 미분과 10대 핵심 항등식",
-      "category": "Math",
+      "category": "MML: Vector Calculus",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/vector_calculus_ch5_4_matrix_gradients.md",
@@ -1248,7 +1264,7 @@
     {
       "id": "vector_calculus_ch5_6_backprop_autodiff",
       "label": "5.6 역전파 알고리즘과 자동 미분 (Backprop & Autodiff)",
-      "category": "DeepLearning",
+      "category": "MML: Vector Calculus",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/vector_calculus_ch5_6_backprop_autodiff.md",
@@ -1271,7 +1287,7 @@
     {
       "id": "vector_calculus_ch5_7_hessian_taylor",
       "label": "5.7~5.8 고계 도함수, 헤시안 행렬과 다변수 테일러 급수",
-      "category": "Math",
+      "category": "MML: Vector Calculus",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/vector_calculus_ch5_7_hessian_taylor.md",
@@ -1295,7 +1311,7 @@
     {
       "id": "probability_ch6_1_space_rv",
       "label": "6.1 확률공간, 확률변수와 빈도주의/베이지안",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/probability_ch6_1_space_rv.md",
@@ -1318,7 +1334,7 @@
     {
       "id": "probability_ch6_2_discrete_continuous",
       "label": "6.2 이산 및 연속 확률분포 (PMF, PDF, CDF)",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/probability_ch6_2_discrete_continuous.md",
@@ -1341,7 +1357,7 @@
     {
       "id": "probability_ch6_4_summary_stats",
       "label": "6.4 요약 통계량, 공분산 행렬, 아핀 변환과 독립성",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/probability_ch6_4_summary_stats.md",
@@ -1366,7 +1382,7 @@
     {
       "id": "probability_ch6_3_bayes_theorem",
       "label": "6.3 합/곱의 법칙과 베이즈 정리 (Bayes Theorem)",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/probability_ch6_3_bayes_theorem.md",
@@ -1391,7 +1407,7 @@
     {
       "id": "probability_ch6_5_gaussian",
       "label": "6.5 가우시안 정규분포 (Multivariate Gaussian & Conditionals)",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/probability_ch6_5_gaussian.md",
@@ -1416,7 +1432,7 @@
     {
       "id": "probability_ch6_6_conjugacy_exponential",
       "label": "6.6 공액 사전분포, 충분통계량과 지수 족 (Exponential Family)",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/probability_ch6_6_conjugacy_exponential.md",
@@ -1442,7 +1458,7 @@
     {
       "id": "probability_ch6_7_change_of_variables",
       "label": "6.7 & 6.8 변수 변환 기법, 야코비안 행렬식과 노말라이징 플로우",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/probability_ch6_7_change_of_variables.md",
@@ -1465,7 +1481,7 @@
     {
       "id": "mml_ch6_exercises",
       "label": "MML Chapter 6 연습문제 전수 풀이 (Ex 6.1 ~ 6.13)",
-      "category": "Math",
+      "category": "MML: Probability & Stats",
       "confidence": 4,
       "studyCount": 1,
       "note": "data/notes/mml_ch6_exercises.md",
