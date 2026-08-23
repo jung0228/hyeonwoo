@@ -380,6 +380,9 @@ function switchView(view) {
   if (view === 'progress') {
     initProgress(); // Re-render lists with the latest localStorage/json data
   }
+  if (view === 'research') {
+    setTimeout(initResearchGraph, 50);
+  }
   if (view === 'quiz') {
     initQuiz();
   }
@@ -2082,10 +2085,17 @@ function renderResearch() {
 
 let researchSvg, researchG, researchSimulation, researchZoom;
 
-function initResearchGraph() {
+async function initResearchGraph() {
   const container = document.getElementById('research-graph-container');
   const svgEl = document.getElementById('research-graph-svg');
   if (!container || !svgEl) return;
+
+  if (!window.researchKnowledgeData) {
+    try {
+      const res = await fetch('data/research_knowledge.json');
+      window.researchKnowledgeData = await res.json();
+    } catch(e) {}
+  }
 
   const W = container.clientWidth || 1000;
   const H = container.clientHeight || 700;
