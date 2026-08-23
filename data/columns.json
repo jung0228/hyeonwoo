@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "ai_conference_macro_trends_2026",
+      "title": "2026 AI 학회 총결산: 패러다임의 대전환",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "ICML 2026, CVPR 2026, ICLR 2026 최신 톱티어 학회를 관통하는 4대 거대한 패러다임 대전환(Next-Token 한계 극복과 GRPO 추론, 4D D4RT 물리 세계 모델, Any-to-Any 옴니모달, 고품질 데이터 레시피 & SLM 경량화)에 대한 심층 총결산 칼럼.",
+      "file": "data/columns/ai_conference_macro_trends_2026.md",
+      "category": "AI Research Trends",
+      "readTime": "12 min read"
+    },
+    {
       "id": "university_in_a_box_ai_learning",
       "title": "나혼자 AI로 레벨업",
       "date": "2026-08-19",

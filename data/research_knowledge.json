@@ -355,6 +355,74 @@
       ],
       "note": "data/notes/rq_modality_decoupled_moe.md",
       "nodeType": "research"
+    },
+    {
+      "id": "paper_d4rt",
+      "label": "D4RT (CVPR26 Best Paper)",
+      "category": "Paper",
+      "confidence": 4,
+      "studyCount": 5,
+      "tags": [
+        "Paper",
+        "CVPR2026",
+        "Best Paper",
+        "Google DeepMind",
+        "4D Dynamic Scene",
+        "Feedforward Transformer"
+      ],
+      "note": "data/notes/paper_d4rt.md",
+      "nodeType": "paper"
+    },
+    {
+      "id": "paper_ovoxel",
+      "label": "O-Voxel (CVPR26 Student Best)",
+      "category": "Paper",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "CVPR2026",
+        "Best Student Paper",
+        "Tsinghua/Microsoft",
+        "3D Generation",
+        "Sparse VAE"
+      ],
+      "note": "data/notes/paper_ovoxel.md",
+      "nodeType": "paper"
+    },
+    {
+      "id": "paper_justgrpo",
+      "label": "JustGRPO (ICML26 Highlight)",
+      "category": "Paper",
+      "confidence": 4,
+      "studyCount": 5,
+      "tags": [
+        "Paper",
+        "ICML2026",
+        "Highlight",
+        "DeepSeek",
+        "RLHF",
+        "GRPO",
+        "Reasoning Alignment"
+      ],
+      "note": "data/notes/paper_justgrpo.md",
+      "nodeType": "paper"
+    },
+    {
+      "id": "paper_dllm",
+      "label": "dLLM Flexibility Trap (ICML26)",
+      "category": "Paper",
+      "confidence": 4,
+      "studyCount": 4,
+      "tags": [
+        "Paper",
+        "ICML2026",
+        "Outstanding Paper",
+        "Diffusion LLM",
+        "Parallel Decoding"
+      ],
+      "note": "data/notes/paper_dllm.md",
+      "nodeType": "paper"
     }
   ],
   "edges": [
@@ -647,6 +715,41 @@
       "relation": "enables",
       "weight": 5,
       "insight": "언어 능력 손실 없이 로봇 물리 액션을 평생 학습하는 기초 인프라"
+    },
+    {
+      "source": "paper_d4rt",
+      "target": "rq_physical_world_model",
+      "relation": "enables",
+      "weight": 5,
+      "insight": "D4RT의 단일 파스 4D 동적 재구성은 물리 세계 모델의 핵심 기하 지반 제공"
+    },
+    {
+      "source": "paper_d4rt",
+      "target": "paper_cosmos",
+      "relation": "basis_of",
+      "weight": 4,
+      "insight": "Cosmos 물리 시뮬레이터와 D4RT 4D 씬 재구성의 결합"
+    },
+    {
+      "source": "paper_ovoxel",
+      "target": "rq_cross_modal_alignment",
+      "relation": "enables",
+      "weight": 4,
+      "insight": "O-Voxel 희소 Latent는 텍스트/비디오-3D 교차 모달 정렬의 표준 인터페이스 제공"
+    },
+    {
+      "source": "paper_justgrpo",
+      "target": "rq_data_recipe_optimization",
+      "relation": "uses",
+      "weight": 5,
+      "insight": "Critic 모델 없는 JustGRPO 알고리즘으로 추론 강화학습 데이터 효율 극대화"
+    },
+    {
+      "source": "paper_dllm",
+      "target": "paper_justgrpo",
+      "relation": "uses",
+      "weight": 5,
+      "insight": "dLLM의 Flexibility Trap을 오토레그레시브 JustGRPO RL 스캐폴딩으로 극복"
     }
   ]
 }

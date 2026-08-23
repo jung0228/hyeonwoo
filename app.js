@@ -2161,11 +2161,11 @@ async function initResearchGraph() {
 
   // Define 5 Research Sub-cluster Centers
   const RESEARCH_SUB_CLUSTERS = {
-    'omni': { label: '✨ Omni-modal & Unified', color: '#f43f5e', cx: 0.18, cy: 0.24, ids: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni'] },
+    'omni': { label: '✨ Omni-modal & Unified', color: '#f43f5e', cx: 0.18, cy: 0.24, ids: ['paper_dynin_omni', 'paper_show_o', 'paper_emu3', 'paper_mini_omni2', 'paper_moshi', 'hcx_omni', 'paper_dllm'] },
     'video': { label: '📹 Long Video & Memory', color: '#fb923c', cx: 0.50, cy: 0.20, ids: ['paper_qwen2_vl', 'streamkv', 'clip', 'paper_llava'] },
     'spatial': { label: '🎭 Spatiotemporal & RVOS', color: '#ec4899', cx: 0.82, cy: 0.24, ids: ['paper_virst', 'paper_lisa', 'paper_mevis', 'paper_momentseeker'] },
-    'physical': { label: '🤖 Physical AI & World Model', color: '#38bdf8', cx: 0.22, cy: 0.76, ids: ['paper_cosmos', 'paper_flow_matching'] },
-    'rq': { label: '🔭 현우의 핵심 연구 과제 (RQ)', color: '#a78bfa', cx: 0.78, cy: 0.76, ids: ['rq_physical_world_model', 'rq_counterfactual_video_causality', 'rq_modality_decoupled_moe', 'rq_cross_modal_alignment', 'rq_video_temporal_grounding', 'rq_data_recipe_optimization'] }
+    'physical': { label: '🤖 Physical AI & World Model', color: '#38bdf8', cx: 0.22, cy: 0.76, ids: ['paper_cosmos', 'paper_flow_matching', 'paper_d4rt', 'paper_ovoxel'] },
+    'rq': { label: '🔭 현우의 핵심 연구 과제 (RQ)', color: '#a78bfa', cx: 0.78, cy: 0.76, ids: ['rq_physical_world_model', 'rq_counterfactual_video_causality', 'rq_modality_decoupled_moe', 'rq_cross_modal_alignment', 'rq_video_temporal_grounding', 'rq_data_recipe_optimization', 'paper_justgrpo'] }
   };
 
   const getSubCluster = (nid) => {
