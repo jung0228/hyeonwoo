@@ -387,7 +387,7 @@ function initNav() {
 const VIEW_LIFECYCLE = {
   graph:          { onShow: () => { if (typeof simulation !== 'undefined' && simulation) simulation.alpha(0.1).restart(); } },
   research:       { onShow: () => { setTimeout(initResearchGraph, 50); } },
-  'auto-research':{ onShow: () => { console.log('🤖 Auto-Research view active'); } },
+  'auto-research':{ onShow: () => { if (typeof initAutoResearch === 'function') initAutoResearch(); } },
   quiz:           { onShow: () => { if (typeof initQuiz === 'function') initQuiz(); } },
   column:         { onShow: () => { if (typeof initColumn === 'function') initColumn(); } },
   analytics:      { onShow: () => { if (typeof initAnalytics === 'function') initAnalytics(); } }
@@ -2921,6 +2921,45 @@ function renderResearchPaperArchive() {
           <button onclick="openNotePanel('${n.id}')" style="padding:6px 12px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); border-radius:8px; color:#38bdf8; font-weight:600; font-size:12px; cursor:pointer;" onmouseenter="this.style.background='#38bdf8';this.style.color='#0f172a'" onmouseleave="this.style.background='rgba(56,189,248,0.15)';this.style.color='#38bdf8'">
             📖 상세 노트 읽기
           </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+
+/* ── 🤖 Autonomous Research Rack Renderer (100% Identical to Column Rack) ── */
+async function initAutoResearch() {
+  if (!columnsData || columnsData.length === 0) {
+    try {
+      const res = await fetch('data/columns.json');
+      const data = await res.json();
+      columnsData = data.columns || [];
+    } catch (e) {
+      console.error('Failed to load columns.json for auto-research:', e);
+    }
+  }
+  renderAutoResearchRack();
+}
+
+function renderAutoResearchRack() {
+  const grid = document.getElementById('auto-research-grid');
+  if (!grid) return;
+
+  const researchCategories = ['Autonomous Research Engine', 'Research Methodology', 'Paper Upgrade & Strategy', 'Paper Spotlight', 'Research Vision', 'Paper Upgrade & Feasibility'];
+  let autoCols = columnsData.filter(c => researchCategories.includes(c.category) || c.id.includes('laptop') || c.id.includes('auto') || c.id.includes('tcvp') || c.id.includes('paper') || c.id.includes('vision'));
+
+  if (autoCols.length === 0) autoCols = columnsData;
+
+  grid.innerHTML = autoCols.map(col => {
+    return `
+      <div class="newspaper-card" onclick="openColumnReader('${col.id}')">
+        <span class="npc-category">${col.category}</span>
+        <h2 class="npc-title">${col.title}</h2>
+        <p class="npc-summary">${col.summary}</p>
+        <div class="npc-meta">
+          <span>✍️ ${col.author}</span>
+          <span>📅 ${col.date} • ${col.readTime}</span>
         </div>
       </div>
     `;
