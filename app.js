@@ -2239,19 +2239,33 @@ async function initResearchGraph() {
 
     nodeElements.attr('transform', d => `translate(${d.x},${d.y})`);
 
-    // Update Hulls
+    // Update Hulls with pad = 52 outward expansion wrapping around nodes
     Object.entries(RESEARCH_SUB_CLUSTERS).forEach(([key, cfg]) => {
       const subNodes = nodes.filter(n => n.subCluster === key);
-      if (subNodes.length >= 2) {
-        const pts = subNodes.map(n => [n.x, n.y]);
-        const polygon = d3.polygonHull(pts);
-        if (polygon) {
-          hullPaths[key].attr('d', `M${polygon.join('L')}Z`);
-          const cx = d3.mean(polygon, p => p[0]);
-          const cy = d3.min(polygon, p => p[1]) - 20;
-          hullLabels[key].attr('x', cx).attr('y', cy);
-        }
-      }
+      if (subNodes.length < 2) return;
+
+      const pts = subNodes.map(d => [d.x, d.y]);
+      while (pts.length < 3) pts.push([...pts[0]]);
+      const polygon = d3.polygonHull(pts);
+      if (!polygon) return;
+
+      // Expand hull outward from centroid
+      const cx = d3.mean(polygon, p => p[0]);
+      const cy = d3.mean(polygon, p => p[1]);
+      const pad = 52;
+      const expanded = polygon.map(p => {
+        const dx = p[0] - cx, dy = p[1] - cy;
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        return [p[0] + dx / len * pad, p[1] + dy / len * pad];
+      });
+
+      hullPaths[key].attr('d', `M${expanded.map(p => p.join(',')).join('L')}Z`);
+
+      // Position label above the expanded hull
+      const minY = d3.min(expanded, p => p[1]);
+      hullLabels[key]
+        .attr('x', cx)
+        .attr('y', minY - 14);
     });
   });
 
