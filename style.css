@@ -215,38 +215,29 @@ body {
 .view {
   position: absolute;
   inset: 0;
-  opacity: 0;
-  pointer-events: none;
+  display: none !important;
   overflow: hidden;
-  transition: opacity var(--transition-slow);
 }
 .view.active {
-  opacity: 1;
-  pointer-events: all;
+  display: block !important;
   z-index: 10;
 }
-#view-graph, #view-research {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
+#view-graph.active, #view-research.active {
+  display: flex !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
 }
-#view-column, #view-auto-research, #view-progress, #view-quiz {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  inset: 0;
-  background: var(--bg);
-}
-/* Research, Column, Progress(복습 대시보드), Quiz 뷰는 세로 스크롤 허용 */
-#view-research, #view-column, #view-auto-research, #view-progress, #view-quiz {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  width: 100%;
+#view-column.active, #view-auto-research.active, #view-progress.active, #view-quiz.active, #view-analytics.active {
+  display: block !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100% !important;
+  width: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: var(--bg-0) !important;
 }
 
 /* ============================================================

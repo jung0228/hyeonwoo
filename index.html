@@ -27,7 +27,7 @@
       ]
     })"></script>
 
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=20" />
 </head>
 <body>
   <!-- Header -->
@@ -73,7 +73,7 @@
   <main class="main" id="main">
 
     <!-- ===== VIEW: GRAPH ===== -->
-    <div class="view active" id="view-graph" style="display: flex;">
+    <div class="view active" id="view-graph">
       <div class="graph-container" id="graph-container">
         <!-- Graph Legend (토글) -->
         <button class="legend-toggle-btn" id="legend-toggle-btn" title="카테고리 보기/숨기기">🏷️</button>
@@ -146,7 +146,7 @@
     </div>
 
     <!-- ===== VIEW: RESEARCH (DEDICATED RESEARCH KNOWLEDGE GRAPH & PAPER ARCHIVE VIEW) ===== -->
-    <div class="view" id="view-research" style="display: flex; position:relative;">
+    <div class="view" id="view-research">
       <!-- Mode Switcher (지식 그래프 ↔ SOTA 논문 전용 아카이브) -->
       <div class="research-view-switcher" style="position:absolute; top:16px; left:16px; z-index:100; display:flex; gap:8px; background:rgba(15,23,42,0.85); backdrop-filter:blur(12px); padding:6px; border-radius:12px; border:1px solid rgba(255,255,255,0.15);">
         <button class="research-mode-btn active" id="btn-mode-graph" onclick="switchResearchMode('graph')">
@@ -235,7 +235,7 @@
 
   <!-- ===== VIEW: REVIEW ===== -->
     <!-- ===== VIEW: ANALYTICS (투데이 리포트 & 일일 일정 대시보드) ===== -->
-    <div class="view" id="view-analytics" style="overflow-y: auto; max-height: calc(100vh - 80px); padding-bottom: 60px;">
+    <div class="view" id="view-analytics">
       <div class="column-page">
         <!-- TODAY REPORT MAIN HEADER -->
         <div class="column-page-header" style="margin-bottom: 20px;">
@@ -567,6 +567,6 @@
   <!-- Search Results Dropdown -->
   <div class="search-results" id="search-results"></div>
 
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=20"></script>
 </body>
 </html>

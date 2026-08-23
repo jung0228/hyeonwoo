@@ -394,15 +394,11 @@ const VIEW_LIFECYCLE = {
 };
 
 function switchView(viewName) {
-  document.querySelectorAll('.view').forEach(v => {
-    v.classList.remove('active');
-    v.style.display = ''; // Clear any inline display overrides
-  });
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const targetView = document.getElementById(`view-${viewName}`);
   if (targetView) {
     targetView.classList.add('active');
   }
-  
   VIEW_LIFECYCLE[viewName]?.onShow?.();
 }
 
