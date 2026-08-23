@@ -2222,28 +2222,31 @@ async function initResearchGraph() {
       openNotePanel(d);
     });
 
-  // Circle inside Node
+  // Circle inside Node (100% Identical to Main Knowledge Graph)
   nodeElements.append('circle')
-    .attr('r', d => d.nodeType === 'research' ? 22 : 18)
+    .attr('class', 'node-circle')
+    .attr('r', d => getNodeRadius(d))
     .attr('fill', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
-    .attr('fill-opacity', 0.85)
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 2);
+    .attr('fill-opacity', d => 0.15 + (d.confidence / 4) * 0.6)
+    .attr('stroke', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-opacity', 0.65);
 
-  // Icon in Node
-  nodeElements.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('dy', '0.35em')
-    .attr('font-size', '12px')
-    .text(d => d.nodeType === 'research' ? '🔭' : '📄');
+  // Inner center dot
+  nodeElements.append('circle')
+    .attr('r', 3)
+    .attr('fill', d => d.nodeType === 'research' ? '#ec4899' : '#f43f5e')
+    .attr('fill-opacity', 0.9);
 
   // Label under Node
   nodeElements.append('text')
+    .attr('class', 'node-label')
     .attr('text-anchor', 'middle')
-    .attr('y', 32)
-    .attr('font-size', '12px')
-    .attr('font-weight', '600')
-    .attr('fill', '#f8fafc')
+    .attr('dy', d => getNodeRadius(d) + 12)
+    .attr('font-size', '11')
+    .attr('font-family', 'Pretendard, sans-serif')
+    .attr('font-weight', '500')
+    .attr('fill', 'rgba(232,234,240,0.85)')
     .text(d => d.label);
 
   // Tick simulation
