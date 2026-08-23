@@ -2823,9 +2823,7 @@ async function openColumnReader(columnId) {
     window.currentColumnRawMd = md;
 
     // Remove first H1 from markdown content since header already shows title
-    md = md.replace(/^#\s+[^
-]+
-/, '');
+    md = md.replace(/^#\s+[^\n]+\n/, '');
 
     // Parse LaTeX with KaTeX if present
     if (window.renderMathInElement) {
