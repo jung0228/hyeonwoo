@@ -750,7 +750,7 @@
     {
       "id": "bias_variance",
       "label": "Bias-Variance Tradeoff",
-      "category": "MML: Linear Algebra",
+      "category": "Training",
       "confidence": 3,
       "studyCount": 4,
       "tags": [
@@ -763,7 +763,7 @@
     {
       "id": "ensemble",
       "label": "Ensemble (Bagging/Boosting)",
-      "category": "MML: Linear Algebra",
+      "category": "Training",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -776,7 +776,7 @@
     {
       "id": "cnn_math",
       "label": "CNN 수식 & 출력 크기",
-      "category": "MML: Linear Algebra",
+      "category": "Architecture",
       "confidence": 3,
       "studyCount": 3,
       "tags": [
@@ -1163,7 +1163,7 @@
     {
       "id": "hamiltonian_mechanics_physics",
       "label": "해밀토니안 물리 역학 (HNN)",
-      "category": "MML: Linear Algebra",
+      "category": "Generative",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
@@ -1179,7 +1179,7 @@
     {
       "id": "causal_inference_scm",
       "label": "구조적 인과 모델 (SCM & do-Calculus)",
-      "category": "MML: Linear Algebra",
+      "category": "Training",
       "confidence": 4,
       "studyCount": 4,
       "tags": [
