@@ -1,6 +1,16 @@
 {
   "columns": [
     {
+      "id": "ai_grand_research_vision_2026",
+      "title": "거대한 세상의 흐름과 AI 연구의 블루오션",
+      "date": "2026-08-23",
+      "author": "정현우",
+      "summary": "왜 인공지능 연구가 텍스트를 넘어 4D 물리 세계와 인과 추론으로 가야 하는가? 현재의 핵심 기술적 병목과 대학원 및 연구 인생에서 대박(High-ROI)을 낼 수 있는 4대 블루오션 연구 주제(Physics-Informed Latent, Causal Rollback Agent, Decoupled MoE, Counterfactual Video) 심층 가이드.",
+      "file": "data/columns/ai_grand_research_vision_2026.md",
+      "category": "Research Strategy & Vision",
+      "readTime": "14 min read"
+    },
+    {
       "id": "ai_unsolved_open_problems_2026",
       "title": "뻔하지만 아무도 풀지 못한 AI의 5대 미해결 과제",
       "date": "2026-08-23",
