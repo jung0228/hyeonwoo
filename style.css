@@ -215,7 +215,7 @@ body {
   pointer-events: all;
 }
 /* Research, Column, Progress(복습 대시보드), Quiz 뷰는 세로 스크롤 허용 */
-#view-research, #view-column, #view-progress, #view-quiz {
+#view-research, #view-column, #view-auto-research, #view-progress, #view-quiz {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;

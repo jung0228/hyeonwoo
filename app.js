@@ -396,20 +396,11 @@ const VIEW_LIFECYCLE = {
 function switchView(viewName) {
   document.querySelectorAll('.view').forEach(v => {
     v.classList.remove('active');
-    if (v.id === 'view-auto-research' || v.id === 'view-column') {
-      v.style.display = 'none';
-    }
+    v.style.display = ''; // Clear any inline display overrides
   });
   const targetView = document.getElementById(`view-${viewName}`);
   if (targetView) {
     targetView.classList.add('active');
-    if (viewName === 'auto-research') {
-      targetView.style.display = 'block';
-    } else if (viewName === 'column') {
-      targetView.style.display = 'block';
-    } else if (viewName === 'graph' || viewName === 'research') {
-      targetView.style.display = 'flex';
-    }
   }
   
   VIEW_LIFECYCLE[viewName]?.onShow?.();
