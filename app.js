@@ -2796,3 +2796,118 @@ function closeColumnReader() {
 }
 
 
+
+
+/* ── 📚 Dedicated SOTA Paper Archive Functions ── */
+let currentPaperFilter = 'all';
+
+function switchResearchMode(mode) {
+  const btnGraph = document.getElementById('btn-mode-graph');
+  const btnPapers = document.getElementById('btn-mode-papers');
+  const graphContainer = document.getElementById('research-graph-container');
+  const archiveContainer = document.getElementById('research-paper-archive-container');
+
+  if (mode === 'papers') {
+    btnGraph.classList.remove('active');
+    btnGraph.style.background = 'transparent';
+    btnGraph.style.color = '#94a3b8';
+
+    btnPapers.classList.add('active');
+    btnPapers.style.background = '#38bdf8';
+    btnPapers.style.color = '#0f172a';
+
+    if (graphContainer) graphContainer.style.display = 'none';
+    if (archiveContainer) archiveContainer.style.display = 'block';
+
+    renderResearchPaperArchive();
+  } else {
+    btnPapers.classList.remove('active');
+    btnPapers.style.background = 'transparent';
+    btnPapers.style.color = '#94a3b8';
+
+    btnGraph.classList.add('active');
+    btnGraph.style.background = '#38bdf8';
+    btnGraph.style.color = '#0f172a';
+
+    if (archiveContainer) archiveContainer.style.display = 'none';
+    if (graphContainer) graphContainer.style.display = 'block';
+  }
+}
+
+function filterPaperArchive(filterType) {
+  currentPaperFilter = filterType;
+  const chips = document.querySelectorAll('.paper-filter-chip');
+  chips.forEach(c => {
+    if (c.getAttribute('onclick').includes(`'${filterType}'`)) {
+      c.style.background = '#38bdf8';
+      c.style.color = '#0f172a';
+      c.style.fontWeight = '700';
+    } else {
+      c.style.background = 'rgba(255,255,255,0.06)';
+      c.style.color = '#cbd5e1';
+      c.style.fontWeight = '500';
+    }
+  });
+  renderResearchPaperArchive();
+}
+
+function renderResearchPaperArchive() {
+  const grid = document.getElementById('paper-archive-grid');
+  if (!grid) return;
+
+  const dataSrc = window.researchKnowledgeData || knowledgeData;
+  const nodes = dataSrc.nodes || [];
+  
+  // Filter nodes that are papers or research notes
+  let paperNodes = nodes.filter(n => n.nodeType === 'paper' || n.category === 'Paper' || n.id.startswith('paper_') || n.id.startswith('note_') || n.id.startswith('integrated_'));
+
+  if (currentPaperFilter === 'award') {
+    paperNodes = paperNodes.filter(n => n.tags && (n.tags.includes('Best Paper') || n.tags.includes('Best Student Paper') || n.tags.includes('Outstanding Paper')));
+  } else if (currentPaperFilter === 'sota') {
+    paperNodes = paperNodes.filter(n => n.tags && (n.tags.includes('Top-Tier') || n.tags.includes('ICML2027') || n.id.includes('direct_backtrack')));
+  } else if (currentPaperFilter === 'note') {
+    paperNodes = paperNodes.filter(n => n.id.startsWith('note_') || n.id.startsWith('integrated_') || (n.tags && n.tags.includes('ResearchNote')));
+  }
+
+  if (paperNodes.length === 0) {
+    grid.innerHTML = '<p style="color:#94a3b8; font-size:14px; grid-column:1/-1;">해당하는 논문/노트가 없습니다.</p>';
+    return;
+  }
+
+  grid.innerHTML = paperNodes.map(n => {
+    const isAward = n.tags && (n.tags.includes('Best Paper') || n.tags.includes('Best Student Paper') || n.tags.includes('Outstanding Paper'));
+    const isSotaDraft = n.id.includes('direct_backtrack') || (n.tags && n.tags.includes('Top-Tier'));
+    
+    let badgeHtml = '<span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">📄 Paper</span>';
+    if (isAward) {
+      badgeHtml = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">🏆 Award Winner</span>';
+    } else if (isSotaDraft) {
+      badgeHtml = '<span style="background:rgba(244,63,94,0.2); color:#f43f5e; border:1px solid rgba(244,63,94,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">🎓 SOTA Draft</span>';
+    } else if (n.id.startsWith('note_') || n.id.startsWith('integrated_')) {
+      badgeHtml = '<span style="background:rgba(167,139,250,0.2); color:#a78bfa; border:1px solid rgba(167,139,250,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;">📝 Master Note</span>';
+    }
+
+    const tagsHtml = (n.tags || []).slice(0, 3).map(t => `<span style="background:rgba(255,255,255,0.06); color:#cbd5e1; padding:2px 6px; border-radius:4px; font-size:10px;">#${t}</span>`).join(' ');
+
+    return `
+      <div style="background:rgba(30,41,59,0.7); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify:space-between; transition:all 0.2s; position:relative;" onmouseenter="this.style.borderColor='#38bdf8';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='none'">
+        <div>
+          <div style="display:flex; justify-space-between; align-items:center; margin-bottom:10px;">
+            ${badgeHtml}
+            <span style="font-size:11px; color:#64748b;">Conf: ${'★'.repeat(n.confidence || 3)}</span>
+          </div>
+          <h3 style="font-size:1.05rem; font-weight:700; color:#f8fafc; margin-bottom:8px; line-height:1.4;">${n.label}</h3>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;">
+            ${tagsHtml}
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:12px; margin-top:10px;">
+          <span style="font-size:11px; color:#94a3b8;">ID: ${n.id}</span>
+          <button onclick="openNotePanel('${n.id}')" style="padding:6px 12px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); border-radius:8px; color:#38bdf8; font-weight:600; font-size:12px; cursor:pointer;" onmouseenter="this.style.background='#38bdf8';this.style.color='#0f172a'" onmouseleave="this.style.background='rgba(56,189,248,0.15)';this.style.color='#38bdf8'">
+            📖 상세 노트 읽기
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
