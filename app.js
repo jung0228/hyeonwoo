@@ -885,29 +885,8 @@ async function openNotePanel(nodeData) {
 
   let content = '';
   try {
-    // AI 어시스턴트가 만든 커스텀 노트가 있으면 우선 표시
-    const customNote = getCustomNote(nodeData.id);
-    if (customNote) {
-      let md = customNote;
-      window.currentNoteRawMd = md;
-      const mathBlocks = [];
-      const safeMd = md.replace(/\$\$([\s\S]*?)\$\$|\$([^\$\n]+?)\$/g, (match, displayMath, inlineMath) => {
-        const isDisplay = match.startsWith('$$');
-        const content = isDisplay ? displayMath : inlineMath;
-        const placeholder = `MATHBLOCK${mathBlocks.length}END`;
-        mathBlocks.push({ match, isDisplay, content });
-        return placeholder;
-      });
-      let html = marked.parse(safeMd);
-      mathBlocks.forEach((item, idx) => {
-        const placeholder = `MATHBLOCK${idx}END`;
-        html = html.replace(new RegExp(placeholder, 'g'), item.match);
-      });
-      content = `<div class="note-content">${html}</div>
-        <div style="margin-top:10px;font-size:11px;color:var(--accent-blue);opacity:.7">📌 AI 어시스턴트가 생성한 노트 (이 브라우저에 저장됨)</div>`;
-    } else {
     const notePath = nodeData.note ? (nodeData.note.startsWith('data/notes/') ? nodeData.note : `data/notes/${nodeData.note}`) : `data/notes/${nodeData.id}.md`;
-    const res = await fetch(notePath);
+    const res = await fetch(notePath + '?t=' + Date.now());
     if (res.ok) {
       let md = await res.text();
       window.currentNoteRawMd = md;
@@ -939,7 +918,6 @@ async function openNotePanel(nodeData) {
         <p><strong>${nodeData.label}</strong>에 대한 노트가 아직 없어요.</p>
         <p style="font-size:12px;color:var(--text-muted)">data/notes/${nodeData.id}.md 파일을 만들어 채워 주세요!</p>
       </div>`;
-    }
     }
   } catch {
     content = `<div class="note-placeholder" style="min-height:200px"><p>노트를 불러올 수 없습니다.</p></div>`;
