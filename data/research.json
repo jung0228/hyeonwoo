@@ -58,6 +58,20 @@
         "Benchmark"
       ],
       "note": "만약 조건이 달랐다면 영상이 어떻게 변할지 추론하고 생성하는 반사실적 비디오 벤치마크 및 모델 선점"
+    },
+    {
+      "id": 5,
+      "title": "On-Device Spatial Life-Logging & Real-Time Nudge Agent (온디바이스 공간 라이프로깅 및 실시간 넛지 에이전트)",
+      "priority": "high",
+      "status": "active",
+      "tags": [
+        "On-Device",
+        "Multimodal",
+        "Life-Logging",
+        "Smart Glasses",
+        "Spatial Computing"
+      ],
+      "note": "스마트 안경의 1인칭 시야와 음성을 초저지연 온디바이스 NPU로 실시간 분석하여, 인간의 인지 노동을 최소화하고 능동적 개입(Nudge)을 제공하는 에이전트 인터페이스 연구"
     }
   ],
   "keywords": [
@@ -66,6 +80,9 @@
     "Causal Rollback",
     "Decoupled MoE",
     "Counterfactual Video",
-    "SLM Efficiency"
+    "SLM Efficiency",
+    "On-Device Multimodal",
+    "Spatial Life-Logging",
+    "Real-time Intervention"
   ]
 }

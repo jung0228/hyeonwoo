@@ -1,6 +1,17 @@
 {
   "columns": [
     {
+      "id": "ai_human_intervention_and_intellectual_play",
+      "title": "AI에게 \"인간의 개입을 줄이고, 너의 개입을 늘려라\"고 말할 수 있을까",
+      "date": "2026-08-25",
+      "author": "정현우",
+      "summary": "데카르트와 공자와 노자의 말을 굳이 머릿속에 외우고 있을 필요가 있을까? 지식의 저장과 조합이 공짜가 된 시대, 우리는 무엇을 배워야 하며 왜 온디바이스 스마트 안경 라이프로깅으로 AI의 개입을 극대화해야 하는가?",
+      "file": "data/columns/ai_human_intervention_and_intellectual_play.md",
+      "category": "Intellectual Column",
+      "readTime": "8 min read",
+      "tab": "column"
+    },
+    {
       "id": "ai_data_center_necessity",
       "title": "하이닉스가 그래서 왜 오른건데?",
       "date": "2026-08-23",

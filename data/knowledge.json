@@ -1527,6 +1527,88 @@
       "tradeoff_insight": "3단계 비판적 맹점: 마스터 정리 적용 가능 여부(T(n)=T(n-1)+O(1) 등 마스터 정리 불가능 형태 분별).",
       "ai_connection": "4단계 AI 연결: FFT(Fast Fourier Transform - 시계열/신호 처리 및 Transformer 컨볼루션 연산 속도 향상), QuickSelect(상위 k개 피처 추출).",
       "nodeType": "concept"
+    },
+    {
+      "id": "grad_app_2027",
+      "label": "🎓 대학원 지원 (2027 전기)",
+      "category": "Career",
+      "confidence": 2,
+      "studyCount": 1,
+      "tags": [
+        "POSTECH",
+        "서울대",
+        "연세대",
+        "고려대",
+        "성균관대",
+        "면접",
+        "서류"
+      ],
+      "note": "data/notes/대학원_지원_타임라인_2027전기.md",
+      "definition": "1단계 목표: 포스텍·서울대·연세대·고려대·성균관대 AI/컴공/전기 계열 대학원 2027 전기 지원",
+      "purpose": "2단계 존재 이유: 한달반 뒤 10월 원서접수를 위한 타임라인·서류·필기·면접 총괄",
+      "tradeoff_insight": "3단계 맹점: 9/14 네이버 인턴 병행으로 시간 관리가 최대 리스크",
+      "ai_connection": "4단계 AI 연결: 멀티모달/Any-to-Any 연구가 지원 동기와 직결"
+    },
+    {
+      "id": "postech_exam_plan",
+      "label": "📖 포스텍 필기 대비",
+      "category": "Career",
+      "confidence": 2,
+      "studyCount": 1,
+      "tags": [
+        "MML",
+        "필기시험",
+        "알고리즘"
+      ],
+      "note": "data/notes/포스텍_필기_공부계획.md",
+      "definition": "1단계: 포스텍 필기시험(MML Ch2~7 기초수학 30분 + 알고리즘 30분) 공부 로드맵",
+      "purpose": "2단계 존재 이유: 백지 유도 + 타이머 모의시험으로 60분 완풀 능력 배양",
+      "tradeoff_insight": "3단계 맹점: 30분이 매우 타이트해 수식 스피드가 관건",
+      "ai_connection": "4단계 AI 연결: MML은 이 사이트 복습 시스템의 핵심 과목"
+    },
+    {
+      "id": "dasgupta_algorithms",
+      "label": "📘 Dasgupta Algorithms",
+      "category": "Career",
+      "confidence": 2,
+      "studyCount": 1,
+      "tags": [
+        "Dasgupta",
+        "분할정복",
+        "그래프",
+        "DP",
+        "필기시험"
+      ],
+      "note": "data/notes/포스텍_필기_공부계획.md",
+      "definition": "1단계: 포스텍 필기시험 알고리즘 과목 공식 교재 (Sanjoy Dasgupta, Ch2~6)",
+      "purpose": "2단계 존재 이유: 분할정복·그래프·최단경로·탐욕법·DP 5대 영역이 30분 알고리즘 시험 범위",
+      "tradeoff_insight": "3단계 맹점: 난이도 상 + 시간 부족 — Master Theorem과 점화식 즉시 작성 필요",
+      "ai_connection": "4단계 AI 연결: 그래프·DP는 딥러닝/추론 시스템 설계의 기초"
+    },
+    {
+      "id": "grad_documents",
+      "label": "📄 대학원 서류 초안",
+      "category": "Career",
+      "confidence": 2,
+      "studyCount": 1,
+      "tags": [
+        "자기소개서",
+        "연구계획서",
+        "POSTECH"
+      ],
+      "note": "data/notes/대학원_서류_초안.md",
+      "definition": "1단계 목표: POSTECH AI대학원 석사 자기소개서·연구계획서 초안",
+      "purpose": "2단계 존재 이유: VMR 1저자 + Omni팀 인턴 + GPA 4.32 스펙을 두괄식으로 정리",
+      "tradeoff_insight": "3단계 맹점: 초안이라 각 대학·랩별 맞춤 다듬기 필요",
+      "ai_connection": "4단계 AI 연결: 멀티모달/Any-to-Any 연구 동기가 지원 방향과 직결"
+    },
+    {
+      "id": "ondevice_multimodal_lifelogging",
+      "label": "On-Device Multimodal Life-Logging",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 1,
+      "note": "data/notes/ondevice_multimodal_lifelogging.md"
     }
   ],
   "edges": [
@@ -2142,6 +2224,98 @@
       "target": "mml_ch6_exercises",
       "relation": "applied_to",
       "weight": 3
+    },
+    {
+      "source": "grad_app_2027",
+      "target": "postech_exam_plan",
+      "relation": "includes",
+      "weight": 4
+    },
+    {
+      "source": "postech_exam_plan",
+      "target": "matrix_decomp_ch4_5_svd",
+      "relation": "uses",
+      "weight": 3
+    },
+    {
+      "source": "postech_exam_plan",
+      "target": "vector_calculus_ch5_2_gradients",
+      "relation": "uses",
+      "weight": 3
+    },
+    {
+      "source": "postech_exam_plan",
+      "target": "linear_algebra_ch2_5_independence",
+      "relation": "uses",
+      "weight": 3
+    },
+    {
+      "source": "postech_exam_plan",
+      "target": "mle_map",
+      "relation": "uses",
+      "weight": 3
+    },
+    {
+      "source": "dasgupta_algorithms",
+      "target": "dasgupta_ch2_exercises",
+      "relation": "contains",
+      "weight": 3
+    },
+    {
+      "source": "dasgupta_algorithms",
+      "target": "bfs_grid",
+      "relation": "contains",
+      "weight": 3
+    },
+    {
+      "source": "dasgupta_algorithms",
+      "target": "topo_sort",
+      "relation": "contains",
+      "weight": 3
+    },
+    {
+      "source": "dasgupta_algorithms",
+      "target": "graph_algo",
+      "relation": "contains",
+      "weight": 3
+    },
+    {
+      "source": "dasgupta_algorithms",
+      "target": "dp",
+      "relation": "contains",
+      "weight": 3
+    },
+    {
+      "source": "postech_exam_plan",
+      "target": "dasgupta_algorithms",
+      "relation": "includes",
+      "weight": 3
+    },
+    {
+      "source": "grad_documents",
+      "target": "grad_app_2027",
+      "relation": "part_of",
+      "weight": 3
+    },
+    {
+      "source": "grad_documents",
+      "target": "postech_exam_plan",
+      "relation": "related_to",
+      "weight": 3
+    },
+    {
+      "source": "ondevice_multimodal_lifelogging",
+      "target": "agent_memory",
+      "relation": "uses",
+      "weight": 4,
+      "insight": "스마트 안경 시야 스트림에서 실시간 인과 비디오 및 메모리 맥락 추출"
+    },
+    {
+      "source": "ondevice_multimodal_lifelogging",
+      "target": "agent_memory",
+      "relation": "leads_to",
+      "weight": 4,
+      "insight": "24시간 라이프로깅 데이터를 영구 온톨로지 지식 그래프로 축적"
     }
   ],
   "sessions": [
@@ -2221,6 +2395,22 @@
         "paper_mevis"
       ],
       "note": "보고 듣고 이해하고 행동하는 차세대 AI의 조건 분석: Modality-Decoupled MoE, Flow Matching의 위상, Embodied World Model 완결편"
+    },
+    {
+      "date": "2026-08-23",
+      "topics": [
+        "grad_app_2027",
+        "postech_exam_plan"
+      ],
+      "note": "대학원 지원(2027 전기) 타임라인·필기 계획·체크리스트 수립. 포스텍/서울대/연대/고대/성대 목표"
+    },
+    {
+      "date": "2026-08-25",
+      "topics": [
+        "ondevice_multimodal_lifelogging",
+        "agent_memory"
+      ],
+      "note": "AI 개입의 역설: 온디바이스 멀티모달 라이프로깅과 인간의 지적 유희 칼럼 작성"
     }
   ]
 }

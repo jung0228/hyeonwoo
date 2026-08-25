@@ -1,0 +1,498 @@
+Title: 스탠포드대 컴공과 교수:  AI가 코딩하는 시대, 왜 배워야할까ㅣ크리스피치
+Channel: EO Korea
+URL: https://www.youtube.com/watch?v=_qYUwrJ_XHo
+
+--- TRANSCRIPT ---
+
+[0.0s] Hi, you know I'm Chris Peach. I'm a
+[2.1s] professor here at Stanford University. I
+[4.2s] teach some large intro to computer
+[5.6s] science classes, some intro to math for
+[8.6s] AI. Code in place, if people don't know,
+[11.3s] it's an online class where you can learn
+[12.8s] to program. And the special thing about
+[14.5s] code in place is that it's the class in
+[16.3s] the world with the most teachers and
+[17.9s] there's about 17,000 students and more
+[20.1s] than a thousand teachers. We've been
+[21.4s] doing code in place for 6 years. So we
+[22.7s] did code in place before cursor and
+[24.6s] cloud code and code in place after. A
+[26.6s] few observations. one, our enrollment
+[28.8s] basically doubled. Oh my gosh, all these
+[30.9s] people want to learn how to code. You
+[33.1s] can expand the question. You could say,
+[35.0s] should I learn to program? You can also
+[36.8s] say, should I learn probability? [music]
+[38.3s] Like, AI can code, but AI can also do
+[40.9s] probability. Should I learn to write? AI
+[42.5s] can write. I think the wrong answer
+[45.1s] would be no. No, no. We're not giving up
+[47.0s] on the next generation being smart. Yes,
+[48.9s] you should learn how to formalize an
+[50.4s] argument. Yes, you should learn the
+[52.3s] depth of probabistic reasoning. And yes,
+[55.0s] you should learn how to program. If AI
+[57.0s] is able to do those things, your
+[58.9s] abilities may be magnified, but I
+[61.4s] imagine in the future it will still be
+[64.3s] important to be smart in those spaces.
+[66.6s] I'm [music] seeing more people with a
+[68.2s] motivational crisis than I have in the
+[70.1s] past. And that makes sense. There's more
+[72.2s] uncertainty in the world. You know, you
+[74.8s] can think about what can I contribute
+[77.2s] with AI of 2026, but I think students
+[79.3s] are faced with a much harder problem of
+[81.0s] thinking about, well, if I'm starting a
+[82.6s] 4-year program, I have to think about
+[84.5s] what jobs are going to exist in 2030
+[87.0s] when AI is 4 years more advanced and and
+[89.3s] that's a lot of uncertainty for [music]
+[90.6s] students and I empathize with this quite
+[92.7s] a lot. I think naturally that leads to
+[94.9s] some motivational problems. When am I
+[97.6s] [music] actually getting something out
+[98.6s] of AI and when have I given away too
+[100.6s] much of the growth? I suppose if I start
+[104.2s] outsourcing, [music]
+[105.4s] at what point will I no longer be able
+[107.4s] to do that? Like that really critical
+[109.8s] piece. I think all students have felt
+[111.4s] like this. Like if you have AI write too
+[113.4s] many of your essays, at what point are
+[115.5s] you no longer able to write an essay? If
+[117.5s] you have AI write too much of your code,
+[119.1s] at what point can you no longer do that
+[120.9s] valuable piece of the architecture? So I
+[123.6s] suppose that's the part where like I
+[125.4s] think it's fun to use AI. I think people
+[127.1s] should be playing around with it, but
+[129.0s] you should be self-aware [music]
+[130.5s] and you should be self-aware of like are
+[132.7s] you also growing alongside the AI and
+[134.7s] you should care so much about your own
+[136.2s] personal growth.
+[146.2s] I was born in Nairobi, Kenya. When I was
+[149.0s] 12, I moved to Koalaur, Malaysia and
+[151.0s] ended up coming to the US for
+[152.4s] university. I was just a curious human.
+[155.9s] I wasn't set on being a professor from
+[158.5s] day one. I just like learning and I
+[161.1s] liked interesting problems. When I came
+[163.3s] to Stanford, I I'd done a little bit of
+[166.1s] coding, but I I really didn't know how
+[167.6s] to program, but like I had to fill an
+[170.3s] elective. So, I just had to take a class
+[173.0s] and I was like, "Okay, I'll do the the
+[174.7s] programming class." And my teacher did
+[176.3s] the most wonderful thing. They said, "At
+[178.6s] this point, I'm going to have a
+[181.0s] challenge. everyone in class, go make
+[183.0s] the most wonderful things with what
+[184.3s] you've learned in the first two weeks of
+[185.8s] programming. And I found myself able to
+[188.2s] put like 40 hours of extra work beyond
+[191.1s] my normal schooling into this challenge
+[193.0s] because I was so excited. Uh, and then
+[196.2s] eventually I discovered uh that I was so
+[199.6s] curious about how people learned and I
+[202.2s] decided Professor was the right thing
+[203.5s] for me. So, Carol speaks this thing
+[206.4s] called Python uh which we're going to be
+[208.6s] using as our programming language
+[209.9s] throughout the course. So Carol is our
+[212.6s] lovable robot and Carol lives in a
+[214.7s] world. We think of the world as kind of
+[216.9s] having a north, west, south, and east
+[219.0s] and having [music] compass directions.
+[221.0s] Come on, Carol. Turn left and then turn
+[223.6s] left and then turn left.
+[227.8s] Okay, turn right. It's the class in the
+[229.4s] world with the most teachers. There's
+[230.9s] one teacher for every 10 students and
+[233.1s] there's about 17,000 students and more
+[235.3s] than a thousand teachers. So what
+[237.3s] problem was I trying to solve? Let's go
+[239.4s] back in time. It's early days in the
+[241.5s] pandemic. I'm about to teach Stanford's
+[243.6s] flagship intro to coding class and I'm
+[247.2s] been told that everything's going to be
+[248.6s] online. [music] And in this moment,
+[250.3s] we're thinking the world is suffering.
+[253.1s] While we're putting the class online, is
+[254.6s] there something that we can also do to
+[256.0s] help the world? We can just put our
+[257.4s] videos online. And we thought people
+[259.7s] might get a little bit out of it, but we
+[262.1s] know that it would be a lot less than
+[263.6s] what our Stanford students get because
+[265.3s] our Stanford students get the special
+[267.0s] sauce of Stanford education. And the
+[269.5s] special sauce of Stanford education for
+[271.8s] introcs is you get a section leader. You
+[274.5s] get somebody who's just a little bit
+[275.8s] older than you, a little bit further
+[277.4s] along in their career who's going to
+[279.4s] take time to help you grow. One of the
+[282.6s] common misconceptions just thinking that
+[284.2s] AI tutors will solve everything. We
+[286.6s] basically have AI tutors already, but
+[289.8s] that isn't moving the needle in the way
+[291.4s] people expected. So over the last six
+[293.8s] years, so we've now done this six times,
+[295.8s] we've tried a lot of different
+[297.1s] experiments where we gave people
+[298.4s] different dosage of AI and we have
+[300.5s] learned something very surprising. If we
+[302.6s] give people AI in just like here's a
+[304.8s] chatbot, use it to learn, predictably
+[307.9s] people will drop out. People get
+[309.4s] demotivated. It is demotivating to have
+[311.7s] AI thrown at you at the wrong moment of
+[313.5s] your learning. We have found very
+[316.2s] nuanced ways where we can use AI that
+[318.2s] actually helps people learn. But if you
+[319.9s] contrast that with humans, so if I throw
+[322.2s] AI at you, you're probably going to
+[324.1s] become a little bit demotivated
+[325.4s] statistically.
+[327.0s] But what happens if I throw a human at
+[328.5s] you? Imagine you're just programming in
+[330.3s] code in place. You might get a popup and
+[332.2s] it says, "Hey, there's a teacher online
+[333.8s] and they'd like to spend 10 minutes with
+[335.2s] you. Do you want to talk to them?" If
+[336.5s] you hit yes, your probability of
+[338.8s] completing the course goes up 10
+[340.2s] percentage points. So you must be
+[341.8s] thinking, "Oh, the humans must be saying
+[343.5s] the right things and the AI must be
+[345.0s] saying the wrong things." We've looked
+[346.0s] at these conversations. The AI was
+[347.6s] correct. It wasn't hallucinating. not
+[349.2s] for intro programming and the the humans
+[351.0s] weren't always correct,
+[353.5s] but the human touch is special. It's
+[356.0s] motivating and I think we all need
+[357.6s] [music] motivation right now. Everyone
+[359.2s] needs something to convince them, I'm
+[362.8s] not going to make Claude do all the
+[365.0s] thinking for me. Like to actually do the
+[366.9s] thinking yourself takes extra energy.
+[370.1s] Crown jewel of education has always been
+[372.0s] motivation. And it's a lot more
+[373.6s] motivating for me to [music] say, I care
+[375.8s] about you being a smart person. I'm not
+[377.4s] giving up on you being a smart person
+[378.9s] this time of AI. [music] Um, let's work
+[381.3s] on your foundations and then when you're
+[382.7s] done with your foundations, I'll teach
+[384.1s] you how to code [music] with AI. That
+[385.7s] works so much better. When I look at
+[389.0s] chat bots, I think they do a good job of
+[391.0s] answering my question. But one challenge
+[392.9s] I would pose to anybody thinking about
+[394.9s] how to make these work better for
+[396.2s] education is how do you get it to
+[398.3s] inspire? Sometimes I will inspire my
+[400.9s] students in a deep [music] way. And it
+[402.4s] could be like you come into my office
+[403.6s] and be like, "Hey, do you want to see
+[404.7s] something really cool about
+[405.8s] probability?" and I just show them
+[407.2s] something really neat and they weren't
+[408.2s] even thinking about that wasn't the
+[409.1s] question they came in with. But then
+[410.3s] they they feel that like love and like
+[412.2s] that that inspiration and [music] as I
+[414.4s] said if I can flip the switch of getting
+[417.4s] the student so curious that they can't
+[420.0s] help but learn like the rest of the day
+[421.8s] all they can think about is the problem
+[423.3s] that I just posed to them or that cool
+[424.9s] thing I showed to them. If that
+[426.2s] curiosity gets ignited uh then I feel
+[428.8s] like they'll get there. And when I look
+[430.3s] at current chat bots [music] they are
+[431.8s] not igniting curiosity that much. It's
+[434.4s] it's not like you never show up to chat.
+[435.6s] [music] It's like, "Hey, do you want to
+[436.8s] just see something that is going to make
+[438.7s] your mind explode that will like you
+[441.0s] know pull you in?" Now, as a teacher, I
+[443.9s] can do that because I have some context
+[445.4s] on [music] my students. I know largely
+[448.1s] where they are and largely where they're
+[449.8s] trying to go. So, I can be very delicate
+[452.0s] [music] in the choice of the inspiring
+[454.5s] example or the inspiring challenge to
+[456.6s] pose to my students. If you just think
+[458.2s] an AI tutor will solve the clarity
+[460.8s] problem, you might miss it. the bigger
+[462.5s] piece of the puzzle. And I feel like if
+[464.9s] we leverage this, we can have a nicer
+[467.2s] world.
+[471.0s] I'm seeing more people with a
+[472.6s] motivational crisis than I have in the
+[474.6s] past. And that makes sense. There's more
+[476.5s] uncertainty in the world. You know, you
+[479.2s] can think about what can I contribute
+[481.5s] with AI of 2026, but I think students
+[483.6s] are faced with a much harder problem of
+[485.4s] thinking about, well, if I'm starting a
+[487.0s] 4-year program, I have to think about
+[488.9s] what jobs are going to exist in 2030
+[491.3s] when AI is 4 years more advanced. And
+[493.4s] and that's a lot of uncertainty for
+[495.0s] students, and I empathize with this
+[496.8s] quite a lot. In 5 to 10 years, many
+[499.4s] things will change. The future has
+[500.9s] always been unpredictable. It's always
+[502.4s] been the case that if you ask people to
+[503.9s] project what jobs will be the right jobs
+[506.8s] 5 to 10 years people always get it
+[508.5s] wrong. Here's an interesting [music]
+[510.1s] anecdote though. So when I was young I'm
+[512.7s] old man now but when I was young and as
+[515.1s] in my PhD is around the time that one of
+[517.4s] my now colleagues [music] was making
+[519.8s] some of the first major milestones in
+[521.6s] self-driving cars and this is back in
+[523.3s] like 2011 2012. And at that moment, you
+[526.5s] would see this car drive and you think,
+[528.4s] "Oh my god, what does it mean to be a
+[531.4s] taxi driver or what does it mean [music]
+[533.2s] to be a truck driver?" But in fact, what
+[536.2s] happened is the truck driver profession
+[537.5s] has been growing at a very healthy rate.
+[540.2s] Um, now I don't know what the future
+[541.5s] holds for truck drivers. Maybe one day
+[543.4s] we'll come to an inflection point. But
+[545.0s] there was a lot of reasons that people
+[546.8s] underestimated. [music]
+[548.4s] They underestimate like, well, if you
+[550.2s] have valuable cargo, you need a person
+[552.2s] who's responsible or the longtail sort
+[554.2s] of experiences. There's always something
+[555.9s] different happening on highway. 99% of
+[557.8s] the experiences can be the same, but
+[559.1s] like that 1% of things that are
+[560.7s] different. It's so hard to have a AI
+[563.1s] master all of them. I think one day
+[565.2s] eventually we'll have fully self-driving
+[567.1s] cars and we'll live in a world where all
+[568.6s] our cars are driven by an AI system. But
+[571.6s] what I was surprised about was how
+[574.2s] grossly we overestimate how quickly we
+[577.1s] get there. I think everyone who's worked
+[580.2s] deeply with AI has had this experience
+[582.6s] of by outsourcing a lot of thinking to
+[585.9s] AI, I am getting more separated from
+[589.2s] problem solving myself. A good example
+[591.3s] right now is [music] I program with AI a
+[593.8s] lot but I happen to know a lot about
+[596.4s] programming and architecture and if I
+[598.6s] don't know a lot about programming
+[599.8s] architecture AI will start to make some
+[601.2s] poor decisions which I might not
+[602.9s] experience the first time I make a
+[604.3s] prototype but like five weeks down the
+[606.6s] line when students are actually using my
+[608.1s] thing they might start to hit weird bugs
+[609.9s] and if I don't understand the
+[611.0s] architecture I can't help them. I
+[612.9s] suppose if I start outsourcing, at what
+[616.1s] point will I no longer be able to do
+[618.2s] that? Like that really critical piece.
+[620.8s] Uh I think all students have felt like
+[622.6s] this. Like if you have AI write too many
+[624.4s] of your essays, at what point are you no
+[626.8s] longer able to write an essay? Uh if you
+[628.8s] have AI write too much of your code, at
+[630.5s] what point can you no longer do that
+[632.1s] valuable piece of the architecture? Um
+[634.6s] so I suppose that's the part where like
+[637.1s] I think it's fun to use AI. I think
+[638.9s] people should be playing around with it,
+[640.6s] but you should be self-aware and you
+[642.8s] should be self-aware of like are you
+[644.9s] also growing alongside the AI and you
+[646.8s] should care so much about your own
+[648.1s] personal growth. When you're learning
+[650.2s] how to program largely you can separate
+[652.5s] it into two pieces. One piece is you're
+[655.2s] learning the syntax of how do we tell
+[657.0s] computers to do things [music] and the
+[659.7s] other thing you're learning is basically
+[661.2s] problem solving like how do you take big
+[663.0s] problems and break them down into small
+[664.6s] pieces. um how do you set it up so that
+[667.5s] data can speak to algorithms? How do you
+[670.4s] think about algorithms? [music] So, I'm
+[672.2s] only going to say AI is going to get
+[673.4s] really really good at just the syntax.
+[676.1s] It's less [music] important in the
+[677.1s] future that you've memorized every
+[678.9s] command. It's probably more important
+[680.6s] that you know how to problem solve.
+[681.9s] [music]
+[682.6s] So, while you're learning to program,
+[684.4s] really focus on that problem solving
+[686.2s] ability. There's one thing about coding
+[689.1s] that's special. You get immediate
+[691.9s] falsifiable feedback. Like if your logic
+[694.9s] is wrong, your thing doesn't work and
+[697.0s] you get to see that and you get to
+[698.2s] iterate quickly. Whereas if you apply
+[700.5s] problem solving to life, you could make
+[701.9s] a poor decision, but the feedback cycle
+[704.2s] is so slow that you don't get to
+[705.9s] practice getting better and better at
+[707.7s] making decisions. So there's a couple
+[709.2s] things about coding that makes it
+[711.0s] particularly good at teaching how to
+[712.3s] problem solve. The the question, how do
+[714.1s] you become like a really high
+[716.8s] contributor [music]
+[717.8s] engineer? You might not find my answer
+[719.4s] that surprising, but it's like it's time
+[721.4s] on task. It's like how much time are you
+[723.5s] spending actually creating things? And
+[725.8s] I'm going to separate you creating
+[727.4s] versus you giving it to Claude Code.
+[729.8s] Now, by the way, you know what I would
+[731.4s] do if I was a young person? I would make
+[733.5s] a lot of prototypes with cloud code and
+[735.0s] I'd say, "Cloud code, teach me all the
+[736.8s] most important things that you did in
+[738.7s] order to create this." And I would
+[740.0s] iterate that way and I get lots of
+[741.5s] experience so I can try and figure out
+[743.4s] what are the most important concepts.
+[745.1s] I'll give your young engineers a
+[746.9s] particular challenge. As I said, it's a
+[749.1s] confusing time, but there's an
+[750.3s] opportunity that didn't exist before.
+[751.9s] One of the things that's happened is
+[753.2s] barriers to entries have been cut. You
+[755.2s] could be a 12th grader, so an
+[757.8s] 18-year-old with a friend. You might be
+[760.8s] able to make a highquality startup. The
+[763.0s] two of you could make a pretty
+[764.1s] impressive codebase that solves an
+[765.7s] interesting problem. There is a real art
+[767.6s] form to knowing [music]
+[769.0s] what is a valuable problem to solve. Uh,
+[771.9s] and I think more and more junior
+[774.6s] engineers [music] get to engage with
+[776.3s] that art form. like what is worth
+[778.5s] actually making, what do users want,
+[781.0s] what's the feature that will help them
+[783.4s] [music] make progress in whatever their
+[784.9s] problems are. So that ability to
+[787.1s] interface between what are computers
+[788.7s] able to do and what do humans actually
+[791.6s] need has always been a critical high
+[794.2s] order skill and I think if I were a
+[796.8s] junior engineer I would start working on
+[798.6s] that skill now. I wouldn't wait till I
+[800.4s] was a senior engineer.
+[805.0s] If you start with the premise that my
+[807.2s] children will become smart people and
+[808.9s] your children will become smart people.
+[810.3s] If you don't have children then maybe
+[811.5s] your nephews and nieces will become
+[812.9s] smart people. You start from the premise
+[814.1s] that the next generation will be filled
+[816.0s] with people who are smarter than we are.
+[818.1s] [music] Then you're like, okay, how do
+[819.4s] we get them to that point? And then you
+[821.1s] look at any subject, probability,
+[823.4s] computer science, and when you look at
+[825.0s] any subject, there's often foundational
+[827.3s] concepts and then you'll have layers of
+[829.4s] complexity built on top of it. If you
+[831.2s] expect them to become smarter than you
+[832.9s] are, it's really hard to skip the
+[835.0s] foundations. And one way of thinking
+[836.5s] about that is we've had calculators to
+[837.9s] do multiplication for a long time. Kids
+[839.7s] still need to learn multiplication. Now,
+[841.9s] there's a subtle difference. The concept
+[843.7s] of multiplication is so critical, but
+[846.3s] actually knowing how to do the wrote,
+[848.6s] you know, if I ask you like what's 13*
+[850.4s] 7? Go quick. That's not as important as
+[852.6s] just knowing what is multiplication. But
+[854.3s] you can't skip the foundations, but you
+[855.9s] can maybe uh be more artful about what
+[858.6s] you [music] focus on. I kind of take it
+[861.0s] as an axiom that I'm not giving up on
+[864.2s] the next generation. Honestly, the
+[866.1s] people I've seen get most lost and most
+[867.8s] demotivated in this motiv AI are
+[870.2s] sometimes the ones who are overthinking
+[871.7s] it. I had a student, he was just doing
+[873.7s] such wonderful things. He was using AI,
+[875.2s] he was solving problems, he was learning
+[876.5s] amazing things. I asked, "Hey, wonderful
+[878.6s] student like what are you thinking
+[880.1s] about?" And he says, "I actually don't
+[881.6s] think about it. I don't really think
+[883.4s] about the future of AI and that allows
+[885.0s] me to thrive."
+[886.8s] And that gave me pause. I think about AI
+[888.4s] all the time. I feel like I think about
+[889.6s] AI 10 times a day and then the
+[891.7s] simplicity of like no I'm just going to
+[894.3s] be curious and learn since that day I
+[896.8s] start my day with the axiom. I don't ask
+[899.1s] why I care about the next generation be
+[901.2s] smarter. I take it as a truth. I want
+[903.3s] this and I will work towards it. It's a
+[905.8s] tool and it will multiply
+[909.4s] humans. So when humans are at our best,
+[911.8s] we can use this tool to multiply us.
+[913.9s] Like the doctor who really cares about
+[915.5s] their patient now has a tool that they
+[917.5s] can do more faster, more accurately. The
+[920.6s] teacher who really cares about their
+[922.3s] students, who is passionate about them
+[924.2s] learning, they can go further with their
+[926.2s] students and they can do more. Also, I
+[929.0s] get to see young people all the time.
+[931.5s] And I would say that gives me
+[934.2s] inspiration. Seeing their
+[935.9s] self-awareness, how critical they're
+[938.2s] thinking, seeing them blossoming, it
+[941.0s] gives you optimism. If I was a young
+[943.4s] person right now, the most valuable
+[945.2s] thing is that you have the
+[946.1s] self-awareness. You should also have the
+[947.5s] goal that I will become smarter. Chris
+[949.6s] is not giving up on you, you should not
+[951.3s] give up on yourself either. [music]
+[953.5s] I have two kids under five. And you know
+[956.6s] what? They're going to live in an
+[958.3s] awesome world. Like, we're going to
+[960.1s] adapt. We're going to figure things out.
+[962.0s] They're going to still have curiosities.
+[964.1s] They're going to still grow their minds.
+[965.8s] And we're [music] going to keep every
+[967.6s] day working towards that.
+[970.4s] The top engineer might not be the person
+[972.7s] who knows all the code. Maybe the top
+[974.2s] engineer is the person who can relate
+[976.0s] the real world human problems into the
+[979.4s] world of apps into the world of data
+[981.8s] science and into the world of research.
+[983.2s] [music]
+[984.0s] So go make stuff, make stuff that people
+[986.8s] use, make stuff that people love. And in
+[989.1s] that process of iteration, you have an
+[991.4s] opportunity to become excellent at
+[993.8s] coding and excellent at problem solving.
+[996.3s] Just take axioms. You will become
+[998.5s] smarter than you were yesterday. Start
+[1000.9s] your day like that.

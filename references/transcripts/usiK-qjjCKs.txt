@@ -1,0 +1,717 @@
+Title: [한영자막] Claude Code와 1000시간 넘게 함께하며 배운 것들
+Channel: Tech Bridge
+URL: https://www.youtube.com/watch?v=usiK-qjjCKs
+
+--- TRANSCRIPT ---
+
+[0.0s] I have spent an unhealthy amount of time
+[1.9s] using Claude Code, and I got to get this
+[3.3s] out of my chest already. Their usage
+[4.9s] limits suck. Oh my goodness. I say hi
+[7.5s] and boom, there goes my limit and I got
+[9.6s] to wait 3 hours. And with this new
+[11.2s] Claude fable model,
+[12.4s] >> [laughter]
+[13.4s] >> I recorded a lot of this footage like a
+[15.5s] month ago. So yes, I know it's not new.
+[17.9s] Leave me alone. Just love on my jokes,
+[19.4s] okay? I've been programming with a $20
+[21.0s] plan and I have had situations where I
+[23.0s] prompt once or twice and I hit the
+[25.0s] limit. Like bro, no wonder people are
+[26.7s] getting better results. They don't get
+[28.0s] enough time to use it properly. I'm glad
+[29.8s] they're making it better, but it's
+[31.1s] painful. So I want to share everything
+[32.5s] that I've learned so you can use it
+[33.8s] effectively. So things like my workflow,
+[35.6s] my favorite MCPs, my favorite skills,
+[37.7s] and I'll also share some ways you can
+[39.2s] save on some tokens so you can actually
+[41.1s] use it more. Trust me, I've learned some
+[42.8s] strategies to use as little tokens as
+[44.8s] possible so I can get my money's worth
+[46.3s] because I am not spending $100 a month
+[48.6s] for this. That's expensive and I'd
+[50.0s] rather spend that on a McDonald's. Okay,
+[51.2s] so what's Claude Code? It's Claude, but
+[53.0s] for coding. You're welcome. No, but
+[54.7s] really, it's Claude, but it's
+[55.8s] specialized for coding and it lives in
+[57.3s] your terminal. Now, do I like the
+[58.4s] terminal? Meh. I prefer the IDE
+[60.3s] approach. Uh specifically the IDE and
+[62.3s] agent combo approach. You get the agent
+[64.1s] interface and an actual IDE. Plus
+[66.3s] there's buttons I can actually click.
+[67.6s] I'll take that over a terminal any day.
+[69.4s] What can I say? I like visuals. I'm a
+[70.8s] toddler. The good news is you can use
+[72.4s] Claude Code in your IDE and on the web.
+[74.3s] Pretty cool. Now, why have I been using
+[75.8s] it? Well, everyone and their moms are
+[77.2s] using it, even big tech companies. Some
+[79.1s] a little too much. Uber. It also made
+[81.0s] like a billion dollars in 6 months,
+[82.7s] which is pretty crazy. And that made
+[84.1s] every other AI company copy and paste
+[86.1s] Claude Code and now we have this mess.
+[88.4s] And every company wants you to learn
+[89.8s] these types of tools so you can become a
+[91.4s] next engineer. So they can give you more
+[93.4s] work and that also didn't work cuz it
+[94.8s] was too expensive. They also gave me
+[96.4s] some free stickers, which is pretty
+[97.6s] cool. Do I recommend you learn it? Yeah,
+[99.5s] pretty helpful until you hit those usage
+[101.3s] Yeah, it's pretty convenient. Jobs want
+[102.8s] you to learn it. And if it gets you a
+[103.9s] better chance at a job, hey, you got to
+[105.4s] do what you got to do. The good news is
+[106.6s] a lot of these Claude Code concepts
+[108.0s] apply to other coding agents, which
+[109.4s] means I can give you some alternatives
+[110.6s] to Claude Code since this video is not
+[112.2s] sponsored. Okay, so let's go over the
+[113.9s] features of Claude Code. I've done my
+[115.4s] fair share of research. I've looked at
+[117.0s] some Twitter articles. I've watched
+[118.2s] YouTube videos. I've seen Claude's
+[119.7s] tutorials. I've watched videos and
+[121.2s] articles from the guy who freaking built
+[122.8s] the thing. As I was doing research for
+[124.3s] this video, I realized that Claude code
+[126.2s] has like 80 plus different commands and
+[128.2s] features that I have never seen in my
+[130.0s] life. Did you know there's an ultra plan
+[131.5s] mode? I didn't. Nobody else uses this. I
+[133.5s] don't think I've seen the creator use
+[134.9s] this. Hey, editor Sloth here. I recorded
+[137.4s] that a month ago, too. And uh ultra plan
+[139.3s] doesn't even exist anymore. That's how
+[141.0s] useless it was.
+[142.1s] >> [laughter]
+[142.4s] >> Yeah, so originally I was going to go
+[143.9s] through every single one, but no.
+[145.8s] There's way too many. Most of them are
+[147.1s] just configuration or just useless. So
+[149.4s] now we're only going to cover the
+[150.7s] essential ones. And even then, I'm going
+[152.6s] to tier rank them from how useful they
+[154.0s] are. Because in my experience, some of
+[155.7s] these features that people call
+[157.2s] essential, you're never going to touch.
+[158.7s] Where every week I send you programming
+[160.3s] advice and news so you can stay up to
+[162.1s] date and not get behind. Did I mention
+[164.0s] it's free? All I need from you is your
+[166.4s] sweet, delectable email.
+[170.6s] Let's start with the slash init and
+[172.0s] Claude file. This is the command you're
+[173.5s] supposed to run when you first open up
+[175.2s] Claude code in a project. So far in my
+[176.8s] experience, it's all right. Essentially,
+[178.4s] Claude looks at your entire code base
+[180.1s] and it puts it all inside this claude.md
+[182.0s] file. This file becomes Claude's
+[183.6s] permanent memory for the project. Now, I
+[185.3s] have beef with Claude for this feature,
+[186.7s] because other AI agents do the same
+[188.4s] thing, except they put it into an
+[190.0s] agents.md file. Claude is the only one
+[192.9s] that doesn't do this, which is very,
+[195.2s] very annoying. The one nice thing about
+[197.1s] Claude files is you can actually import
+[198.9s] additional files. So if you are using an
+[200.7s] agents.md file, you can just import it
+[202.9s] inside the Claude MD file, which saves
+[204.7s] you from having a simlink. But it would
+[206.2s] be nice if, you know, Claude just
+[207.7s] supported it, but it is what it is.
+[209.2s] There's also a new experimental version
+[210.7s] of this command. You just have to turn
+[212.0s] on this environment flag. And this one
+[213.8s] actually has some potential. Instead of
+[215.4s] analyzing the code base and writing the
+[216.8s] file, it now interviews you, which is
+[218.5s] really good. And it'll now also
+[220.1s] recommend some skills and hooks, which
+[221.8s] is really nice. We'll get into those in
+[223.2s] a bit. Based on my experience, I'm
+[224.7s] honestly going to give this feature like
+[226.4s] a C or even a D. I don't use it very
+[228.7s] much. Whoa, me from a month ago was
+[231.0s] really stupid. Yeah, after a month my
+[233.2s] opinion has changed and it still stays
+[235.3s] the same. I think it's pretty mid, but
+[236.9s] the Claude file, I'm moving that up.
+[238.5s] After months of dealing with the sloppy
+[240.2s] code, you definitely start to get an
+[242.2s] idea of these AI models quirks and their
+[245.4s] habits, really disgusting habits. And
+[248.0s] so, for the most part, my Claude.md file
+[250.8s] has information like a quick description
+[252.9s] of the project, current status of it, my
+[255.2s] coding styles, and I've also been
+[257.0s] testing some interesting things like
+[258.8s] this working philosophy. A funny rule I
+[260.9s] have in my file is user-facing
+[263.2s] capitalization. For some reason when AI
+[265.8s] models create designs, they really love
+[268.2s] to use all caps. No idea why, but it's
+[270.7s] ugly. Another thing I've been testing
+[272.2s] and liking a lot is setting the pull
+[274.0s] request language. But this is what I
+[275.4s] like to use so far. This file can change
+[277.2s] quite a bit. Be flexible with it, but
+[279.0s] this file is honestly not a make or
+[280.6s] break thing. You could easily survive
+[282.4s] not even having one. So, don't freak out
+[284.2s] too much about it because you can
+[285.4s] honestly just use skills and you can get
+[287.0s] similar or even better results. All
+[288.7s] right, I haven't explained skills.
+[291.2s] A tier, but if you're smart with it,
+[292.7s] easy S tier. A skill is also just a
+[295.2s] markdown file, specifically a skill.md
+[297.6s] file. It's essentially a guide for
+[299.2s] something you do over and over that the
+[301.0s] AI can use when it makes sense, or you
+[302.8s] can explicitly tell it to use it. It
+[304.2s] would be for things like your best
+[305.6s] practices, your workflow for something,
+[307.8s] or how you would research something.
+[309.5s] Essentially any type of workflow that's
+[311.1s] repeatable. Claude code has some default
+[312.8s] skills pre-installed like code review,
+[314.6s] security review, and some other stuff. I
+[316.2s] would give those skills like a B tier A
+[317.8s] tier. I do recommend using them if
+[319.5s] Claude [music] implements a feature.
+[320.6s] It's just a nice bonus. Personally, I
+[322.4s] freaking love skills and I love that
+[324.2s] there's a whole community of them now
+[325.6s] because it's literally companies and
+[327.2s] genius engineers taking their knowledge
+[329.0s] and best practices and putting it all
+[331.0s] into one file. So, not only is it useful
+[333.4s] for the agent, it's useful for me. I've
+[335.7s] learned so much just reading other
+[337.5s] people's skills. So, some of my favorite
+[339.2s] places to find skills has been the
+[341.0s] website skills.sh. This is my go-to
+[343.2s] place for finding and installing skills,
+[344.9s] but there's also some other GitHub repos
+[346.4s] where you can find skills. My favorite
+[348.2s] type of skills that I like to use are
+[349.8s] Matt Pocock skills. He must read a
+[351.5s] dictionary every day because his
+[353.0s] vocabulary is immaculate. Such a smart
+[355.4s] and brilliant guy. I really like using
+[356.9s] his grow with doc skill. Helps me refine
+[358.8s] my requirements. And I also like using
+[360.8s] the improved code base architecture
+[362.2s] skill. It's just a nice workflow. I also
+[364.0s] like that it comes with a nice visual. I
+[365.5s] mean, hey, he won me over. Like I said,
+[367.3s] I'm a toddler. I also like using
+[368.4s] cursors. I like this name. Thermonuclear
+[370.9s] code quality review skill. Really
+[372.7s] helpful. It really simplifies the code
+[374.7s] that AI generates, which eliminates a
+[376.7s] lot of the slop. Strongly recommend you
+[378.5s] use this. And it actually combines
+[380.2s] really good with the improved code base
+[381.8s] architecture skill. I've been using both
+[383.4s] of them at the same time and I think
+[384.8s] they're pretty good. One of the recent
+[386.0s] skills I like to use is a Shatsiant's
+[388.0s] improved skill. I've been trying it out
+[389.6s] and I'm loving it. I really love the
+[391.1s] idea here. It audits your code base and
+[392.9s] it writes the plans for other agents. Oh
+[394.8s] yeah, plan
+[396.8s] Easy S tier. If you hit shift and tab on
+[399.1s] Claude code, Claude goes into plan mode.
+[400.9s] Instead of reading and making changes,
+[402.6s] it reads your code more thoroughly,
+[404.4s] writes up a full plan, and it shows it
+[406.3s] to you before doing a single thing. And
+[408.2s] then you can either approve it or deny
+[409.8s] it. This feature is a must for Claude
+[411.9s] models, I think. You get a higher
+[413.5s] quality result since now the model takes
+[415.6s] the time to explore and think about its
+[417.2s] actions before doing something. It's
+[418.8s] also way easier to catch a mistake in a
+[420.8s] plan than in like 3,000 lines of code
+[423.0s] and 12 different files it modifies. I
+[425.1s] recommend using plan mode for big task.
+[427.5s] Don't use it for small task like typos,
+[429.8s] renaming variables, or small design
+[431.6s] changes. That's just a waste and you
+[433.4s] don't get much better results. Anyways,
+[435.0s] back to the improved skill. It's such a
+[436.6s] good idea. It'll probably become the
+[438.3s] default strategy if it's not already.
+[440.6s] Essentially, you would use the smart
+[442.1s] model to write the plan and then you
+[443.6s] would use a cheaper faster model to
+[445.2s] implement it. Now, keep in mind when I
+[446.7s] say faster and cheaper, that doesn't
+[448.6s] mean dumb. Some of these faster models
+[450.6s] are actually pretty intelligent now,
+[452.4s] which is why this workflow works. You
+[453.9s] save way more money and everybody loves
+[456.0s] money, right? For example, if you are on
+[457.7s] Claude code, you would use the Fable
+[459.4s] model. Oh wait, that's gone. Again, that
+[461.3s] was recorded over a month ago. It's not
+[463.0s] gone, but you do need use its credits,
+[464.7s] so it basically is gone. I guess you
+[466.4s] would use the Opus model for the plan
+[468.1s] and then Sonnet for the implementation.
+[470.0s] But if you're not using Claude code,
+[472.0s] Cursor, OpenCode, Codex,
+[473.9s] then you can truly mix models. But
+[475.8s] overall, my best practices for skills,
+[477.8s] do not spam skills and do not install a
+[480.4s] hundred of them. Some of these skills
+[481.9s] are pretty subjective since everyone has
+[484.0s] an opinion on good code. So, I would
+[486.0s] also recommend sticking with one
+[487.6s] specific group of skills or skills that
+[489.6s] match your coding style. Since we're
+[491.0s] talking about coding styles and doing
+[492.6s] things the right way,
+[494.5s] >> [music]
+[495.3s] >> let's talk about verification. This
+[496.8s] isn't exactly a feature or a command,
+[498.9s] it's more so a workflow and best
+[500.8s] practice. And I'm giving this an S tier
+[503.3s] and if anything, a double S or even a
+[505.2s] triple S because this isn't just an AI
+[507.6s] thing. This is just good software
+[509.0s] engineering fundamentals. AI just makes
+[511.0s] this more important. So, what exactly is
+[513.2s] verification? Essentially, you're giving
+[515.0s] Claude a way to check its own work
+[516.8s] before it considers something done. It
+[518.9s] actually has no idea if it's correct,
+[521.0s] but with verification, it can write the
+[522.9s] code and see if it's actually correct,
+[524.9s] not just telling you it's done. Now,
+[526.4s] there's multiple ways to verify and the
+[528.1s] most obvious one is test. But make sure
+[530.4s] you do tests correctly. Tell Claude to
+[532.6s] write the test first and then implement.
+[534.6s] This is important. If you tell it to
+[536.0s] implement first and then write the test,
+[538.1s] it's just going to write tests that pass
+[539.7s] its own code and that's not exactly
+[541.4s] testing, that's cheating. Make sure you
+[543.1s] don't test every single line, just test
+[545.4s] the most important things. I've noticed
+[547.0s] that smarter models like to test every
+[549.0s] single thing when it's really not
+[550.8s] necessary and it kind of just bloats
+[552.4s] your code base. Some other ways to
+[553.8s] verify are type checkers and linters. If
+[556.2s] your language supports it, tell Claude
+[557.8s] to run it before considering the task
+[559.4s] done. Two other ways you can do
+[560.7s] verification, and this is if you're
+[562.1s] doing front end and design work, is
+[563.8s] screenshot testing and testing with the
+[565.7s] browser. Because Claude is literally
+[567.5s] blind, it can't actually see what it's
+[569.4s] making. With these two verification
+[571.1s] methods, Claude can actually open your
+[572.8s] app, click around, get some screenshots,
+[574.9s] and actually see what's happening. It's
+[576.5s] nice to see that AI models are getting
+[578.0s] good at using computers. You used to
+[579.6s] have to use MCPs, but now they're just
+[581.2s] built in. All right, MC
+[583.0s] >> [music]
+[583.7s] >> B-tier. Actually, I'm lying. A-tier.
+[586.1s] MCPs give Claude access to other tools.
+[588.2s] So, things like GitHub, your database,
+[590.4s] Slack, checking out your analytics, your
+[592.4s] deployments, and if you do front-end
+[593.9s] work, a browser. Some of the ways I like
+[595.5s] to use MCPs are for fetching design
+[597.2s] inspirations, database seeding, so
+[599.4s] adding fake data to test certain
+[600.9s] features, research and documentation,
+[602.9s] and of course browser testing. Now, in
+[604.5s] my experience, I think you only need an
+[606.4s] MCP when Claude has to directly interact
+[608.8s] with something outside your codebase.
+[610.3s] There's really no reason to use an MCP
+[612.3s] for things like best practices, [music]
+[614.0s] patterns, or how to implement something
+[615.7s] because the skill can handle that. The
+[617.1s] best practices for MCPs are basically
+[619.2s] the same as skills. Don't spam them.
+[621.0s] Don't install a bunch of them. Only use
+[622.6s] what's necessary. Honestly, the big
+[624.2s] pattern with AI is only do what's
+[625.8s] necessary.
+[628.2s] >> [music]
+[628.4s] >> Let's quickly go over some features and
+[629.8s] commands I feel like not enough people
+[631.8s] talk about. I'll make it quick because
+[633.2s] they're simple, but really convenient.
+[635.0s] {slash}voice. B-tier. Claude Code has a
+[636.7s] voice mode. All you have to do is type
+[638.1s] {slash}voice and just talk. And with
+[639.7s] this, whatever you say turns into the
+[641.2s] prompt. I feel like in voice mode, it's
+[642.8s] easier to be more descriptive than
+[644.3s] typing. It lets you think out loud and
+[646.0s] understand what you want more, and I
+[647.4s] feel like it's better for maintaining
+[649.0s] your technical knowledge. It's also way
+[650.5s] faster than typing if you're slow at
+[652.1s] that.
+[653.8s] {slash}btw. C-tier. Probably won't use
+[656.0s] this much, but it's nice to have. It
+[657.6s] lets you ask a question mid-task, and it
+[659.4s] doesn't interrupt Claude or touch the
+[661.0s] conversation history. So, you can ask
+[662.7s] about stuff Claude has already read or
+[664.7s] implemented. When you run this command,
+[666.3s] Claude can't read files or use any
+[668.1s] commands. It just uses the conversation
+[669.9s] history, but it's really nice to have if
+[671.6s] you have a question about something and
+[673.2s] want to know why it's making these
+[674.3s] decisions.
+[676.3s] I mentioned you can use Claude in
+[677.4s] different ways. {slash}teleport and
+[678.9s] remote control lets you move sessions
+[680.4s] between these apps. So, you can move
+[681.8s] between your phone, the web, or the
+[683.7s] terminal, which I appreciate a lot
+[685.4s] because sometimes I just get that random
+[687.6s] genius idea or inspiration in the middle
+[689.6s] of the drive-thru line at McDonald's,
+[691.0s] and I really got to tell Claude about
+[692.4s] it. So, I can start that in the mobile
+[693.8s] app, and when I get home, I can transfer
+[695.5s] it to my terminal. It's great. If you
+[697.0s] touch grass a lot, I'll give it an A
+[698.4s] tier, but I don't go out very much. So,
+[700.6s] personally, it's kind of like a C tier
+[702.1s] or D tier, but it is convenient.
+[704.9s] Shell mode, also a C tier, but I do
+[706.8s] think it's one of the more underrated
+[708.1s] features here. If you type exclam God,
+[710.2s] that was terrible.
+[712.0s] If you start your message with
+[713.2s] exclamation point, you enter shell mode,
+[715.2s] and this basically goes back to a normal
+[716.8s] terminal. But, the difference in this
+[718.0s] mode is Claude also sees the output.
+[720.2s] It's just a really convenient shortcut.
+[723.1s] /radio, F tier for productivity, but
+[725.5s] triple S tier for vibes. This command
+[727.4s] opens up Claude FM, which is just lo-fi
+[730.2s] music you can listen to while you code.
+[731.9s] And yeah, that's it. That's the whole
+[733.2s] feature. I can't play the music because
+[734.8s] I don't know if it's copyrighted, but
+[736.2s] it's pretty chill.
+[738.2s] Let's be honest, not everyone here is
+[740.4s] rich with unlimited tokens. I can't just
+[742.3s] spend a million dollars worth of tokens,
+[744.4s] and neither can big companies. A lot of
+[746.0s] you are probably on the $20 plan like
+[748.2s] me, or maybe you're Mr. Big Bucks over
+[750.4s] here with a $100 or $200 plan. Either
+[753.1s] way, context management matters for all
+[755.2s] of you. You see, Claude tracks usage
+[757.0s] based on tokens. It's not based on how
+[759.1s] many prompts you send. Every message you
+[760.7s] send, every file Claude reads, every
+[762.7s] response it writes, generates tokens.
+[764.5s] The goal here is to make these tokens
+[766.2s] effective and last long for both your
+[768.6s] usage limits and Claude's performance.
+[770.5s] Because Claude has a context window that
+[772.5s] also relies on these tokens. It's
+[774.2s] basically Claude's short-term memory.
+[775.8s] Now, the important thing here is Claude
+[777.5s] has a dumb zone. The more context you
+[779.7s] use, the dumber Claude gets. It starts
+[781.6s] forgetting things, contradicting itself,
+[783.7s] and making dumb mistakes. Claude has two
+[785.5s] different context limits. One is at like
+[787.4s] 300,000 tokens, and another one's at a
+[789.6s] million. I think Claude code defaults to
+[791.5s] a million tokens. Now, you would think
+[793.0s] the difference in 300,000 and a million
+[795.4s] for context would reduce the dumb zone,
+[797.3s] but all it really does is extend the
+[799.0s] dumb zone. In my experience, once you're
+[801.0s] above like 100,000 or 200,000 tokens,
+[804.2s] that's when the performance starts to
+[805.5s] dip a bit, and those usage limits get
+[807.8s] cooked. You can see Claude's context
+[809.2s] right now with the {slash} context
+[810.8s] command. And I'll give this command a B
+[812.5s] tier. I think it's pretty important to
+[813.7s] use, especially if you want to get more
+[815.2s] advanced with AI. And I suggest running
+[817.0s] this command before you run a big task,
+[819.0s] but just being able to see the context
+[820.5s] window doesn't really do much. How
+[822.4s] should you use your context? In my
+[824.0s] experience, to get the most out of this
+[825.5s] context window is number one, for every
+[827.8s] new task, start a new session. Every
+[829.9s] task after the first one is just going
+[831.7s] to be worse quality because every time I
+[833.4s] run like a medium or big task with
+[835.4s] Claude Code, it uses up a lot of
+[837.1s] context. It's like always minimum 50,000
+[839.7s] tokens it uses, and if you tell it to
+[841.5s] research or use a skill or an MCP, it
+[843.6s] could easily go above 100,000 tokens.
+[846.0s] So, if you do multiple tasks, and you're
+[847.4s] just going to get worse output, and
+[848.7s] you're going to run out of your usage
+[849.9s] limit real fast. Number two, do not let
+[852.2s] Claude go on research tangents. If you
+[854.1s] notice that Claude starts to explore
+[855.6s] files or search topics it doesn't need,
+[857.9s] tell Claude right away not to do that
+[859.6s] because every file and website Claude
+[861.3s] reads is tokens you're spending. If you
+[863.3s] have specific files and sources it
+[864.9s] should use, tell it to use it, which
+[866.4s] leads to the next tip. Be specific in
+[868.9s] your prompts. Stupidly specific. If you
+[871.6s] give Claude vague prompts, it's just
+[873.1s] going to read everything to figure out
+[874.8s] what you want. And this tip is very
+[876.4s] important for technical decisions. Now,
+[878.3s] even with these tips, you'll probably
+[880.0s] end up in a task that actually uses the
+[881.9s] context limit, and when you do reach
+[883.6s] that limit, Claude is going to run the
+[885.4s] {slash} compact command. I'll give this
+[887.0s] command a C tier when Claude uses it,
+[889.2s] but if you know how to use it, it's
+[890.5s] probably like a B tier. This command
+[891.9s] summarizes the whole conversation
+[893.4s] history down into a shorter version so
+[895.3s] that it fits in the context window. If
+[897.0s] Claude runs this command on its own,
+[898.6s] that's your sign to just start a new
+[900.0s] session because when Claude compacts
+[901.8s] itself mid-task, it basically gets
+[903.7s] dementia. You'll notice right away
+[905.2s] there's a bit of a quality drop. Now, if
+[906.7s] you're on a task where you're positive
+[908.4s] it doesn't need a separate conversation,
+[910.2s] it's better to run the command yourself
+[911.8s] and tell it exactly what to keep. Now,
+[913.6s] if you want to optimize your context
+[915.1s] even more, there are some additional
+[916.9s] community tools built specifically for
+[918.8s] this. I'll probably just leave give the
+[920.2s] description so you can check it out.
+[922.7s] Ah, yes. You see, AI enthusiasts and
+[926.1s] software engineers have collectively
+[928.2s] discovered a revolutionary, innovative
+[931.1s] solution with AI, the for loop. Yeah,
+[934.3s] I'm not kidding. It's it's a whole trend
+[935.8s] right now. I can't wait till we move on
+[937.3s] to object-oriented prompting, and then
+[939.5s] functional prompting, and maybe a little
+[941.4s] bit of system prompting. I can't wait
+[943.0s] for this. No, but honestly, it's
+[944.4s] incredible.
+[945.8s] >> [laughter]
+[946.0s] >> And I blame the people saying,
+[947.4s] "Programmers are going to get replaced."
+[949.0s] Or the ones saying, "Why would I ever
+[950.7s] need to learn to code again?" This is
+[952.3s] why, right here. People are just
+[953.7s] reinventing the same thing over and
+[955.9s] over, just in a different font. If you
+[957.6s] couldn't read code, you would never even
+[959.2s] notice. So, please, learn to code. We
+[961.4s] need more people with actual brains.
+[963.5s] Knowing how to code is the exact reason
+[965.4s] why all these tips work, and why I get
+[967.6s] decent results from AI. I don't want you
+[969.3s] to be the type of programmer where you
+[970.8s] hit your usage limit, and suddenly you
+[972.4s] can't even work on your own project
+[974.0s] because you never learned how any of it
+[975.7s] works. And if that's you, you've already
+[977.5s] been replaced. I'm sorry. So, if you are
+[979.1s] going to lean on AI, you should use it
+[981.0s] to do the work and make you smarter. I
+[983.3s] mean, it's a win-win. Brain bigger, and
+[985.4s] AI does better work because brain big.
+[987.9s] You could have Claude teach you as you
+[989.5s] go. I would recommend that. Make it
+[991.2s] explain every change instead of blindly
+[993.1s] smashing accept. Go learn and make your
+[994.8s] brain bigger.
+[996.8s] All right, so what's the deal with this
+[997.8s] life-changing command? I mean, {slash}
+[1000.0s] loop, it's pretty straightforward. You
+[1001.4s] give it a time interval, how often it
+[1003.0s] should run this task, and it'll keep
+[1004.4s] doing it. It's essentially like an AI
+[1006.3s] cron job. I mean, I'm not going to lie,
+[1008.0s] it is really convenient. I've been
+[1009.8s] enjoying loops a lot because you can
+[1011.6s] create automations. Because I'm not
+[1013.4s] working on my personal projects every
+[1015.1s] single day. But with loops, I've been
+[1016.9s] setting up these routines or
+[1018.2s] automations, and it allows me to keep
+[1020.0s] making progress even when I'm not
+[1021.8s] actually there. Some of my favorite
+[1023.2s] automations that I've been running
+[1024.3s] recently have been on implementing a
+[1026.0s] GitHub issue, where every day it'll pick
+[1028.2s] from the open issues in my project, and
+[1030.0s] it'll work on it. And so, I come back,
+[1031.9s] and there's a PR waiting for me. Another
+[1033.5s] automation I like using is security and
+[1035.5s] bug sweep. It'll scan the code base for
+[1037.3s] any known vulnerabilities or if it finds
+[1039.4s] any bugs and it'll flag what it finds
+[1041.4s] and puts that into a GitHub issue. In my
+[1043.5s] third automation that I've been testing
+[1045.0s] recently, feature brainstorming, where
+[1046.6s] it's going to look at the code base, the
+[1047.8s] PRs, the issues, and it's going to
+[1049.6s] brainstorm features that would actually
+[1051.6s] help the project. You can also run
+[1053.2s] automations when certain things happen,
+[1054.8s] but it lets you make some really sick
+[1056.3s] automations. I think a lot of companies
+[1058.0s] and open source projects are testing
+[1059.6s] this and they are getting some decent
+[1060.9s] results. It's honestly worth trying.
+[1062.7s] >> A tier, it's great.
+[1065.2s] >> This command is pretty straightforward.
+[1066.6s] You basically give Claude a goal and
+[1068.4s] it'll keep working on it until it
+[1070.0s] completes it or it needs your help. So,
+[1071.7s] you can do something like make sure
+[1073.0s] every test passed and there's no type
+[1074.6s] errors and have that as a goal and
+[1076.2s] Claude will just keep doing it until it
+[1077.9s] meets it. I'll give this command like a
+[1079.4s] B tier if you're on one of the lower
+[1081.1s] plans, but if you are on one of the
+[1082.6s] higher plans or you have unlimited
+[1084.0s] tokens, it's definitely more so on the A
+[1086.2s] tier.
+[1088.0s] We have an agent, which is the main
+[1089.8s] Claude chat. This is the one you always
+[1091.0s] talk to. You can think of this as the
+[1093.1s] daddy agent, the Chad, the group leader,
+[1095.5s] whatever works for you. And a sub agent
+[1097.3s] is just a mini Claude your daddy agent
+[1099.8s] starts for one specific job. So, the sub
+[1102.2s] agent could be a researcher, a reviewer,
+[1104.6s] a debugger. You can make as many sub
+[1106.2s] agents as you want and each sub agent
+[1108.1s] gets its own context window. It does its
+[1110.1s] thing and when it finishes, it gives the
+[1112.1s] daddy agent a summary of what it did.
+[1114.1s] There's multiple ways to make one, but
+[1115.9s] honestly, the easiest is just telling
+[1117.8s] Claude to create the sub agent and a
+[1119.7s] description of what it'll do. But
+[1121.4s] realistically speaking though, most
+[1123.1s] people can't run sub agents all the time
+[1125.5s] because sub agents drain your usage
+[1127.4s] limits so fast. Each sub agent is
+[1129.8s] basically its own full conversation
+[1131.8s] running in parallel and on the $20 plan,
+[1134.1s] even a small multi-agent setup can eat
+[1136.4s] your entire limit before the task even
+[1138.5s] finishes. But I will say honestly, sub
+[1140.4s] agents are still like an A tier and if
+[1142.3s] you do have unlimited tokens or you're
+[1144.0s] on a higher plan, it's easily an S tier.
+[1146.1s] It makes the quality of the
+[1146.9s] implementation so much better.
+[1149.3s] A tier. Work trees is a feature that
+[1151.2s] allows you to check out into multiple
+[1152.8s] branches of the same repository. Every
+[1154.6s] time you create a worktree, it
+[1155.9s] essentially copies a project into its
+[1157.8s] own separate folder, and it's the
+[1159.2s] perfect thing for parallel development
+[1161.0s] with AI. The workflow I essentially use
+[1163.2s] is that every chat is a worktree. So,
+[1165.2s] instead of working on one branch at a
+[1166.6s] time and waiting around, you can work on
+[1168.4s] multiple branches at once, and they're
+[1170.0s] completely isolated. So, you wouldn't
+[1171.7s] have to worry about agents interfering
+[1173.6s] with each other. And Cloud Code does
+[1175.0s] have native worktree support.
+[1177.0s] >> [music]
+[1177.8s] >> So, what if you don't want to use Cloud
+[1179.0s] Code? Well, that's great because it's
+[1180.6s] not the only option. One good
+[1181.9s] alternative is, of course, CodeX. It's
+[1184.0s] OpenAI's version, and I personally love
+[1186.0s] it. I think that's the one I've been
+[1187.2s] using the most. Their usage limits are
+[1189.4s] actually generous. Our lord and savior
+[1191.4s] Tibo keeps resetting them, so I get to
+[1194.0s] use [music] a lot, and I've been making
+[1195.2s] tons of progress on my projects thanks
+[1197.1s] to him. There's Open Code, which is
+[1198.7s] essentially the open-source version of
+[1200.2s] Cloud Code. And if you want to use any
+[1201.9s] model, I do recommend you check it out.
+[1203.6s] Another alternative that I've seen is a
+[1205.6s] one called Pi. It's basically like a
+[1207.5s] minimalist setup. So, if you're the type
+[1209.0s] of person that wants to create their own
+[1210.5s] workflow from scratch, this is the tool
+[1212.2s] for you. And if you're interested in
+[1213.5s] like an IDE and agent combo, there's
+[1215.6s] Cursor. It's what I like to use if I
+[1217.3s] need to use an IDE. This one also lets
+[1219.1s] you pick any type of model. I like their
+[1220.8s] own models. I like Rock and Composer.
+[1223.0s] They're so fast, and they're really
+[1224.1s] cheap. And, of course, there's VS Code
+[1225.6s] and GitHub Copilot, the OG. Most of you
+[1227.8s] know what VS Code is. And a recent one
+[1229.4s] that's been getting really good is
+[1231.2s] actually T3 Code. I'll just read it from
+[1232.9s] their website. It summarizes it pretty
+[1234.4s] good. It's an open-source control plane
+[1236.2s] for a coding agents. So, if you have a
+[1237.4s] Cloud subscription, you'll probably
+[1238.9s] enjoy the UI of T3 Code way more. But,
+[1241.5s] if you have multiple subscriptions, so
+[1242.9s] you have Cloud Code, CodeX, Open Code,
+[1245.3s] Cursor subscription, you have all of
+[1246.6s] those, then maybe you should check out
+[1248.1s] T3 Code since you can basically use all
+[1250.1s] your subscriptions in just one
+[1251.4s] application instead of going all over
+[1252.7s] the place. So, go pick whatever AI tool
+[1254.6s] you want to use. If you want to use
+[1255.7s] Cloud Code, so be it. Enjoy those usage
+[1257.9s] limits. And when you do hit those usage
+[1259.5s] limits, go watch more of my videos. I'll
+[1261.7s] see you all in the next video.

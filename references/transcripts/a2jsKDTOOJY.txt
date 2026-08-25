@@ -1,0 +1,981 @@
+Title: [한영자막] 지능은 빌리지 말고 소유하세요
+Channel: Tech Bridge
+URL: https://www.youtube.com/watch?v=a2jsKDTOOJY
+
+--- TRANSCRIPT ---
+
+[0.2s] So
+[2.4s] the internet calls me one of the most AI
+[6.5s] psychotic people online. So it's only
+[10.1s] right that I start my talk with a story
+[13.2s] about one of the most cancelled men in
+[17.3s] history.
+[19.5s] His name was Baroo Spinosza. And in case
+[23.4s] the philosophy elective wasn't your
+[25.6s] thing, here are the highlights you need
+[28.5s] to know.
+[30.5s] In 1929, a New York rabbi challenged
+[33.8s] Einstein by telegram.
+[36.4s] Do you believe in God? Answer in 50
+[39.6s] words. Einstein answered in 25. I
+[44.2s] believe in Spinosa's God who reveals
+[47.0s] himself in the lawful harmony of the
+[49.4s] world, not in a God who concerns himself
+[53.0s] with the fate and doings of mankind. The
+[56.3s] most famous scientist alive asked the
+[59.5s] biggest question there is pointed at
+[62.2s] Spinosa.
+[63.8s] But here's what Baroo Spinosza's own
+[66.2s] community did to him. Amsterdam, July
+[70.5s] 27th, 1656.
+[73.5s] Spinosa is 23 years old, a member of a
+[77.2s] tight-knit Sephardic Jewish community.
+[79.9s] He stands in a synagogue while the
+[82.2s] elders exccommunicate him with the most
+[85.0s] violent curse their community ever
+[88.0s] produced.
+[90.2s] Cursed be he by day and cursed be he by
+[94.7s] night. Cursed be he when he lies down
+[98.6s] and cursed be he when he rises up.
+[103.4s] Nobody may speak to him. Nobody may
+[106.2s] trade with him. Nobody may come within
+[109.4s] four cubits of him. Nobody may read
+[113.2s] anything he writes. And this ban,
+[116.4s] uniquely among the roughly 40 bans
+[119.2s] Spininoza's community issued that
+[120.9s] century, has no repentance clause. It
+[124.8s] has never been lifted. It technically is
+[127.7s] still in force today.
+[132.1s] Spinosa was 23. His crime was evil
+[135.0s] opinions, expressing forbidden thoughts.
+[137.5s] His punishment was complete deletion
+[140.4s] from the community.
+[143.2s] Before his community cursed him, they
+[145.8s] tried to buy him a thousand gilders a
+[148.6s] year. Serious money. All he had to do
+[151.4s] was show up at synagogue once in a while
+[153.4s] and keep his mouth shut. Hear that in
+[156.0s] founder terms. They've offered him a
+[158.1s] salary to stop building. He said, "No,
+[161.2s] not for 10,000." He said he wanted
+[163.8s] truth, not comfort. Shortly before his
+[167.1s] excommunication,
+[168.9s] a fanatic came at him with a knife. The
+[171.6s] blade tore through his cloak and missed
+[173.9s] him. He kept that cloak, scar unmended,
+[177.0s] for the rest of his life. He wanted to
+[179.8s] remember what ideas cost.
+[183.2s] So what does the most canceled man of
+[185.3s] the 17th century do next? He grinds
+[188.7s] lenses. By day, he makes optical
+[192.0s] instruments, tools that let human beings
+[194.6s] see further than their eyes allow. He
+[198.7s] makes them so well that the best
+[200.7s] scientists in Europe seek them out. And
+[203.7s] by night, he writes a book so dangerous
+[207.0s] he cannot publish it while he is alive.
+[211.6s] When he dies at 44, lungs full of glass
+[214.7s] dust from making other people's lenses.
+[217.3s] The manuscript is locked in his writing
+[219.8s] desk. His dying instruction shipped the
+[223.4s] desk by canal barge to his publisher in
+[226.0s] Amsterdam. That manuscript became his
+[229.0s] postumous works which attracted
+[231.4s] immediate attention across Europe and
+[233.4s] inspired some of the most important
+[235.0s] philosophers of the enlightened.
+[237.8s] What does Spinosa have to do with
+[239.4s] startups, you might ask? Well, here is a
+[242.7s] man canled by everyone he knew, offered
+[246.0s] a salary to stop, nearly killed for
+[249.9s] shipping, and his response was to build
+[253.3s] precision tools by day and write the
+[255.4s] most dangerous book in Europe by night
+[257.8s] alone with no permission from anybody.
+[261.1s] If you're going to start a startup, you
+[262.8s] could do well to learn from Spinosa.
+[266.0s] He had a name for the engine that kept
+[268.1s] him going. Canadus, it means your
+[272.2s] striving, the drive in every living
+[274.8s] thing to keep going and to increase its
+[277.4s] power to act. Not your resume, not your
+[280.9s] title, not your job, the striving
+[283.8s] itself. This talk is about the tools
+[286.4s] that amplify it. So what did he actually
+[289.5s] say that was worth deleting a man over?
+[291.5s] The gist of the heresy was that God is
+[293.4s] not a king on a throne. God has spread
+[295.5s] through everything that exists. God or
+[298.6s] nature, he wrote.
+[301.6s] 400 years later, we are making a similar
+[304.9s] mistake about intelligence.
+[307.9s] Everyone is waiting for AGI as a
+[311.3s] singular event, a god in a data center,
+[315.4s] some announcement, some threshold, some
+[318.8s] day when the sky changes color. So now
+[322.8s] I'll say a version of Spininoza's heresy
+[325.1s] updated 400 years later. Everyone is
+[328.4s] watching the sky and the thing they're
+[331.1s] watching for is already in the room. It
+[334.6s] doesn't look like a god. It looks like
+[336.6s] infrastructure, a terminal window, a
+[339.2s] folder of markdown files, a job that
+[342.5s] finishes while you sleep. Spread through
+[345.3s] everything, which is exactly where Smosa
+[348.9s] told you to look. AGI isn't arriving as
+[352.4s] an event. It's arriving diffused as your
+[356.0s] agent running on your context doing your
+[360.1s] work.
+[361.7s] I call it personal AGI, not artificial
+[364.6s] general intelligence for everyone all at
+[366.3s] once. General intelligence for one
+[368.6s] person, you.
+[371.3s] This was a dream of a great many people.
+[373.6s] Vanavar Bush called it the MEMX, a
+[375.8s] machine that would be an extension of
+[377.3s] yourself and your brain. And I want to
+[380.0s] be precise about what I mean because the
+[382.1s] words personal AI has already been
+[385.2s] captured by marketing departments. I do
+[387.8s] not mean a chatbot you pay $20 a month
+[390.2s] to. I do not mean a slightly better
+[392.3s] autocomplete. I do not mean an assistant
+[394.5s] that knows your calendar and nothing
+[396.9s] else. That's just a subscription you
+[399.5s] rent. It's a corporate AGI you don't
+[402.1s] own. It resets when you close the tab.
+[404.9s] It knows what everyone else already
+[406.8s] knows. And when the company behind it
+[409.0s] pivots, your so-called assistant gets a
+[411.0s] lobotomy on someone else's schedule.
+[414.4s] Personal AGI is a different animal. An
+[418.0s] agent that runs on your infrastructure,
+[420.3s] reads from a memory you own, executes
+[423.1s] procedures you wrote, and compounds. The
+[426.4s] corporate AGI you don't own gets better
+[430.2s] only when the company ships something.
+[432.6s] Your personal AGI gets better every
+[435.1s] single day you use it because every day
+[437.7s] it knows more of your life. One of these
+[440.6s] is a product you consume. The other is
+[443.4s] an asset you build. Almost nobody in the
+[446.6s] world has this second thing yet. And
+[449.6s] everyone in this arena could have it by
+[453.1s] Monday. And I believe intelligence,
+[456.3s] intelligence of this kind should be
+[458.6s] owned, owned by you, not rented. If you
+[462.5s] go forth and build this for yourself,
+[464.4s] 2034
+[465.9s] doesn't have to be like 1984.
+[470.8s] You might ask why this personal AGI is
+[473.3s] happening only now. Well, I think it's
+[475.8s] because of what agents can do. And
+[477.7s] nowhere is it more obvious than encoding
+[479.8s] agents. In 2013, I was a YC partner
+[482.6s] building Bookface, our internal social
+[484.5s] network at night. I shipped maybe 14
+[487.0s] useful lines of code a day, which if you
+[488.6s] know the literature on programmer
+[490.2s] productivity is dead on median. That was
+[492.9s] me at full effort. This year I run YC
+[495.6s] full-time. Same brain, same hours plus a
+[498.5s] 5:00 kid pickup. I did the math on my
+[501.9s] output and I'm at about 400x what I did
+[505.5s] in 2013. Now, before the skeptic in row
+[509.8s] three uh deflates that number for me,
+[512.2s] let me deflate that for myself. You
+[514.2s] don't trust the raw lines of code. Fine.
+[516.2s] Apply the most pathological verbosity
+[518.0s] penalty you can stomach and assume the
+[520.7s] agent writes bloated code. Assume half
+[523.4s] of it is scaffolding.
+[525.7s] Assume I'm flattering myself, which is
+[527.6s] always a live possibility. It's still 8x
+[530.7s] at the absolute floor and 10 times that
+[533.5s] in the middle of the range. The number
+[535.4s] is large no matter how you torture it.
+[538.2s] Now, this is just code and if you're at
+[540.0s] the beginning of your career, you're in
+[541.9s] luck. This applies to design. This
+[545.0s] applies to product management. This
+[547.5s] applies to growth. This applies to every
+[550.6s] part of what you might want to do. The
+[553.9s] multiplier for coding is not just for
+[556.0s] coding. It's for every piece of
+[558.2s] knowledge work. And it's not just me. At
+[561.4s] YC, we get to watch this at portfolio
+[563.6s] scale. A year and a half ago in the
+[565.5s] winter 25 batch, a quarter of the
+[567.8s] companies had code bases that were 95%
+[570.1s] AI generated. Those companies use AI
+[572.6s] agents for everything now, not just
+[574.6s] code. And that batch is on track to
+[577.3s] becoming one of the fastest growing,
+[578.8s] most profitable batches in the history
+[580.6s] of YC. Now, I know what a correlation
+[583.1s] is. So, let me say it carefully. I
+[584.6s] cannot prove that the AI generated code
+[586.9s] and everything else caused the growth.
+[589.1s] But what I can tell you is that the
+[591.0s] fastest growing founders we fund are not
+[593.0s] treating AI as autocomplete. They are
+[595.9s] treating it as a workforce. There are 2x
+[599.9s] people and there are 100x people who are
+[602.2s] using the same claude. Same weights,
+[605.3s] same context window size, same API. But
+[608.5s] the leverage is not in the weights. It's
+[610.5s] in what context you give it, how
+[612.6s] relevant it is, and does it happen at
+[615.0s] the right step. We'll come back to this.
+[618.8s] Now, Spininoza has a definition I think
+[620.9s] about every single week. In ethics, he
+[623.6s] defines joy as the feeling of your power
+[626.3s] of acting increasing. Which is why the
+[629.4s] first time an agent does a week of your
+[631.6s] work in an afternoon, it doesn't feel
+[634.4s] like a convenience. It feels like joy.
+[637.5s] And that's not me being poetic. That's
+[639.5s] the technical term. Your power of acting
+[642.6s] increased. Your canadus just got bigger.
+[646.6s] He defined the opposite to by the way,
+[648.6s] sadness. the feeling of your power of
+[650.9s] acting decreasing. If your Sunday nights
+[653.2s] have a specific heaviness, like your
+[655.5s] ability to influence the world is
+[657.0s] receding, that you feel like you're
+[658.5s] quiet quitting, then this is what you
+[660.7s] feel. And hold that thought because
+[663.4s] we're coming back to this in the second
+[665.0s] half of this talk and it gets political.
+[669.0s] So here's the equation for the next
+[670.6s] decade of your life. a frontier model
+[673.1s] which is rented and a commodity and
+[676.2s] getting cheaper by the quarter plus your
+[679.8s] context which is owned by you and unique
+[683.3s] no and ideally nobody else on this earth
+[685.5s] has it plus a harness that wires them
+[688.6s] together that harness might be openclaw
+[690.8s] Hermes agent claude code or codeex add
+[693.6s] that up and that gives you an agent that
+[695.8s] acts like a very fast version of you
+[699.0s] model quality is rented but your brain
+[701.7s] is owned ideally by you. Marshall
+[704.7s] McLuhan said that technology is an
+[706.6s] extension of man. Steve Jobs called a
+[709.8s] computer a bicycle for the mind. And if
+[713.0s] you have what I'm describing here, then
+[715.2s] you have a selfdriving rocket.
+[719.0s] Paul Graham taught every founder in this
+[720.8s] building two things. Make something
+[722.2s] people want and do things that don't
+[723.8s] scale. Both still govern everything.
+[727.5s] What's new is the multiplier on the
+[729.8s] second one. Agents are how one founder
+[732.5s] now does unscalable things at scale. The
+[735.4s] advice didn't change, but the physics of
+[738.0s] all startups and of what you can do did.
+[742.6s] Spinosa ground lenses, instruments that
+[745.3s] let people see past the limits of their
+[747.1s] eyes. I want to spend the next 15
+[749.4s] minutes showing you what grinding lenses
+[750.9s] for the mind looks like. This is the
+[753.0s] machinery I actually run my life on, and
+[755.5s] every concept travels to whatever stack
+[757.5s] you use. Let's start with working memory
+[760.8s] because it explains everything. You and
+[763.6s] I as human beings hold about seven
+[766.0s] things in our head at once. Seven plus
+[768.2s] or minus two. It's the most famous paper
+[771.1s] in cognitive psychology. It's why local
+[774.7s] phone numbers are seven digits and why
+[777.3s] you forget the eighth item on a grocery
+[779.6s] list. That is the entire working memory
+[783.0s] of a human being. and every institution
+[786.2s] humanity has ever built, every
+[788.9s] checklist, every org chart, every filing
+[792.7s] cabinet, every standup meeting is a
+[796.2s] prosthetic for that limit.
+[799.9s] An AI agent though holds a million
+[802.7s] tokens. That's about a thousand pages.
+[806.5s] Three Harry Potter books sitting open on
+[808.7s] its head all at once. And it can find a
+[811.8s] needle in any of them. and synthesized
+[815.0s] across all three in seconds. Three Harry
+[818.2s] Potter books versus seven digits.
+[822.2s] You could argue that's not quite AGI
+[824.2s] yet, but it is already a different
+[827.5s] operating regime. And almost everyone on
+[830.2s] Earth is still running their life on an
+[832.7s] org chart and a way of doing things
+[835.3s] designed for the seven-digit brain.
+[839.9s] Run that number in the other direction.
+[841.4s] A thousand pages is a lot, but it is
+[844.2s] also very little. Your life is not three
+[847.0s] books. Your life is a library. Every
+[849.2s] email you ever sent, every meeting,
+[851.8s] every decision, and every reason behind
+[854.7s] it, every conversation with every person
+[857.5s] you know, the question that determines
+[860.6s] whether your agent is a genius or a
+[864.5s] goldfish is this. who decides or what
+[868.0s] decides which three books are open on
+[871.8s] the desk. And that's what a brain is.
+[874.5s] That's what Gbrain is meant to be. The
+[876.4s] library plus the librarian.
+[881.1s] I've been building Gbrain in the open.
+[883.6s] My personal open claw has a Karpathy
+[886.5s] style knowledge wiki with about 220,000
+[889.7s] markdown pages. 25 years of my life
+[892.8s] diarized. every email, every meeting, my
+[895.4s] notes, my photos, my drafts, the things
+[898.4s] I got wrong,
+[900.5s] compiled mostly by agents, curated by
+[902.8s] agents, searched for by agents, but I
+[905.8s] never reask a question I already
+[907.6s] answered. And the lived experience in
+[911.1s] the system is the point. A founder
+[913.5s] emails me about a crisis. Before I
+[916.2s] finish reading the email, my agent has
+[918.2s] already pulled every prior conversation
+[920.1s] I've had with that founder. three
+[922.6s] portfolio companies that hit the same
+[924.5s] wall and what actually worked for them.
+[927.4s] When my agent does anything, it does
+[929.7s] knowing everything I know. And that's
+[931.5s] the difference between an assistant and
+[933.1s] a colleague. Let me walk you through an
+[935.6s] actual day because that matters more
+[938.0s] than an architecture diagram. While I
+[940.6s] slept last night, my agent processed my
+[942.6s] inbox. Not sorted it, processed it. It
+[945.1s] knows which emails are from founders in
+[946.9s] trouble, which are from people trying to
+[949.0s] sell me something, and which are from
+[950.8s] the 17 mailing lists I never quite
+[952.8s] unsubscribed from. The ones that matter
+[955.4s] are triaged with context pulled from the
+[957.8s] library. Who this person is, my whole
+[960.2s] history with them, what they're really
+[962.1s] asking under what they wrote, and what
+[964.6s] that might mean for me. I wake up to a
+[966.8s] briefing, not a pile of emails. Before
+[969.7s] every meeting, a prep dock. Who I'm
+[971.5s] meeting, what we said last time, what
+[973.4s] changed since, and what I should ask.
+[975.4s] Research I was curious about at midnight
+[977.3s] is finished by morning. And when
+[978.8s] something interesting happens in the
+[980.2s] world, my agent has usually read it,
+[982.2s] cross referenced against what I care
+[983.8s] about, and filed it before I've had
+[985.4s] coffee.
+[987.0s] On top of this library says my agent
+[988.8s] coding framework, GStack, 123,000 stars
+[992.2s] now, which put it in the top 100 open
+[994.4s] source projects in the history of
+[995.6s] GitHub. And what's actually in the
+[998.9s] punchline of this full architecture?
+[1001.0s] It's mostly skill files plus a browser
+[1003.7s] that the agents can drive. Pages of
+[1006.2s] English and a way to act on the world.
+[1009.0s] Markdown, not magic. Fat skills, thin
+[1011.9s] harness. Let me show you what a skill
+[1014.3s] file is because I keep saying this
+[1015.8s] phrase and I want you to see how
+[1017.4s] unmagical it is. Here's a real one,
+[1020.2s] lightly redacted. It says, "When a
+[1023.3s] meeting recording lands from Circle
+[1024.9s] Back, transcribe it with speaker labels.
+[1027.0s] Pull out the commitment made, who made
+[1028.6s] it, and the deadline. Cross-check every
+[1030.4s] person named against the library and
+[1031.9s] link their pages. File the summary here,
+[1034.3s] full transcript there. If anything
+[1036.3s] contradicts something we already
+[1037.7s] believe, flag it. Don't overwrite it.
+[1039.7s] That's it. That's a skill. It's a page
+[1042.2s] of English. A smart intern, anyone
+[1044.9s] really who could read could follow it."
+[1046.7s] And that's the test actually. If a smart
+[1048.5s] intern could follow it, an agent can run
+[1050.7s] it. Which means uh actually a kind of
+[1054.0s] profound thing. I know I caught a lot of
+[1056.2s] flack for talking about this, but I
+[1058.1s] think it's more true than ever,
+[1059.3s] especially now. Markdown is actually
+[1061.3s] code. If you can write clear
+[1063.4s] instructions in English, you're a
+[1065.4s] programmer. The compiler is a language
+[1067.3s] model. And that's why it's not just for
+[1069.5s] engineers anymore. At YC, our media
+[1071.8s] people, event staff, finance team,
+[1073.9s] people who never open a terminal in
+[1076.1s] their lives are building skill files and
+[1078.6s] scheduled jobs. One of our finance folks
+[1081.2s] compiled um about a hundred Excel
+[1083.4s] workbooks into a single app she built
+[1085.2s] with an internal agent. She is not a
+[1087.4s] programmer. She is a manager of agents.
+[1089.5s] Now, everyone is about to be.
+[1093.2s] The most important question to ask here
+[1095.2s] is where is the computation happening?
+[1098.2s] And there are exactly two answers. and
+[1100.2s] confusing them causes every agent
+[1102.9s] failure I've ever seen. Some computation
+[1106.3s] belongs in latent space. Taste judgment
+[1110.0s] reading what a human actually wants from
+[1112.0s] a vague request that lives in the model
+[1115.0s] and you steer it with a markdown file.
+[1117.9s] And then some computation belongs in
+[1120.2s] deterministic space. the arithmetic, the
+[1123.1s] SQL query, uh for instance, the seating
+[1126.9s] chart for what sessions you're going to
+[1129.3s] go to today for your breakouts. Uh all
+[1132.6s] of that needs to be stored in a SQL
+[1134.6s] database used by the markdown files.
+[1138.5s] Being smart about this goes a long way.
+[1140.8s] Ask an agent or human to seat five
+[1142.6s] people around a table. That's easy. Do
+[1144.6s] it in latent space. Ask it to make
+[1146.8s] custom schedules for 6,000 people in an
+[1149.3s] arena like we just did for you. And your
+[1152.5s] latent space agent needs to write some
+[1154.4s] code to keep track of it. Your
+[1156.3s] experience at this conference had to be
+[1159.4s] markdown files calling code in exactly
+[1162.2s] this way. And you couldn't do it without
+[1164.2s] the code. The model fails where we fail.
+[1166.5s] The fix is having the model compute the
+[1168.4s] way humans compute. the latent and the
+[1171.4s] deterministic markdown files calling
+[1173.8s] databases and scripts. Simple, but it's
+[1177.6s] what everything is actually built on.
+[1179.6s] And I'll give you one more receipt. My
+[1181.2s] favorite one because you're sitting
+[1182.6s] inside it right now. Five days ago, I
+[1185.4s] decided this talk needed Spinosa, one of
+[1187.9s] my favorite philosophers, especially
+[1190.2s] because of how cancelled he got. So, my
+[1193.2s] agent went and acquired three of the
+[1195.0s] best biographies about the man. Books by
+[1197.8s] Nadler, Goldstein, and Stewart, about
+[1200.0s] 1,500 pages. It read all three. It built
+[1203.4s] me a synthesis, a dated chronology of
+[1205.6s] his life, every place the three
+[1207.7s] biographers disagree with each other,
+[1209.5s] and the best verbatim quotes with
+[1211.2s] chapter citations. And because it knows
+[1214.0s] what I need, the 10 most tellable
+[1216.5s] moments of his life ranked with delivery
+[1219.2s] notes. The knife attack, the bribe, the
+[1222.2s] desk. Every beat of our opening that
+[1225.8s] might have given you some chills 20
+[1227.4s] minutes ago came out of that overnight
+[1229.5s] run. 1500 pages became a stage ready
+[1232.4s] story that I could edit. I call it a
+[1234.6s] compendium skill and I use it daily.
+[1236.6s] It's a personal skill that is a mega
+[1239.0s] mega version of deep research only
+[1241.0s] deeper than anything the corporate AI
+[1243.3s] products will give you.
+[1245.2s] The spine of this talk you're watching
+[1247.0s] was inspired by the machine we're
+[1249.1s] describing now. And if you're wondering
+[1251.6s] where my mine actually started, it was
+[1254.1s] not 220,000 pages. It was a folder. It
+[1258.1s] was a few markdown files about the
+[1260.6s] companies I was working with and the
+[1262.2s] people I kept emailing. And the library
+[1264.6s] got big the same way anything gets big.
+[1267.0s] A little every day compounding with
+[1269.1s] agents doing the filing. Nobody builds
+[1271.9s] the warehouse first. First, you build
+[1274.2s] one shelf.
+[1276.2s] When you sit down with an agent tonight,
+[1278.6s] you're not coding. You're man managing a
+[1282.3s] workforce made of markdown. A skill file
+[1284.9s] is an employee. It has one capability,
+[1287.4s] one job written down clearly enough that
+[1289.6s] someone new could execute it. A resolver
+[1292.6s] is an org chart. A task comes in and it
+[1295.6s] decides which markdown file or who
+[1298.5s] handles it. Which means that before you
+[1301.3s] ever incorporate anything, before you
+[1303.4s] have a co-founder or a logo or a deck,
+[1306.2s] you can already be running an
+[1307.8s] organization, an organization of one
+[1310.6s] plus your agents. You are the founder
+[1313.1s] and the entire management layer of you
+[1315.6s] incorporated and the headcount under you
+[1317.8s] is now whatever you decide it is.
+[1321.7s] This already produces companies that
+[1323.7s] break the old math. Emergent out of our
+[1326.4s] summer 24 batch went from public launch
+[1329.0s] to nine figures of revenue in eight
+[1330.6s] months. When they crossed $15 million in
+[1333.4s] annualized revenue, they were 15 people.
+[1336.0s] Retail Winter 24 hit 60 million
+[1338.2s] annualized with about 40. That revenue
+[1341.2s] per person did not exist before. Not in
+[1343.6s] software, not in oil, not in railroads.
+[1346.6s] And these aren't freaks of nature.
+[1348.6s] They're the first companies built
+[1350.0s] natively on the new physics. And every
+[1352.2s] one of them started as one or two people
+[1354.9s] wired the way I just described.
+[1358.0s] Now picture our batch room in the dog
+[1360.6s] patch. Hundreds of founders every single
+[1362.7s] day. Each one of them doing what used to
+[1365.0s] be a person's entire year of work. That
+[1369.2s] is not the future. That is the bar right
+[1371.8s] now with this batch. If you're not doing
+[1374.4s] it, your competitor is and they will eat
+[1376.6s] your lunch politely and thank you for
+[1378.5s] it. It also changes what software even
+[1381.1s] is. Software doesn't have to be precious
+[1383.3s] anymore. You can build exactly the tool
+[1385.8s] you need for the audience of one in a
+[1387.9s] weekend. The old advice was scratch your
+[1390.2s] own itch and hope it's the market. The
+[1391.8s] new version is much better. Scratch your
+[1394.2s] own itch because scratching itches is
+[1396.2s] nearly free. And some of your tools for
+[1398.8s] one will turn out to be entire
+[1401.1s] companies. You'll know because other
+[1403.5s] people start begging for them.
+[1406.2s] And one honest caveat before the how-to
+[1408.9s] because you catch me out in anyway. A
+[1410.9s] brain nobody curates is a garbage dump
+[1412.9s] with great search. Retrieval will
+[1415.0s] surface a stale fact with total
+[1416.6s] confidence. A bad skill file encodes a
+[1419.5s] bad process forever. So the primitive is
+[1422.8s] memory plus hygiene. Provenence on every
+[1425.8s] fact. Contradition contradiction checks
+[1428.8s] when new information collides with old.
+[1431.5s] and a librarian whose actual job is
+[1434.3s] pruning. Treat the brain like production
+[1437.6s] infrastructure and it compounds. Treat
+[1440.5s] it like a dumping ground and you get a
+[1443.1s] very confident agent that is wrong in
+[1445.6s] ways nobody can trace.
+[1449.5s] Everything so far is philosophy and
+[1452.2s] receipts. So, let's get into some
+[1454.3s] how-to. If you do what I describe in the
+[1456.7s] next six minutes, you'll be ahead of 99%
+[1459.0s] of people who watch this talk and just
+[1460.9s] nodded. Step one tonight, pick a harness
+[1463.6s] and run an agent on your own machine. I
+[1467.0s] use OpenClaw and Hermes agent with
+[1469.2s] Gbrain. A hosted version of this is at
+[1471.5s] gbrain.io.
+[1473.1s] It's free. Gbrain itself is free and
+[1475.5s] open source. I always recommend the
+[1477.8s] Ferrari, but I'll be honest, the Honda
+[1480.2s] is really good, too. Codeex, Cloud Code,
+[1482.7s] whatever. any of them will do 99% of
+[1485.6s] this. And the upside of not Ferrari is
+[1487.6s] that it will also get you to your
+[1489.5s] destination with a little less of less
+[1491.4s] getting out to fix it on the side of the
+[1493.0s] road. The concepts are the point, not
+[1495.2s] any given repo or product. The
+[1497.0s] intelligence is untapped and there are
+[1499.2s] many paths. Step two this weekend, start
+[1502.4s] your library, not a grand archive. One
+[1505.4s] folder of markdown files. Export your
+[1507.7s] notes. Export your email if you can.
+[1510.2s] Write one page about each project you
+[1512.6s] you're working on and each person you
+[1514.4s] work with. And on those pages, write the
+[1517.1s] things you actually know, what you're
+[1518.7s] building together, what they care about,
+[1520.9s] what you owe them, what they said last
+[1523.1s] time. That's stuff no model on the
+[1524.8s] earth, no model on earth has because it
+[1527.8s] only exists in your head. And your head,
+[1530.6s] as we established, only holds seven
+[1533.3s] things. The first time an agent answers
+[1535.6s] a question using your context instead of
+[1537.8s] the internets, you'll feel the click and
+[1540.3s] you won't go back. You're all sitting on
+[1542.9s] you are all sitting on five 10 years of
+[1545.2s] your own history in one inbox or
+[1547.3s] another. That's your moat just lying
+[1549.5s] there unindexed doing nothing. The only
+[1552.4s] gate between you and this entire
+[1554.1s] architecture is probably 24 hours. Step
+[1558.2s] three, write your first skill file.
+[1561.3s] Picking it is easy. You know what's the
+[1564.1s] task you do every single week that you
+[1567.2s] hate the most? Might be expense reports,
+[1569.6s] meeting notes, the weekly status update,
+[1571.8s] competitor research. Explain it to your
+[1574.6s] agent. What do you want to do? In plain
+[1576.6s] English, the way you'd explain it to a
+[1578.2s] smart friend on their first day of a
+[1579.8s] job. And then let it get it wrong. If it
+[1583.3s] gets it wrong, correct it. Every rule,
+[1585.8s] every exception, every oh, and also put
+[1589.3s] it in there and it'll fix it. That page
+[1591.5s] is now an employee. Run it. Step four,
+[1595.9s] wire it up to be a recurring job. Maybe
+[1598.8s] it's the job you just created. In step
+[1600.6s] three, every morning at 7, do this.
+[1603.6s] Every Friday, summarize that. The first
+[1605.9s] time you wake up to work that finished
+[1607.8s] while you're sle you slept, something
+[1609.8s] shifts in your head permanently. That's
+[1611.8s] the day that the day stops being the
+[1616.4s] unit of work for you. It becomes what
+[1619.5s] you can imagine and it should be driven
+[1622.0s] by what your goals are and what you want
+[1624.3s] to create in the world. Step five, this
+[1627.3s] is the discipline that separates the
+[1629.1s] compounders from the dabblers. Never do
+[1632.2s] one-off work. Most people run one
+[1634.7s] operation with one agent and then throw
+[1637.0s] the context away. They close the window.
+[1639.3s] That's it. Don't. At the end of every
+[1642.2s] task, ask the agent to skillify what it
+[1646.9s] did.
+[1647.9s] Skillify is a special skill you can find
+[1649.8s] in Gbrain. You can point it at that repo
+[1653.3s] and say, "Extract Skillify. Learn how to
+[1656.1s] do it." Turn it into a markdown file you
+[1659.9s] can use and reuse forever. I'll say it
+[1663.0s] the way I say it at YC. If you have to
+[1664.8s] ask for something twice, you failed. The
+[1667.8s] person who captures what they learn gets
+[1669.7s] smarter every single day. The person who
+[1671.9s] wakes up every morning with amnesia,
+[1674.6s] well, that that's a waste of your time.
+[1677.1s] And it sort of doesn't matter how good
+[1679.0s] the model gets if you can't turn it into
+[1682.5s] real memory. Do those five things and I
+[1685.6s] can tell you what your next 90 days look
+[1687.3s] like. Week one, honestly, it's a toy.
+[1690.2s] The library is thin. The skills are
+[1692.5s] clumsy. You're fixing more than you're
+[1694.6s] saving. Week four, the flywheel catches.
+[1698.2s] The agent starts answering with your
+[1700.1s] context. The morning job produces
+[1702.2s] something you actually read. and you
+[1704.3s] write your third and fourth skill
+[1705.8s] because the first two worked. Week 12,
+[1708.3s] you have a library that answers before
+[1710.5s] you finish asking. A dozen skill files
+[1713.4s] running the parts of your week you used
+[1715.7s] to dread and one or two tools that other
+[1718.3s] people keep asking to borrow, which in
+[1721.4s] this room is called a startup. The curve
+[1724.2s] is the same curve as any compounding
+[1727.2s] thing you've ever seen. Flat, flat,
+[1729.6s] flat, then not. Most people who try this
+[1733.4s] will quit this in week two, which is
+[1735.9s] precisely why the ones who don't feel
+[1738.4s] like they're cheating by week 12.
+[1743.0s] Now, I need to tell you the part that
+[1744.9s] isn't fun because everything I taught
+[1747.0s] you just cuts both ways. I told you
+[1749.8s] Spinosa's definition of sadness earlier.
+[1752.8s] The feeling of your power acting, power
+[1756.0s] of acting
+[1757.7s] decreasing. And I said it gets
+[1759.5s] political. This is where a skill file is
+[1762.5s] not a document. It's a piece of your
+[1764.4s] cognition. How you do the thing
+[1766.8s] extracted from your head, written down,
+[1769.7s] and executable. Every skill you teach an
+[1772.8s] agent is you externalized. And the exact
+[1776.5s] same file is two opposite futures
+[1779.6s] depending on one variable, who controls
+[1782.6s] it.
+[1784.2s] Take a fictional example of a support
+[1786.2s] engineer. Let's call her Maya. Over two
+[1788.6s] years, Maya teaches her agents 40
+[1790.5s] skills. How to triage a P 0 at two in
+[1793.5s] the morning. How to deescalate the
+[1795.2s] customer who's about to churn. How to
+[1797.0s] write a postmortem that actually
+[1798.5s] prevents the next incident. 40 files.
+[1801.2s] That's her judgment. The thing that took
+[1803.2s] her two years to build sitting on a
+[1805.0s] disc. Version one. Those files live in
+[1808.2s] Maya's repo. She changes jobs. They go
+[1810.7s] with her. Day one at a new company.
+[1812.4s] She's operating with years of compounded
+[1814.8s] judgment on tap. Every year she works.
+[1817.5s] she compounds. That's ownership. And if
+[1820.2s] she wanted to start a company that does
+[1821.9s] this, it's her expertise. And it turns
+[1824.2s] out she can. Entire startups these days
+[1827.0s] will be markdown files. Version two,
+[1830.4s] those files live in the company's repo
+[1832.3s] under the company's IT policy. Maya
+[1834.6s] leaves with nothing. The company keeps
+[1836.2s] running her judgment without her. 40
+[1838.2s] files executing forever. And her name
+[1840.3s] isn't even in the commit history. She
+[1842.7s] didn't have a career. She had an
+[1844.3s] extraction. Same files, same Maya, one
+[1847.4s] variable. So this is the doctrine and I
+[1850.3s] want you to be able to repeat it
+[1851.6s] tomorrow. I believe skill files are
+[1854.2s] yours. Own your skills because if you
+[1858.0s] don't, your job becomes a skill file.
+[1862.4s] And this happened before. Craftsmen own
+[1865.4s] their tools. That's what made them free.
+[1867.9s] The factory broke that. The loom
+[1869.6s] belonged to the mill. The knowledge
+[1871.0s] workers assumed we were safe because our
+[1873.0s] tools lived in our heads where nobody
+[1874.7s] could confiscate them. Skill files end
+[1877.1s] that for the first time in history, your
+[1878.7s] cognition can be extracted, stored,
+[1880.7s] versioned, and owned. The only question
+[1882.7s] is by whom? Remember, do you remember
+[1886.2s] the thousand gilders? That offer never
+[1888.6s] went away. It got rebranded. Every
+[1890.8s] comfortable arrangement where your
+[1892.6s] judgment compounds in someone else's
+[1894.7s] repo is a thousand gilders a year to
+[1897.2s] show up, keep quiet, and stop building
+[1899.3s] your own thing. And that's why you
+[1901.4s] should start a startup because this is
+[1903.2s] how you can actually make those skill
+[1906.0s] files work for you. Spinosa faced the
+[1909.2s] upgraded version two in 1673. H
+[1912.5s] Highleberg offered the cursed heretic a
+[1915.0s] full professorship,
+[1916.8s] salary, legitimacy, a chair, and quote,
+[1922.1s] freedom of philosophizing, provided he
+[1924.5s] not disturbed the established religion.
+[1927.3s] His answer was, I do not know what the
+[1930.2s] limits of that freedom of philosophizing
+[1933.1s] might have to be. He read the terms of
+[1935.6s] service and he declined the acquisition.
+[1937.8s] He had a phrase for what he was
+[1939.4s] protecting, under your own power. as
+[1942.2s] opposed to under someone else's. Your
+[1944.6s] power of acting exists either way. The
+[1948.6s] political question in 1673 and in 2026
+[1952.8s] is who commands it? Personal AI is about
+[1956.4s] controlling your own cognitive abilities
+[1958.6s] and protecting yourself. That's the
+[1960.8s] whole thesis of this talk in one
+[1962.4s] sentence. Personal AGI is how you stay
+[1965.4s] under your own power in the age of
+[1967.8s] agents. So keep your brain and your
+[1970.5s] skills in a repo you control from day
+[1973.0s] one before any platform or any acquirer
+[1977.1s] has an opinion about it.
+[1980.4s] When Spininoza died, they inventoried
+[1982.7s] the room. Two pairs of pants, seven
+[1985.9s] shirts, a lens lathe, 160 books,
+[1991.4s] and the ethics locked in a desk. He
+[1994.7s] owned almost nothing and nobody ever
+[1997.8s] controlled his skill files. The desk
+[2000.6s] drawer was his repo.
+[2004.1s] Own yours like he owned his.
+[2009.3s] Now, three objections, and I can hear
+[2011.0s] them from up here, so let's just do
+[2012.5s] them. Objection one, the models are
+[2014.2s] improving so fast that all this harness
+[2015.9s] stuff will be obsolete. Just wait for
+[2017.6s] the next release. This is the better
+[2019.5s] bitter lesson crowd, and I love them.
+[2021.2s] But notice what actually happens in
+[2022.8s] every model release. The better the
+[2025.0s] models get, the more the differentiator
+[2027.4s] moves to context. When everyone's engine
+[2030.0s] is a 1000 horsepower, the race is won on
+[2032.5s] the driver and the map. The weights are
+[2034.7s] everyone's. The library is yours. At
+[2037.9s] least I hope it is. A better model makes
+[2040.8s] your library worth more because a
+[2043.6s] smarter reader extracts more from the
+[2045.9s] same books. I'm rooting for the labs as
+[2048.4s] hard as anyone in this building, but
+[2050.8s] every release they ship is a free
+[2053.2s] upgrade to a workforce I already own and
+[2056.6s] a workforce I want you to own.
+[2059.8s] Objection two, is this just rag? Sure.
+[2062.1s] And Postgress is just B trees. Retrieval
+[2064.6s] is the primitive not the product. The
+[2066.3s] hard part is everything around it. What
+[2067.9s] gets written down in the first place?
+[2069.4s] How it gets enriched and linked, what
+[2071.1s] gets promoted to hot memory versus filed
+[2073.6s] as cold cold reference, who arbitrates
+[2076.1s] when two facts disagree. Retrieval is
+[2078.5s] easy. Being worth retrieving from is the
+[2081.9s] product.
+[2083.6s] Objection three, and it's the one that
+[2085.2s] deserves the most respect. You put your
+[2087.4s] entire life in one system, your email,
+[2089.3s] your meetings, your kids schedules. What
+[2090.9s] happens when it leaks? My answer is the
+[2093.1s] same answer as the whole talk. That's
+[2095.4s] exactly why it has to be yours. My brain
+[2099.4s] runs on my own infra in my own repo
+[2101.8s] under my own keys. Compare that to the
+[2103.9s] default, which is not privacy. The
+[2106.9s] default is your life is already
+[2108.3s] scattered across 10 clouds owned by
+[2110.1s] companies whose incentives are not
+[2111.4s] yours, searchable by everyone except
+[2113.2s] you. I didn't create the risk by
+[2115.4s] consolidating my context. I took custody
+[2117.8s] of it. Custody is the security model.
+[2120.2s] And if you don't trust yourself to hold
+[2121.5s] the keys, I promise you the answer isn't
+[2124.2s] trusting someone else's terms of service
+[2125.9s] more. So why did I open source all of
+[2128.8s] it? The harness, the brain architecture,
+[2130.6s] the skills, the whole personal operating
+[2132.2s] system. People ask me this because they
+[2135.4s] seem like they they think there must be
+[2137.1s] a catch. Well, the answer is because I
+[2139.3s] can. Because being at YC for me means I
+[2142.5s] don't have to monetize my own
+[2143.8s] infrastructure.
+[2146.2s] But because I can is also the answer to
+[2148.2s] the wrong question. The real question is
+[2149.9s] why anyone should. And the answer is
+[2152.0s] that I believe tools of the powerful
+[2154.6s] should be given away. Every era has a
+[2158.5s] private technology of leverage, a thing
+[2161.2s] the powerful have and everyone else
+[2164.2s] doesn't. For a long time it was
+[2166.6s] literacy. Then it was capital. Right now
+[2170.2s] today, it's this. The harness, the
+[2172.5s] library, the workforce made of markdown.
+[2175.2s] The people who have it are quietly
+[2177.3s] operating at a different scale than the
+[2179.5s] people who don't. And the gap is
+[2181.7s] widening every month. And that's what
+[2184.2s] this whole conference is about. To give
+[2186.8s] you the power to be able to do it for
+[2190.2s] yourself.
+[2191.9s] When something like that that powerful
+[2194.4s] stays private, you get a priesthood.
+[2197.2s] When it gets given away,
+[2199.9s] you get a renaissance.
+[2203.7s] I know which one I want to live in,
+[2206.6s] which means I get to do the thing that I
+[2209.0s] actually believe in. And I'll give it to
+[2211.0s] you as a creed because it's the closest
+[2213.2s] thing I have to one. Say the things
+[2216.7s] other people won't. Fund the people
+[2219.4s] other people won't. Build the buildings
+[2222.2s] other people won't. Write and give away
+[2225.0s] the code that other people won't. Leave
+[2228.1s] behind the institutions that other
+[2230.5s] people won't.
+[2232.7s] And when you build in the open, you
+[2234.7s] should know what's coming because
+[2236.1s] Spinosa's story has one more chapter.
+[2239.1s] November 1676, Gotfrieded Leenes, the
+[2243.2s] most glittering genius in Europe, silk
+[2245.9s] stockings, a calculating machine in his
+[2248.2s] luggage, travels to the Hague to spend
+[2251.4s] three days in an attic with the most
+[2253.6s] hated man on the continent.
+[2256.3s] And then he spends the next 40 years
+[2258.4s] lying about it. Publicly, the visit was
+[2260.9s] a few hours in passing. Privately, his
+[2264.0s] notes are crammed with obsessive
+[2265.7s] commentary on Spinosa.
+[2268.5s] I live a small version of this weekly. I
+[2270.4s] say, "Agents write most of my code now,
+[2272.4s] and the dunks arrive by lunch. Then I
+[2275.0s] look at what the loudest dunkers are
+[2277.1s] actually shipping, and it's agents all
+[2278.8s] the way down." So, learn the pattern
+[2281.0s] now, because building in public
+[2282.3s] guarantees you'll meet it. First, they
+[2284.2s] quote tweet you, then they get clone
+[2286.3s] you. The dunks are just the adoption
+[2289.4s] curve announcing itself. And I want to
+[2292.2s] show you what this architecture looks
+[2294.5s] like when it's pointed at the only thing
+[2296.6s] that really matters. I have a friend
+[2299.3s] whose son has a rare form of epilepsy.
+[2303.7s] No lab, no grant, no permission. He just
+[2306.2s] went and you can just do things. He
+[2308.3s] built a repo of 80,000 markdown files, a
+[2311.7s] brain for one small boy, and pushed
+[2315.0s] himself to the absolute edge of what
+[2317.3s] humanity knows about his son's exact
+[2320.2s] condition. Every specialist visit, every
+[2323.4s] paper, every seizure log, every drug
+[2326.2s] interaction, indexed and cross-lin, and
+[2329.4s] ready so that when a new doctor has an
+[2332.0s] idea, he knows in minutes whether it's
+[2334.2s] already been tried. a father, a laptop,
+[2337.4s] and a library. That is personal AGI, not
+[2341.8s] a benchmark, not a demo. The entire
+[2344.6s] architecture I've described tonight, the
+[2346.8s] library, the librarian, the right three
+[2348.9s] books, open at the right moment, aimed
+[2351.1s] at the one thing, one man loves the most
+[2354.3s] in the world. Nobody was coming to build
+[2357.4s] that for him. So, he built it. And
+[2360.6s] nobody is coming to build yours for you.
+[2363.8s] That's the good news.
+[2366.2s] Everything you were told you needed, the
+[2368.5s] team, the funding, the permission, the
+[2371.3s] credential was a workaround for the fact
+[2373.8s] that one person could hold seven things
+[2376.6s] in their head and work 16 hours a day.
+[2380.5s] That fact just expired. You can fly now.
+[2384.2s] Not metaphorically,
+[2386.1s] mechanically.
+[2388.3s] Every problem where you thought, I wish
+[2390.4s] I had this person. I wish I could hire
+[2393.8s] this person, but I can't get them. You
+[2397.2s] can. Every archive too big to read.
+[2400.4s] Every data set too gnarly to clean.
+[2403.1s] Every ocean you were told not to boil.
+[2407.4s] We can boil the ocean. Now,
+[2411.2s] I have a sentence I live by and I want
+[2413.3s] to leave it with you.
+[2415.8s] It's all made up, but you get to make it
+[2419.5s] up.
+[2420.9s] Every institution in the world,
+[2423.1s] including the one that read a curse over
+[2425.0s] a 23-year-old in 1656,
+[2428.2s] was made up by people no smarter than
+[2430.6s] you. The difference between you and
+[2432.8s] every generation of founders before you
+[2435.4s] is that they had to recruit dozens of
+[2437.4s] believers before they could build
+[2439.4s] anything at all. You need a laptop and a
+[2443.1s] few years of your own history you're
+[2445.2s] already sitting on.
+[2447.8s] There were about 7,000 people at this
+[2451.4s] whole event. 7,000 kannotuses,
+[2455.5s] 7,000 strivings. For most of history,
+[2459.6s] almost all of that striving never got an
+[2462.2s] audience. It died waiting for funding,
+[2465.0s] waiting for headcount, waiting for
+[2467.0s] permission, waiting for someone else to
+[2469.9s] believe first. The machinery I showed
+[2473.2s] you tonight is the first technology I've
+[2475.4s] ever seen that lets the striving go
+[2477.2s] straight to work. One person, no
+[2479.8s] intermediaries, no permission. I
+[2482.6s] genuinely do not think the world
+[2484.5s] understands yet what 7,000 people with
+[2487.7s] that kind of leverage walk out of a
+[2490.8s] building and do.
+[2494.2s] Spinosa closed the ethics, the book that
+[2496.9s] had to be smuggled out in a desk with
+[2499.5s] nine words. All things excellent are as
+[2502.7s] difficult as they are rare. The
+[2506.0s] difficulty
+[2507.9s] just collapsed. The rarity is now up to
+[2511.3s] you.
+[2513.3s] Go and build.
+[2516.3s] Thank you.
