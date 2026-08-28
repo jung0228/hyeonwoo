@@ -24,7 +24,8 @@ ALLOWED_CATEGORIES = {
     "Algorithm",
     "Math",
     "Math Problems",
-    "DeepLearning"
+    "DeepLearning",
+    "Career"
 }
 
 def verify():

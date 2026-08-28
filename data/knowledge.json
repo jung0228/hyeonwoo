@@ -1529,6 +1529,28 @@
       "nodeType": "concept"
     },
     {
+      "id": "dasgupta_ch4_exercises",
+      "label": "Dasgupta Ch4 최단 경로 골든 9선 풀이 (Dijkstra, Bellman-Ford, Arbitrage)",
+      "category": "Algorithm",
+      "confidence": 4,
+      "studyCount": 1,
+      "note": "data/notes/dasgupta_ch4_exercises.md",
+      "tags": [
+        "Algorithm",
+        "Graph",
+        "Shortest Path",
+        "Dijkstra",
+        "Bellman-Ford",
+        "Arbitrage",
+        "Priority Queue"
+      ],
+      "definition": "1단계 개념: Dasgupta Ch 4 그래프 최단 경로 필수 9선 (다익스트라/벨만포드 손추적, 양수 가산 트릭 반례, 출발점 음수 간선 정당성, 경로 개수 DP, 차익거래 음수사이클, makeheap O(n) 증명).",
+      "purpose": "2단계 존재 이유: 대학원 알고리즘 지필/구술 시험 최빈출 최단 경로 알고리즘과 자료구조(Heap) 시간 복잡도 증명 완벽 대비.",
+      "tradeoff_insight": "3단계 비판적 맹점: 다익스트라(양수 전용 Greedy) vs 벨만-포드(음수 허용 DP) vs DAG(선형 위상정렬)의 한계와 경계 조건 구별.",
+      "ai_connection": "4단계 AI 연결: 강화학습(Value Iteration의 Bellman Update), 그래프 신경망(GNN의 Message Passing), 외환/가상화폐 차익거래 봇.",
+      "nodeType": "concept"
+    },
+    {
       "id": "grad_app_2027",
       "label": "🎓 대학원 지원 (2027 전기)",
       "category": "Career",
@@ -1609,6 +1631,21 @@
       "confidence": 3,
       "studyCount": 1,
       "note": "data/notes/ondevice_multimodal_lifelogging.md"
+    },
+    {
+      "id": "paper_fastv",
+      "label": "FastV (ECCV 2024)",
+      "category": "Multimodal",
+      "confidence": 3,
+      "studyCount": 1,
+      "tags": [
+        "Token Pruning",
+        "LVLM Acceleration",
+        "Attention Sink",
+        "Figure 3"
+      ],
+      "note": "data/notes/paper_fastv.md",
+      "nodeType": "concept"
     }
   ],
   "edges": [
@@ -2058,6 +2095,20 @@
       "insight": "DOM 트리뿐 아니라 스크린샷 렌더링 이미지를 시각적으로 이해하고 클릭 좌표 예측"
     },
     {
+      "source": "paper_fastv",
+      "target": "multimodal",
+      "relation": "optimizes",
+      "weight": 4,
+      "insight": "LVLM의 시각 토큰 중복성과 레이어별 어텐션 비효율을 해결하여 추론 45% 가속"
+    },
+    {
+      "source": "paper_fastv",
+      "target": "transformer",
+      "relation": "prunes",
+      "weight": 4,
+      "insight": "트랜스포머의 Self-Attention 및 FFN 연산량을 Layer 2 이후 토큰 50% 삭제로 절감"
+    },
+    {
       "source": "multimodal",
       "target": "long_video_understanding",
       "relation": "leads_to",
@@ -2411,6 +2462,53 @@
         "agent_memory"
       ],
       "note": "AI 개입의 역설: 온디바이스 멀티모달 라이프로깅과 인간의 지적 유희 칼럼 작성"
+    },
+    {
+      "date": "2026-08-26",
+      "topics": [
+        "paper_fastv",
+        "multimodal"
+      ],
+      "note": "FastV (ECCV 2024): Inefficient Visual Attention (Figure 3) 분석 및 Plug-and-Play 토큰 프루닝 기반 LVLM 추론 가속 메커니즘 정리"
+    },
+    {
+      "date": "2026-08-26",
+      "topics": [
+        "paper_fastv",
+        "paper_qwen2_vl",
+        "paper_llava",
+        "paper_artificial_intelligence_for_multimodal_data_integr"
+      ],
+      "note": "자동 연구 제안서 및 논문군 분석 합성 완료: Multimodal Long Video Token Compression"
+    },
+    {
+      "date": "2026-08-26",
+      "topics": [
+        "paper_fastv",
+        "paper_qwen2_vl",
+        "paper_llava",
+        "paper_artificial_intelligence_for_multimodal_data_integr"
+      ],
+      "note": "자동 연구 제안서 및 논문군 분석 합성 완료: Multimodal Long Video Token Compression"
+    },
+    {
+      "date": "2026-08-26",
+      "topics": [
+        "paper_fastv",
+        "paper_qwen2_vl",
+        "paper_llava",
+        "paper_universal_audio_generation"
+      ],
+      "note": "자동 연구 제안서 및 논문군 분석 합성 완료: Omni-modal Video Token Compression"
+    },
+    {
+      "date": "2026-08-26",
+      "topics": [
+        "hcx_omni",
+        "paper_fastv",
+        "paper_qwen2_vl"
+      ],
+      "note": "네이버 HyperCLOVA X Omni 8B 서빙 가속을 위한 PagedAttention 정합형 2축 압축 연구제안서(TABA) 수립 및 2열 LaTeX PDF 컴파일 완료"
     }
   ]
 }

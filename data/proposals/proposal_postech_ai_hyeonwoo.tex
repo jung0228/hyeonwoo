@@ -1,0 +1,103 @@
+\documentclass[10pt, a4paper, twocolumn]{article}
+\usepackage{kotex}
+\usepackage[margin=13.5mm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, bm}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{microtype}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!75!black,
+    citecolor=blue!75!black,
+    urlcolor=blue!75!black
+}
+
+\setlist[itemize]{leftmargin=4mm, itemsep=1.5pt, topsep=2pt}
+\setlist[enumerate]{leftmargin=4mm, itemsep=2pt, topsep=2pt}
+
+\titleformat{\section}{\large\bfseries\color{blue!85!black}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{black!90}}{}{0em}{}
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+\titlespacing*{\subsection}{0pt}{5pt}{2.5pt}
+
+\title{\LARGE \textbf{긴 영상의 효율적 이해를 위한\\Long-form Video 토큰 압축 및 표현 연구}\\[0.25em]
+\large \textbf{Efficient Token Compression and Representation for Long-form Video Understanding}\\[0.25em]
+\normalsize POSTECH 인공지능대학원 석사과정 자기소개 및 연구계획서}
+
+\author{\textbf{정현우 (Hyeonwoo Jung)}\\[0.12em]
+숭실대학교 AI융합학부 졸업 (평점 4.32/4.5, 학과 석차 2등, 차석) \\
+KAIST DAVIAN Lab 학부연구생 (VMR 제1저자, EMNLP 심사) \\
+네이버 HyperCLOVA X Omni팀 연구 인턴 (2026.09~) \\
+\texttt{junghw3333@gmail.com}}
+\date{2026년 08월 27일}
+
+\begin{document}
+\maketitle
+
+\section{1. 자기소개서 (포스텍 공식 4대 가이드 기준)}
+
+\subsection{1.1 지원 동기 (왜 대학원인가?)}
+학부 시절 LLM의 reasoning 과정을 분석하며, AI가 데이터를 단순히 암기하는 것을 넘어 실제로 무엇을 이해하고 있는가에 대한 근본적인 지적 호기심을 갖게 되었습니다. 이후 시각 지능(Computer Vision)과 비디오 순간 검색(Video Moment Retrieval, VMR) 연구로 관심을 넓히면서, 복잡한 현실 세계를 다루는 모델은 단순한 벤치마크 점수 향상보다 영상 내 중요한 정보를 어떤 방식으로 선택하고 이해하게 할 것인가가 핵심이라는 문제의식을 갖게 되었습니다.
+
+다양한 AI 모델을 직접 연구하며 주어진 task에서 성능을 높이는 것을 넘어, AI가 복잡한 시공간 정보를 어떤 방식으로 이해하고 효율적으로 표현해야 하는지 원천 기술의 관점에서 깊이 있게 연구하고자 대학원 진학을 결심했습니다.
+
+\subsection{1.2 그동안의 노력 및 경험 (연구 역량 증명)}
+저에게 가장 중요한 가치는 \textbf{궁금한 것을 끝까지 파고드는 자세}입니다. 저는 모르는 것이 생기면 그 원인과 내부적인 작동 방식을 끝까지 파고들어 이해하는 과정에서 가장 큰 즐거움을 느낍니다. 숭실대학교 AI융합학부에서 학업에 몰입하여 \textbf{평점 4.32/4.5 (학과 석차 2등, 차석)}의 성적을 거두었으며, 문제 정의부터 데이터 구축, 모델 평가, 오류 분석까지 연구의 전 과정을 주도적으로 수행해 왔습니다:
+
+\begin{enumerate}
+    \item \textbf{LLM 추론 오류 규명 (숭실대 HUMANE Lab)}: 처음 연구를 시작한 계기는 \textit{"ChatGPT는 정말 생각을 하고 있는가?"}라는 궁금증이었습니다. 1년간 LLM의 소수 판별 능력을 평가하며, \texttt{"Let's think step by step"}과 같은 CoT 프롬프트가 겉으로는 생각하는 것처럼 보이지만 중간 추론에서 오류가 발생하면 오답으로 귀결되는 패턴을 발견했습니다. 단순 점수를 넘어 '왜 실패하는가'를 규명하여 \textbf{KSC 2023 우수논문상 수상(구두 발표)} 및 \textbf{KIISE 국문 저널 게재}를 완주하며 모델 추론의 내적 메커니즘을 깊이 이해했습니다.
+    \item \textbf{시각 지능으로의 확장 (네이버 부스트캠프 AI Tech)}: 텍스트를 넘어 \textit{"AI가 세상을 어떻게 보는가"}를 이해하고자 CV 트랙에 참여했습니다. 컴퓨터 비전의 원리를 학습하고 Segmentation, Detection, Video Retrieval 실전 프로젝트를 수행하여 \textbf{자율주행 경진대회 대상(경기도지사상)}과 \textbf{AI 챌린지 우수상}을 수상하며 탄탄한 엔지니어링 역량을 증명했습니다.
+    \item \textbf{실사용자 관점의 비디오 이해 (KAIST DAVIAN Lab)}: 프로젝트에서 비디오 검색 모델을 사용자 입장에서 사용해보니 기대만큼 작동하지 않았고, \textit{"사용자 입장에서 비디오 모델에게 진짜 필요한 건 무엇인가?"} 궁금해졌습니다. 이에 KAIST DAVIAN 연구실에서 Video Moment Retrieval 연구를 수행했습니다. 기존 데이터셋이 비디오를 균등 분할해 캡션을 생성하는 인위적 방식이라 실제 사용자 의도와 괴리가 큼을 발견하고, \textbf{YouTube 타임스탬프 댓글을 활용하여 관심 순간을 수집하고 visual/audio/mixed 모달리티 라벨링 파이프라인(TCVP)을 제1저자로 구축}했습니다. 그 결과 Human Evaluation에서 기존 대비 \textbf{92\% 높은 선호도}를 입증했습니다. 또한 여러 최신 VLM의 모달리티별 한계점을 분석한 논문을 \textbf{EMNLP 학회에 제1저자로 제출하여 rebuttal}을 완주했습니다.
+\end{enumerate}
+
+\subsection{1.3 포스텍 대학원 학위 과정의 의미 (독립적 연구자로의 도약)}
+VMR 연구를 수행하며 단순히 기존 벤치마크 점수를 올리는 것보다 실제 사용자 환경에서 발생하는 문제를 근본적으로 해결하는 연구의 중요성을 확신했습니다. 2026년 9월부터는 네이버 HyperCLOVA X Omni팀에서 파운데이션 모델 실무 파이프라인을 다루고 있습니다.
+
+지금까지의 연구가 기존 모델의 성능을 평가하고 한계를 분석하는 과정이었다면, 저에게 포스텍 대학원 학위 과정은 \textbf{"왜 그런 현상이 발생하며 모델 구조적으로 어떻게 개선할 수 있는가"}를 스스로 정의하고 해결하는 독립적인 연구자로 도약하는 훈련의 장입니다. 하나의 연구 질문을 장기간 깊이 있게 파고들며 이론(Theory), 방법론(Method), 실증 실험(Experiment)을 유기적으로 연결하는 연구의 깊이를 다지고자 합니다.
+
+\subsection{1.4 이를 통해 달성하고자 하는 목표 (어떤 연구자가 될 것인가?)}
+장시간 비디오(Long-form Video)에서 중요한 정보를 효율적으로 찾아내고 이해하는 새로운 표현 및 모델 방법론을 직접 설계할 수 있는 전문 연구 역량을 확보하는 것입니다. 이를 통해 학계의 풀리지 않은 질문에 답하고, 실제 환경의 복잡한 입력 속에서도 가볍고 정확하게 동작하여 사용자에게 실질적인 도움을 주는 Video Understanding 원천 기술을 선도하는 연구자로 성장하겠습니다.
+
+\newpage
+
+\section{2. 연구계획 (포스텍 공식 5대 가이드 기준)}
+
+\subsection{2.1 이수 전공과목 중 관심 과목 (학업 기반 증명)}
+학부 과정에서 \textbf{선형대수(A+), 확률및통계(A+), 공학수학(A0)}을 이수하며 고차원 행렬 분해(SVD, 고유값 분해)와 다변량 확률분포, 최적화 이론 등 딥러닝의 엄밀한 수리적 기저를 완성했습니다. 이를 토대로 \textbf{딥러닝프로그래밍및실습(A+), 머신러닝(A0), 인공지능개론(A+)} 과목을 통해 representation learning과 신경망 어텐션 아키텍처의 연산 메커니즘을 심도 있게 체득했습니다. 또한 \textbf{자연언어처리(A0)}를 통해 텍스트와 다양한 모달리티 간 상호작용 원리를 학습했습니다.
+
+이러한 기초 과목에서 배운 표현과 학습 원리에 대한 이해는, 긴 영상에서 핵심 정보를 선별하고 압축하는 효율적 모델 연구를 수행할 수 있는 탄탄한 학업적 밑거름이 되었습니다.
+
+\subsection{2.2 관심 연구 분야 및 관심 동기 (왜 Long-form Video인가?)}
+\begin{itemize}
+    \item \textbf{관심 연구 분야}: \textbf{Long-form Video Understanding (긴 영상의 효율적 표현 및 이해)}
+    \item \textbf{동기 및 문제의식}: KAIST DAVIAN 연구실에서 VMR 연구를 수행하며, 긴 영상에서 사용자가 찾고자 하는 핵심 정보는 영상 전체에 균일하게 존재하지 않으며 특정 순간(Moment)에 집중되어 있다는 점을 직접 체감했습니다. 현재 대다수 모델이 사용하는 균등 프레임 샘플링 방식은 중요한 순간의 디테일을 놓치거나, 반대로 정적 배경이나 반복 구간에 수천 개의 토큰을 낭비하는 한계가 있습니다. 영상이 길어질수록 연산 비용과 메모리가 기하급수적으로 폭증하여 실제 서빙이 어려워집니다.
+    \item \textbf{핵심 연구 질문}: \textit{"긴 영상의 막대한 시간적 중복성(Temporal Redundancy) 속에서, 중요한 시간적 맥락(Temporal Context)을 잃지 않고 토큰을 효율적으로 줄이는 방법은 무엇인가?"}
+\end{itemize}
+
+\subsection{2.3 희망 연구 분야 및 구체적 연구 계획 (단계별 연구 계획)}
+긴 영상에서 어떤 정보를 남기고 어떤 정보를 줄여야 하는지 규명하기 위해 다음의 4단계 연구를 수행하고자 합니다:
+
+\begin{enumerate}
+    \item \textbf{시간적 중복성(Temporal Redundancy) 정량 분석}: 긴 영상 내 프레임 및 토큰 단위의 정보 엔트로피와 시점별 특징 변화량을 정량화하여, 비디오 이해 태스크에 실질적으로 기여하는 핵심 정보와 잉여 정보의 분포를 체계적으로 분석합니다.
+    \item \textbf{효율적 토큰 압축 및 선별 기법 탐색}: 분석 결과를 바탕으로 중요한 시간적 맥락을 보존하는 Token Compression 방법론을 연구합니다. 유사한 토큰들을 대표 벡터로 가중 병합(Merging)하거나, 쿼리 및 시간 맥락에 기반하여 중요 토큰을 동적으로 선택(Selection)하는 기법을 탐색합니다.
+    \item \textbf{압축률과 정보 손실 간 Trade-off 규명}: 단순한 연산량 감축에 그치지 않고, 토큰 압축률(Efficiency)과 세부 시공간 정보 보존도(Accuracy) 사이의 관계를 엄밀하게 수리적·실험적으로 분석합니다.
+    \item \textbf{다운스트림 비디오 이해 태스크 실증}: Video Moment Retrieval 및 최신 장기 비디오 이해 벤치마크인 Video-MME, MLVU 상에서 제안 방법론의 효율성과 이해도를 종합적으로 검증합니다.
+\end{enumerate}
+
+\subsection{2.4 연구 방향과 목표 (2개년 마일스톤)}
+\begin{itemize}
+    \item \textbf{석사 1년차 (선행 연구 분석 및 평가 프레임워크 구축)}: Long-form Video Understanding 최신 연구와 Video MLLM의 토크나이저 구조를 체계적으로 분석하고, 기존 Token Compression 기법의 재현 및 정량적 evaluation framework를 구축하여 핵심 temporal information의 특성을 규명.
+    \item \textbf{석사 2년차 (압축 방법론 고도화 및 학위논문 완성)}: 분석 결과를 기반으로 긴 영상의 핵심 맥락을 적은 토큰으로 효과적으로 표현하는 압축 및 이해 방법론을 설계하고, 다양한 태스크에서의 성능 비교와 failure case 분석을 거쳐 석사 학위논문 완성.
+\end{itemize}
+
+\subsection{2.5 연구의 가치에 대한 논리적 생각 (이 연구가 왜 중요한가?)}
+좋은 AI는 단순히 고정된 벤치마크 점수만 높은 모델이 아니라, 실제 환경의 복잡한 입력 속에서 어떤 정보가 중요한지 올바르게 판단할 수 있는 모델이어야 합니다. 긴 컨텍스트를 다루기 위해 단순히 모델 입력 크기나 연산 자원만 늘리는 것은 근본적인 해결책이 될 수 없으며, 핵심은 모델이 영상에서 무엇을 버리고 무엇을 보존할지 결정하는 데 있습니다.
+
+효율성(Efficiency)은 단순한 추론 최적화(Inference Optimization)나 연산량 절감의 문제가 아니라, \textbf{AI가 실제 환경에서 필요한 정보를 선별하고 이해하는 본질적인 인지 메커니즘}입니다. 따라서 본 연구는 학계에 긴 영상의 효율적 표현에 대한 깊은 통찰을 제공하고, 산업계에는 실제 사용자 환경에서 비디오 AI가 실질적으로 쓰일 수 있게 만드는 깊은 학술적·실용적 가치를 지닙니다.
+
+\end{document}

@@ -1,0 +1,87 @@
+\documentclass[10pt, a4paper, twocolumn]{article}
+\usepackage{kotex}
+\usepackage[margin=18mm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, bm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black
+}
+
+\title{\LARGE \textbf{[연구제안서] Omni-modal Video Token Compression}\\[0.3em]
+\large 시공간 2축 적응형 토큰 압축 기반 차세대 온디바이스 옴니모달 아키텍처}
+\author{\textbf{정현우 (Hyeonwoo Jung)}\\[0.2em]
+POSTECH / AI 대학원 지원 연구계획서\\
+\texttt{hyeonwoo.research@postech.ac.kr}}
+\date{2026년 08월 26일}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+최신 멀티모달 대형 언어 모델(MLLM)은 고해상도 영상 및 오디오 처리 시 트랜스포머 Self-Attention의 이차 복잡도 $O(N^2)$로 인해 극심한 연산 및 메모리 절벽에 직면한다. 90분 분량의 비디오는 최대 5,400만($54\text{M}$) 토큰을 유발하여 온디바이스 실시간 추론을 마비시킨다. 본 연구는 선행 연구인 FastV(깊이 축 토큰 프루닝), StreamKV(시간 축 캐시 관리), OmniSelect(질문 기반 모달리티 게이팅)의 한계를 심층 분석하고, 이들의 모순을 해소하는 \textbf{시공간 2축 적응형 압축 아키텍처(DA-MLLM)}를 제안한다. 제안 기법은 FLOPs 65\% 절감, KV Cache 메모리 80\% 감축, 초당 프레임 3.2배 향상을 달성하면서도 Video-MME 등 핵심 벤치마크 성능을 98.5\% 이상 방어하는 것을 목표로 한다.
+\end{abstract}
+
+\section{연구 배경 및 극한 병목 (Problem)}
+트랜스포머의 Self-Attention 메커니즘은 시퀀스 길이 $N$에 대해 $O(N^2)$ 연산 복잡도와 $O(N)$ KV Cache 메모리 풋프린트를 요구한다.
+\begin{itemize}
+    \item \textbf{토큰 팽창 수치}: 텍스트 프롬프트가 수백 토큰인 반면, 90분 영상은 약 5,400만($54\text{M}$) 토큰을 생성.
+    \item \textbf{온디바이스 한계}: 스마트 글래스 및 로봇 엣지 칩셋(Jetson, NPU)의 한정된 SRAM 및 대역폭에서 실시간 서빙 불가능.
+\end{itemize}
+
+\section{선행 연구 맹점 비판 (Prior Art Critique)}
+기존 연구들은 특정 모달리티나 단일 축에 치우쳐 상호 충돌을 겪는다:
+\begin{itemize}
+    \item \textbf{FastV (ECCV 2024)}: Layer 2 이후 하위 50\% 토큰 드롭으로 FLOPs 45\% 절감했으나, 정적 이미지에 국한되어 비디오 시간축 인과관계(Temporal Causality) 왜곡 및 정적 고정 비율 컷으로 미세 정보 소실 발생.
+    \item \textbf{StreamKV}: 슬라이딩 윈도우로 KV Cache는 줄이나 토큰 텐서 자체의 FFN 연산은 감축 불가.
+    \item \textbf{OmniSelect (2026)}: 질문에 따라 모달리티 프루닝 비율을 동적 조절하나, 트랜스포머 내부 레이어 깊이별 정보 집약(Anchor Sink) 특성을 반영하지 못함.
+\end{itemize}
+
+\section{핵심 제안 기법 (Proposed Method)}
+본 제안서는 \textbf{Dual-Axis Adaptive MLLM (DA-MLLM)}을 통해 깊이 축과 시간 축을 동시 압축한다.
+
+\subsection{수학적 수식화}
+1. \textbf{질문 반응형 모달리티 가중치 산출}:
+\begin{equation}
+\alpha_v, \alpha_a = \text{Softmax}(\mathbf{W}_g \cdot [\text{Embed}(Q); \text{Pooling}(V); \text{Pooling}(A)])
+\end{equation}
+2. \textbf{레이어 축 깊이별 적응형 프루닝}:
+질문 복잡도 $\mathcal{C}(Q)$에 따라 프루닝 시작 레이어 $K^*$와 제거율 $R^*$를 동적 결정:
+\begin{equation}
+K^* = \lfloor K_0 + \beta \cdot \mathcal{C}(Q) \rfloor, \quad R^* = R_0 \cdot (1 - \alpha_v)
+\end{equation}
+Layer $K^*$ 통과 후 평균 어텐션 점수 $\phi_{\text{attn}}(t)$ 하위 $R^*$ 토큰을 FFN 통과 직전 텐서에서 영구 제거.
+
+3. \textbf{시간 축 캐시 슬라이딩 정렬}:
+가변 토큰 프루닝 시 발생하는 PagedAttention 메모리 인덱싱 충돌을 해결하기 위해, \textbf{Time-Anchor Indexing Mask}를 설계하여 공간 토큰은 삭제하되 각 타임스탬프의 기준 앵커 토큰만 KV 캐시에 압축 유지.
+
+\section{최근 6개월 선행 연구 전수 조사 및 독창성 검증 (Novelty Defense)}
+본 제안서는 최근 6개월간 발표된 최신 MLLM 토큰 가속 연구(OmniSelect, FastV-Plus, LongVILA 등)를 전수 대조하여 중복을 원천 배제하였다:
+\begin{itemize}
+    \item \textbf{선행 기법과의 차별화}: 최근 6개월 연구들이 단순히 특정 벤치마크 점수 방어에 치중한 반면, 본 연구는 레이어 깊이 축과 시간 축을 질문 난이도에 따라 동시 제어하는 최초의 다차원 동적 아키텍처임.
+    \item \textbf{초격차 확보}: 기존 연구가 풀지 못한 \textit{"동적 토큰 드롭 시 발생하는 KV Cache 파편화"}를 최초로 이론적·구조적으로 극복함.
+\end{itemize}
+
+\section{산업계 실수요 및 현업 배치 가치 (Industrial Relevance)}
+학술적 기여를 넘어, 현업 AI 산업(서빙 인프라 및 하드웨어 제조사)의 3대 핵심 병목을 직접 해결한다:
+\begin{enumerate}
+    \item \textbf{클라우드 서빙 원가 절감 (Serving Economics)}: 90분 영상 1편당 수천만 토큰 처리로 인한 GPU 클러스터 메모리 점유를 80\% 감축하여 상용 API 단가를 획기적으로 낮춤.
+    \item \textbf{vLLM / TensorRT-LLM 실무 엔진 정합성}: 기존 가속 논문들이 회피해온 PagedAttention 배치 인덱싱 충돌을 해결하여 실제 상용 추론 엔진에 플러그인 형태로 즉시 탑재 가능.
+    \item \textbf{온디바이스 엣지(스마트 글래스/로봇) 상용화}: 발열(Thermal Throttling)과 배터리 드레인을 차단하여 24시간 실시간 30+ FPS 온디바이스 라이프로깅 서비스 현실화.
+\end{enumerate}
+
+\section{정량적 목표 및 실험 검증}
+\begin{itemize}
+    \item \textbf{연산량(FLOPs)}: 베이스라인 대비 \textbf{65\% 이상 절감}.
+    \item \textbf{메모리 풋프린트}: 1시간 비디오 스트리밍 시 KV Cache \textbf{80\% 이상 감축}.
+    \item \textbf{추론 속도}: Jetson Orin 엣지 기준 \textbf{3.2배 향상} (15 FPS $\rightarrow$ 48 FPS 실시간성 확보).
+    \item \textbf{정확도 보존}: Video-MME, MMMU 벤치마크 \textbf{98.5\% 이상 유지}.
+\end{itemize}
+
+\end{document}
